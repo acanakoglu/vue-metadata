@@ -1,7 +1,7 @@
 <template>
     <div>
         <label for="select-id">{{title}}</label>
-        <select id="select-id" >
+        <select id="select-id" multiple>
             <option v-for="value in values" :key="value.value">
                 {{value.value}}
             </option>
