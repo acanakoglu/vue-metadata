@@ -1,15 +1,19 @@
 <template>
-    <select>
-        <option v-for="value in values">
-            {{value.value}}
-        </option>
-    </select>
+    <div>
+        <label for="select-id">{{title}}</label>
+        <select id="select-id" >
+            <option v-for="value in values" :key="value.value">
+                {{value.value}}
+            </option>
+        </select>
+    </div>
 </template>
 
 <script>
     export default {
         name: "MetadataDropdown",
         props: {
+            title: {type: String, required: true,},// default: 100,
             field: {type: String, required: true,},// default: 100,
         },
         data() {

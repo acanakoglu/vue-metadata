@@ -1,12 +1,13 @@
 <template>
     <div>
         <h1>hello</h1>
-        <MetadataDropdown v-for="field in fields" :field="field.value"/>
+        <MetadataDropdown v-for="field in fields" :field="field.value" :title="field.value"/>
     </div>
 </template>
 
 <script>
     import MetadataDropdown from "./MetadataDropdown";
+
     export default {
         name: "MetadataDropdownList",
         components: {MetadataDropdown},

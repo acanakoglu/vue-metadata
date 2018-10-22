@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <MetadataDropdown field="cell_line"/>
+        <MetadataDropdown title="cell_line" field="cell_line"/>
         <MetadataDropdownList/>
 
 
