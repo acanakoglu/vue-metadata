@@ -1,6 +1,7 @@
 <template>
     <div class="home">
         <MetadataDropdown field="cell_line"/>
+        <MetadataDropdownList/>
 
 
 
@@ -13,10 +14,12 @@
     // @ is an alias to /src
     // import HelloWorld from '@/components/HelloWorld.vue'
     import MetadataDropdown from "../components/MetadataDropdown";
+    import MetadataDropdownList from "../components/MetadataDropdownList";
 
     export default {
         name: 'home',
         components: {
+            MetadataDropdownList,
             MetadataDropdown,
             // HelloWorld
         }
