@@ -1,32 +1,31 @@
 <template>
     <div>
-        <label for="select-id">{{title}}</label>
-        <select id="select-id" multiple>
-            <option v-for="value in values" :key="value.value">
-                {{value.value}}
-            </option>
-        </select>
+        <h1>hello</h1>
+        <MetadataDropDown v-for="field in fields" :field="field.value" :title="field.value"/>
     </div>
 </template>
 
 <script>
+    import MetadataDropDown from "./MetadataDropDown";
+
     export default {
-        name: "MetadataDropdown",
-        props: {
-            title: {type: String, required: true,},// default: 100,
-            field: {type: String, required: true,},// default: 100,
-        },
+        name: "MetadataDropDownList",
+        components: {MetadataDropDown},
+        // props: {
+        //     field: {type: String, required: true,},// default: 100,
+        // },
         data() {
             return {
-                values: [],
+                isLoading: true,
+                fields: [],
             }
         },
 
+
         created() {
-            const url = `/api/value/${this.field}`;
-            // const url = `/api/value/`;
-            this.url = url;
-            this.values = [];
+            // const url = `/api/value/${this.field}`;
+            const url = `/api/value/`;
+            this.fields = [];
 
             fetch(url)
                 .then((res) => {
@@ -41,7 +40,7 @@
                     return res.json()
                 })
                 .then((res) => {
-                    this.values = res;
+                    this.fields = res;
                     this.isLoading = false;
                 });
         }
