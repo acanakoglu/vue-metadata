@@ -1,11 +1,16 @@
 <template>
     <div>
-        <label for="select-id">{{title}}</label>
-        <select id="select-id" multiple>
-            <option v-for="value in values" :key="value.value">
-                {{value.value}}
+        <label for="select-id">{{labelTitle}}:</label>
+        <select id="select-id" v-model="selected" multiple>
+            <option v-if="isLoading">
+                Loading...
+            </option>
+            <option v-for="(value, index) in values" :value="value">
+                {{index}} - {{value}}
             </option>
         </select>
+        <br>
+        <span>Selected: {{ selected }}</span>
     </div>
 </template>
 
@@ -13,41 +18,45 @@
     export default {
         name: "MetadataDropDown",
         props: {
-            title: {type: String, required: true,},// default: 100,
+            labelTitle: {type: String, required: true,},// default: 100,
             field: {type: String, required: true,},// default: 100,
         },
         data() {
             return {
+                isLoading: true,
                 values: [],
+                selected: [],
             }
         },
-
+        watch: {
+            selected()  {
+                this.$emit('valueChanged', this.field, this.selected);
+            }
+        },
         created() {
             const url = `/api/value/${this.field}`;
-            // const url = `/api/value/`;
-            this.url = url;
+            this.isLoading = true;
             this.values = [];
+            this.selected = [];
 
+            // setTimeout(() => {
             fetch(url)
                 .then((res) => {
-                    console.log(url);
-                    console.log(url);
-                    console.log(url);
-
-                    console.log(res);
-                    // this.res = res;
-                    // this.res2 = res.json();
-                    // console.log(this.res2);
+                    // console.log(res)
                     return res.json()
                 })
                 .then((res) => {
-                    this.values = res;
+                    this.values = res.map((value) => {return value.value});
                     this.isLoading = false;
                 });
+            // }, 3000);
         }
     }
 </script>
 
 <style scoped>
-
+    label {
+        color: red;
+        padding: 8px;
+    }
 </style>

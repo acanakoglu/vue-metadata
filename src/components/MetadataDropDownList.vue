@@ -1,7 +1,9 @@
 <template>
     <div>
-        <h1>hello</h1>
-        <MetadataDropDown v-for="field in fields" :field="field.value" :title="field.value"/>
+        <MetadataDropDown v-for="field in fields"
+                          :field="field.value"
+                          :labelTitle="field.value"
+                          @valueChanged="handleDropDownValue"/>
     </div>
 </template>
 
@@ -18,10 +20,20 @@
             return {
                 isLoading: true,
                 fields: [],
+                filter: {},
             }
         },
-
-
+        methods: {
+            handleDropDownValue(field, selected) {
+                console.log(field, selected);
+                console.log(this);
+                console.log(selected.length);
+                if (!selected.length)
+                    delete this.filter[field];
+                else
+                    this.filter[field] = selected;
+            }
+        },
         created() {
             // const url = `/api/value/${this.field}`;
             const url = `/api/value/`;
@@ -29,14 +41,6 @@
 
             fetch(url)
                 .then((res) => {
-                    console.log(url);
-                    console.log(url);
-                    console.log(url);
-
-                    console.log(res);
-                    // this.res = res;
-                    // this.res2 = res.json();
-                    // console.log(this.res2);
                     return res.json()
                 })
                 .then((res) => {
