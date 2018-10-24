@@ -17,6 +17,7 @@
 
 <script>
     import MetadataDropDown from "./MetadataDropDown";
+    import axios from 'axios';
 
     export default {
         name: "MetadataDropDownList",
@@ -42,12 +43,12 @@
                     filter[field] = selected;
                 this.filter = filter;
             },
-            getTitle(field){
+            getTitle(field) {
                 return `${field.name} (${field.group})`
             }
         },
         watch: {
-            filter()  {
+            filter() {
                 this.$emit('filterChanged', this.filter);
             }
         },
@@ -56,11 +57,11 @@
             const url = `/api/field/`;
             this.fields = [];
 
-            fetch(url)
+
+            axios.get(url)
+                .then((res) => {return res.data})
                 .then((res) => {
-                    return res.json()
-                })
-                .then((res) => {
+                    // console.log(res);
                     this.fields = res;
                     this.isLoading = false;
                 });

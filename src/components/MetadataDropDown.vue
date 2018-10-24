@@ -6,8 +6,12 @@
                 Loading...
             </option>
             <option v-for="(value, index) in values.values" :value="value.value">
-                {{index}} -
-                {{value.value}}
+                <span v-if="value.value">
+                    {{value.value}}
+                </span>
+                <span v-else>
+                    !!UNKNOWN!!
+                </span>
             </option>
         </select>
         <br>
@@ -16,6 +20,8 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     export default {
         name: "MetadataDropDown",
         props: {
@@ -30,7 +36,7 @@
             }
         },
         watch: {
-            selected()  {
+            selected() {
                 this.$emit('valueChanged', this.field, this.selected);
             }
         },
@@ -40,17 +46,15 @@
             this.values = [];
             this.selected = [];
 
-            // setTimeout(() => {
-            fetch(url)
+            axios.get(url)
                 .then((res) => {
-                    // console.log(res)
-                    return res.json()
+                    return res.data
                 })
                 .then((res) => {
+                    console.log(res);
                     this.values = res;
                     this.isLoading = false;
                 });
-            // }, 3000);
         }
     }
 </script>
