@@ -1,22 +1,17 @@
 <template>
-    <div>
-        <label for="select-id">{{labelTitle}}:</label>
-        <select id="select-id" v-model="selected" multiple>
-            <option v-if="isLoading">
-                Loading...
-            </option>
-            <option v-for="(value, index) in values.values" :value="value.value">
-                <span v-if="value.value">
-                    {{value.value}}
-                </span>
-                <span v-else>
-                    !!UNKNOWN!!
-                </span>
-            </option>
-        </select>
-        <br>
-        <span>Selected: {{ selected }}</span>
-    </div>
+
+
+    <v-flex xs12 md3 sm6 d-flex>
+        <v-select
+                v-model="selected"
+                :items="values.values"
+                :item-text="rename"
+                item-value="value"
+                :label="labelTitle"
+                multiple
+                chips
+        ></v-select>
+    </v-flex>
 </template>
 
 <script>
@@ -38,6 +33,14 @@
         watch: {
             selected() {
                 this.$emit('valueChanged', this.field, this.selected);
+            }
+        },
+        methods: {
+            rename(inp) {
+                if (inp.value)
+                    return inp.value
+                else
+                    return 'Not defined'
             }
         },
         created() {

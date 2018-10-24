@@ -5,13 +5,15 @@
         <br>
 
         <!--<div  v-for="field in fields.fields"> {{field}}</div>-->
+  <v-container fluid grid-list-xl>
+            <v-layout wrap align-center>
 
-        <MetadataDropDown v-for="field in fields.fields"
-                          :field="field.name"
-                          :labelTitle="getTitle(field)"
-                          @valueChanged="handleDropDownValue"/>
-
-
+                <MetadataDropDown v-for="field in fields.fields"
+                                  :field="field.name"
+                                  :labelTitle="getTitle(field)"
+                                  @valueChanged="handleDropDownValue"/>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
@@ -59,7 +61,9 @@
 
 
             axios.get(url)
-                .then((res) => {return res.data})
+                .then((res) => {
+                    return res.data
+                })
                 .then((res) => {
                     // console.log(res);
                     this.fields = res;

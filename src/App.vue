@@ -16,17 +16,20 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <!--<HelloWorld/>-->
+      <MetadataDropDownList/>
     </v-content>
   </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
+import MetadataDropDownList from "./components/MetadataDropDownList";
 
 export default {
   name: 'App',
   components: {
+      MetadataDropDownList,
     HelloWorld
   },
   data () {
