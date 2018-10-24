@@ -1,17 +1,13 @@
 <template>
-    <div class="home">
-        <MetadataDropDownList/>
-    </div>
+  <HelloWorld />
 </template>
 
 <script>
-    // @ is an alias to /src
-    import MetadataDropDownList from "../components/MetadataDropDownList";
+  import HelloWorld from '../components/HelloWorld'
 
-    export default {
-        name: 'home',
-        components: {
-            MetadataDropDownList,
-        }
+  export default {
+    components: {
+      HelloWorld
     }
+  }
 </script>
