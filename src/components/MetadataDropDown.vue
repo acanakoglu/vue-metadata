@@ -5,8 +5,9 @@
             <option v-if="isLoading">
                 Loading...
             </option>
-            <option v-for="(value, index) in values" :value="value">
-                {{index}} - {{value}}
+            <option v-for="(value, index) in values.values" :value="value.value">
+                {{index}} -
+                {{value.value}}
             </option>
         </select>
         <br>
@@ -46,7 +47,7 @@
                     return res.json()
                 })
                 .then((res) => {
-                    this.values = res.map((value) => {return value.value});
+                    this.values = res;
                     this.isLoading = false;
                 });
             // }, 3000);

@@ -1,9 +1,17 @@
 <template>
     <div>
-        <MetadataDropDown v-for="field in fields"
-                          :field="field.value"
-                          :labelTitle="field.value"
+        {{filter}}
+        <br>
+        <br>
+
+        <!--<div  v-for="field in fields.fields"> {{field}}</div>-->
+
+        <MetadataDropDown v-for="field in fields.fields"
+                          :field="field.name"
+                          :labelTitle="getTitle(field)"
                           @valueChanged="handleDropDownValue"/>
+
+
     </div>
 </template>
 
@@ -25,18 +33,27 @@
         },
         methods: {
             handleDropDownValue(field, selected) {
-                console.log(field, selected);
-                console.log(this);
-                console.log(selected.length);
+                //reassign: to trigger the event(value changed on the binded listeners)
+                var filter = this.filter;
+                this.filter = {};
                 if (!selected.length)
-                    delete this.filter[field];
+                    delete filter[field];
                 else
-                    this.filter[field] = selected;
+                    filter[field] = selected;
+                this.filter = filter;
+            },
+            getTitle(field){
+                return `${field.name} (${field.group})`
+            }
+        },
+        watch: {
+            filter()  {
+                this.$emit('filterChanged', this.filter);
             }
         },
         created() {
             // const url = `/api/value/${this.field}`;
-            const url = `/api/value/`;
+            const url = `/api/field/`;
             this.fields = [];
 
             fetch(url)
