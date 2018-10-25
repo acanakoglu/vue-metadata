@@ -1,17 +1,13 @@
 <template>
-
-
-    <v-flex xs12 md3 sm6 d-flex>
-        <v-select
-                v-model="selected"
-                :items="values.values"
-                :item-text="rename"
-                item-value="value"
-                :label="labelTitle"
-                multiple
-                chips
-        ></v-select>
-    </v-flex>
+    <v-select
+            v-model="selected"
+            :items="values.values"
+            :item-text="rename"
+            item-value="value"
+            :label="labelTitle"
+            multiple
+            chips
+    ></v-select>
 </template>
 
 <script>
@@ -37,10 +33,10 @@
         },
         methods: {
             rename(inp) {
-                if (inp.value)
+                if (inp.value !== null)
                     return inp.value
                 else
-                    return 'Not defined'
+                    return 'not defined'
             }
         },
         created() {
@@ -63,8 +59,5 @@
 </script>
 
 <style scoped>
-    label {
-        color: red;
-        padding: 8px;
-    }
+
 </style>

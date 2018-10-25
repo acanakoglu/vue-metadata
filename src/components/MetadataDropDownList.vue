@@ -5,15 +5,19 @@
         <br>
 
         <!--<div  v-for="field in fields.fields"> {{field}}</div>-->
-  <v-container fluid grid-list-xl>
+        <v-container fluid grid-list-xl>
             <v-layout wrap align-center>
+                <v-flex xs12 md1 sm6 d-flex v-for="field in fields.fields">
 
-                <MetadataDropDown v-for="field in fields.fields"
-                                  :field="field.name"
-                                  :labelTitle="getTitle(field)"
-                                  @valueChanged="handleDropDownValue"/>
+                    <MetadataDropDown
+                            :field="field.name"
+                            :labelTitle="getTitle(field)"
+                            @valueChanged="handleDropDownValue"
+                    ></MetadataDropDown>
+                </v-flex>
             </v-layout>
         </v-container>
+
     </div>
 </template>
 
@@ -36,14 +40,12 @@
         },
         methods: {
             handleDropDownValue(field, selected) {
-                //reassign: to trigger the event(value changed on the binded listeners)
-                var filter = this.filter;
-                this.filter = {};
                 if (!selected.length)
-                    delete filter[field];
+                    delete this.filter[field];
                 else
-                    filter[field] = selected;
-                this.filter = filter;
+                    this.filter[field] = selected;
+                this.filter = Object.assign({}, this.filter);
+                ;
             },
             getTitle(field) {
                 return `${field.name} (${field.group})`
