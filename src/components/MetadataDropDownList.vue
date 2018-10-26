@@ -4,7 +4,6 @@
         <br>
         <br>
 
-        <!--<div  v-for="field in fields.fields"> {{field}}</div>-->
         <v-container fluid grid-list-xl>
             <v-layout wrap align-center>
                 <v-flex xs12 md1 sm6 d-flex v-for="field in fields.fields">
@@ -40,12 +39,19 @@
         },
         methods: {
             handleDropDownValue(field, selected) {
-                if (!selected.length)
-                    delete this.filter[field];
-                else
-                    this.filter[field] = selected;
+                if (!selected.length) {
+                    if(this.filter[field]) {
+                        delete this.filter[field];
+                        this.filter = Object.assign({}, this.filter);
+                    }
+                }
+                else {
+                    if(this.filter[field] !== selected) {
+                        this.filter[field] = selected;
+                        this.filter = Object.assign({}, this.filter);
+                    }
+                }
                 this.filter = Object.assign({}, this.filter);
-                ;
             },
             getTitle(field) {
                 return `${field.name} (${field.group})`

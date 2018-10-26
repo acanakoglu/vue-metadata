@@ -14,6 +14,9 @@
             <MetadataDropDownList @filterChanged="handleFilterChange"/>
             <br>
             {{filter}}
+            <MetadataTable
+                :filter="filter"
+            ></MetadataTable>
 
         </v-content>
     </v-app>
@@ -22,10 +25,12 @@
 <script>
     import HelloWorld from './components/HelloWorld'
     import MetadataDropDownList from "./components/MetadataDropDownList";
+    import MetadataTable from "./components/MetadataTable";
 
     export default {
         name: 'App',
         components: {
+            MetadataTable,
             MetadataDropDownList,
             HelloWorld
         },
@@ -36,7 +41,7 @@
         },
         methods: {
             handleFilterChange(filter) {
-                console.log(filter);
+                // console.log(filter);
                 this.filter = filter;
             },
             getTitle(field) {

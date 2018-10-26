@@ -1,7 +1,7 @@
 <template>
     <v-select
             v-model="selected"
-            :items="values.values"
+            :items="values"
             :item-text="rename"
             item-value="value"
             :label="labelTitle"
@@ -34,24 +34,24 @@
         methods: {
             rename(inp) {
                 if (inp.value !== null)
-                    return inp.value
+                    return inp.value;
                 else
-                    return 'not defined'
+                    return 'not defined';
             }
         },
         created() {
             const url = `/api/value/${this.field}`;
             this.isLoading = true;
             this.values = [];
-            this.selected = [];
+            // this.selected = [];
 
             axios.get(url)
                 .then((res) => {
                     return res.data
                 })
                 .then((res) => {
-                    console.log(res);
-                    this.values = res;
+                    // console.log(res);
+                    this.values = res.values;
                     this.isLoading = false;
                 });
         }
