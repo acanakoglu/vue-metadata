@@ -1,15 +1,15 @@
 <template>
     <v-card>
         <!--<v-card-title>-->
-            <!--Result-->
-            <!--<v-spacer></v-spacer>-->
-            <!--<v-text-field-->
-                    <!--v-model="search"-->
-                    <!--append-icon="search"-->
-                    <!--label="Search"-->
-                    <!--single-line-->
-                    <!--hide-details-->
-            <!--&gt;</v-text-field>-->
+        <!--Result-->
+        <!--<v-spacer></v-spacer>-->
+        <!--<v-text-field-->
+        <!--v-model="search"-->
+        <!--append-icon="search"-->
+        <!--label="Search"-->
+        <!--single-line-->
+        <!--hide-details-->
+        <!--&gt;</v-text-field>-->
         <!--</v-card-title>-->
         <v-data-table
                 :headers="headers"
@@ -18,7 +18,10 @@
                 :loading="isLoading"
         >
             <template slot="items" slot-scope="props">
-                <td v-for="header in headers">{{props.item[header.value]}}</td>
+                <td v-for="header in headers">
+                    <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
+                    <span v-else>{{props.item[header.value]}}</span>
+                </td>
             </template>
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
                 Your search for "{{ search }}" found no results.
@@ -48,8 +51,8 @@
                     {text: 'date', value: 'date'},
                     {text: 'pipeline', value: 'pipeline'},
                     {text: 'platform', value: 'platform'},
-                    {text: 'source_url', value: 'source_url'},
-                    {text: 'local_url', value: 'local_url'},
+                    {text: 'source_url', value: 'source_url', is_link: true},
+                    {text: 'local_url', value: 'local_url', is_link: true},
                     {text: 'name', value: 'name'},
                     {text: 'data_type', value: 'data_type'},
                     {text: 'format', value: 'format'},
