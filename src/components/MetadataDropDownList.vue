@@ -6,7 +6,7 @@
 
         <v-container fluid grid-list-xl>
             <v-layout wrap align-center>
-                <v-flex xs12 md1 sm6 d-flex v-for="field in fields.fields">
+                <v-flex xs12  sm6  md3 d-flex v-for="field in fields.fields">
 
                     <MetadataDropDown
                             :field="field.name"
