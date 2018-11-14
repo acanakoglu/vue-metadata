@@ -1,13 +1,12 @@
 <template>
-    <v-select
+    <v-autocomplete
             v-model="selected"
             :items="values"
             :item-text="rename"
             item-value="value"
             :label="labelTitle"
             multiple
-            chips
-    ></v-select>
+    ></v-autocomplete>
 </template>
 
 <script>
@@ -22,7 +21,7 @@
         data() {
             return {
                 isLoading: true,
-                values: [],
+                values: [],//the list of values of the drop-down menu
                 selected: [],
             }
         },
@@ -37,7 +36,7 @@
                     return inp.value;
                 else
                     return 'not defined';
-            }
+            },
         },
         created() {
             const url = `/api/value/${this.field}`;
@@ -59,5 +58,6 @@
 </script>
 
 <style scoped>
+
 
 </style>

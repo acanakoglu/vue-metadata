@@ -9,13 +9,12 @@
             <v-btn flat href="http://gmql.eu" target="_blank"><span class="mr-2">GMQL</span></v-btn>
         </v-toolbar>
 
-        <v-content>
+        <v-content class="main-content">
             <!--<HelloWorld/>-->
             <MetadataDropDownList @filterChanged="handleFilterChange"/>
-            <br>
-            {{filter}}
+            <!--{{filter}}-->
             <MetadataTable
-                :filter="filter"
+                    :filter="filter"
             ></MetadataTable>
 
         </v-content>
@@ -50,3 +49,15 @@
         },
     }
 </script>
+<style>
+    .no-horizontal-padding {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .main-content {
+        padding-top: 10px !important;
+        padding-bottom: 0 !important;
+
+    }
+</style>

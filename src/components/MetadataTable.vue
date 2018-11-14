@@ -46,22 +46,23 @@
                 isLoading: false,
                 search: '',
                 headers: [
-                    {text: 'source_id', value: 'source_id'},
-                    {text: 'size', value: 'size'},
-                    {text: 'date', value: 'date'},
-                    {text: 'pipeline', value: 'pipeline'},
-                    {text: 'platform', value: 'platform'},
-                    {text: 'source_url', value: 'source_url', is_link: true},
-                    {text: 'local_url', value: 'local_url', is_link: true},
-                    {text: 'name', value: 'name'},
-                    {text: 'data_type', value: 'data_type'},
-                    {text: 'format', value: 'format'},
-                    {text: 'assembly', value: 'assembly'},
-                    {text: 'annotation', value: 'annotation'},
-                    {text: 'technique', value: 'technique'},
-                    {text: 'feature', value: 'feature'},
-                    {text: 'target', value: 'target'},
-                    {text: 'antibody', value: 'antibody'}
+                    {text: 'Source ID', value: 'source_id'},
+                    // {text: 'size', value: 'size'},
+                    // {text: 'date', value: 'date'},
+                    // {text: 'checksum', value: 'checksum'},
+                    {text: 'Pipeline', value: 'pipeline'},
+                    {text: 'Platform', value: 'platform'},
+                    {text: 'Source URI', value: 'source_url', is_link: true},
+                    {text: 'Local URI', value: 'local_url', is_link: true},
+                    {text: 'Dataset', value: 'name'},
+                    {text: 'Data Type', value: 'data_type'},
+                    {text: 'File Format', value: 'format'},
+                    {text: 'Assembly', value: 'assembly'},
+                    {text: 'Annotation Type', value: 'annotation'},
+                    {text: 'Technique', value: 'technique'},
+                    {text: 'Feature', value: 'feature'},
+                    {text: 'Target', value: 'target'},
+                    {text: 'Antibody', value: 'antibody'}
                 ],
                 result: []
             }
@@ -73,7 +74,7 @@
         },
         methods: {
             applyFilter() {
-                console.log('test');
+                // console.log('test');
 
                 const url = `/api/query/`;
                 this.isLoading = true;
