@@ -76,7 +76,7 @@
             applyFilter() {
                 // console.log('test');
 
-                const url = `/api/query/`;
+                const url = `query/`;
                 this.isLoading = true;
                 this.result = [];
 

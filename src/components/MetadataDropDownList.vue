@@ -78,7 +78,7 @@
         },
         created() {
             // const url = `/api/value/${this.field}`;
-            const url = `/api/field/`;
+            const url = `field/`;
 
 
             this.fields = [];
