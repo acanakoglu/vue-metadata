@@ -7,5 +7,5 @@ module.exports = {
             },
         }
     },
-    baseUrl: '/meta/',
+    baseUrl: '/repo-viewer/',
 }
