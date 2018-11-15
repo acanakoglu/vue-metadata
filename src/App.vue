@@ -2,7 +2,7 @@
     <v-app>
         <v-toolbar app>
             <v-toolbar-title class="headline text-uppercase">
-                <span>METADATA</span>
+                <span>Repository</span>
                 <span class="font-weight-light">Viewer</span>
             </v-toolbar-title>
             <!--<v-spacer></v-spacer>-->
