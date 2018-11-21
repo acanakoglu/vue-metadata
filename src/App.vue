@@ -17,9 +17,11 @@
             <!--<HelloWorld/>-->
             <MetadataDropDownList @filterChanged="handleFilterChange"/>
             <!--{{filter}}-->
-            <MetadataTable
-                    :filter="filter"
-            ></MetadataTable>
+            <div class="result-div">
+                <MetadataTable
+                        :filter="filter"
+                ></MetadataTable>
+            </div>
 
         </v-content>
     </v-app>
@@ -63,5 +65,9 @@
         padding-top: 10px !important;
         padding-bottom: 0 !important;
 
+    }
+    .result-div{
+        margin-bottom: 1.5em;
+        max-width: 100%;
     }
 </style>

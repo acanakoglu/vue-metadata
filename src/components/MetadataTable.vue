@@ -19,7 +19,7 @@
                 class="data-table"
         >
             <template slot="items" slot-scope="props">
-                <td v-for="header in headers">
+                <td v-for="header in headers" :key="header">
                     <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
                     <span v-else>{{props.item[header.value]}}</span>
                 </td>
