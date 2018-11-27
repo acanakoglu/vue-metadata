@@ -39,7 +39,7 @@
             },
         },
         created() {
-            const url = `value/${this.field}`;
+            const url = `field/${this.field}`;
             this.isLoading = true;
             this.values = [];
             // this.selected = [];

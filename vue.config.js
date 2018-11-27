@@ -5,6 +5,9 @@ module.exports = {
             "/api": {
                 target: "http://localhost:5000/" // So that the client dev server can access your Flask routes under /api
             },
+            "/graph": {
+                target: "http://localhost:5000/" // So that the client dev server can access your Flask routes under /aaa
+            },
         }
     },
     baseUrl: '/repo-viewer/',

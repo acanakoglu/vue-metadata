@@ -16,7 +16,7 @@
         <v-content class="main-content">
             <!--<HelloWorld/>-->
             <MetadataDropDownList @filterChanged="handleFilterChange"/>
-            <!--{{filter}}-->
+            {{filter}}
             <div class="result-div">
                 <MetadataTable
                         :filter="filter"

@@ -19,8 +19,9 @@
                 class="data-table"
         >
             <template slot="items" slot-scope="props">
-                <td v-for="header in headers" :key="header">
+                <td v-for="header in headers" :key="header.value">
                     <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
+                    <span v-else-if="header.value === 'source_id'"><a :href=getSourceId(props.item[header.value]) target="_blank">{{props.item[header.value]}}</a></span>
                     <span v-else>{{props.item[header.value]}}</span>
                 </td>
             </template>
@@ -97,7 +98,7 @@
             applyFilter() {
                 // console.log('test');
 
-                const url = `query/`;
+                const url = `query/search`;
                 this.isLoading = true;
                 this.result = [];
 
@@ -112,6 +113,9 @@
                         this.isLoading = false;
                     });
 
+            },
+            getSourceId(sourceId) {
+                return `graph/static/index.html?source_id=${sourceId}`;
             }
         },
         created() {
