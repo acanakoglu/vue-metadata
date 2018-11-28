@@ -8,14 +8,6 @@
 </template>
 
 <script>
-    // var slide = require('./graph/static/js/neo4jd3.js');
-    //     import Neo4jd3 from '../../../neo4jd3/dist/js/neo4jd3.min'
-    //     var slide = require('../../../neo4jd3/dist/js/neo4jd3.min');
-
-
-    // @import '../assets/js/d3.min.js'
-
-    // import Neo4jd3 from  '../assets/js/neo4jd3.js';
 
 
     export default {
@@ -25,15 +17,11 @@
         },
         data() {
             return {
-                // sourceId: '00580e36-eea0-455e-90e7-f5ee7bd1cd7b-msm',
             }
         },
 
         mounted() {
-            // this.$scriptLoader.load('./graph/static/js/d3.min.js');
-
-
-            var neo4jd3 = new Neo4jd3('#neo4jd3', {
+            let neo4jd3 = new Neo4jd3('#neo4jd3', {
                 highlight: [
                     {
                         class: 'Project',
