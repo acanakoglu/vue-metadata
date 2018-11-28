@@ -31,10 +31,12 @@
     import HelloWorld from './components/HelloWorld'
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
+    import GraphViewer from "./components/GraphViewer";
 
     export default {
         name: 'App',
         components: {
+            GraphViewer,
             MetadataTable,
             MetadataDropDownList,
             HelloWorld
@@ -53,6 +55,7 @@
                 return `${field.name} (${field.group})`
             }
         },
+
     }
 </script>
 <style>
@@ -66,7 +69,8 @@
         padding-bottom: 0 !important;
 
     }
-    .result-div{
+
+    .result-div {
         margin-bottom: 1.5em;
         max-width: 100%;
     }
