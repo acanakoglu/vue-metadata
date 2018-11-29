@@ -4,13 +4,14 @@
         <br>
         <br>
         <v-container fluid grid-list-xl>
-            <v-layout wrap align-center test v-for="group in groups">
+            <v-layout wrap align-center test v-for="group in groups" :key="group.value">
                 <v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">
                     {{group.text}}:
                 </v-flex>
                 <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
                         v-for="field in fields"
-                        v-if="field.group === group.value">
+                        v-if="field.group === group.value"
+                        :key="field.name">
                     <MetadataDropDown
                             :field="field.name"
                             :labelTitle="getTitle(field)"
@@ -58,8 +59,7 @@
                         delete this.filter[field];
                         this.filter = Object.assign({}, this.filter);
                     }
-                }
-                else {
+                } else {
                     if (this.filter[field] !== selected) {
                         this.filter[field] = selected;
                         this.filter = Object.assign({}, this.filter);
@@ -98,10 +98,9 @@
     }
 </script>
 
-<style scoped>
-    .label {
-        display: block;
-        font-size: 1.3em;
-        font-weight: bold;
-    }
+<style lang="sass" scoped>
+    .label
+        display: block
+        font-size: 1.3em
+        font-weight: bold
 </style>
