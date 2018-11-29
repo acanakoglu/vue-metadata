@@ -98,7 +98,7 @@
             applyFilter() {
                 // console.log('test');
 
-                const url = `query/search`;
+                const url = `query/table`;
                 this.isLoading = true;
                 this.result = [];
 
