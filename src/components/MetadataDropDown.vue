@@ -10,6 +10,7 @@
 </template>
 
 <script>
+    // noinspection ES6UnusedImports
     import axios from 'axios';
 
     export default {
@@ -32,10 +33,10 @@
         },
         methods: {
             rename(inp) {
-                if (inp.value !== null)
+                if (inp.value)
                     return inp.value;
                 else
-                    return 'not defined';
+                    return 'N/D(not defined)';
             },
         },
         created() {
