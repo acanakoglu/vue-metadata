@@ -1,15 +1,10 @@
 <template>
     <div>
-        <link rel="stylesheet" href="./css/neo4jd3.css">
-        <!--<script src="graph/static/js/neo4jd3.js"></script>-->
         <div id="neo4jd3"></div>
-        <!--import('../assets/js/d3.min.js')-->
     </div>
 </template>
 
 <script>
-
-
     export default {
         name: "GraphViewer",
         props: {
