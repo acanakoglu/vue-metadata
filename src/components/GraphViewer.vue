@@ -11,11 +11,12 @@
             sourceId: {type: String, required: false, default: '00580e36-eea0-455e-90e7-f5ee7bd1cd7b-msm'},
         },
         data() {
-            return {
-            }
+            return {}
         },
 
         mounted() {
+            // the error was 'neo4jd3' is assigned a value but never used (no-unused-vars)
+            // eslint-disable-next-line
             let neo4jd3 = new Neo4jd3('#neo4jd3', {
                 highlight: [
                     {
@@ -31,9 +32,12 @@
                 icons: {},
                 images: {},
                 minCollision: 60,
-                neo4jDataUrl: `api/query/item/${this.sourceId}/graph`,
+                neo4jDataUrl: `api/item/${this.sourceId}/graph`,
                 nodeRadius: 25,
+
                 onNodeDoubleClick: function (node) {
+                    console.log('double click on node: ' + JSON.stringify(node));
+
                     /*switch(node.id) {
                         case '25':
                             // Google
@@ -47,7 +51,7 @@
                     }*/
                 },
                 onRelationshipDoubleClick: function (relationship) {
-                    //console.log('double click on relationship: ' + JSON.stringify(relationship));
+                    console.log('double click on relationship: ' + JSON.stringify(relationship));
                 },
                 zoomFit: true
             });
