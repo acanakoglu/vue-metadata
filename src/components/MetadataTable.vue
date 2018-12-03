@@ -21,7 +21,17 @@
             <template slot="items" slot-scope="props">
                 <td v-for="header in headers" :key="header.value">
                     <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
-                    <span v-else-if="header.value === 'source_id'"><a :href=getSourceId(props.item[header.value]) target="_blank">{{props.item[header.value]}}</a></span>
+                    <span v-else-if="header.value === 'graph'">
+                        <v-btn flat icon color="blue" @click="dialog = true; sourceId=props.item[header.value]">
+                            <v-icon>group_work</v-icon>
+                        </v-btn>
+
+                    </span>
+                    <span v-else-if="header.value === 'extra'">
+                        <v-btn flat icon color="blue" @click="dialog = true; sourceId=props.item[header.value]">
+                            <v-icon>list</v-icon>
+                        </v-btn>
+                    </span>
                     <span v-else>{{props.item[header.value]}}</span>
                 </td>
             </template>
@@ -56,18 +66,22 @@
 </template>
 
 <script>
-    import axios from 'axios';
 
     export default {
         name: "MetadataTable",
         props: {
             filter: {type: Object, required: true,},
+            dialog: {type: Boolean, default: false},
+            sourceId: {type: String},
         },
         data() {
             return {
                 isLoading: false,
                 search: '',
                 headers: [
+                    {text: 'Graph', value: 'graph'},
+                    {text: 'Extra', value: 'extra'},
+
                     {text: 'Source ID', value: 'source_id'},
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
