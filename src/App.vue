@@ -14,13 +14,10 @@
         </v-toolbar>
 
         <v-content class="main-content">
-            <!--<HelloWorld/>-->
-            <MetadataDropDownList @filterChanged="handleFilterChange"/>
-            {{filter}}
+            <MetadataDropDownList/>
+            {{fullQuery}}
             <div class="result-div">
-                <MetadataTable
-                        :filter="filter"
-                ></MetadataTable>
+                <MetadataTable/>
             </div>
 
         </v-content>
@@ -28,10 +25,10 @@
 </template>
 
 <script>
-    import HelloWorld from './components/HelloWorld'
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
     import GraphViewer from "./components/GraphViewer";
+    import {mapGetters} from 'vuex'
 
     export default {
         name: 'App',
@@ -39,23 +36,16 @@
             GraphViewer,
             MetadataTable,
             MetadataDropDownList,
-            HelloWorld
-        },
-        data() {
-            return {
-                filter: {},
-            }
         },
         methods: {
-            handleFilterChange(filter) {
-                // console.log(filter);
-                this.filter = filter;
-            },
-            getTitle(field) {
+            getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             }
         },
+        computed: {
+            ...mapGetters(['fullQuery']),
 
+        }
     }
 </script>
 <style>

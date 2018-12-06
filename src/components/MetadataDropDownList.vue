@@ -9,13 +9,11 @@
                     {{group.text}}:
                 </v-flex>
                 <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
-                        v-for="field in fields"
-                        v-if="field.group === group.value"
+                        v-for="field in getGroupFields(group.value)"
                         :key="field.name">
                     <MetadataDropDown
                             :field="field.name"
-                            :labelTitle="getTitle(field)"
-                            @valueChanged="handleDropDownValue"
+                            :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
                 </v-flex>
             </v-layout>
@@ -27,7 +25,6 @@
 
 <script>
     import MetadataDropDown from "./MetadataDropDown";
-    import axios from 'axios';
 
     export default {
         name: "MetadataDropDownList",
@@ -42,39 +39,25 @@
                 filter: {},
                 groups: [
                     {text: 'Project', value: 'Project'},
-                    {text: 'Experiment Type', value: 'ExperimentType'},
+                    {text: 'Experiment type', value: 'ExperimentType'},
                     {text: 'Dataset', value: 'Dataset'},
                     {text: 'Biosample', value: 'Biosample'},
                     {text: 'Donor', value: 'Donor'},
                     {text: 'Replicate', value: 'Replicate'},
                     {text: 'Item', value: 'Item'},
-                    {text: 'Case Study', value: 'CaseStudy'},
+                    {text: 'Case study', value: 'CaseStudy'},
                 ],
             }
         },
         methods: {
-            handleDropDownValue(field, selected) {
-                if (!selected.length) {
-                    if (this.filter[field]) {
-                        delete this.filter[field];
-                        this.filter = Object.assign({}, this.filter);
-                    }
-                } else {
-                    if (this.filter[field] !== selected) {
-                        this.filter[field] = selected;
-                        this.filter = Object.assign({}, this.filter);
-                    }
-                }
-                this.filter = Object.assign({}, this.filter);
+            getGroupFields(groupValue) {
+                return this.fields.filter(field => field.group === groupValue);
             },
-            getTitle(field) {
-                return `${field.name}`
+            getFieldTitle: (field) => {
+                let upperField = field.name;
+                upperField = upperField.charAt(0).toUpperCase() + upperField.slice(1);
+                return `${upperField.replace('_', ' ')}`
             },
-        },
-        watch: {
-            filter() {
-                this.$emit('filterChanged', this.filter);
-            }
         },
         created() {
             // const url = `/api/value/${this.field}`;
@@ -85,6 +68,7 @@
 
             let temp_fields = [];
 
+            // eslint-disable-next-line
             axios.get(url)
                 .then((res) => {
                     return res.data

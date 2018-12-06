@@ -66,11 +66,11 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
 
     export default {
         name: "MetadataTable",
         props: {
-            filter: {type: Object, required: true,},
             dialog: {type: Boolean, default: false},
             sourceId: {type: String},
         },
@@ -108,6 +108,10 @@
                 this.applyFilter();
             }
         },
+        mounted() {
+            //load all the results
+            this.applyFilter();
+        },
         methods: {
             applyFilter() {
                 // console.log('test');
@@ -116,7 +120,7 @@
                 this.isLoading = true;
                 this.result = [];
 
-
+                // eslint-disable-next-line
                 axios.post(url, this.filter)
                     .then((res) => {
                         return res.data
@@ -128,13 +132,11 @@
                     });
 
             },
-            getSourceId(sourceId) {
-                return `graph/static/index.html?source_id=${sourceId}`;
-            }
         },
-        created() {
-            //load all the results
-            this.applyFilter();
+        computed: {
+            ...mapGetters({
+                filter: 'fullQuery',
+            }),
         }
 
     }
