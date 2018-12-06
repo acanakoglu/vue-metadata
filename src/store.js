@@ -6,11 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         query: {},
+        showGraphDialog: false,
+        graphSourceId: '00580e36-eea0-455e-90e7-f5ee7bd1cd7b-msm',
+        showExtraMetadataDialog: false,
+        extraMetadataSourceId: null,
+
     },
     getters: {
-        fullQuery(state) {
-            return state.query
-        }
+        query: (state) => state.query,
+        showGraphDialog: (state) => state.showGraphDialog,
+        graphSourceId: (state) => state.graphSourceId,
+        showExtraMetadataDialog: (state) => state.showExtraMetadataDialog,
+        extraMetadataSourceId: (state) => state.extraMetadataSourceId,
+
 
         // query(state){
         //     return state.query;
@@ -24,6 +32,17 @@ export default new Vuex.Store({
             else
                 Vue.delete(state.query, payload.field);
         },
+        openGraphDialog: (state, sourceId) => {
+            console.log(sourceId);
+            state.graphSourceId = sourceId;
+            state.showGraphDialog = true;
+        },
+        openExtraMetadataDialog: (state, sourceId) => {
+            state.extraMetadataSourceId = sourceId;
+            state.showExtraMetadataDialog = true;
+        },
+        closeGraphDialog: (state) => state.showGraphDialog = false,
+        closeExtraMetadataDialog: (state) => state.showExtraMetadataDialog = false,
 
     },
     actions: {},

@@ -36,12 +36,12 @@
         },
         computed: {
             ...mapGetters([
-                'fullQuery',
+                'query',
             ]),
             selected: {
                 get() {
                     // console.log("GET" + this.fullQuery[this.field]);
-                    return this.fullQuery[this.field];
+                    return this.query[this.field];
                 },
                 set(value) {
                     // console.log("SET" + value);

@@ -15,7 +15,8 @@
 
         <v-content class="main-content">
             <MetadataDropDownList/>
-            {{fullQuery}}
+            <FullScreenGraphViewer/>
+            {{query}}
             <div class="result-div">
                 <MetadataTable/>
             </div>
@@ -27,13 +28,13 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import GraphViewer from "./components/GraphViewer";
     import {mapGetters} from 'vuex'
+    import FullScreenGraphViewer from "./components/FullScreenGraphViewer";
 
     export default {
         name: 'App',
         components: {
-            GraphViewer,
+            FullScreenGraphViewer,
             MetadataTable,
             MetadataDropDownList,
         },
@@ -43,7 +44,7 @@
             }
         },
         computed: {
-            ...mapGetters(['fullQuery']),
+            ...mapGetters(['query']),
 
         }
     }

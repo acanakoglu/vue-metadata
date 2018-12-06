@@ -5,17 +5,10 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
+
     export default {
         name: "GraphViewer",
-        props: {
-            sourceId: {type: String, required: true},
-        },
-        data() {
-            return {
-                // sourceId:  '00580e36-eea0-455e-90e7-f5ee7bd1cd7b-msm',
-
-            }
-        },
         methods: {
             createDivId() {
                 return 'neo4jd3-' + this.sourceId
@@ -66,6 +59,12 @@
         mounted() {
             this.updateGraph()
         },
+        computed: {
+            ...mapGetters({
+                sourceId: 'graphSourceId',
+            }),
+        }
+
     }
 </script>
 

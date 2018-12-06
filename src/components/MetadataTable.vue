@@ -22,13 +22,13 @@
                 <td v-for="header in headers" :key="header.value">
                     <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
                     <span v-else-if="header.value === 'graph'">
-                        <v-btn flat icon color="blue" @click="dialog = true; sourceId=props.item[header.value]">
+                        <v-btn flat icon color="blue" @click="graphClicked(props.item)">
                             <v-icon>group_work</v-icon>
                         </v-btn>
 
                     </span>
                     <span v-else-if="header.value === 'extra'">
-                        <v-btn flat icon color="blue" @click="dialog = true; sourceId=props.item[header.value]">
+                        <v-btn flat icon color="blue" @click="extraMetadataClicked(props.item[header.value])">
                             <v-icon>list</v-icon>
                         </v-btn>
                     </span>
@@ -66,7 +66,8 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapMutations} from 'vuex'
+    const sourceId = 'source_id';
 
     export default {
         name: "MetadataTable",
@@ -82,7 +83,7 @@
                     {text: 'Graph', value: 'graph'},
                     {text: 'Extra', value: 'extra'},
 
-                    {text: 'Source ID', value: 'source_id'},
+                    {text: 'Source ID', value: sourceId},
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},
@@ -113,6 +114,12 @@
             this.applyFilter();
         },
         methods: {
+            ...mapMutations([
+                'openGraphDialog',
+                'openExtraMetadataDialog'
+            ]),
+            graphClicked(row) { this.openGraphDialog(row[sourceId])},
+            extraMetadataClicked(row) { this.openExtraMetadataDialog(row[sourceId])},
             applyFilter() {
                 // console.log('test');
 
@@ -135,7 +142,7 @@
         },
         computed: {
             ...mapGetters({
-                filter: 'fullQuery',
+                filter: 'query',
             }),
         }
 
