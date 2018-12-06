@@ -28,7 +28,7 @@
 
                     </span>
                     <span v-else-if="header.value === 'extra'">
-                        <v-btn flat icon color="blue" @click="extraMetadataClicked(props.item[header.value])">
+                        <v-btn flat icon color="blue" @click="extraMetadataClicked(props.item)">
                             <v-icon>list</v-icon>
                         </v-btn>
                     </span>
@@ -67,14 +67,11 @@
 
 <script>
     import {mapGetters, mapMutations} from 'vuex'
-    const sourceId = 'source_id';
+
+    const sourceIdColumnName = 'source_id';
 
     export default {
         name: "MetadataTable",
-        props: {
-            dialog: {type: Boolean, default: false},
-            sourceId: {type: String},
-        },
         data() {
             return {
                 isLoading: false,
@@ -83,7 +80,7 @@
                     {text: 'Graph', value: 'graph'},
                     {text: 'Extra', value: 'extra'},
 
-                    {text: 'Source ID', value: sourceId},
+                    {text: 'Source ID', value: sourceIdColumnName},
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},
@@ -118,8 +115,12 @@
                 'openGraphDialog',
                 'openExtraMetadataDialog'
             ]),
-            graphClicked(row) { this.openGraphDialog(row[sourceId])},
-            extraMetadataClicked(row) { this.openExtraMetadataDialog(row[sourceId])},
+            graphClicked(row) {
+                this.openGraphDialog(row[sourceIdColumnName])
+            },
+            extraMetadataClicked(row) {
+                this.openExtraMetadataDialog(row[sourceIdColumnName])
+            },
             applyFilter() {
                 // console.log('test');
 

@@ -3,14 +3,17 @@
         <!--<v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>-->
         <v-card>
             <v-toolbar dark color="primary">
-                <v-toolbar-title>Graph of {{sourceId}}</v-toolbar-title>
+                <v-toolbar-title v-if="sourceId1">Graph of item with source id :{{sourceId1}}</v-toolbar-title>
+                <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon dark @click="closeGraphDialog">
+                <v-btn icon dark @click="closeDialog">
                     <v-icon>close</v-icon>
                 </v-btn>
             </v-toolbar>
 
-            <GraphViewer v-if="dialog" class="graph--fullscreen"/>
+            <GraphViewer v-if="sourceId1" class="graph--fullscreen"/>
+            <PairsTable v-if="sourceId2"/>
+            <div v-else-if="sourceId2">TABLE</div>
         </v-card>
     </v-dialog>
 </template>
@@ -19,10 +22,11 @@
     import {mapGetters, mapMutations} from 'vuex'
 
     import GraphViewer from "./GraphViewer";
+    import PairsTable from "./PairsTable";
 
     export default {
         name: "FullScreenGraphViewer",
-        components: {GraphViewer},
+        components: {PairsTable, GraphViewer},
         data() {
             return {
                 notifications: false,
@@ -32,14 +36,18 @@
         },
         methods: {
             ...mapMutations([
-                'closeGraphDialog',
+                'closeDialog',
             ]),
+
         },
         computed: {
             ...mapGetters({
-                dialog: 'showGraphDialog',
-                sourceId: 'graphSourceId',
+                dialog1: 'showGraphDialog',
+                dialog2: 'showExtraMetadataDialog',
+                sourceId1: 'graphSourceId',
+                sourceId2: 'extraMetadataSourceId',
             }),
+            dialog() {return this.dialog1 || this.dialog2} ,
         }
     }
 </script>

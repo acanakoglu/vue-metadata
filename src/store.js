@@ -6,17 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         query: {},
-        showGraphDialog: false,
-        graphSourceId: '00580e36-eea0-455e-90e7-f5ee7bd1cd7b-msm',
-        showExtraMetadataDialog: false,
+        // showGraphDialog: false,
+        graphSourceId: null,
+        // showExtraMetadataDialog: false,
         extraMetadataSourceId: null,
 
     },
     getters: {
         query: (state) => state.query,
-        showGraphDialog: (state) => state.showGraphDialog,
+        showGraphDialog: (state) => state.graphSourceId != null,
+        // state.showGraphDialog,
         graphSourceId: (state) => state.graphSourceId,
-        showExtraMetadataDialog: (state) => state.showExtraMetadataDialog,
+        showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
+        // state.showExtraMetadataDialog,
         extraMetadataSourceId: (state) => state.extraMetadataSourceId,
 
 
@@ -35,14 +37,17 @@ export default new Vuex.Store({
         openGraphDialog: (state, sourceId) => {
             console.log(sourceId);
             state.graphSourceId = sourceId;
-            state.showGraphDialog = true;
+            // state.showGraphDialog = true;
         },
         openExtraMetadataDialog: (state, sourceId) => {
             state.extraMetadataSourceId = sourceId;
-            state.showExtraMetadataDialog = true;
+            // state.showExtraMetadataDialog = true;
         },
-        closeGraphDialog: (state) => state.showGraphDialog = false,
-        closeExtraMetadataDialog: (state) => state.showExtraMetadataDialog = false,
+        closeDialog: (state) => {
+            state.graphSourceId = null;
+            state.extraMetadataSourceId = null;
+        },
+        // closeExtraMetadataDialog: (state) => state.showExtraMetadataDialog = false,
 
     },
     actions: {},
