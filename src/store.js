@@ -6,9 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         query: {},
-        // showGraphDialog: false,
         graphSourceId: null,
-        // showExtraMetadataDialog: false,
         extraMetadataSourceId: null,
 
     },
@@ -17,17 +15,15 @@ export default new Vuex.Store({
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
     },
     mutations: {
-        //it is possible to send as payload
         setDropDownSelected: (state, payload) => {
             if (payload.list.length > 0)
                 Vue.set(state.query, payload.field, payload.list);
             else
                 Vue.delete(state.query, payload.field);
-            //reload
+            //reload, needs to update correctly the watcher
             state.query = Object.assign({}, state.query);
         },
         openGraphDialog: (state, sourceId) => {
-            console.log(sourceId);
             state.graphSourceId = sourceId;
         },
         openExtraMetadataDialog: (state, sourceId) => {
