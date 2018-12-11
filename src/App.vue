@@ -28,7 +28,7 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapGetters} from 'vuex'
+    import {mapState} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenGraphViewer";
 
     export default {
@@ -44,7 +44,7 @@
             }
         },
         computed: {
-            ...mapGetters(['query']),
+            ...mapState(['query']),
 
         }
     }

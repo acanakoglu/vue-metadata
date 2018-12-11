@@ -13,12 +13,8 @@ export default new Vuex.Store({
 
     },
     getters: {
-        query: (state) => state.query,
         showGraphDialog: (state) => state.graphSourceId != null,
-        graphSourceId: (state) => state.graphSourceId,
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
-        extraMetadataSourceId: (state) => state.extraMetadataSourceId,
-
     },
     mutations: {
         //it is possible to send as payload
@@ -33,11 +29,9 @@ export default new Vuex.Store({
         openGraphDialog: (state, sourceId) => {
             console.log(sourceId);
             state.graphSourceId = sourceId;
-            // state.showGraphDialog = true;
         },
         openExtraMetadataDialog: (state, sourceId) => {
             state.extraMetadataSourceId = sourceId;
-            // state.showExtraMetadataDialog = true;
         },
         closeDialog: (state) => {
             state.graphSourceId = null;

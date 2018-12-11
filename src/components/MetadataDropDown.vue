@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapState, mapMutations} from 'vuex'
 
 
     export default {
@@ -35,7 +35,7 @@
             }
         },
         computed: {
-            ...mapGetters([
+            ...mapState([
                 'query',
             ]),
             selected: {

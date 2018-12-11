@@ -67,7 +67,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapState, mapMutations} from 'vuex'
 
     const sourceIdColumnName = 'source_id';
 
@@ -143,10 +143,7 @@
             },
         },
         computed: {
-            ...mapGetters([
-                'query',
-            ]),
-
+            ...mapState(['query', ]),
         }
 
     }

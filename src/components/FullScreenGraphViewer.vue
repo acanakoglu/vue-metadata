@@ -4,7 +4,8 @@
         <v-card>
             <v-toolbar dark color="primary">
                 <v-toolbar-title v-if="sourceId1">Graph of item with source id :{{sourceId1}}</v-toolbar-title>
-                <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}</v-toolbar-title>
+                <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon dark @click="closeDialog">
                     <v-icon>close</v-icon>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapGetters, mapMutations, mapState} from 'vuex'
 
     import GraphViewer from "./GraphViewer";
     import PairsTable from "./PairsTable";
@@ -41,13 +42,17 @@
 
         },
         computed: {
-            ...mapGetters({
-                dialog1: 'showGraphDialog',
-                dialog2: 'showExtraMetadataDialog',
+            ...mapState({
                 sourceId1: 'graphSourceId',
                 sourceId2: 'extraMetadataSourceId',
             }),
-            dialog() {return this.dialog1 || this.dialog2} ,
+            ...mapGetters({
+                dialog1: 'showGraphDialog',
+                dialog2: 'showExtraMetadataDialog',
+            }),
+            dialog() {
+                return this.dialog1 || this.dialog2
+            },
         }
     }
 </script>
