@@ -5,7 +5,7 @@ module.exports = {
             "/api": {
                 target: "http://localhost:5000/" // So that the client dev server can access your Flask routes under /api
             },
-            "/static": {
+            "/graph_static": {
                 target: "http://localhost:5000/" // So that the client dev server can access your Flask routes under /aaa
             },
         }
