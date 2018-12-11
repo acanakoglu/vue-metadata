@@ -15,16 +15,10 @@ export default new Vuex.Store({
     getters: {
         query: (state) => state.query,
         showGraphDialog: (state) => state.graphSourceId != null,
-        // state.showGraphDialog,
         graphSourceId: (state) => state.graphSourceId,
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
-        // state.showExtraMetadataDialog,
         extraMetadataSourceId: (state) => state.extraMetadataSourceId,
 
-
-        // query(state){
-        //     return state.query;
-        // }
     },
     mutations: {
         //it is possible to send as payload
@@ -33,6 +27,8 @@ export default new Vuex.Store({
                 Vue.set(state.query, payload.field, payload.list);
             else
                 Vue.delete(state.query, payload.field);
+            //reload
+            state.query = Object.assign({}, state.query);
         },
         openGraphDialog: (state, sourceId) => {
             console.log(sourceId);
@@ -47,8 +43,6 @@ export default new Vuex.Store({
             state.graphSourceId = null;
             state.extraMetadataSourceId = null;
         },
-        // closeExtraMetadataDialog: (state) => state.showExtraMetadataDialog = false,
-
     },
     actions: {},
 })
