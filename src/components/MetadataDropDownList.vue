@@ -45,7 +45,7 @@
                     {text: 'Donor', value: 'Donor'},
                     {text: 'Replicate', value: 'Replicate'},
                     {text: 'Item', value: 'Item'},
-                    {text: 'Case study', value: 'CaseStudy'},
+                    {text: 'Case study', value: 'Case'},
                 ],
             }
         },
