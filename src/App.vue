@@ -29,7 +29,7 @@
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
     import {mapState} from 'vuex'
-    import FullScreenGraphViewer from "./components/FullScreenGraphViewer";
+    import FullScreenGraphViewer from "./components/FullScreenViewer";
 
     export default {
         name: 'App',

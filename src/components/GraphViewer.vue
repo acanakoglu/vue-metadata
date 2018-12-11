@@ -1,6 +1,14 @@
 <template>
     <div>
-        <v-layout :id="createDivId()"></v-layout>
+        <v-layout column class="fab-container">
+            <v-switch label="Vocabulary" v-model="vocabulary" class="switch "></v-switch>
+        </v-layout>
+
+        <div :id="createDivId()"></div>
+
+
+        <!--<v-layout v-else :id="createDivId()+'-false'"></v-layout>-->
+
     </div>
 </template>
 
@@ -9,6 +17,16 @@
 
     export default {
         name: "GraphViewer",
+        data() {
+            return {
+                vocabulary: false
+            }
+        },
+        watch: {
+            vocabulary() {
+                this.updateGraph();
+            }
+        },
         methods: {
             createDivId() {
                 return 'neo4jd3-' + this.sourceId
@@ -31,7 +49,7 @@
                     icons: {},
                     images: {},
                     minCollision: 60,
-                    neo4jDataUrl: `api/item/${this.sourceId}/graph`,
+                    neo4jDataUrl: `api/item/${this.sourceId}/graph?voc=${this.vocabulary}`,
                     nodeRadius: 25,
                     onNodeDoubleClick: function (node) {
                         console.log('double click on node: ' + JSON.stringify(node));
@@ -78,5 +96,17 @@
         /*overflow-y: auto;*/
         /*top: 0;*/
         /*left: 0;*/
+    }
+
+    /*.switch {*/
+    /*!*position: absolute;*!*/
+    /*right: 10px;*/
+    /*top: 10px;*/
+    /*}*/
+
+    .fab-container {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
     }
 </style>
