@@ -1,5 +1,6 @@
 <template>
     <v-card>
+        {{query}}
         <!--<v-card-title>-->
         <!--Result-->
         <!--<v-spacer></v-spacer>-->
@@ -102,13 +103,13 @@
             }
         },
         watch: {
-            filter() {
-                this.applyFilter();
+            query() {
+                this.applyQuery();
             }
         },
         mounted() {
             //load all the results
-            this.applyFilter();
+            this.applyQuery();
         },
         methods: {
             ...mapMutations([
@@ -121,7 +122,7 @@
             extraMetadataClicked(row) {
                 this.openExtraMetadataDialog(row[sourceIdColumnName])
             },
-            applyFilter() {
+            applyQuery() {
                 // console.log('test');
 
                 const url = `query/table`;
@@ -129,7 +130,7 @@
                 this.result = [];
 
                 // eslint-disable-next-line
-                axios.post(url, this.filter)
+                axios.post(url, this.query)
                     .then((res) => {
                         return res.data
                     })
@@ -142,9 +143,10 @@
             },
         },
         computed: {
-            ...mapGetters({
-                filter: 'query',
-            }),
+            ...mapGetters([
+                'query',
+            ]),
+
         }
 
     }
