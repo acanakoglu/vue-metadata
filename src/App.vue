@@ -12,11 +12,15 @@
             </v-btn>
             <v-btn flat href="#" target=""><span class="mr-2">Contact</span></v-btn>
         </v-toolbar>
+        <v-layout column class="fab-container">
+            <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
+
+        </v-layout>
 
         <v-content class="main-content">
             <MetadataDropDownList/>
             <FullScreenGraphViewer/>
-            {{query}}
+            <!--{{query}}-->
             <div class="result-div">
                 <MetadataTable/>
             </div>
@@ -28,7 +32,7 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapState} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
 
     export default {
@@ -38,13 +42,29 @@
             MetadataTable,
             MetadataDropDownList,
         },
+        // data() {
+        //     return {
+        //         synonym: null,
+        //     }
+        // },
         methods: {
+            ...mapMutations(['setSynonym']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             }
         },
         computed: {
-            ...mapState(['query']),
+            ...mapState(['query', 'synonym']),
+            synonymLocal: {
+                get() {
+                    console.log("GET synonym " + this.synonym);
+                    return this.synonym;
+                },
+                set(value) {
+                    console.log("SET synonym " + value);
+                    this.setSynonym(value);
+                }
+            },
 
         }
     }
@@ -64,5 +84,17 @@
     .result-div {
         margin-bottom: 1.5em;
         max-width: 100%;
+    }
+
+    .switch {
+        margin-bottom: -10px;
+
+    }
+
+    .fab-container {
+        position: absolute;
+        top: 64px;
+        right: 20px;
+        z-index: 1;
     }
 </style>

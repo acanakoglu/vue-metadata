@@ -8,7 +8,7 @@ export default new Vuex.Store({
         query: {},
         graphSourceId: null,
         extraMetadataSourceId: null,
-
+        synonym: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -32,6 +32,9 @@ export default new Vuex.Store({
         closeDialog: (state) => {
             state.graphSourceId = null;
             state.extraMetadataSourceId = null;
+        },
+        setSynonym: (state, synonym) => {
+            state.synonym = synonym;
         },
     },
     actions: {},

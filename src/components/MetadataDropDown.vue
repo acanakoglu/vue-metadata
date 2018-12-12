@@ -8,18 +8,18 @@
             multiple
     ></v-autocomplete>
 
-        <!--<v-autocomplete-->
-            <!--:value="getValue()"-->
-            <!--@input="changedValue"-->
-            <!--:items="values"-->
-            <!--:item-text="rename"-->
-            <!--:label="labelTitle"-->
-            <!--multiple=""-->
+    <!--<v-autocomplete-->
+    <!--:value="getValue()"-->
+    <!--@input="changedValue"-->
+    <!--:items="values"-->
+    <!--:item-text="rename"-->
+    <!--:label="labelTitle"-->
+    <!--multiple=""-->
     <!--&gt;</v-autocomplete>-->
 </template>
 
 <script>
-    import {mapState, mapMutations} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
 
 
     export default {
@@ -34,9 +34,14 @@
                 values: [],//the list of values of the drop-down menu
             }
         },
+        watch: {
+            synonym() {
+                this.loadData();
+            }
+        },
         computed: {
             ...mapState([
-                'query',
+                'query', 'synonym',
             ]),
             selected: {
                 get() {
@@ -70,22 +75,25 @@
                 else
                     return 'N/D(not defined)';
             },
+            loadData() {
+                const url = `field/${this.field}?voc=${this.synonym}`;
+                this.isLoading = true;
+                this.values = [];
+
+                // eslint-disable-next-line
+                axios.get(url)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        // console.log(res);
+                        this.values = res.values;
+                        this.isLoading = false;
+                    });
+            }
         },
         created() {
-            const url = `field/${this.field}`;
-            this.isLoading = true;
-            this.values = [];
-
-            // eslint-disable-next-line
-            axios.get(url)
-                .then((res) => {
-                    return res.data
-                })
-                .then((res) => {
-                    // console.log(res);
-                    this.values = res.values;
-                    this.isLoading = false;
-                });
+            this.loadData();
         }
     }
 </script>

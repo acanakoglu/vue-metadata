@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        {{query}}
+        <!--{{query}}-->
         <!--<v-card-title>-->
         <!--Result-->
         <!--<v-spacer></v-spacer>-->
