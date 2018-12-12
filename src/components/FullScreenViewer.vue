@@ -1,8 +1,8 @@
 <template>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog @keydown.esc="closeDialog" v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
         <!--<v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>-->
         <v-card>
-            <v-toolbar dark color="primary">
+            <v-toolbar  dense dark color="primary">
                 <v-toolbar-title v-if="sourceId1">Graph of item with source id :{{sourceId1}}</v-toolbar-title>
                 <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}
                 </v-toolbar-title>
@@ -61,7 +61,7 @@
     .graph--fullscreen {
         /*border-radius: 0;*/
         /*margin: 0;*/
-        height: 100vh;
+        height: 95vh;
         width: 100%;
         /*position: fixed;*/
         /*overflow-y: auto;*/

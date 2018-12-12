@@ -1,7 +1,12 @@
 <template>
     <div>
         <v-layout column class="fab-container">
-            <v-switch label="Vocabulary" v-model="vocabulary" class="switch "></v-switch>
+            <v-switch v-model="vocabulary" label="Vocabulary" class="switch">
+            </v-switch>
+            <v-btn @click="neo4jd3.zoomFit(1)" icon>
+              <v-icon large>cached</v-icon>
+            </v-btn>
+
         </v-layout>
 
         <div :id="createDivId()"></div>
@@ -19,7 +24,8 @@
         name: "GraphViewer",
         data() {
             return {
-                vocabulary: false
+                vocabulary: false,
+                neo4jd3:null,
             }
         },
         watch: {
@@ -53,6 +59,7 @@
                     nodeRadius: 25,
                     onNodeDoubleClick: function (node) {
                         console.log('double click on node: ' + JSON.stringify(node));
+                        console.log(neo4jd3.updateInfo(node))
                         /*switch(node.id) {
                             case '25':
                                 // Google
@@ -65,11 +72,12 @@
                                 break;
                         }*/
                     },
-                    onRelationshipDoubleClick: function (relationship) {
-                        console.log('double click on relationship: ' + JSON.stringify(relationship));
-                    },
-                    zoomFit: true
+                    // onRelationshipDoubleClick: function (relationship) {
+                    //     console.log('double click on relationship: ' + JSON.stringify(relationship));
+                    // },
+                    zoomFit: false,
                 });
+                this.neo4jd3 = neo4jd3;
 
             }
         },
@@ -90,7 +98,7 @@
     .neo4jd3 {
         /*border-radius: 0;*/
         /*margin: 0;*/
-        height: 90vh;
+        height: 100%;
         width: 100%;
         /*position: fixed;*/
         /*overflow-y: auto;*/
@@ -98,15 +106,14 @@
         /*left: 0;*/
     }
 
-    /*.switch {*/
-    /*!*position: absolute;*!*/
-    /*right: 10px;*/
-    /*top: 10px;*/
-    /*}*/
+    .switch {
+        margin-bottom: -10px;
+
+    }
 
     .fab-container {
         position: fixed;
-        bottom: 10px;
-        right: 10px;
+        top: 48px;
+        right: 20px;
     }
 </style>
