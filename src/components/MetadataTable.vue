@@ -108,7 +108,7 @@
             applyQuery() {
                 // console.log('test');
 
-                const url = `query/table`;
+                const url = `query/table?voc=${this.synonym}`;
                 this.isLoading = true;
                 this.result = [];
 
