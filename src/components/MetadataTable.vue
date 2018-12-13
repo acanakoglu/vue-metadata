@@ -18,6 +18,7 @@
                 :search="search"
                 :loading="isLoading"
                 class="data-table"
+                disable-initial-sort
         >
             <template slot="items" slot-scope="props">
                 <td v-for="header in headers" :key="header.value">
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-    import {mapState, mapMutations} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
 
     const sourceIdColumnName = 'source_id';
 
@@ -75,37 +76,19 @@
         name: "MetadataTable",
         data() {
             return {
+
                 isLoading: false,
                 search: '',
-                headers: [
-                    {text: 'Graph', value: 'graph'},
-                    {text: 'Extra', value: 'extra'},
-
-                    {text: 'Source ID', value: sourceIdColumnName},
-                    // {text: 'size', value: 'size'},
-                    // {text: 'date', value: 'date'},
-                    // {text: 'checksum', value: 'checksum'},
-                    {text: 'Pipeline', value: 'pipeline'},
-                    {text: 'Platform', value: 'platform'},
-                    {text: 'Source URI', value: 'source_url', is_link: true},
-                    {text: 'Local URI', value: 'local_url', is_link: true},
-                    {text: 'Dataset', value: 'name'},
-                    {text: 'Data Type', value: 'data_type'},
-                    {text: 'File Format', value: 'format'},
-                    {text: 'Assembly', value: 'assembly'},
-                    {text: 'Annotation Type', value: 'annotation'},
-                    {text: 'Technique', value: 'technique'},
-                    {text: 'Feature', value: 'feature'},
-                    {text: 'Target', value: 'target'},
-                    {text: 'Antibody', value: 'antibody'}
-                ],
                 result: []
             }
         },
         watch: {
             query() {
                 this.applyQuery();
-            }
+            },
+            synonym() {
+                this.applyQuery();
+            },
         },
         mounted() {
             //load all the results
@@ -143,7 +126,32 @@
             },
         },
         computed: {
-            ...mapState(['query', ]),
+            ...mapState(['query', 'synonym',]),
+            sortable() {return this.result.length < 100;},
+            headers() {
+                return [
+                    {text: 'Graph', value: 'graph', sortable: false,},
+                    {text: 'Extra', value: 'extra', sortable: false,},
+
+                    {text: 'Source ID', value: sourceIdColumnName, sortable: this.sortable,},
+                    // {text: 'size', value: 'size'},
+                    // {text: 'date', value: 'date'},
+                    // {text: 'checksum', value: 'checksum'},
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
+                    {text: 'Platform', value: 'platform', sortable: this.sortable,},
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
+                    {text: 'Dataset', value: 'name', sortable: this.sortable,},
+                    {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
+                    {text: 'File Format', value: 'format', sortable: this.sortable,},
+                    {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
+                    {text: 'Annotation Type', value: 'annotation', sortable: this.sortable,},
+                    {text: 'Technique', value: 'technique', sortable: this.sortable,},
+                    {text: 'Feature', value: 'feature', sortable: this.sortable,},
+                    {text: 'Target', value: 'target', sortable: this.sortable,},
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,}
+                ];
+            },
         }
 
     }
