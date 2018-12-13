@@ -15,13 +15,17 @@ export default new Vuex.Store({
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
     },
     mutations: {
-        setDropDownSelected: (state, payload) => {
-            if (payload.list.length > 0)
-                Vue.set(state.query, payload.field, payload.list);
-            else
-                Vue.delete(state.query, payload.field);
-            //reload, needs to update correctly the watcher
+        //reload the query
+        reloadQuery: (state) => {
             state.query = Object.assign({}, state.query);
+        },
+        setQueryField: (state, payload) => {
+            state.query[payload.field] = payload.fieldQuery;
+            // Vue.set(state.query, payload.field, payload.list);
+        },
+        resetQueryField: (state, field) => {
+            delete state.query[field];
+            // Vue.delete(state.query, field);
         },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;
@@ -37,5 +41,28 @@ export default new Vuex.Store({
             state.synonym = synonym;
         },
     },
-    actions: {},
+    actions: {
+        setDropDownSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.query[field];
+            if (!previousList)
+                previousList = [];
+
+
+            //update if they are not equal
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setQueryField', newPayload);
+                } else
+                    commit('resetQueryField', field);
+                commit('reloadQuery');
+            }
+        },
+    },
 })

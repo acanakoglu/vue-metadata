@@ -58,8 +58,8 @@
                     neo4jDataUrl: `api/item/${this.sourceId}/graph?voc=${this.vocabulary}`,
                     nodeRadius: 25,
                     onNodeDoubleClick: function (node) {
-                        console.log('double click on node: ' + JSON.stringify(node));
-                        console.log(neo4jd3.updateInfo(node))
+                        // console.log('double click on node: ' + JSON.stringify(node));
+                        // console.log(neo4jd3.updateInfo(node))
                         /*switch(node.id) {
                             case '25':
                                 // Google

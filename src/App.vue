@@ -20,7 +20,7 @@
         <v-content class="main-content">
             <MetadataDropDownList/>
             <FullScreenGraphViewer/>
-            <!--{{query}}-->
+            {{query}}
             <div class="result-div">
                 <MetadataTable/>
             </div>
@@ -57,11 +57,11 @@
             ...mapState(['query', 'synonym']),
             synonymLocal: {
                 get() {
-                    console.log("GET synonym " + this.synonym);
+                    // console.log("GET synonym " + this.synonym);
                     return this.synonym;
                 },
                 set(value) {
-                    console.log("SET synonym " + value);
+                    // console.log("SET synonym " + value);
                     this.setSynonym(value);
                 }
             },

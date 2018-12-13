@@ -1,5 +1,6 @@
 <template>
     <v-autocomplete
+            :loading="isLoading"
             v-model="selected"
             :items="values"
             :item-text="rename"
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-    import {mapMutations, mapState} from 'vuex'
+    import {mapActions, mapState} from 'vuex'
 
 
     export default {
@@ -55,7 +56,7 @@
             },
         },
         methods: {
-            ...mapMutations([
+            ...mapActions([
                 'setDropDownSelected',
             ]),
             //for the alternative solution
@@ -78,7 +79,6 @@
             loadData() {
                 const url = `field/${this.field}?voc=${this.synonym}`;
                 this.isLoading = true;
-                this.values = [];
 
                 // eslint-disable-next-line
                 axios.get(url)
@@ -88,9 +88,18 @@
                     .then((res) => {
                         // console.log(res);
                         this.values = res.values;
+                        //to clean previously selected values
+                        if (this.selected) {
+                            // console.log(this.selected);
+                            this.selected = this.selected.filter(value => res.values.map(v => v.value).includes(value));
+                        }
                         this.isLoading = false;
                     });
-            }
+
+                // console.log(this.selected.get().filter(v => this.values.indexOf(v) > -1));
+//
+                // this.selected.set(this.selected.get().filter(v => this.values.indexOf(v) > -1));
+            },
         },
         created() {
             this.loadData();
