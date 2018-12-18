@@ -20,7 +20,12 @@
         <v-content class="main-content">
             <MetadataDropDownList/>
             <FullScreenGraphViewer/>
-            {{query}}
+            <div>
+                <span class="label ">
+                    Selected query:
+                </span>
+                {{query}}
+            </div>
             <div class="result-div">
                 <MetadataTable/>
             </div>
@@ -97,4 +102,11 @@
         right: 20px;
         z-index: 1;
     }
+
+    .label {
+        font-size: 1.3em;
+        font-weight: bold;
+        padding: 12px;
+    }
+
 </style>
