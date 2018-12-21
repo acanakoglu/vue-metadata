@@ -14,6 +14,14 @@
         </v-toolbar>
         <v-layout column class="fab-container">
             <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
+            <v-select
+                    :items="queryItems"
+                    v-model="selectedQuery"
+                    label="Predefined queries"
+                    @input="afterQuerySelection"
+                    single-line
+                    bottom
+            ></v-select>
 
         </v-layout>
 
@@ -47,16 +55,39 @@
             MetadataTable,
             MetadataDropDownList,
         },
-        // data() {
-        //     return {
-        //         synonym: null,
-        //     }
-        // },
+        data() {
+            return {
+                selectedQuery: null,
+                queryItems: [
+                    {text: 'Empty', value: {synonym: false, query: {}},},
+                    {text: 'Encode', value: {synonym: false, query: {program_name: ["encode"]}},},
+                    {
+                        text: 'Example-1',
+                        value: {
+                            synonym: false,
+                            query: {
+                                target: ["h3k27me3"],
+                                cell_line: ["mcf-7"],
+                            }
+                        }
+                    },
+
+                ]
+            }
+        },
         methods: {
-            ...mapMutations(['setSynonym']),
+            ...mapMutations(['setQuery', 'setSynonym']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
-            }
+            },
+            afterQuerySelection(item) {
+                console.log(item);
+                this.setQuery(item.query);
+                this.setSynonym(item.synonym);
+                this.$nextTick(() => {
+                    this.selectedQuery = null
+                })
+            },
         },
         computed: {
             ...mapState(['query', 'synonym']),

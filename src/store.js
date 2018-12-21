@@ -6,15 +6,18 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         query: {},
+        synonym: false,
         graphSourceId: null,
         extraMetadataSourceId: null,
-        synonym: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
     },
     mutations: {
+        setQuery: (state, query) => {
+            state.query = query;
+        },
         //reload the query
         reloadQuery: (state) => {
             state.query = Object.assign({}, state.query);

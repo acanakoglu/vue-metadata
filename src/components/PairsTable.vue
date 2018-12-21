@@ -17,10 +17,11 @@
                 :search="search"
                 :loading="isLoading"
                 class="data-table"
+                :pagination.sync="pagination"
         >
             <template slot="items" slot-scope="props">
                 <td v-for="header in headers" :key="header.value">
-                    <span >{{props.item[header.value]}}</span>
+                    <span>{{props.item[header.value]}}</span>
                 </td>
             </template>
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -51,7 +52,8 @@
                     {text: 'Key', value: 'key'},
                     {text: 'Value', value: 'value'},
                 ],
-                result: []
+                result: [],
+                pagination: {rowsPerPage: -1},//show all
             }
         },
         watch: {
