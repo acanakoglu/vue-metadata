@@ -71,7 +71,27 @@
                             }
                         }
                     },
-
+                    {
+                        text: 'Example-2',
+                        value: {
+                            synonym: false,
+                            query: {
+                                program_name: ["tcga"],
+                                tissue: ["breast"],
+                                platform: ["illumina", "affymetrix snp 6.0"]
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example-3',
+                        value: {
+                            synonym: false,
+                            query: {
+                                disease: ["breast cancer"],
+                                assembly: ["grch38"]
+                            }
+                        }
+                    },
                 ]
             }
         },
