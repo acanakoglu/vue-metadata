@@ -67,7 +67,7 @@
                             synonym: false,
                             query: {
                                 target: ["h3k27me3"],
-                                cell_line: ["mcf-7"],
+                                cell: ["mcf-7"],
                             }
                         }
                     },
