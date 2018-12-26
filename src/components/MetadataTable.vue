@@ -118,10 +118,11 @@
                         return res.data
                     })
                     .then((res) => {
-                        console.log("hello");
                         return res.map((t)=>{
-                            t.local_url = t.local_url.replace("www.gmql.eu", "genomic.deib.polimi.it");
-                            t.local_url = t.local_url + "?authToken=DOWNLOAD-TOKEN";
+                            if(t.local_url) {
+                                t.local_url = t.local_url.replace("www.gmql.eu", "genomic.deib.polimi.it");
+                                t.local_url = t.local_url + "?authToken=DOWNLOAD-TOKEN";
+                            }
                             return t;
                         });
                     })
