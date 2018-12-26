@@ -22,7 +22,10 @@
         >
             <template slot="items" slot-scope="props">
                 <td v-for="header in headers" :key="header.value">
-                    <span v-if="header.is_link"><a :href="props.item[header.value]" target="_blank">link</a></span>
+                    <span v-if="header.is_link">
+                        <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                        <span v-else="props.item[header.value]">N/A</span>
+                    </span>
                     <span v-else-if="header.value === 'graph'">
                         <v-btn flat icon color="blue" @click="graphClicked(props.item)">
                             <v-icon>group_work</v-icon>
