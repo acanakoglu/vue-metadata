@@ -1,25 +1,81 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-flex
-                    lighten-2
-                    xs12
-                    >
-                <div v-if="isLoading">Loading...</div>
-                <div v-else-if="result.length===100" class="center">Shown up to 100 items</div>
-                <div v-else-if="result.length>0">Shown {{result.length}} item<span
-                        v-if="result.length>1">s</span>
-                </div>
-                <div v-else>No result</div>
+            <!--<v-flex-->
+            <!--lighten-2-->
+            <!--xs12-->
+            <!--&gt;-->
+            <div v-if="isLoading">Loading...</div>
+            <div v-else-if="result.length===100" class="center">Shown up to 100 items</div>
+            <div v-else-if="result.length>0">Shown {{result.length}} item<span
+                    v-if="result.length>1">s</span>
+            </div>
+            <div v-else>No result</div>
+            <!--</v-flex>-->
+            <v-spacer></v-spacer>
+            <v-dialog
+                    v-model="dialog"
+                    width="500"
+            >
+                <v-btn
+                        slot="activator"
+                        small color="blue lighten-3"
+                >
+                    Download
+                </v-btn>
 
-            </v-flex>
-            <!--<v-spacer></v-spacer>-->
+
+                <v-card>
+                    <v-card-title
+                            class="headline blue lighten-4"
+                            primary-title
+                    >
+                        Download region files
+                    </v-card-title>
+
+                    <v-card-text>
+                        <p>
+                            Click the "Download" button below to download a "files.txt" file that contains a list of
+                            URLs to a file containing all region files.
+                        </p>
+                        <p>
+                            The following command using cURL can be used to download all the files in the list:
+                            <br>
+                            <code>xargs -L 1 curl -O -L < files.txt</code>
+                        </p>
+
+
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="download()"
+                        >
+                            Download
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialog = false"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+
             <!--<v-text-field-->
-                    <!--v-model="search"-->
-                    <!--append-icon="search"-->
-                    <!--label="Search"-->
-                    <!--single-line-->
-                    <!--hide-details-->
+            <!--v-model="search"-->
+            <!--append-icon="search"-->
+            <!--label="Search"-->
+            <!--single-line-->
+            <!--hide-details-->
             <!--&gt;</v-text-field>-->
         </v-card-title>
         <v-data-table
@@ -75,7 +131,7 @@
         name: "MetadataTable",
         data() {
             return {
-
+                dialog: false,
                 isLoading: false,
                 search: '',
                 result: []
@@ -131,6 +187,22 @@
                         this.isLoading = false;
                     });
 
+            },
+            download() {
+                const urlDownload = `query/download?voc=${this.synonym}`;
+
+                axios.post(urlDownload, this.query)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        const url = window.URL.createObjectURL(new Blob([res]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'files.txt');
+                        document.body.appendChild(link);
+                        link.click();
+                    });
             },
         },
         computed: {
