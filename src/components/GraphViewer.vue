@@ -35,7 +35,8 @@
         },
         methods: {
             createDivId() {
-                return 'neo4jd3-' + this.sourceId
+                // return 'neo4jd3-' + this.sourceId
+                return 'neo4jd3-'
             },
             updateGraph() {
                 // the error was 'neo4jd3' is assigned a value but never used (no-unused-vars)
