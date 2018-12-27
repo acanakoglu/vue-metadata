@@ -110,17 +110,17 @@
                                 </v-list-tile-content>
                             </v-list-tile>
 
-                            <!--<v-list-tile>-->
-                                <!--<v-list-tile-content>-->
-                                    <!--<v-list-tile-title>Marco Masseroli</v-list-tile-title>-->
-                                <!--</v-list-tile-content>-->
-                            <!--</v-list-tile>-->
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>Marco Masseroli</v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
 
-                            <!--<v-list-tile>-->
-                                <!--<v-list-tile-content>-->
-                                    <!--<v-list-tile-title>Stefano Ceri</v-list-tile-title>-->
-                                <!--</v-list-tile-content>-->
-                            <!--</v-list-tile>-->
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>Stefano Ceri</v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
                         </v-list>
                          <p>Repository viewer is supported by the <a href="http://www.bioinformatics.deib.polimi.it/GeCo/?home" target="GeCo">Data-Driven Genomic Computing (GeCo)</a> project,
                             funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center (ERC)</a> (Advanced ERC Grant 693174).</p>
