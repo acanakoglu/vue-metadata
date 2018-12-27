@@ -32,6 +32,8 @@
                     >
                         Download region files
                     </v-card-title>
+                    <v-progress-linear height="2" class="progress" :indeterminate="downloadProgress"></v-progress-linear>
+
 
                     <v-card-text>
                         <p>
@@ -131,6 +133,7 @@
         name: "MetadataTable",
         data() {
             return {
+                downloadProgress: false,
                 dialog: false,
                 isLoading: false,
                 search: '',
@@ -189,6 +192,7 @@
 
             },
             download() {
+                this.downloadProgress = true;
                 const urlDownload = `query/download?voc=${this.synonym}`;
 
                 axios.post(urlDownload, this.query)
@@ -202,6 +206,7 @@
                         link.setAttribute('download', 'files.txt');
                         document.body.appendChild(link);
                         link.click();
+                        this.downloadProgress = false;
                     });
             },
         },
@@ -245,6 +250,9 @@
 
 <style scoped>
 
+    .progress{
+        margin: 0;
+    }
 
     .data-table {
         /*margin-bottom: 1.5em;*/
