@@ -62,7 +62,10 @@
                         </v-tab-item>
 
                         <v-tab-item>
-                            <DatasetCountTable/>
+                            <CountTable countType="source"/>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <CountTable countType="dataset"/>
                         </v-tab-item>
                     </v-tabs>
                 </div>
@@ -135,7 +138,7 @@
     import MetadataTable from "./components/MetadataTable";
     import {mapMutations, mapState} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
-    import DatasetCountTable from "./components/DatasetCountTable";
+    import CountTable from "./components/CountTable";
 
     export default {
         name: 'App',
@@ -143,7 +146,7 @@
             FullScreenGraphViewer,
             MetadataTable,
             MetadataDropDownList,
-            DatasetCountTable,
+            CountTable,
         },
         data() {
             return {

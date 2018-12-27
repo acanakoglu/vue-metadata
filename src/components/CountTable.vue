@@ -46,7 +46,10 @@
     import {mapMutations, mapState} from 'vuex';
 
     export default {
-        name: "DatasetCountTable",
+        name: "CountTable",
+        props: {
+            countType: {type: String, required: true,},
+        },
         data() {
             return {
                 isLoading: false,
@@ -78,7 +81,7 @@
             //TODO merge these functions with metadata table
             applyQuery() {
                 // console.log('test');
-                const url = `query/count?voc=${this.synonym}`;
+                const url = `query/count/${this.countType}?voc=${this.synonym}`;
                 this.isLoading = true;
                 this.result = [];
 
