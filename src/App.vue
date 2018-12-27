@@ -5,14 +5,15 @@
                 <span>Repository</span>
                 <span class="font-weight-light">Viewer</span>
             </v-toolbar-title>
-
+            <v-spacer></v-spacer>
             <v-btn flat href="http://gmql.eu" target="_blank"><span class="mr-2">GMQL</span></v-btn>
             <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
                 <span class="font-weight-light">doc</span></span>
             </v-btn>
+            <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span class="mr-2">Wiki</span></v-btn>
+
             <v-btn flat href="#" target=""><span class="mr-2">Contact</span></v-btn>
 
-            <v-spacer></v-spacer>
 
         </v-toolbar>
         <v-layout column class="fab-container">
@@ -200,6 +201,7 @@
         font-weight: bold;
         padding: 12px;
     }
+
     .bottom-info {
         margin: 1.5em;
     }
