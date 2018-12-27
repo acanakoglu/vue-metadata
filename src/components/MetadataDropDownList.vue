@@ -1,8 +1,6 @@
 <template>
     <div>
         <!--{{filter}}-->
-        <br>
-        <br>
         <v-container fluid grid-list-xl>
             <v-layout wrap align-center test v-for="group in groups" :key="group.value">
                 <v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">

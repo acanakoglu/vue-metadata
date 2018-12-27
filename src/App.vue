@@ -1,16 +1,19 @@
 <template>
     <v-app>
-        <v-toolbar app>
+        <v-toolbar dark color="primary" app>
             <v-toolbar-title class="headline text-uppercase">
                 <span>Repository</span>
                 <span class="font-weight-light">Viewer</span>
             </v-toolbar-title>
-            <v-spacer></v-spacer>
+
             <v-btn flat href="http://gmql.eu" target="_blank"><span class="mr-2">GMQL</span></v-btn>
             <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
                 <span class="font-weight-light">doc</span></span>
             </v-btn>
             <v-btn flat href="#" target=""><span class="mr-2">Contact</span></v-btn>
+
+            <v-spacer></v-spacer>
+
         </v-toolbar>
         <v-layout column class="fab-container">
             <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
@@ -20,12 +23,15 @@
                     label="Predefined queries"
                     @input="afterQuerySelection"
                     single-line
-                    bottom
             ></v-select>
 
         </v-layout>
 
         <v-content class="main-content">
+            <br>
+            <br>
+
+
             <MetadataDropDownList/>
             <FullScreenGraphViewer/>
             <div>
@@ -35,8 +41,39 @@
                 {{query}}
             </div>
             <div class="result-div">
-                <MetadataTable/>
+                <v-tabs dark color="blue darken-1"
+                >
+                    <v-tab>
+                        Table
+                    </v-tab>
+                    <v-tab>
+                        Dataset count
+                    </v-tab>
+                    <v-tab-item>
+                        <MetadataTable/>
+                    </v-tab-item>
+
+                    <v-tab-item>
+                        <DatasetCountTable/>
+                    </v-tab-item>
+                </v-tabs>
             </div>
+            <v-footer app>
+                <v-flex
+                        lighten-2
+                        text-xs-right
+                        xs12
+                        class="bottom-info">
+
+
+                    <div v-if="count === null">Loading...</div>
+                    <div v-else-if="count>0">{{count}} item<span
+                            v-if="count>1">s</span> found
+                    </div>
+                    <div v-else>No result</div>
+
+                </v-flex>
+            </v-footer>
 
         </v-content>
     </v-app>
@@ -47,6 +84,7 @@
     import MetadataTable from "./components/MetadataTable";
     import {mapMutations, mapState} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
+    import DatasetCountTable from "./components/DatasetCountTable";
 
     export default {
         name: 'App',
@@ -54,6 +92,7 @@
             FullScreenGraphViewer,
             MetadataTable,
             MetadataDropDownList,
+            DatasetCountTable,
         },
         data() {
             return {
@@ -92,7 +131,9 @@
                             }
                         }
                     },
-                ]
+                ],
+                selectedTab: 'table'
+
             }
         },
         methods: {
@@ -110,7 +151,7 @@
             },
         },
         computed: {
-            ...mapState(['query', 'synonym']),
+            ...mapState(['query', 'synonym', 'count']),
             synonymLocal: {
                 get() {
                     // console.log("GET synonym " + this.synonym);
@@ -142,7 +183,7 @@
         max-width: 100%;
     }
 
-    .switch {
+    .¬ {
         margin-bottom: -10px;
 
     }
@@ -159,5 +200,7 @@
         font-weight: bold;
         padding: 12px;
     }
-
+    .bottom-info {
+        margin: 1.5em;
+    }
 </style>
