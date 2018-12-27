@@ -43,7 +43,7 @@
                         <p>
                             The following command using cURL can be used to download all the files in the list:
                             <br>
-                            <code>xargs -L 1 curl -O -L < files.txt</code>
+                            <code>xargs -L 1 curl -J -O -L < files.txt</code>
                         </p>
 
 
