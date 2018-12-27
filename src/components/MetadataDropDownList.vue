@@ -1,8 +1,7 @@
 <template>
-    <div>
         <!--{{filter}}-->
         <v-container fluid grid-list-xl>
-            <v-layout wrap align-center test v-for="group in groups" :key="group.value">
+            <v-layout wrap align-center class="container" v-for="group in groups" :key="group.value">
                 <v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">
                     {{group.text}}:
                 </v-flex>
@@ -18,7 +17,6 @@
 
         </v-container>
 
-    </div>
 </template>
 
 <script>
@@ -83,6 +81,9 @@
 </script>
 
 <style lang="sass" scoped>
+    /*.container*/
+        /*padding: 0*/
+
     .label
         display: block
         font-size: 1.3em

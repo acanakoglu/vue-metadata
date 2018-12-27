@@ -25,17 +25,29 @@
 
         <v-content class="main-content">
             <v-content v-show="mainContent">
-                <v-layout column class="fab-container">
-                    <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
-                    <v-select
-                            :items="queryItems"
-                            v-model="selectedQuery"
-                            label="Predefined queries"
-                            @input="afterQuerySelection"
-                            single-line
-                    ></v-select>
+                <!--<v-layout column class="fab-container"> -->
+                <v-container fluid grid-list-xl>
+                    <v-layout wrap align-center test>
+                        <v-flex xs12 sm2 md2 d-flex class="label no-horizontal-padding">
+                            General settings:
+                        </v-flex>
+                        <v-flex xs12 sm2 md2 class="no-horizontal-padding">
+                            <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
+                        </v-flex>
+                        <v-flex xs12 sm6 md6  class=" no-horizontal-padding">
+                            <v-select  solo
+                                      :items="queryItems"
+                                      v-model="selectedQuery"
+                                      label="Predefined queries"
+                                      @input="afterQuerySelection"
+                                      single-line
+                            ></v-select>
+                        </v-flex>
 
-                </v-layout>
+                    </v-layout>
+                </v-container>
+
+                <!--</v-layout>-->
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
@@ -122,8 +134,11 @@
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
-                         <p>Repository viewer is supported by the <a href="http://www.bioinformatics.deib.polimi.it/GeCo/?home" target="GeCo">Data-Driven Genomic Computing (GeCo)</a> project,
-                            funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center (ERC)</a> (Advanced ERC Grant 693174).</p>
+                        <p>Repository viewer is supported by the <a
+                                href="http://www.bioinformatics.deib.polimi.it/GeCo/?home" target="GeCo">Data-Driven
+                            Genomic Computing (GeCo)</a> project,
+                            funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center
+                                (ERC)</a> (Advanced ERC Grant 693174).</p>
 
                     </v-container>
                 </v-content>
@@ -238,10 +253,10 @@
         max-width: 100%;
     }
 
-    .¬ {
-        margin-bottom: -10px;
+    /*.¬ {*/
+        /*margin-bottom: -10px;*/
 
-    }
+    /*}*/
 
     .fab-container {
         position: absolute;
