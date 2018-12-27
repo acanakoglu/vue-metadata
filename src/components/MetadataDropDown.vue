@@ -71,7 +71,7 @@
             //     // this.$store.dispatch('setDropDownSelected', {field: this.field, list: ['TCGA']});
             // },
             rename(inp) {
-                if (inp.value)
+                if (inp.value !== null)
                     return inp.value;
                 else
                     return 'N/D(not defined)';

@@ -147,15 +147,19 @@
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
+                    {text: 'Content type', value: 'content_type', sortable: this.sortable,},
                     {text: 'Platform', value: 'platform', sortable: this.sortable,},
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
+
                     {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
                     {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
+
                     {text: 'Dataset', value: 'name', sortable: this.sortable,},
                     {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
                     {text: 'File Format', value: 'format', sortable: this.sortable,},
                     {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
-                    {text: 'Annotation Type', value: 'annotation', sortable: this.sortable,},
+                    {text: 'Is annotation', value: 'is_ann', sortable: this.sortable,},
+
                     {text: 'Technique', value: 'technique', sortable: this.sortable,},
                     {text: 'Feature', value: 'feature', sortable: this.sortable,},
                     {text: 'Target', value: 'target', sortable: this.sortable,},
