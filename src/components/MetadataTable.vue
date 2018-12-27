@@ -17,9 +17,9 @@
                     v-model="dialog"
                     width="500"
             >
-                <v-btn
+                <v-btn dark
                         slot="activator"
-                        small color="blue lighten-3"
+                        small color="blue lighten-2"
                 >
                     Download
                 </v-btn>
