@@ -169,35 +169,65 @@
                 selectedQuery: null,
                 queryItems: [
                     {text: 'Clear Fields', value: {synonym: false, query: {}},},
-                    {text: 'Encode', value: {synonym: false, query: {program_name: ["encode"]}},},
+                    {text: 'Encode source', value: {synonym: false, query: {program_name: ["encode"]}},},
                     {
-                        text: 'Example-1',
+                        text: 'Example 1 - disease content from multiple sources',
                         value: {
                             synonym: false,
                             query: {
-                                target: ["h3k27me3"],
-                                cell: ["mcf-7"],
+                                disease: ["prostate adenocarcinoma"],
+                                assembly: ["grch38"],
                             }
                         }
                     },
                     {
-                        text: 'Example-2',
+                        text: 'Example 2' - towards big data,
                         value: {
                             synonym: false,
                             query: {
-                                program_name: ["tcga"],
-                                tissue: ["breast"],
-                                platform: ["illumina", "affymetrix snp 6.0"]
+                                tissue: ["adrenal gland"],
+                                feature: ["copy number variation","rna binding protein"],
                             }
                         }
                     },
                     {
-                        text: 'Example-3',
+                        text: 'Example 3' - synonym enriched search,
+                        value: {
+                            synonym: true,
+                            query: {
+                                cell: ["gm12878"],
+                                assembly: ["hg19"],
+                                format: ["broadpeak"],
+                                technique: ["chip-seq"],
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 4 - experimental and annotation data',
                         value: {
                             synonym: false,
                             query: {
-                                disease: ["breast cancer"],
-                                assembly: ["grch38"]
+                                content_type: ["exon","exon quantifications"],
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 5 - combined replicas',
+                        value: {
+                            synonym: false,
+                            query: {
+                                project_name: ["tads"],
+                                bio_replicate_num: [2],
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 6 - searching for replicates',
+                        value: {
+                            synonym: false,
+                            query: {
+                                bio_replicate_num: [1],
+                                tech_replicate_num: [4],
                             }
                         }
                     },
