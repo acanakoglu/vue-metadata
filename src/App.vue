@@ -181,7 +181,7 @@
                         }
                     },
                     {
-                        text: 'Example 2' - towards big data,
+                        text: 'Example 2 - towards big data',
                         value: {
                             synonym: false,
                             query: {
@@ -191,7 +191,7 @@
                         }
                     },
                     {
-                        text: 'Example 3' - synonym enriched search,
+                        text: 'Example 3 - synonym enriched search',
                         value: {
                             synonym: true,
                             query: {
