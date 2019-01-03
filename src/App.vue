@@ -221,16 +221,6 @@
                             }
                         }
                     },
-                    {
-                        text: 'Example 6 - searching for replicates',
-                        value: {
-                            synonym: false,
-                            query: {
-                                bio_replicate_num: [1],
-                                tech_replicate_num: [4],
-                            }
-                        }
-                    },
                 ],
                 selectedTab: 'table'
 
