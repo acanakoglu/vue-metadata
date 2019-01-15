@@ -7,6 +7,8 @@
             item-value="value"
             :label="labelTitle"
             multiple
+            :hint="hint"
+            persistent-hint
     ></v-autocomplete>
 
     <!--<v-autocomplete-->
@@ -28,6 +30,7 @@
         props: {
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
+            hint: {type: String, required: true,},
         },
         data() {
             return {

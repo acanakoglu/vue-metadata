@@ -11,6 +11,7 @@
                     <MetadataDropDown
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
+                            :hint="field.description"
                     ></MetadataDropDown>
                 </v-flex>
             </v-layout>
