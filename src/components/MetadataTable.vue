@@ -18,8 +18,8 @@
                     width="500"
             >
                 <v-btn dark
-                        slot="activator"
-                        small color="blue lighten-2"
+                       slot="activator"
+                       small color="blue lighten-2"
                 >
                     Download
                 </v-btn>
@@ -32,13 +32,14 @@
                     >
                         Download region files
                     </v-card-title>
-                    <v-progress-linear height="2" class="progress" :indeterminate="downloadProgress"></v-progress-linear>
+                    <v-progress-linear height="2" class="progress"
+                                       :indeterminate="downloadProgress"></v-progress-linear>
 
 
                     <v-card-text>
                         <p>
-                            Click the "Download" button below to download a "files.txt" file that contains a list of
-                            URLs to a file containing all region files.
+                            Click the "Download" button below to download a "files.txt" file that contains the list of
+                            the URLs of the region data files related to the result items.
                         </p>
                         <p>
                             The following command using cURL can be used to download all the files in the list:
@@ -195,6 +196,7 @@
                 this.downloadProgress = true;
                 const urlDownload = `query/download?voc=${this.synonym}`;
 
+                // eslint-disable-next-line
                 axios.post(urlDownload, this.query)
                     .then((res) => {
                         return res.data
@@ -250,7 +252,7 @@
 
 <style scoped>
 
-    .progress{
+    .progress {
         margin: 0;
     }
 
