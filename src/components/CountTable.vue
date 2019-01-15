@@ -104,7 +104,7 @@
             },
             headers() {
                 return [
-                    {text: 'Dataset', value: 'name', sortable: this.sortable,},
+                    {text: 'Name', value: 'name', sortable: this.sortable,},
                     {text: 'Count', value: 'count', sortable: this.sortable,},
                 ];
             },
