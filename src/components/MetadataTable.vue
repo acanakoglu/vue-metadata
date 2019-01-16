@@ -233,11 +233,11 @@
                     {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
                     {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
 
-                    {text: 'Dataset', value: 'name', sortable: this.sortable,},
+                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,},
                     {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
-                    {text: 'File Format', value: 'format', sortable: this.sortable,},
+                    {text: 'File Format', value: 'file_format', sortable: this.sortable,},
                     {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
-                    {text: 'Is annotation', value: 'is_ann', sortable: this.sortable,},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,},
 
                     {text: 'Technique', value: 'technique', sortable: this.sortable,},
                     {text: 'Feature', value: 'feature', sortable: this.sortable,},

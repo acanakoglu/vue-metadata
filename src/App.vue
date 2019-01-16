@@ -169,7 +169,7 @@
                 selectedQuery: null,
                 queryItems: [
                     {text: 'Clear Fields', value: {synonym: false, query: {}},},
-                    {text: 'Encode source', value: {synonym: false, query: {program_name: ["encode"]}},},
+                    {text: 'Encode source', value: {synonym: false, query: {source: ["encode"]}},},
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
@@ -217,7 +217,7 @@
                             synonym: false,
                             query: {
                                 project_name: ["tads"],
-                                bio_replicate_num: [2],
+                                biological_replicate_number: [2],
                             }
                         }
                     },

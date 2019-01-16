@@ -42,7 +42,7 @@
                     {text: 'Donor', value: 'Donor'},
                     {text: 'Replicate', value: 'Replicate'},
                     {text: 'Item', value: 'Item'},
-                    {text: 'Case study', value: 'Case'},
+                    {text: 'Case study', value: 'CaseStudy'},
                 ],
             }
         },
@@ -52,7 +52,7 @@
             },
             getFieldTitle: (field) => {
                 let upperField = field.name;
-                upperField = upperField === "is_ann" ? "is_annotation": upperField;
+                //upperField = upperField === "is_ann" ? "is_annotation": upperField;
                 upperField = upperField.charAt(0).toUpperCase() + upperField.slice(1);
                 upperField = upperField.replace('_', ' ');
                 return upperField;
