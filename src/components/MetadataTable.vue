@@ -6,7 +6,7 @@
             <!--xs12-->
             <!--&gt;-->
             <div v-if="isLoading">Loading...</div>
-            <div v-else-if="result.length===1000" class="center">Shown up to 100 items</div>
+            <div v-else-if="result.length===1000" class="center">Shown up to 1000 items</div>
             <div v-else-if="result.length>0">Shown {{result.length}} item<span
                     v-if="result.length>1">s</span>
             </div>
@@ -215,7 +215,7 @@
         computed: {
             ...mapState(['query', 'synonym',]),
             sortable() {
-                return this.result.length < 100;
+                return this.result.length < 1000;
             },
             headers() {
                 return [
