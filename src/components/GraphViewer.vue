@@ -4,7 +4,7 @@
             <v-switch v-model="vocabulary" label="Vocabulary" class="switch">
             </v-switch>
             <v-btn @click="neo4jd3.zoomFit(1)" icon>
-              <v-icon large>cached</v-icon>
+                <v-icon large>cached</v-icon>
             </v-btn>
 
         </v-layout>
@@ -25,7 +25,7 @@
         data() {
             return {
                 vocabulary: false,
-                neo4jd3:null,
+                neo4jd3: null,
             }
         },
         watch: {
@@ -59,20 +59,31 @@
                     neo4jDataUrl: `api/item/${this.sourceId}/graph?voc=${this.vocabulary}`,
                     nodeRadius: 25,
                     onNodeDoubleClick: function (node) {
-                        // console.log('double click on node: ' + JSON.stringify(node));
-                        // console.log(neo4jd3.updateInfo(node))
-                        /*switch(node.id) {
-                            case '25':
-                                // Google
-                                window.open(node.properties.url, '_blank');
-                                break;
-                            default:
-                                var maxNodes = 5,
-                                    data = neo4jd3.randomD3Data(node, maxNodes);
-                                neo4jd3.updateWithD3Data(data);
-                                break;
-                        }*/
+                        console.log('double click on node: ' + JSON.stringify(node));
+                        // console.log(neo4jd3.updateWithNeo4jData(node))
+                        var id = node.id;
+                        var label = node.labels[0];
+                        var maxNodes = 5;
+                        var data = neo4jd3.randomD3Data(node, maxNodes);
+                        //GET DATA FROM API
+                        var url = `item/${label}/${id}/relations`;
+                        axios.get(url)
+                            .then((res) => {
+                                return res.data
+                            })
+                            .then((res) => {
+                                neo4jd3.updateWithNeo4jData(res);
+                            });
+                        axios.get(`item/${id}/count`).then((res) => {return res.data})
+                            .then((res) => {
+                                if(res > 30){
+                                    window.alert("Showing only 30 relationship of "+res+" for node "+id)
+                                }
+                            });
                     },
+                    // onNodeMouseEnter: function(node) {
+                    //     console.log('Mouse enter on node: '+ node.id)
+                    // },
                     // onRelationshipDoubleClick: function (relationship) {
                     //     console.log('double click on relationship: ' + JSON.stringify(relationship));
                     // },
