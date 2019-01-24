@@ -54,7 +54,7 @@
                 let upperField = field.name;
                 //upperField = upperField === "is_ann" ? "is_annotation": upperField;
                 upperField = upperField.charAt(0).toUpperCase() + upperField.slice(1);
-                upperField = upperField.replace('_', ' ');
+                upperField = upperField.replace(/_/g, ' ');
                 return upperField;
             },
         },
