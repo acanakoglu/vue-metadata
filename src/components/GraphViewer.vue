@@ -63,10 +63,9 @@
                         // console.log(neo4jd3.updateWithNeo4jData(node))
                         var id = node.id;
                         var label = node.labels[0];
-                        var maxNodes = 5;
-                        var data = neo4jd3.randomD3Data(node, maxNodes);
                         //GET DATA FROM API
                         var url = `item/${label}/${id}/relations`;
+                        // eslint-disable-next-line
                         axios.get(url)
                             .then((res) => {
                                 return res.data
@@ -74,6 +73,7 @@
                             .then((res) => {
                                 neo4jd3.updateWithNeo4jData(res);
                             });
+                        // eslint-disable-next-line
                         axios.get(`item/${id}/count`).then((res) => {return res.data})
                             .then((res) => {
                                 if(res > 30){
