@@ -14,7 +14,77 @@
             <!--</v-flex>-->
             <v-spacer></v-spacer>
             <v-dialog
-                    v-model="dialog"
+                    full-width
+                    v-model="dialogGmql"
+            >
+                <v-btn dark
+                       slot="activator"
+                       small color="blue lighten-2"
+                >
+                    GMQL
+                </v-btn>
+
+
+                <v-card>
+                    <v-card-title
+                            class="headline blue lighten-4"
+                            primary-title
+                    >
+                        GMQL query
+                    </v-card-title>
+                    <v-progress-linear height="2" class="progress" :indeterminate="gmqlProgress"></v-progress-linear>
+
+
+                    <v-card-text>
+                        <p> Click "COPY TO CLIPBOARD" button and use whole query in
+                            <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
+
+                            One statement extracts the selected items from a single dataset.
+                            All datasets are unified into a single dataset for further use.
+                            <br>
+                            Please refer to
+                            <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
+                               target="gmql_doc">
+                                GMQL documentation
+                            </a>
+                            for specific use of querying language.
+
+                            <br>
+                            Beware union of big datasets may result in long execution times.
+                        </p>
+
+                        <v-textarea
+                                label="GMQL query"
+                                :value="gmqlQuery"
+                        ></v-textarea>
+                    </v-card-text>
+
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="toClipboard()"
+                        >
+                            Copy to clipboard
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialogGmql = false"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+
+            <v-dialog
+                    v-model="dialogDownload"
                     width="500"
             >
                 <v-btn dark
@@ -64,7 +134,7 @@
                         <v-btn
                                 color="primary"
                                 flat
-                                @click="dialog = false"
+                                @click="dialogDownload = false"
                         >
                             Close
                         </v-btn>
@@ -135,7 +205,10 @@
         data() {
             return {
                 downloadProgress: false,
-                dialog: false,
+                gmqlProgress: false,
+                dialogDownload: false,
+                dialogGmql: false,
+                gmqlQuery: "",
                 isLoading: false,
                 search: '',
                 result: []
@@ -147,6 +220,27 @@
             },
             synonym() {
                 this.applyQuery();
+            },
+            dialogGmql() {
+                if (this.dialogGmql) {
+                    this.gmqlProgress = true;
+                    this.gmqlQuery = "Loading!";
+
+                    const url = `query/gmql?voc=${this.synonym}`;
+
+
+                    // eslint-disable-next-line
+                    axios.post(url, this.query)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            // console.log(res);
+                            this.gmqlQuery = res;
+                            this.gmqlProgress = false;
+                        });
+
+                }
             },
         },
         mounted() {
@@ -210,6 +304,17 @@
                         link.click();
                         this.downloadProgress = false;
                     });
+            },
+            toClipboard() {
+                this.$copyText(this.gmqlQuery).then(function (e) {
+                    alert('Copied');
+                    console.log(e);
+                }, function (e) {
+                    alert('Can not copy');
+                    console.log(e);
+                })
+
+
             },
         },
         computed: {
