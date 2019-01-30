@@ -4,16 +4,17 @@
         <v-card>
             <v-toolbar  dense dark color="primary">
                 <v-toolbar-title v-if="sourceId1">Graph of item with source id :{{sourceId1}}</v-toolbar-title>
-                <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}
-                </v-toolbar-title>
+                <v-toolbar-title v-else-if="sourceId2">Extra information of item with source id : {{sourceId2}}</v-toolbar-title>
+                <v-toolbar-title v-else>Graph for query {{query}}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon dark @click="closeDialog">
                     <v-icon>close</v-icon>
                 </v-btn>
             </v-toolbar>
-
             <GraphViewer v-if="sourceId1" class="graph--fullscreen"/>
             <PairsTable v-if="sourceId2"/>
+            <GraphViewer v-if="dialog3" class="graph--fullscreen"/>
+
             <div v-else-if="sourceId2">TABLE</div>
         </v-card>
     </v-dialog>
@@ -45,13 +46,15 @@
             ...mapState({
                 sourceId1: 'graphSourceId',
                 sourceId2: 'extraMetadataSourceId',
+                query: 'query',
+                dialog3: 'showGraphQuery'
             }),
             ...mapGetters({
                 dialog1: 'showGraphDialog',
                 dialog2: 'showExtraMetadataDialog',
             }),
             dialog() {
-                return this.dialog1 || this.dialog2
+                return this.dialog1 || this.dialog2 || this.dialog3
             },
         }
     }

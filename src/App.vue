@@ -57,9 +57,9 @@
                 </span>
                     {{query}}
                 </div>
+                {{selectedTab}}
                 <div class="result-div">
-                    <v-tabs dark color="blue darken-1"
-                    >
+                    <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Result items
                         </v-tab>
@@ -69,15 +69,20 @@
                         <v-tab>
                             Dataset count
                         </v-tab>
+                        <v-tab >
+                            Graph
+                        </v-tab>
                         <v-tab-item>
                             <MetadataTable/>
                         </v-tab-item>
-
                         <v-tab-item>
                             <CountTable countType="source"/>
                         </v-tab-item>
                         <v-tab-item>
                             <CountTable countType="dataset"/>
+                        </v-tab-item>
+                        <v-tab-item>
+                            EMPTY
                         </v-tab-item>
                     </v-tabs>
                 </div>
@@ -165,6 +170,7 @@
         },
         data() {
             return {
+                // selectedTab : null,
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
@@ -227,7 +233,7 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setSynonym']),
+            ...mapMutations(['setQuery', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -239,6 +245,9 @@
                     this.selectedQuery = null
                 })
             },
+            openGraph(query) {
+                this.openGraphDialog(query)
+            }
         },
         computed: {
             ...mapState(['query', 'synonym', 'count']),
@@ -252,7 +261,15 @@
                     this.setSynonym(value);
                 }
             },
-
+        },
+        watch: {
+            selectedTab() {
+                if(this.selectedTab == 3){
+                    this.setQueryGraph(true)
+                    // alert("open graph"+this.query.toString());
+                    this.selectedTab = 'table';
+                }
+            }
         }
     }
 </script>

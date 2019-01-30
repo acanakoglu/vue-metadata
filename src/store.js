@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
@@ -10,6 +10,7 @@ export default new Vuex.Store({
         graphSourceId: null,
         extraMetadataSourceId: null,
         count: null,
+        showGraphQuery: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -40,12 +41,16 @@ export default new Vuex.Store({
         closeDialog: (state) => {
             state.graphSourceId = null;
             state.extraMetadataSourceId = null;
+            state.showGraphQuery = false;
         },
         setSynonym: (state, synonym) => {
             state.synonym = synonym;
         },
         setCount: (state, count) => {
             state.count = count;
+        },
+        setQueryGraph: (state, input) => {
+            state.showGraphQuery = input;
         },
     },
     actions: {
