@@ -3,20 +3,13 @@
         <v-layout column class="fab-container">
             <v-switch v-if="sourceId" v-model="vocabulary" label="Vocabulary" class="switch">
             </v-switch>
-
-            <v-switch v-if="showQueryGraph" v-model="biological_view" label="Biological View" class="switch">
-            </v-switch>
-            <v-switch v-if="showQueryGraph" v-model="management_view" label="Management View" class="switch">
-            </v-switch>
-            <v-switch v-if="showQueryGraph" v-model="technological_view" label="Technological View" class="switch">
-            </v-switch>
-            <v-switch v-if="showQueryGraph" v-model="extraction_view" label="Extraction View" class="switch">
-            </v-switch>
-            <!--TODO USE v-select-->
+            <div v-if="showQueryGraph" v-for="view in views">
+                <v-switch class="switch" :label="view.label" v-model="view.active"></v-switch>
+            </div>
             <v-select
                     v-if="showQueryGraph"
                     v-model="limit"
-                    label ="Number of Items"
+                    label="Number of Items"
                     :items="limit_options">
             </v-select>
 
@@ -44,30 +37,26 @@
         data() {
             return {
                 vocabulary: false,
-                biological_view: true,
-                management_view: true,
-                technological_view: true,
-                extraction_view: true,
                 neo4jd3: null,
                 limit: 5,
-                limit_options: Array.from({length: 20}, (x, i) => (i + 1))
+                limit_options: Array.from({length: 20 / 5}, (x, i) => (i + 1) * 5),
+                views: [
+                    {value: 'biological_view', label: 'Biological View', active: true},
+                    {value: 'management_view', label: 'Management View', active: true},
+                    {value: 'technological_view', label: 'Technological View', active: true},
+                    {value: 'extraction_view', label: 'Extraction View', active: true},
+                ]
             }
         },
         watch: {
             vocabulary() {
                 this.updateGraph();
             },
-            biological_view() {
-                this.updateGraph()
-            },
-            management_view() {
-                this.updateGraph()
-            },
-            technological_view() {
-                this.updateGraph()
-            },
-            extraction_view() {
-                this.updateGraph()
+            views: {
+                handler() {
+                    this.updateGraph()
+                },
+                deep: true
             },
             limit() {
                 this.updateGraph()
@@ -143,12 +132,12 @@
                             neo4jd3.updateWithNeo4jData(res);
                         });
                 } else if (this.showQueryGraph) {
-                    const url = `query/graph?limit=${this.limit}` +
-                        `&biological_view=${this.biological_view}` +
-                        `&management_view=${this.management_view}` +
-                        `&technological_view=${this.technological_view}` +
-                        `&extraction_view=${this.extraction_view}`;
-                    // eslint-disable-next-line
+                    var includeViews = "";
+                    var x;
+                    this.views.forEach(function (view) {
+                        includeViews += `&${view.value}=${view.active}`
+                    });
+                    const url = `query/graph?limit=${this.limit}` + includeViews;
                     axios.post(url, this.query)
                         .then((res) => {
                             return res.data
@@ -162,14 +151,16 @@
 
         mounted() {
             this.updateGraph()
-        },
+        }
+        ,
         computed: {
-            ...mapState({
-                sourceId: 'graphSourceId',
-                queryGraph: 'query',
-                showQueryGraph: 'showGraphQuery',
-                query: 'query',
-            }),
+            ...
+                mapState({
+                    sourceId: 'graphSourceId',
+                    queryGraph: 'query',
+                    showQueryGraph: 'showGraphQuery',
+                    query: 'query',
+                }),
         }
 
     }
@@ -191,8 +182,9 @@
         margin-bottom: -10px;
 
     }
+
     .v-menu__content {
-        z-index: 1000!important;
+        z-index: 1000 !important;
     }
 
     .fab-container {
