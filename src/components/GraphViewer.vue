@@ -13,13 +13,12 @@
             <v-switch v-if="showQueryGraph" v-model="extraction_view" label="Extraction View" class="switch">
             </v-switch>
             <!--TODO USE v-select-->
-            <select
+            <v-select
                     v-if="showQueryGraph"
-                    v-model="limit">
-                <option v-for="option in limit_options" :value="option">
-                    Number of items {{ option }}
-                </option>
-            </select>
+                    v-model="limit"
+                    label ="Number of Items"
+                    :items="limit_options">
+            </v-select>
 
             <v-btn @click="neo4jd3.zoomFit(1)" icon>
                 <v-icon large>cached</v-icon>
@@ -49,8 +48,8 @@
                 management_view: true,
                 technological_view: true,
                 extraction_view: true,
-                limit: 5,
                 neo4jd3: null,
+                limit: 5,
                 limit_options: Array.from({length: 20}, (x, i) => (i + 1))
             }
         },
@@ -144,13 +143,11 @@
                             neo4jd3.updateWithNeo4jData(res);
                         });
                 } else if (this.showQueryGraph) {
-                    console.log(this.limit_options);
                     const url = `query/graph?limit=${this.limit}` +
                         `&biological_view=${this.biological_view}` +
                         `&management_view=${this.management_view}` +
                         `&technological_view=${this.technological_view}` +
                         `&extraction_view=${this.extraction_view}`;
-                    console.log(url)
                     // eslint-disable-next-line
                     axios.post(url, this.query)
                         .then((res) => {
@@ -178,7 +175,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .neo4jd3 {
         /*border-radius: 0;*/
         /*margin: 0;*/
@@ -193,6 +190,9 @@
     .switch {
         margin-bottom: -10px;
 
+    }
+    .v-menu__content {
+        z-index: 1000!important;
     }
 
     .fab-container {

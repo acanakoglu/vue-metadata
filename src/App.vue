@@ -57,7 +57,6 @@
                 </span>
                     {{query}}
                 </div>
-                {{selectedTab}}
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -170,7 +169,6 @@
         },
         data() {
             return {
-                // selectedTab : null,
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
@@ -228,8 +226,7 @@
                         }
                     },
                 ],
-                selectedTab: 'table'
-
+                selectedTab: 0,
             }
         },
         methods: {
@@ -245,8 +242,13 @@
                     this.selectedQuery = null
                 })
             },
-            openGraph(query) {
-                this.openGraphDialog(query)
+        },
+        watch: {
+            selectedTab() {
+                if(this.selectedTab == 3){
+                    this.setQueryGraph(true);
+                    this.selectedTab= 999;
+                }
             }
         },
         computed: {
@@ -262,15 +264,6 @@
                 }
             },
         },
-        watch: {
-            selectedTab() {
-                if(this.selectedTab == 3){
-                    this.setQueryGraph(true)
-                    // alert("open graph"+this.query.toString());
-                    this.selectedTab = 'table';
-                }
-            }
-        }
     }
 </script>
 <style>
