@@ -3,7 +3,7 @@
         <v-layout column class="fab-container">
             <v-switch v-if="sourceId" v-model="vocabulary" label="Vocabulary" class="switch">
             </v-switch>
-            <div v-if="showQueryGraph" v-for="view in views">
+            <div v-if="showQueryGraph" v-for="view in views" :key="view.id">
                 <v-switch class="switch" :label="view.label" v-model="view.active"></v-switch>
             </div>
             <v-select
@@ -27,10 +27,6 @@
 
 <script>
     import {mapState} from 'vuex'
-    import vSelect from 'vue-select'
-    import Vue from 'vue'
-
-    Vue.component('v-select', vSelect);
 
     export default {
         name: "GraphViewer",
@@ -132,12 +128,13 @@
                             neo4jd3.updateWithNeo4jData(res);
                         });
                 } else if (this.showQueryGraph) {
-                    var includeViews = "";
-                    var x;
+                    let includeViews = "";
+
                     this.views.forEach(function (view) {
                         includeViews += `&${view.value}=${view.active}`
                     });
                     const url = `query/graph?limit=${this.limit}` + includeViews;
+                    // eslint-disable-next-line
                     axios.post(url, this.query)
                         .then((res) => {
                             return res.data
