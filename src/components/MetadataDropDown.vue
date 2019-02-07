@@ -106,13 +106,21 @@
                         return res.data
                     })
                     .then((res) => {
+                        let vals = res.values
                         // console.log(res);
-                        this.values = res.values;
                         //to clean previously selected values
                         if (this.selected) {
                             // console.log(this.selected);
-                            this.selected = this.selected.filter(value => res.values.map(v => v.value).includes(value));
+                            let zero_elements = this.selected.filter(value => !res.values.map(v => v.value).includes(value))
+                                .sort().map(v => Object({
+                                    value: v,
+                                    count: 0
+                                }));
+                            // console.log(zero_elements);
+                            vals = vals.concat(zero_elements);
                         }
+
+                        this.values = vals;
                         this.isLoading = false;
                     });
 
@@ -128,9 +136,10 @@
 </script>
 
 <style scoped>
-    .item-value-span{
+    .item-value-span {
         padding-right: 3.5em;
     }
+
     .item-count-span {
         /*float:right;*/
         position: absolute;
