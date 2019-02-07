@@ -9,7 +9,13 @@
             multiple
             :hint="hint"
             persistent-hint
-    ></v-autocomplete>
+    >
+
+        <template slot="item" slot-scope="data">
+            <span class="item-value-span"> {{ rename(data.item)}}</span>
+            <span class="item-count-span">{{data.item.count}}</span>
+        </template>
+    </v-autocomplete>
 
     <!--<v-autocomplete-->
     <!--:value="getValue()"-->
@@ -40,6 +46,9 @@
         },
         watch: {
             synonym() {
+                this.loadData();
+            },
+            query() {
                 this.loadData();
             }
         },
@@ -74,17 +83,25 @@
             //     // this.$store.dispatch('setDropDownSelected', {field: this.field, list: ['TCGA']});
             // },
             rename(inp) {
+                let value;
                 if (inp.value !== null)
-                    return inp.value;
+                    value = inp.value;
                 else
-                    return 'N/D(not defined)';
+                    value = 'N/D(not defined)';
+
+                let res;
+                if (inp.count)
+                    res = `${value}`;
+                else
+                    res = value;
+                return res;
             },
             loadData() {
                 const url = `field/${this.field}?voc=${this.synonym}`;
                 this.isLoading = true;
 
                 // eslint-disable-next-line
-                axios.get(url)
+                axios.post(url, this.query)
                     .then((res) => {
                         return res.data
                     })
@@ -111,6 +128,13 @@
 </script>
 
 <style scoped>
-
+    .item-value-span{
+        padding-right: 3.5em;
+    }
+    .item-count-span {
+        /*float:right;*/
+        position: absolute;
+        right: 0.5em;
+    }
 
 </style>
