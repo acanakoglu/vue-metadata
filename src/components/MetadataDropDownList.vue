@@ -125,16 +125,17 @@
     .container
         padding-top: 0
         padding-bottom: 0
+        min-width: 100%;
 
-        .label
-            display: block
-            font-size: 1.3em
-            font-weight: bold
+    .label
+        display: block
+        font-size: 1.3em
+        font-weight: bold
 
-        .info-icon
-            font-size: 15px
+    .info-icon
+        font-size: 15px
 
-        .info-button
-            width: 10px
+    .info-button
+        width: 10px
 
 </style>
