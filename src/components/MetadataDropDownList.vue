@@ -1,46 +1,50 @@
 <template>
     <!--{{filter}}-->
     <v-container fluid grid-list-xl>
-        <v-layout wrap align-center class="container" v-for="view in views" :key="view.value">
-            <v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">
-                {{view.text}}:
-            </v-flex>
-            <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
-                    v-for="field in getViewFields(view.value)"
-                    :key="field.name">
-                <MetadataDropDown
-                        :field="field.name"
-                        :labelTitle="getFieldTitle(field)"
-                ></MetadataDropDown>
-                <v-dialog
-                        v-model="dialog"
-                        width="500"
-                >
+        <div v-for="view in views" :key="view.value" :style="{background: view.color}">
+            <h4 style="text-align: center">{{view.text}}</h4>
+            <v-layout wrap align-center class="container">
+
+                <!--<v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">-->
+                <!--{{view.text}}:-->
+                <!--</v-flex>-->
+                <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
+                        v-for="field in getViewFields(view.value)"
+                        :key="field.name">
+                    <MetadataDropDown
+                            :field="field.name"
+                            :labelTitle="getFieldTitle(field)"
+                    ></MetadataDropDown>
+                    <v-dialog
+                            v-model="dialog"
+                            width="500"
+                    >
 
 
-                    <v-btn slot="activator"
-                           class="info-button"
-                           small
-                           flat icon color="blue">
-                        <v-icon class="info-icon">info</v-icon>
-                    </v-btn>
+                        <v-btn slot="activator"
+                               class="info-button"
+                               small
+                               flat icon color="blue">
+                            <v-icon class="info-icon">info</v-icon>
+                        </v-btn>
 
-                    <v-card>
-                        <v-card-title
-                                class="headline grey lighten-2"
-                                primary-title
-                        >
-                            {{getFieldTitle(field)}}
-                        </v-card-title>
+                        <v-card>
+                            <v-card-title
+                                    class="headline grey lighten-2"
+                                    primary-title
+                            >
+                                {{getFieldTitle(field)}}
+                            </v-card-title>
 
-                        <v-card-text>
-                            {{field.description}}
-                        </v-card-text>
+                            <v-card-text>
+                                {{field.description}}
+                            </v-card-text>
 
-                    </v-card>
-                </v-dialog>
-            </v-flex>
-        </v-layout>
+                        </v-card>
+                    </v-dialog>
+                </v-flex>
+            </v-layout>
+        </div>
 
     </v-container>
 
@@ -71,10 +75,10 @@
                 //     {text: 'Case study', value: 'CaseStudy'},
                 // ],
                 views: [
-                    {text: 'Management', value: 'management'},
-                    {text: 'Extraction', value: 'extraction'},
-                    {text: 'Biological ', value: 'biological'},
-                    {text: 'Technological', value: 'technological'},
+                    {text: 'Management', value: 'management', color: '#FFBF5B'},
+                    {text: 'Extraction', value: 'extraction', color: '#B3E1FF'},
+                    {text: 'Biological ', value: 'biological', color: '#FFA9BF'},
+                    {text: 'Technological', value: 'technological', color: '#DEFFC5'},
                 ],
             }
         },
@@ -125,17 +129,19 @@
     .container
         padding-top: 0
         padding-bottom: 0
-        min-width: 100%;
+        min-width: 100%
 
-    .label
-        display: block
-        font-size: 1.3em
-        font-weight: bold
 
-    .info-icon
-        font-size: 15px
+        .label
+            display: block
+            font-size: 1.3em
+            font-weight: bold
 
-    .info-button
-        width: 10px
+        .info-icon
+            font-size: 15px
+
+        .info-button
+            width: 10px
+
 
 </style>

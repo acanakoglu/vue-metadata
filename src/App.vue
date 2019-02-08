@@ -51,11 +51,11 @@
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
-                <div>
-                <span class="label ">
-                    Selected query:
-                </span>
-                    {{query}}
+                <div class="selected-query">
+                    <span class="label">
+                        Selected query:
+                    </span>
+                        {{query}}
                 </div>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
@@ -303,5 +303,8 @@
 
     .bottom-info {
         margin: 1.5em;
+    }
+    .selected-query{
+        padding-top: 15px;
     }
 </style>
