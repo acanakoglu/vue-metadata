@@ -8,6 +8,12 @@
                     <span class="font-weight-light">Viewer</span>
                 </v-toolbar-title>
             </v-btn>
+            <v-img
+                  :src="require('./assets/logo2.png')"
+                  contain
+                  height="64px"
+            ></v-img>
+
             <v-spacer></v-spacer>
             <v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
