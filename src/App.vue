@@ -9,7 +9,7 @@
                 </v-toolbar-title>
             </v-btn>
             <v-img
-                  :src="require('./assets/logo2.png')"
+                  :src="require('./assets/logo.png')"
                   contain
                   height="64px"
             ></v-img>

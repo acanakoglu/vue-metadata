@@ -16,7 +16,6 @@
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
                     <v-dialog
-                            v-model="dialog"
                             width="500"
                     >
 

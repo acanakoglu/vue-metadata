@@ -7,8 +7,6 @@
             item-value="value"
             :label="labelTitle"
             multiple
-            :hint="hint"
-            persistent-hint
     >
 
         <template slot="item" slot-scope="data">
@@ -36,7 +34,6 @@
         props: {
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
-            hint: {type: String, required: true,},
         },
         data() {
             return {
