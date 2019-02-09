@@ -1,7 +1,7 @@
 <template>
     <!--{{filter}}-->
     <v-container fluid grid-list-xl>
-        <div v-for="view in views" :key="view.value" :style="{background: view.color}">
+        <div v-for="view in views" :key="view.value" :style="{'background-color': view.color,}">
             <h4 style="text-align: center">{{view.text}}</h4>
             <v-layout wrap align-center class="container">
 
@@ -44,7 +44,6 @@
                 </v-flex>
             </v-layout>
         </div>
-
     </v-container>
 
 </template>
