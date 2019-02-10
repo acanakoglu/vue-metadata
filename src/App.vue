@@ -9,9 +9,9 @@
                 </v-toolbar-title>
             </v-btn>
             <v-img
-                  :src="require('./assets/logo.png')"
-                  contain
-                  height="64px"
+                    :src="require('./assets/logo.png')"
+                    contain
+                    height="64px"
             ></v-img>
 
             <v-spacer></v-spacer>
@@ -40,8 +40,8 @@
                         <v-flex xs12 sm2 md2 class="no-horizontal-padding">
                             <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
                         </v-flex>
-                        <v-flex xs12 sm6 md6  class=" no-horizontal-padding">
-                            <v-select  solo
+                        <v-flex xs12 sm6 md6 class=" no-horizontal-padding">
+                            <v-select solo
                                       :items="queryItems"
                                       v-model="selectedQuery"
                                       label="Predefined queries"
@@ -61,25 +61,23 @@
                     <span class="label">
                         Selected query:
                     </span>
-                        {{query}}
+                    {{query}}
                 </div>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
-                        <v-tab>
-                            Result items
-                        </v-tab>
                         <v-tab>
                             Source count
                         </v-tab>
                         <v-tab>
                             Dataset count
                         </v-tab>
-                        <v-tab >
+                        <v-tab>
+                            Result items
+                        </v-tab>
+                        <v-tab>
                             Graph
                         </v-tab>
-                        <v-tab-item>
-                            <MetadataTable/>
-                        </v-tab-item>
+
                         <v-tab-item>
                             <CountTable countType="source"/>
                         </v-tab-item>
@@ -87,7 +85,10 @@
                             <CountTable countType="dataset"/>
                         </v-tab-item>
                         <v-tab-item>
-                            EMPTY
+                            <MetadataTable/>
+                        </v-tab-item>
+                        <v-tab-item>
+                            GRAPH
                         </v-tab-item>
                     </v-tabs>
                 </div>
@@ -196,7 +197,7 @@
                             synonym: false,
                             query: {
                                 tissue: ["adrenal gland"],
-                                feature: ["copy number variation","rna binding protein"],
+                                feature: ["copy number variation", "rna binding protein"],
                             }
                         }
                     },
@@ -217,7 +218,7 @@
                         value: {
                             synonym: false,
                             query: {
-                                content_type: ["exon","exon quantifications"],
+                                content_type: ["exon", "exon quantifications"],
                             }
                         }
                     },
@@ -251,9 +252,9 @@
         },
         watch: {
             selectedTab() {
-                if(this.selectedTab == 3){
+                if (this.selectedTab == 3) {
                     this.setQueryGraph(true);
-                    this.selectedTab= 999;
+                    this.selectedTab = 999;
                 }
             }
         },
@@ -290,7 +291,7 @@
     }
 
     /*.¬ {*/
-        /*margin-bottom: -10px;*/
+    /*margin-bottom: -10px;*/
 
     /*}*/
 
@@ -310,7 +311,8 @@
     .bottom-info {
         margin: 1.5em;
     }
-    .selected-query{
+
+    .selected-query {
         padding-top: 15px;
     }
 </style>
