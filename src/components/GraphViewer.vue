@@ -37,10 +37,10 @@
                 limit: 5,
                 limit_options: Array.from({length: 20 / 5}, (x, i) => (i + 1) * 5),
                 views: [
-                    {value: 'biological_view', label: 'Biological View', active: true},
-                    {value: 'management_view', label: 'Management View', active: true},
+                    {value: 'biological_view', label: 'Biological View', active: false},
+                    {value: 'management_view', label: 'Management View', active: false},
                     {value: 'technological_view', label: 'Technological View', active: true},
-                    {value: 'extraction_view', label: 'Extraction View', active: true},
+                    {value: 'extraction_view', label: 'Extraction View', active: false},
                 ]
             }
         },
