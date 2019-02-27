@@ -85,21 +85,17 @@
 
             <v-dialog
                     v-model="dialogDownload"
-                    width="500"
-            >
+                    width="500">
                 <v-btn dark
                        slot="activator"
-                       small color="blue lighten-2"
-                >
+                       small color="blue lighten-2">
                     Download
                 </v-btn>
-
 
                 <v-card>
                     <v-card-title
                             class="headline blue lighten-4"
-                            primary-title
-                    >
+                            primary-title>
                         Download region files
                     </v-card-title>
                     <v-progress-linear height="2" class="progress"
@@ -126,8 +122,7 @@
                         <v-btn
                                 color="primary"
                                 flat
-                                @click="download()"
-                        >
+                                @click="download()">
                             Download
                         </v-btn>
                         <v-spacer></v-spacer>

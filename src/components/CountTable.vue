@@ -18,9 +18,7 @@
                 :search="search"
                 :loading="isLoading"
                 class="data-table"
-                :pagination.sync="pagination"
-
-        >
+                :pagination.sync="pagination">
             <template slot="items" slot-scope="props">
                 <td v-for="header in headers" :key="header.value">
                     <span>{{props.item[header.value]}}</span>

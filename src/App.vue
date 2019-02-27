@@ -57,11 +57,14 @@
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
-                <div class="selected-query">
+                <div id="query" class="selected-query">
                     <span class="label">
                         Selected query:
                     </span>
                     {{query}}
+                    <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
+                    <text-reader @load="queryString = $event"></text-reader>
+                    <!--<v-btn color='info' @click="uploadQuery">Upload Query</v-btn>-->
                 </div>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
@@ -165,6 +168,7 @@
     import {mapMutations, mapState} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
+    import TextReader from "./components/TextReader"
 
     export default {
         name: 'App',
@@ -173,6 +177,7 @@
             MetadataTable,
             MetadataDropDownList,
             CountTable,
+            TextReader,
         },
         data() {
             return {
@@ -234,6 +239,7 @@
                     },
                 ],
                 selectedTab: 0,
+                queryString: '',
             }
         },
         methods: {
@@ -249,6 +255,18 @@
                     this.selectedQuery = null
                 })
             },
+            downloadQuery() {
+                var text = JSON.stringify(this.query);
+                console.log(text)
+                var filename = "query.txt";
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            },
         },
         watch: {
             selectedTab() {
@@ -256,6 +274,9 @@
                     this.setQueryGraph(true);
                     this.selectedTab = 999;
                 }
+            },
+            queryString() {
+                this.setQuery(JSON.parse(this.queryString))
             }
         },
         computed: {
