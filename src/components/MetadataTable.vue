@@ -191,9 +191,9 @@
 </template>
 
 <script>
-    import {mapMutations, mapState} from 'vuex';
+    import {mapMutations, mapState, mapGetters} from 'vuex';
 
-    const sourceIdColumnName = 'source_id';
+    const itemSourceIdName = 'item_source_id';
 
     export default {
         name: "MetadataTable",
@@ -225,7 +225,7 @@
 
 
                     // eslint-disable-next-line
-                    axios.post(url, this.query)
+                    axios.post(url, this.compound_query)
                         .then((res) => {
                             return res.data
                         })
@@ -248,10 +248,10 @@
                 'openExtraMetadataDialog'
             ]),
             graphClicked(row) {
-                this.openGraphDialog(row[sourceIdColumnName])
+                this.openGraphDialog(row[itemSourceIdName])
             },
             extraMetadataClicked(row) {
-                this.openExtraMetadataDialog(row[sourceIdColumnName])
+                this.openExtraMetadataDialog(row[itemSourceIdName])
             },
             applyQuery() {
                 // console.log('test');
@@ -259,9 +259,8 @@
                 const url = `query/table?voc=${this.synonym}`;
                 this.isLoading = true;
                 this.result = [];
-
                 // eslint-disable-next-line
-                axios.post(url, this.query)
+                axios.post(url, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -286,7 +285,7 @@
                 const urlDownload = `query/download?voc=${this.synonym}`;
 
                 // eslint-disable-next-line
-                axios.post(urlDownload, this.query)
+                axios.post(urlDownload, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -313,7 +312,10 @@
             },
         },
         computed: {
-            ...mapState(['query', 'synonym',]),
+            ...mapState(['synonym',]),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             sortable() {
                 return this.result.length < 1000;
             },
@@ -322,7 +324,7 @@
                     {text: 'Graph', value: 'graph', sortable: false,},
                     {text: 'Extra', value: 'extra', sortable: false,},
 
-                    {text: 'Source ID', value: sourceIdColumnName, sortable: this.sortable,},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},

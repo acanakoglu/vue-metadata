@@ -61,7 +61,7 @@
                     <span class="label">
                         Selected query:
                     </span>
-                    {{query}}
+                    {{ compound_query }}
                     <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
                     <text-reader @load="queryString = $event"></text-reader>
                     <!--<v-btn color='info' @click="uploadQuery">Upload Query</v-btn>-->
@@ -77,9 +77,6 @@
                         <v-tab>
                             Result items
                         </v-tab>
-                        <v-tab>
-                            Graph
-                        </v-tab>
 
                         <v-tab-item>
                             <CountTable countType="source"/>
@@ -89,9 +86,6 @@
                         </v-tab-item>
                         <v-tab-item>
                             <MetadataTable/>
-                        </v-tab-item>
-                        <v-tab-item>
-                            GRAPH
                         </v-tab-item>
                     </v-tabs>
                 </div>
@@ -165,7 +159,7 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapMutations, mapState} from 'vuex'
+    import {mapMutations, mapState, mapGetters} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
     import TextReader from "./components/TextReader"
@@ -240,10 +234,11 @@
                 ],
                 selectedTab: 0,
                 queryString: '',
+
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setSynonym', 'setQueryGraph']),
+            ...mapMutations(['setQuery', 'setType', 'setKv', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -256,8 +251,8 @@
                 })
             },
             downloadQuery() {
-                var text = JSON.stringify(this.query);
-                console.log(text)
+                var text = JSON.stringify(this.compound_query);
+                console.log(text);
                 var filename = "query.txt";
                 var element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -269,18 +264,24 @@
             },
         },
         watch: {
-            selectedTab() {
-                if (this.selectedTab == 3) {
-                    this.setQueryGraph(true);
-                    this.selectedTab = 999;
-                }
-            },
+            // selectedTab() {
+            //     if (this.selectedTab == 3) {
+            //         this.setQueryGraph(true);
+            //         this.selectedTab = 999;
+            //     }
+            // },
             queryString() {
-                this.setQuery(JSON.parse(this.queryString))
+                const json = JSON.parse(this.queryString)
+                this.setQuery(json['gcm'])
+                this.setType(json['type'])
+                this.setKv(json['kv'])
             }
         },
         computed: {
             ...mapState(['query', 'synonym', 'count']),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             synonymLocal: {
                 get() {
                     // console.log("GET synonym " + this.synonym);

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-    import {mapMutations, mapState} from 'vuex';
+    import {mapMutations, mapState, mapGetters} from 'vuex';
 
     export default {
         name: "CountTable",
@@ -84,7 +84,7 @@
                 this.result = [];
 
                 // eslint-disable-next-line
-                axios.post(url, this.query)
+                axios.post(url, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -97,6 +97,9 @@
         },
         computed: {
             ...mapState(['query', 'synonym',]),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             sortable() {
                 return true;
             },

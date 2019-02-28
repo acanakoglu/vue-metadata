@@ -7,6 +7,8 @@ export default new Vuex.Store({
     state: {
         query: {},
         synonym: false,
+        kv: {},
+        type: null,
         graphSourceId: null,
         extraMetadataSourceId: null,
         count: null,
@@ -15,10 +17,21 @@ export default new Vuex.Store({
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
+        build_query: state => {
+            let res = {};
+            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
+            return res
+        },
     },
     mutations: {
         setQuery: (state, query) => {
             state.query = query;
+        },
+        setKv: (state, kv) => {
+            state.kv = kv;
+        },
+        setType: (state, type) => {
+            state.type = type;
         },
         //reload the query
         reloadQuery: (state) => {
@@ -64,7 +77,6 @@ export default new Vuex.Store({
             let previousList = state.query[field];
             if (!previousList)
                 previousList = [];
-
 
             //update if they are not equal
             if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
