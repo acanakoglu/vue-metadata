@@ -1,10 +1,8 @@
 <template>
-    <v-btn color="info">
-    <label class="text-reader">
-        Upload Query
-        <input type="file" @change="loadTextFromFile">
-    </label>
-    </v-btn>
+    <span>
+        <v-btn color="info" @click="$refs.inputUpload.click()">Upload Query</v-btn>
+        <input v-show="false" ref="inputUpload" type="file" @change="loadTextFromFile" >
+    </span>
 </template>
 
 <script>
