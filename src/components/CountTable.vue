@@ -82,7 +82,6 @@
                 const url = `query/count/${this.countType}?voc=${this.synonym}`;
                 this.isLoading = true;
                 this.result = [];
-
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
