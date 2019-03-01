@@ -8,7 +8,7 @@ export default new Vuex.Store({
         query: {},
         synonym: false,
         kv: {},
-        type: null,
+        type: 'original',
         graphSourceId: null,
         extraMetadataSourceId: null,
         count: null,
@@ -32,6 +32,9 @@ export default new Vuex.Store({
         },
         setType: (state, type) => {
             state.type = type;
+        },
+        resetType: (state) => {
+            state.type = 'original';
         },
         //reload the query
         reloadQuery: (state) => {

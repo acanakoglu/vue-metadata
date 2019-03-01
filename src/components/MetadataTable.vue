@@ -24,7 +24,6 @@
                     GMQL
                 </v-btn>
 
-
                 <v-card>
                     <v-card-title
                             class="headline blue lighten-4"
@@ -206,7 +205,8 @@
                 gmqlQuery: "",
                 isLoading: false,
                 search: '',
-                result: []
+                result: [],
+                agg_mode: false,
             }
         },
         watch: {
@@ -256,7 +256,7 @@
             applyQuery() {
                 // console.log('test');
 
-                const url = `query/table?voc=${this.synonym}`;
+                const url = `query/table?agg=${this.agg_mode}`;
                 this.isLoading = true;
                 this.result = [];
                 // eslint-disable-next-line
@@ -307,8 +307,6 @@
                     alert('Can not copy');
                     console.log(e);
                 })
-
-
             },
         },
         computed: {
@@ -344,7 +342,28 @@
                     {text: 'Technique', value: 'technique', sortable: this.sortable,},
                     {text: 'Feature', value: 'feature', sortable: this.sortable,},
                     {text: 'Target', value: 'target', sortable: this.sortable,},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,}
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
+
+
+                    {text: 'Biological Replicate Number', value: 'biological_replicate_number', sortable: this.sortable,},
+                    {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
+
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable,},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable,},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
+
+                    {text: 'Species', value: 'species', sortable: this.sortable,},
+                    {text: 'Gender', value: 'gender', sortable: this.sortable,},
+                    {text: 'Age', value: 'age', sortable: this.sortable,},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
+
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
+                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
+
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
+                    {text: 'Source', value: 'source', sortable: this.sortable,}
                 ];
             },
         }

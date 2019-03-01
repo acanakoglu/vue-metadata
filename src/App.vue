@@ -34,13 +34,13 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl>
                     <v-layout wrap align-center test>
-                        <v-flex xs12 sm2 md2 d-flex class="label no-horizontal-padding">
-                            General settings:
+                        <v-flex xs2 d-flex class="no-horizontal-padding">
+                            <span class = label>General Settings </span>
                         </v-flex>
-                        <v-flex xs12 sm2 md2 class="no-horizontal-padding">
+                        <v-flex xs2 class="no-horizontal-padding">
                             <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
                         </v-flex>
-                        <v-flex xs12 sm6 md6 class=" no-horizontal-padding">
+                        <v-flex xs3 class=" no-horizontal-padding">
                             <v-select solo
                                       :items="queryItems"
                                       v-model="selectedQuery"
@@ -49,7 +49,23 @@
                                       single-line
                             ></v-select>
                         </v-flex>
-
+                        <v-flex xs1></v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
+                        </v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
+                            <text-reader @load="queryString = $event"></text-reader>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap align-center test>
+                        <v-flex xs12 class="no-horizontal-padding">
+                            <!--<div id="query" class="selected-query">-->
+                                <span class="label">
+                                    Selected query:
+                                </span>
+                                {{ compound_query }}
+                            <!--</div>-->
+                        </v-flex>
                     </v-layout>
                 </v-container>
 
@@ -57,15 +73,6 @@
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
-                <div id="query" class="selected-query">
-                    <span class="label">
-                        Selected query:
-                    </span>
-                    {{ compound_query }}
-                    <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
-                    <text-reader @load="queryString = $event"></text-reader>
-                    <!--<v-btn color='info' @click="uploadQuery">Upload Query</v-btn>-->
-                </div>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -238,7 +245,7 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'setKv', 'setSynonym', 'setQueryGraph']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -290,6 +297,11 @@
                 set(value) {
                     // console.log("SET synonym " + value);
                     this.setSynonym(value);
+                    if (value) {
+                        this.setType('synonym')
+                    } else {
+                        this.resetType();
+                    }
                 }
             },
         },
