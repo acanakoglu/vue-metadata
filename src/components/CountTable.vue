@@ -57,7 +57,7 @@
             }
         },
         watch: {
-            query() {
+            compound_query() {
                 this.applyQuery();
             },
             synonym() {

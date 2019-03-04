@@ -13,6 +13,8 @@
             <div v-else>No result</div>
             <!--</v-flex>-->
             <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-switch label = "Aggregated Mode" v-model = agg_mode></v-switch>
             <v-dialog
                     full-width
                     v-model="dialogGmql"
@@ -23,7 +25,6 @@
                 >
                     GMQL
                 </v-btn>
-
                 <v-card>
                     <v-card-title
                             class="headline blue lighten-4"
@@ -210,10 +211,13 @@
             }
         },
         watch: {
-            query() {
+            compound_query() {
                 this.applyQuery();
             },
             synonym() {
+                this.applyQuery();
+            },
+            agg_mode()  {
                 this.applyQuery();
             },
             dialogGmql() {
