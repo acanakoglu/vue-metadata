@@ -14,7 +14,9 @@
             <!--</v-flex>-->
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
-            <v-switch label = "Aggregated Mode" v-model = agg_mode></v-switch>
+            <v-label>Replicated</v-label>
+            <span style="padding-right: 1em"></span>
+            <v-switch label="Aggregated" v-model=agg_mode></v-switch>
             <v-dialog
                     full-width
                     v-model="dialogGmql"
@@ -207,7 +209,7 @@
                 isLoading: false,
                 search: '',
                 result: [],
-                agg_mode: false,
+                agg_mode: true,
             }
         },
         watch: {
@@ -217,7 +219,7 @@
             synonym() {
                 this.applyQuery();
             },
-            agg_mode()  {
+            agg_mode() {
                 this.applyQuery();
             },
             dialogGmql() {
@@ -323,7 +325,6 @@
             },
             headers() {
                 return [
-                    {text: 'Graph', value: 'graph', sortable: false,},
                     {text: 'Extra', value: 'extra', sortable: false,},
 
                     {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
@@ -349,7 +350,11 @@
                     {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
 
 
-                    {text: 'Biological Replicate Number', value: 'biological_replicate_number', sortable: this.sortable,},
+                    {
+                        text: 'Biological Replicate Number',
+                        value: 'biological_replicate_number',
+                        sortable: this.sortable,
+                    },
                     {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
 
                     {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
