@@ -8,6 +8,12 @@
                     <span class="font-weight-light">Viewer</span>
                 </v-toolbar-title>
             </v-btn>
+            <v-img
+                    :src="require('./assets/logo.png')"
+                    contain
+                    height="64px"
+            ></v-img>
+
             <v-spacer></v-spacer>
             <v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
@@ -28,14 +34,14 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl>
                     <v-layout wrap align-center test>
-                        <v-flex xs12 sm2 md2 d-flex class="label no-horizontal-padding">
-                            General settings:
+                        <v-flex xs2 d-flex class="no-horizontal-padding">
+                            <span class = label>General Settings </span>
                         </v-flex>
-                        <v-flex xs12 sm2 md2 class="no-horizontal-padding">
+                        <v-flex xs2 class="no-horizontal-padding">
                             <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
                         </v-flex>
-                        <v-flex xs12 sm6 md6  class=" no-horizontal-padding">
-                            <v-select  solo
+                        <v-flex xs3 class=" no-horizontal-padding">
+                            <v-select solo
                                       :items="queryItems"
                                       v-model="selectedQuery"
                                       label="Predefined queries"
@@ -43,7 +49,23 @@
                                       single-line
                             ></v-select>
                         </v-flex>
-
+                        <v-flex xs1></v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
+                        </v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
+                            <text-reader @load="queryString = $event"></text-reader>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap align-center test>
+                        <v-flex xs12 class="no-horizontal-padding">
+                            <!--<div id="query" class="selected-query">-->
+                                <span class="label">
+                                    Selected query:
+                                </span>
+                                {{ compound_query }}
+                            <!--</div>-->
+                        </v-flex>
                     </v-layout>
                 </v-container>
 
@@ -51,33 +73,26 @@
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
-                <div>
-                <span class="label ">
-                    Selected query:
-                </span>
-                    {{query}}
-                </div>
                 <div class="result-div">
-                    <v-tabs dark color="blue darken-1"
-                    >
-                        <v-tab>
-                            Result items
-                        </v-tab>
+                    <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Source count
                         </v-tab>
                         <v-tab>
                             Dataset count
                         </v-tab>
-                        <v-tab-item>
-                            <MetadataTable/>
-                        </v-tab-item>
+                        <v-tab>
+                            Result items
+                        </v-tab>
 
                         <v-tab-item>
                             <CountTable countType="source"/>
                         </v-tab-item>
                         <v-tab-item>
                             <CountTable countType="dataset"/>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <MetadataTable/>
                         </v-tab-item>
                     </v-tabs>
                 </div>
@@ -151,9 +166,10 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapMutations, mapState} from 'vuex'
+    import {mapMutations, mapState, mapGetters} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
+    import TextReader from "./components/TextReader"
 
     export default {
         name: 'App',
@@ -162,6 +178,7 @@
             MetadataTable,
             MetadataDropDownList,
             CountTable,
+            TextReader,
         },
         data() {
             return {
@@ -186,7 +203,7 @@
                             synonym: false,
                             query: {
                                 tissue: ["adrenal gland"],
-                                feature: ["copy number variation","rna binding protein"],
+                                feature: ["copy number variation", "rna binding protein"],
                             }
                         }
                     },
@@ -207,7 +224,7 @@
                         value: {
                             synonym: false,
                             query: {
-                                content_type: ["exon","exon quantifications"],
+                                content_type: ["exon", "exon quantifications"],
                             }
                         }
                     },
@@ -222,12 +239,13 @@
                         }
                     },
                 ],
-                selectedTab: 'table'
+                selectedTab: 0,
+                queryString: '',
 
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setSynonym']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -239,9 +257,38 @@
                     this.selectedQuery = null
                 })
             },
+            downloadQuery() {
+                var text = JSON.stringify(this.compound_query);
+                console.log(text);
+                var filename = "query.txt";
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            },
+        },
+        watch: {
+            // selectedTab() {
+            //     if (this.selectedTab == 3) {
+            //         this.setQueryGraph(true);
+            //         this.selectedTab = 999;
+            //     }
+            // },
+            queryString() {
+                const json = JSON.parse(this.queryString)
+                this.setQuery(json['gcm'])
+                this.setType(json['type'])
+                this.setKv(json['kv'])
+            }
         },
         computed: {
             ...mapState(['query', 'synonym', 'count']),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             synonymLocal: {
                 get() {
                     // console.log("GET synonym " + this.synonym);
@@ -250,10 +297,14 @@
                 set(value) {
                     // console.log("SET synonym " + value);
                     this.setSynonym(value);
+                    if (value) {
+                        this.setType('synonym')
+                    } else {
+                        this.resetType();
+                    }
                 }
             },
-
-        }
+        },
     }
 </script>
 <style>
@@ -274,7 +325,7 @@
     }
 
     /*.¬ {*/
-        /*margin-bottom: -10px;*/
+    /*margin-bottom: -10px;*/
 
     /*}*/
 
@@ -293,5 +344,9 @@
 
     .bottom-info {
         margin: 1.5em;
+    }
+
+    .selected-query {
+        padding-top: 15px;
     }
 </style>

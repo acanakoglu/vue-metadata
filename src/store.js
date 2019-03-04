@@ -1,23 +1,40 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
         query: {},
         synonym: false,
+        kv: {},
+        type: 'original',
         graphSourceId: null,
         extraMetadataSourceId: null,
         count: null,
+        showGraphQuery: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
         showExtraMetadataDialog: (state) => state.extraMetadataSourceId != null,
+        build_query: state => {
+            let res = {};
+            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
+            return res
+        },
     },
     mutations: {
         setQuery: (state, query) => {
             state.query = query;
+        },
+        setKv: (state, kv) => {
+            state.kv = kv;
+        },
+        setType: (state, type) => {
+            state.type = type;
+        },
+        resetType: (state) => {
+            state.type = 'original';
         },
         //reload the query
         reloadQuery: (state) => {
@@ -40,12 +57,16 @@ export default new Vuex.Store({
         closeDialog: (state) => {
             state.graphSourceId = null;
             state.extraMetadataSourceId = null;
+            state.showGraphQuery = false;
         },
         setSynonym: (state, synonym) => {
             state.synonym = synonym;
         },
         setCount: (state, count) => {
             state.count = count;
+        },
+        setQueryGraph: (state, input) => {
+            state.showGraphQuery = input;
         },
     },
     actions: {
@@ -59,7 +80,6 @@ export default new Vuex.Store({
             let previousList = state.query[field];
             if (!previousList)
                 previousList = [];
-
 
             //update if they are not equal
             if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {

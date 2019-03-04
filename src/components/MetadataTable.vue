@@ -13,23 +13,91 @@
             <div v-else>No result</div>
             <!--</v-flex>-->
             <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-label>Replicated</v-label>
+            <span style="padding-right: 1em"></span>
+            <v-switch label="Aggregated" v-model=agg_mode></v-switch>
             <v-dialog
-                    v-model="dialog"
-                    width="500"
+                    full-width
+                    v-model="dialogGmql"
             >
                 <v-btn dark
                        slot="activator"
                        small color="blue lighten-2"
                 >
-                    Download
+                    GMQL
                 </v-btn>
-
-
                 <v-card>
                     <v-card-title
                             class="headline blue lighten-4"
                             primary-title
                     >
+                        GMQL query
+                    </v-card-title>
+                    <v-progress-linear height="2" class="progress" :indeterminate="gmqlProgress"></v-progress-linear>
+
+
+                    <v-card-text>
+                        <p> Click "COPY TO CLIPBOARD" button and use whole query in
+                            <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
+
+                            One statement extracts the selected items from a single dataset.
+                            All datasets are unified into a single dataset for further use.
+                            <br>
+                            Please refer to
+                            <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
+                               target="gmql_doc">
+                                GMQL documentation
+                            </a>
+                            for specific use of querying language.
+
+                            <br>
+                            Beware union of big datasets may result in long execution times.
+                        </p>
+
+                        <v-textarea
+                                label="GMQL query"
+                                :value="gmqlQuery"
+                        ></v-textarea>
+                    </v-card-text>
+
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="toClipboard()"
+                        >
+                            Copy to clipboard
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialogGmql = false"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+
+            <v-dialog
+                    v-model="dialogDownload"
+                    width="500">
+                <v-btn dark
+                       slot="activator"
+                       small color="blue lighten-2">
+                    Download
+                </v-btn>
+
+                <v-card>
+                    <v-card-title
+                            class="headline blue lighten-4"
+                            primary-title>
                         Download region files
                     </v-card-title>
                     <v-progress-linear height="2" class="progress"
@@ -44,7 +112,7 @@
                         <p>
                             The following command using cURL can be used to download all the files in the list:
                             <br>
-                            <code>xargs -L 1 curl -J -O -L < files.txt</code>
+                            <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
                         </p>
 
 
@@ -56,15 +124,14 @@
                         <v-btn
                                 color="primary"
                                 flat
-                                @click="download()"
-                        >
+                                @click="download()">
                             Download
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn
                                 color="primary"
                                 flat
-                                @click="dialog = false"
+                                @click="dialogDownload = false"
                         >
                             Close
                         </v-btn>
@@ -126,27 +193,55 @@
 </template>
 
 <script>
-    import {mapMutations, mapState} from 'vuex';
+    import {mapMutations, mapState, mapGetters} from 'vuex';
 
-    const sourceIdColumnName = 'source_id';
+    const itemSourceIdName = 'item_source_id';
 
     export default {
         name: "MetadataTable",
         data() {
             return {
                 downloadProgress: false,
-                dialog: false,
+                gmqlProgress: false,
+                dialogDownload: false,
+                dialogGmql: false,
+                gmqlQuery: "",
                 isLoading: false,
                 search: '',
-                result: []
+                result: [],
+                agg_mode: true,
             }
         },
         watch: {
-            query() {
+            compound_query() {
                 this.applyQuery();
             },
             synonym() {
                 this.applyQuery();
+            },
+            agg_mode() {
+                this.applyQuery();
+            },
+            dialogGmql() {
+                if (this.dialogGmql) {
+                    this.gmqlProgress = true;
+                    this.gmqlQuery = "Loading!";
+
+                    const url = `query/gmql?voc=${this.synonym}`;
+
+
+                    // eslint-disable-next-line
+                    axios.post(url, this.compound_query)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            // console.log(res);
+                            this.gmqlQuery = res;
+                            this.gmqlProgress = false;
+                        });
+
+                }
             },
         },
         mounted() {
@@ -159,20 +254,19 @@
                 'openExtraMetadataDialog'
             ]),
             graphClicked(row) {
-                this.openGraphDialog(row[sourceIdColumnName])
+                this.openGraphDialog(row[itemSourceIdName])
             },
             extraMetadataClicked(row) {
-                this.openExtraMetadataDialog(row[sourceIdColumnName])
+                this.openExtraMetadataDialog(row[itemSourceIdName])
             },
             applyQuery() {
                 // console.log('test');
 
-                const url = `query/table?voc=${this.synonym}`;
+                const url = `query/table?agg=${this.agg_mode}`;
                 this.isLoading = true;
                 this.result = [];
-
                 // eslint-disable-next-line
-                axios.post(url, this.query)
+                axios.post(url, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -197,7 +291,7 @@
                 const urlDownload = `query/download?voc=${this.synonym}`;
 
                 // eslint-disable-next-line
-                axios.post(urlDownload, this.query)
+                axios.post(urlDownload, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -211,18 +305,29 @@
                         this.downloadProgress = false;
                     });
             },
+            toClipboard() {
+                this.$copyText(this.gmqlQuery).then(function (e) {
+                    alert('Copied');
+                    console.log(e);
+                }, function (e) {
+                    alert('Can not copy');
+                    console.log(e);
+                })
+            },
         },
         computed: {
-            ...mapState(['query', 'synonym',]),
+            ...mapState(['synonym',]),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             sortable() {
                 return this.result.length < 1000;
             },
             headers() {
                 return [
-                    {text: 'Graph', value: 'graph', sortable: false,},
                     {text: 'Extra', value: 'extra', sortable: false,},
 
-                    {text: 'Source ID', value: sourceIdColumnName, sortable: this.sortable,},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},
@@ -242,7 +347,32 @@
                     {text: 'Technique', value: 'technique', sortable: this.sortable,},
                     {text: 'Feature', value: 'feature', sortable: this.sortable,},
                     {text: 'Target', value: 'target', sortable: this.sortable,},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,}
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
+
+
+                    {
+                        text: 'Biological Replicate Number',
+                        value: 'biological_replicate_number',
+                        sortable: this.sortable,
+                    },
+                    {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
+
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable,},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable,},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
+
+                    {text: 'Species', value: 'species', sortable: this.sortable,},
+                    {text: 'Gender', value: 'gender', sortable: this.sortable,},
+                    {text: 'Age', value: 'age', sortable: this.sortable,},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
+
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
+                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
+
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
+                    {text: 'Source', value: 'source', sortable: this.sortable,}
                 ];
             },
         }
