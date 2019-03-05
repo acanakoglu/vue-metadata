@@ -25,10 +25,10 @@ export default new Vuex.Store({
     },
     mutations: {
         setQuery: (state, query) => {
-            state.query = query;
+            state.query = Object.assign({}, query);
         },
         setKv: (state, kv) => {
-            state.kv = kv;
+            state.kv = Object.assign({}, kv);
         },
         setType: (state, type) => {
             state.type = type;
