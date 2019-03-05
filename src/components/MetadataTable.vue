@@ -160,7 +160,7 @@
                 <td v-for="header in headers" :key="header.value">
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
-                        <span v-else>N/A</span>
+                        <span v-else>N/D</span>
                     </span>
                     <span v-else-if="header.value === 'graph'">
                         <v-btn flat icon color="blue" @click="graphClicked(props.item)">
@@ -173,7 +173,7 @@
                             <v-icon>list</v-icon>
                         </v-btn>
                     </span>
-                    <span v-else>{{props.item[header.value]}}</span>
+                    <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -187,13 +187,11 @@
                 Loading
             </v-alert>
         </v-data-table>
-        <!--TODO  move this to outer layer-->
-
     </v-card>
 </template>
 
 <script>
-    import {mapMutations, mapState, mapGetters} from 'vuex';
+    import {mapGetters, mapMutations, mapState} from 'vuex';
 
     const itemSourceIdName = 'item_source_id';
 
@@ -313,6 +311,13 @@
                     alert('Can not copy');
                     console.log(e);
                 })
+            },
+            updateCellTextFormat(input) {
+                var temp = input;
+                if (temp === null)
+                    temp = 'N/D';
+                temp = temp.replace(/\|/g, "|<br/>")
+                return temp
             },
         },
         computed: {
