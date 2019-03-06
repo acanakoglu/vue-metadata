@@ -301,7 +301,7 @@
                     },
 
                     {text: 'Species', value: 'species', sortable: this.sortable,show: false},
-                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
+                    // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
 
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
