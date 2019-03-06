@@ -12,6 +12,42 @@
             </div>
             <div v-else>No result</div>
             <!--</v-flex>-->
+            <v-dialog v-model="dialogOrder">
+                <v-card>
+                    <v-card-title
+                            class="headline blue lighten-4"
+                            primary-title
+                    >
+                        Column order
+                    </v-card-title>
+                    <v-card-text>
+                        <draggable v-model="headers" @start="drag=true" @end="drag=false">
+                            <v-list v-for="element in headers" :key="element.value">
+                                <v-checkbox :label = element.text v-model=element.show></v-checkbox>
+                            </v-list>
+                        </draggable>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialogOrder = false"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+                <v-btn dark
+                       slot="activator"
+                       small color="blue lighten-2"
+                >
+                    Order
+                </v-btn>
+            </v-dialog>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-label>Replicated</v-label>
@@ -149,7 +185,7 @@
             <!--&gt;</v-text-field>-->
         </v-card-title>
         <v-data-table
-                :headers="headers"
+                :headers="selected_headers"
                 :items="result"
                 :search="search"
                 :loading="isLoading"
@@ -157,7 +193,7 @@
                 disable-initial-sort
         >
             <template slot="items" slot-scope="props">
-                <td v-for="header in headers" :key="header.value">
+                <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <span v-else>N/D</span>
@@ -191,12 +227,17 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations, mapState} from 'vuex';
+
+    import {mapMutations, mapState, mapGetters} from 'vuex';
+    import draggable from 'vuedraggable'
 
     const itemSourceIdName = 'item_source_id';
 
     export default {
         name: "MetadataTable",
+        components: {
+            draggable
+        },
         data() {
             return {
                 downloadProgress: false,
@@ -208,6 +249,57 @@
                 search: '',
                 result: [],
                 agg_mode: true,
+                dialogOrder: false,
+                headers: [
+                    {text: 'Extra', value: 'extra', sortable: false, show: true},
+
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,show: true},
+                    // {text: 'size', value: 'size'},
+                    // {text: 'date', value: 'date'},
+                    // {text: 'checksum', value: 'checksum'},
+                    {text: 'Content type', value: 'content_type', sortable: this.sortable,show: true},
+                    {text: 'Platform', value: 'platform', sortable: this.sortable,show: true},
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,show: true},
+
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,show: true},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,show: true},
+
+                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: this.sortable,show: true},
+                    {text: 'File Format', value: 'file_format', sortable: this.sortable,show: true},
+                    {text: 'Assembly', value: 'assembly', sortable: this.sortable,show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,show: true},
+
+                    {text: 'Technique', value: 'technique', sortable: this.sortable,show: true},
+                    {text: 'Feature', value: 'feature', sortable: this.sortable,show: true},
+                    {text: 'Target', value: 'target', sortable: this.sortable,show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,show: true},
+
+                    {
+                        text: 'Biological Replicate Number',
+                        value: 'biological_replicate_number',
+                        sortable: this.sortable,
+                        show: true
+                    },
+                    {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,show: true},
+
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,show: true},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable,show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,show: true},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable,show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,show: true},
+
+                    {text: 'Species', value: 'species', sortable: this.sortable,show: true},
+                    {text: 'Gender', value: 'gender', sortable: this.sortable,show: true},
+                    {text: 'Age', value: 'age', sortable: this.sortable,show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,show: true},
+
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,show: true},
+                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: true},
+
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,show: true},
+                    {text: 'Source', value: 'source', sortable: this.sortable,show: true}
+                ],
             }
         },
         watch: {
@@ -238,7 +330,6 @@
                             this.gmqlQuery = res;
                             this.gmqlProgress = false;
                         });
-
                 }
             },
         },
@@ -328,57 +419,69 @@
             sortable() {
                 return this.result.length < 1000;
             },
-            headers() {
-                return [
-                    {text: 'Extra', value: 'extra', sortable: false,},
-
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
-                    // {text: 'size', value: 'size'},
-                    // {text: 'date', value: 'date'},
-                    // {text: 'checksum', value: 'checksum'},
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable,},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable,},
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
-
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
-
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable,},
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,},
-
-                    {text: 'Technique', value: 'technique', sortable: this.sortable,},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable,},
-                    {text: 'Target', value: 'target', sortable: this.sortable,},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
-
-
-                    {
-                        text: 'Biological Replicate Number',
-                        value: 'biological_replicate_number',
-                        sortable: this.sortable,
-                    },
-                    {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
-
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable,},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable,},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
-
-                    {text: 'Species', value: 'species', sortable: this.sortable,},
-                    {text: 'Gender', value: 'gender', sortable: this.sortable,},
-                    {text: 'Age', value: 'age', sortable: this.sortable,},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
-
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
-                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
-
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
-                    {text: 'Source', value: 'source', sortable: this.sortable,}
-                ];
+            // headers() {
+            //     return [
+            //         {text: 'Extra', value: 'extra', sortable: false,},
+            //
+            //         {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
+            //         // {text: 'size', value: 'size'},
+            //         // {text: 'date', value: 'date'},
+            //         // {text: 'checksum', value: 'checksum'},
+            //         {text: 'Content type', value: 'content_type', sortable: this.sortable,},
+            //         {text: 'Platform', value: 'platform', sortable: this.sortable,},
+            //         {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
+            //
+            //         {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
+            //         {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
+            //
+            //         {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,},
+            //         {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
+            //         {text: 'File Format', value: 'file_format', sortable: this.sortable,},
+            //         {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
+            //         {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,},
+            //
+            //         {text: 'Technique', value: 'technique', sortable: this.sortable,},
+            //         {text: 'Feature', value: 'feature', sortable: this.sortable,},
+            //         {text: 'Target', value: 'target', sortable: this.sortable,},
+            //         {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
+            //
+            //         {
+            //             text: 'Biological Replicate Number',
+            //             value: 'biological_replicate_number',
+            //             sortable: this.sortable,
+            //         },
+            //         {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
+            //
+            //         {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
+            //         {text: 'Disease', value: 'disease', sortable: this.sortable,},
+            //         {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
+            //         {text: 'Cell', value: 'cell', sortable: this.sortable,},
+            //         {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
+            //
+            //         {text: 'Species', value: 'species', sortable: this.sortable,},
+            //         {text: 'Gender', value: 'gender', sortable: this.sortable,},
+            //         {text: 'Age', value: 'age', sortable: this.sortable,},
+            //         {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
+            //
+            //         {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
+            //         {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
+            //
+            //         {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
+            //         {text: 'Source', value: 'source', sortable: this.sortable,}
+            //     ];
+            // },
+            // hiddenHeaders() {
+            //     []
+            // },
+            selected_headers() {
+                var x;
+                var res = [];
+                for(x in this.headers) {
+                    if(this.headers[x].show){
+                        res.push(this.headers[x]);
+                    }
+                }
+                return res;
             },
         }
 

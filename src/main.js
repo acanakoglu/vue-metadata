@@ -5,7 +5,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueClipboard from 'vue-clipboard2'
-import Sortable from 'vue-sortable'
+import draggable from 'vuedraggable'
 
 Vue.config.productionTip = false;
 
@@ -16,4 +16,4 @@ new Vue({
 }).$mount('#app');
 
 Vue.use(VueClipboard);
-Vue.use(Sortable);1
+Vue.use(draggable);
