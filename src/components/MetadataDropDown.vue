@@ -46,7 +46,7 @@
                 this.loadData();
             },
             query() {
-                if(!this.synonym)
+                // if(!this.synonym)
                     this.loadData();
             }
         },
