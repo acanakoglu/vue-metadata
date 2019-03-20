@@ -45,7 +45,7 @@
             synonym() {
                 this.loadData();
             },
-            query() {
+            compound_query() {
                 // if(!this.synonym)
                 this.loadData();
             }

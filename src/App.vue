@@ -35,10 +35,15 @@
                 <v-container fluid grid-list-xl>
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class = label>General Settings </span>
+                            <span class=label>General Settings </span>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
+                            <v-radio-group v-model="typeLocal" label="Query type">
+                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
+                                <v-radio label="Original" id="original" value="original"></v-radio>
+                                <v-radio label="Synonym" id="synonym" value="synonym" ></v-radio>
+                                <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
+                            </v-radio-group>
                         </v-flex>
                         <v-flex xs3 class=" no-horizontal-padding">
                             <v-select solo
@@ -60,10 +65,10 @@
                     <v-layout wrap align-center test>
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
-                                <span class="label">
+                            <span class="label">
                                     Selected query:
                                 </span>
-                                {{ compound_query }}
+                            {{ compound_query }}
                             <!--</div>-->
                         </v-flex>
                     </v-layout>
@@ -214,7 +219,7 @@
                             query: {
                                 cell: ["gm12878"],
                                 assembly: ["hg19"],
-                                format: ["broadpeak"],
+                                file_format: ["broadpeak"],
                                 technique: ["chip-seq"],
                             }
                         }
@@ -285,10 +290,22 @@
             }
         },
         computed: {
-            ...mapState(['query', 'synonym', 'count']),
+            ...mapState(['query', 'synonym', 'count', 'type']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            typeLocal: {
+                get() {
+                    return this.type;
+                },
+                set(value) {
+                    if (value) {
+                        this.setType(value)
+                    } else {
+                        this.resetType();
+                    }
+                }
+            },
             synonymLocal: {
                 get() {
                     // console.log("GET synonym " + this.synonym);
