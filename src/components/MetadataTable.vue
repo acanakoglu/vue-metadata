@@ -23,7 +23,7 @@
                     <v-card-text>
                         <draggable v-model="headers" @start="drag=true" @end="drag=false">
                             <v-list v-for="element in headers" :key="element.value">
-                                <v-checkbox :label = element.text v-model=element.show></v-checkbox>
+                                <v-checkbox :label=element.text v-model=element.show></v-checkbox>
                             </v-list>
                         </draggable>
                     </v-card-text>
@@ -191,6 +191,9 @@
                 :loading="isLoading"
                 class="data-table"
                 disable-initial-sort
+                :pagination.sync="pagination"
+                :rows-per-page-items="pagination.rowsPerPageItems"
+                :total-items="pagination.totalItems"
         >
             <template slot="items" slot-scope="props">
                 <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
@@ -252,40 +255,40 @@
                 dialogOrder: false,
                 headers: [
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable,show: true},
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,show: true},
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,show: true},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,show: true},
+                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
 
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable,show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable,show: true},
+                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
 
-                    {text: 'Technique', value: 'technique', sortable: this.sortable,show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable,show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable,show: true},
+                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
+                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
+                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
 
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable,show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable,show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,show: true},
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
 
-                    {text: 'Gender', value: 'gender', sortable: this.sortable,show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable,show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,show: true},
+                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
+                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
 
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable,show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,show: true},
+                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
+                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
 
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable,show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable,show: true},
+                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
+                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
 
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,show: true},
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
 
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,show: true},
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,show: true},
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
 
                     {
                         text: 'Biological Replicate Number',
@@ -300,13 +303,21 @@
                         show: false
                     },
 
-                    {text: 'Species', value: 'species', sortable: this.sortable,show: false},
+                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
                     // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
 
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
                     // {text: 'checksum', value: 'checksum'},
                 ],
+                pagination: {
+                    descending: false,
+                    page: 1,
+                    rowsPerPage: 10,
+                    sortBy: itemSourceIdName,
+                    totalItems: 0,
+                    rowsPerPageItems: [10, 100, 1000] //mani che si alzano
+                },
             }
         },
         watch: {
@@ -483,8 +494,8 @@
             selected_headers() {
                 var x;
                 var res = [];
-                for(x in this.headers) {
-                    if(this.headers[x].show){
+                for (x in this.headers) {
+                    if (this.headers[x].show) {
                         res.push(this.headers[x]);
                     }
                 }
