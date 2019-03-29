@@ -6,9 +6,9 @@
             <!--xs12-->
             <!--&gt;-->
             <div v-if="isLoading">Loading...</div>
-            <div v-else-if="result.length===1000" class="center">Shown up to 1000 items</div>
-            <div v-else-if="result.length>0">Shown {{result.length}} item<span
-                    v-if="result.length>1">s</span>
+            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>
+            <div v-else-if="count>0">Shown {{result.length}} item<span
+                    v-if="count>1">s</span>
             </div>
             <div v-else>No result</div>
             <!--</v-flex>-->
@@ -187,10 +187,8 @@
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
-                :search="search"
                 :loading="isLoading"
                 class="data-table"
-                disable-initial-sort
                 :pagination.sync="pagination"
                 :rows-per-page-items="pagination.rowsPerPageItems"
                 :total-items="pagination.totalItems"
@@ -215,17 +213,18 @@
                     <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
-            <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                Your search for "{{ search }}" found no results.
-            </v-alert>
+<!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
+<!--                Your search for "{{ search }}" found no results.-->
+<!--            </v-alert>-->
 
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
-            <v-alert slot="no-data" :value="true" color="info" icon="info" v-else>
+            <v-alert slot="no-results" :value="true" color="info" icon="info" v-else>
                 Loading
             </v-alert>
         </v-data-table>
+        {{ pagination }}
     </v-card>
 </template>
 
@@ -251,6 +250,7 @@
                 isLoading: false,
                 search: '',
                 result: [],
+                resultCount: 0,
                 agg_mode: true,
                 dialogOrder: false,
                 headers: [
@@ -313,7 +313,7 @@
                 pagination: {
                     descending: false,
                     page: 1,
-                    rowsPerPage: 10,
+                    rowsPerPage: 1,
                     sortBy: itemSourceIdName,
                     totalItems: 0,
                     rowsPerPageItems: [10, 100, 1000] //mani che si alzano
@@ -330,13 +330,18 @@
             agg_mode() {
                 this.applyQuery();
             },
+            pagination: {
+                handler() {
+                    this.applyQuery(false);
+                },
+                deep: true
+            },
             dialogGmql() {
                 if (this.dialogGmql) {
                     this.gmqlProgress = true;
                     this.gmqlQuery = "Loading!";
 
                     const url = `query/gmql?voc=${this.synonym}`;
-
 
                     // eslint-disable-next-line
                     axios.post(url, this.compound_query)
@@ -358,7 +363,8 @@
         methods: {
             ...mapMutations([
                 'openGraphDialog',
-                'openExtraMetadataDialog'
+                'openExtraMetadataDialog',
+                'setCount'
             ]),
             graphClicked(row) {
                 this.openGraphDialog(row[itemSourceIdName])
@@ -366,10 +372,27 @@
             extraMetadataClicked(row) {
                 this.openExtraMetadataDialog(row[itemSourceIdName])
             },
-            applyQuery() {
-                // console.log('test');
+            applyQuery(changeCount = true) {
+                if (changeCount) {
+                    var count_url = 'query/count';
+                    // eslint-disable-next-line
+                    axios.post(count_url, this.compound_query)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            this.setCount(res)
+                            this.pagination.totalItems = res
+                        });
+                }
+                var orderDir = "";
 
-                const url = `query/table?agg=${this.agg_mode}`;
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
+
+                const url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 this.isLoading = true;
                 this.result = [];
                 // eslint-disable-next-line
@@ -391,7 +414,6 @@
                         this.result = res;
                         this.isLoading = false;
                     });
-
             },
             download() {
                 this.downloadProgress = true;
@@ -430,7 +452,7 @@
             },
         },
         computed: {
-            ...mapState(['synonym',]),
+            ...mapState(['synonym', 'count']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
