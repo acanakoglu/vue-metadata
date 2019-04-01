@@ -48,6 +48,7 @@
                     Order
                 </v-btn>
             </v-dialog>
+            <v-btn color='info' @click="downloadTable">Download Results</v-btn>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-label>Replicated</v-label>
@@ -213,9 +214,9 @@
                     <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
-<!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
-<!--                Your search for "{{ search }}" found no results.-->
-<!--            </v-alert>-->
+            <!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
+            <!--                Your search for "{{ search }}" found no results.-->
+            <!--            </v-alert>-->
 
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
@@ -224,7 +225,6 @@
                 Loading
             </v-alert>
         </v-data-table>
-        {{ pagination }}
     </v-card>
 </template>
 
@@ -250,8 +250,8 @@
                 isLoading: false,
                 search: '',
                 result: [],
-                resultCount: 0,
                 agg_mode: true,
+                download_table: '',
                 dialogOrder: false,
                 headers: [
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
@@ -313,7 +313,7 @@
                 pagination: {
                     descending: false,
                     page: 1,
-                    rowsPerPage: 1,
+                    rowsPerPage: 10,
                     sortBy: itemSourceIdName,
                     totalItems: 0,
                     rowsPerPageItems: [10, 100, 1000] //mani che si alzano
@@ -414,6 +414,17 @@
                         this.result = res;
                         this.isLoading = false;
                     });
+                // if(changeCount) {
+                // const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                // // eslint-disable-next-line
+                // axios.post(csv_url, this.compound_query)
+                //     .then((res) => {
+                //         return res.data
+                //     })
+                //     .then((res) => {
+                //         this.download_table = res
+                //     });
+                // }
             },
             download() {
                 this.downloadProgress = true;
@@ -450,6 +461,42 @@
                 temp = temp.replace(/\|/g, "|<br/>")
                 return temp
             },
+            json2csv(input) {
+                var json = input;
+                console.log(json[0]);
+                var fields = Object.keys(json[0]);
+                var replacer = function (key, value) {
+                    return value === null ? 'N/D' : value
+                };
+                var csv = json.map(function (row) {
+                    return fields.map(function (fieldName) {
+                        return JSON.stringify(row[fieldName], replacer)
+                    }).join(',')
+                });
+                csv.unshift(fields.join(','));
+
+                // console.log(csv.join('\r\n'));
+                return csv.join('\r\n')
+            },
+            downloadTable() {
+                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                // eslint-disable-next-line
+                axios.post(csv_url, this.compound_query)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        const text = this.json2csv(res);
+                        const filename = "result.csv";
+                        const element = document.createElement('a');
+                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                        element.setAttribute('download', filename);
+                        element.style.display = 'none';
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
+                    });
+            }
         },
         computed: {
             ...mapState(['synonym', 'count']),
