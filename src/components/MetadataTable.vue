@@ -6,11 +6,11 @@
             <!--xs12-->
             <!--&gt;-->
             <div v-if="isLoading">Loading...</div>
-            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>
-            <div v-else-if="count>0">Shown {{result.length}} item<span
-                    v-if="count>1">s</span>
-            </div>
-            <div v-else>No result</div>
+            <!--            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>-->
+            <!--            <div v-else-if="count>0">Shown {{result.length}} item<span-->
+            <!--                    v-if="count>1">s</span>-->
+            <!--            </div>-->
+            <!--            <div v-else>No result</div>-->
             <!--</v-flex>-->
             <v-dialog v-model="dialogOrder">
                 <v-card>
@@ -19,36 +19,39 @@
                             primary-title
                     >
                         Column order
-                    </v-card-title>
-                    <v-card-text>
-                        <draggable v-model="headers" @start="drag=true" @end="drag=false">
-                            <v-list v-for="element in headers" :key="element.value">
-                                <v-checkbox :label=element.text v-model=element.show></v-checkbox>
-                            </v-list>
-                        </draggable>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
                                 color="primary"
                                 flat
                                 @click="dialogOrder = false"
                         >
-                            Close
+                            Apply
                         </v-btn>
-                    </v-card-actions>
+                    </v-card-title>
+                                        <v-card-text>
+                        <draggable v-model="headers" @start="drag=true" @end="drag=false">
+                            <v-list v-for="element in headers" :key="element.value">
+                                <v-checkbox :label=element.text v-model=element.show></v-checkbox>
+                            </v-list>
+                        </draggable>
+                    </v-card-text>
+                    <v-divider></v-divider>
+
                 </v-card>
                 <v-btn dark
                        slot="activator"
                        small color="blue lighten-2"
                 >
-                    Order
+                    Sort fields
                 </v-btn>
             </v-dialog>
-            <v-btn color='info' @click="downloadTable">Download Results</v-btn>
+            <v-btn color="blue lighten-2"
+                   dark
+                   small
+                   @click="downloadTable"
+            >
+                Download table
+            </v-btn>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-label>Replicated</v-label>
@@ -463,8 +466,12 @@
             },
             json2csv(input) {
                 var json = input;
-                console.log(json[0]);
-                var fields = Object.keys(json[0]);
+                var fields = []
+                this.selected_headers.forEach(function (el) {
+                    if (el.value != "extra")
+                        fields.push(el.value)
+                });
+                console.log(fields);
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };
@@ -486,9 +493,9 @@
                         return res.data
                     })
                     .then((res) => {
-                        const text = this.json2csv(res);
-                        const filename = "result.csv";
-                        const element = document.createElement('a');
+                        let text = this.json2csv(res);
+                        let filename = "result.csv";
+                        let element = document.createElement('a');
                         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
                         element.setAttribute('download', filename);
                         element.style.display = 'none';

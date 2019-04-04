@@ -35,10 +35,10 @@
                 <v-container fluid grid-list-xl>
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>General Settings </span>
+                            <span class=label>General settings </span>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-radio-group v-model="typeLocal" label="Query type">
+                            <v-radio-group v-model="typeLocal" label="Data search">
                                 <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
                                 <v-radio label="Original" id="original" value="original"></v-radio>
                                 <v-radio label="Synonym" id="synonym" value="synonym" ></v-radio>
