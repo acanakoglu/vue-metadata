@@ -35,10 +35,40 @@
                 <v-container fluid grid-list-xl>
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class = label>General Settings </span>
+                            <span class=label>General settings </span>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-switch v-model="synonymLocal" label="Synonym" class="switch"/>
+                            <v-radio-group v-model="typeLocal" label="Data search" class="radio-group"
+                                           append-icon="info"
+                                           :append-icon-cb="openInfoDialog">
+                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
+                                <v-radio label="Original" id="original" value="original"></v-radio>
+                                <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
+                                <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
+                            </v-radio-group>
+                            <v-dialog
+                                    width="500"
+                                    v-model="infoDialog"
+                            >
+                                <v-card>
+                                    <v-card-title
+                                            class="headline grey lighten-2"
+                                            primary-title
+                                    >
+                                        TODO title
+                                    </v-card-title>
+
+                                    <v-card-text>
+                                        <p>Original: searches using metadata unchanged from the original data sources</p>
+                                        <p>Synonym: searches using original metadata and ontological term and synonyms
+                                            related to it</p>
+                                        <p>Hierarchy: searches using original metadata, ontological terms, and their
+                                            hypernyms and hyponyms</p>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+
                         </v-flex>
                         <v-flex xs3 class=" no-horizontal-padding">
                             <v-select solo
@@ -60,10 +90,10 @@
                     <v-layout wrap align-center test>
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
-                                <span class="label">
+                            <span class="label">
                                     Selected query:
                                 </span>
-                                {{ compound_query }}
+                            {{ compound_query }}
                             <!--</div>-->
                         </v-flex>
                     </v-layout>
@@ -214,7 +244,7 @@
                             query: {
                                 cell: ["gm12878"],
                                 assembly: ["hg19"],
-                                format: ["broadpeak"],
+                                file_format: ["broadpeak"],
                                 technique: ["chip-seq"],
                             }
                         }
@@ -241,6 +271,7 @@
                 ],
                 selectedTab: 0,
                 queryString: '',
+                infoDialog: false
 
             }
         },
@@ -248,6 +279,9 @@
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
+            },
+            openInfoDialog() {
+                this.infoDialog = true;
             },
             afterQuerySelection(item) {
                 console.log(item);
@@ -285,10 +319,22 @@
             }
         },
         computed: {
-            ...mapState(['query', 'synonym', 'count']),
+            ...mapState(['query', 'synonym', 'count', 'type']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            typeLocal: {
+                get() {
+                    return this.type;
+                },
+                set(value) {
+                    if (value) {
+                        this.setType(value)
+                    } else {
+                        this.resetType();
+                    }
+                }
+            },
             synonymLocal: {
                 get() {
                     // console.log("GET synonym " + this.synonym);
@@ -342,8 +388,19 @@
         padding: 12px;
     }
 
+    .radio-group .v-input__icon--append .v-icon {
+        color: #2196F3;
+        font-size: 15px;
+    }
+
     .bottom-info {
         margin: 1.5em;
+    }
+
+    .v-input__append-outer {
+        margin-left: -1.9em;
+        margin-top: -0.7em !important;
+        z-index: 1;
     }
 
     .selected-query {

@@ -5,177 +5,257 @@
             <!--lighten-2-->
             <!--xs12-->
             <!--&gt;-->
-            <div v-if="isLoading">Loading...</div>
-            <div v-else-if="result.length===1000" class="center">Shown up to 1000 items</div>
-            <div v-else-if="result.length>0">Shown {{result.length}} item<span
-                    v-if="result.length>1">s</span>
-            </div>
-            <div v-else>No result</div>
+            <!--            <div v-if="isLoading">Loading...</div>-->
+            <!--            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>-->
+            <!--            <div v-else-if="count>0">Shown {{result.length}} item<span-->
+            <!--                    v-if="count>1">s</span>-->
+            <!--            </div>-->
+            <!--            <div v-else>No result</div>-->
             <!--</v-flex>-->
-            <v-dialog v-model="dialogOrder">
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title
-                    >
-                        Column order
-                    </v-card-title>
-                    <v-card-text>
-                        <draggable v-model="headers" @start="drag=true" @end="drag=false">
-                            <v-list v-for="element in headers" :key="element.value">
-                                <v-checkbox :label = element.text v-model=element.show></v-checkbox>
-                            </v-list>
-                        </draggable>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogOrder = false"
+            <v-container fluid grid-list-xs>
+                <v-layout justify-space-between row>
+                    <v-flex m4 align-self-center>
+                        <v-dialog
+                                v-model="dialogGmql"
                         >
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2"
-                >
-                    Order
-                </v-btn>
-            </v-dialog>
-            <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
-            <v-label>Replicated</v-label>
-            <span style="padding-right: 1em"></span>
-            <v-switch label="Aggregated" v-model=agg_mode></v-switch>
-            <v-dialog
-                    full-width
-                    v-model="dialogGmql"
-            >
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2"
-                >
-                    GMQL
-                </v-btn>
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title
-                    >
-                        GMQL query
-                    </v-card-title>
-                    <v-progress-linear height="2" class="progress" :indeterminate="gmqlProgress"></v-progress-linear>
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="blue lighten-2"
+                            >
+                                GMQL
+                            </v-btn>
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title
+                                >
+                                    GMQL query
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="gmqlProgress"></v-progress-linear>
 
 
-                    <v-card-text>
-                        <p> Click "COPY TO CLIPBOARD" button and use whole query in
-                            <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
+                                <v-card-text>
+                                    <p> Click "COPY TO CLIPBOARD" button and use whole query in
+                                        <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
 
-                            One statement extracts the selected items from a single dataset.
-                            All datasets are unified into a single dataset for further use.
-                            <br>
-                            Please refer to
-                            <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
-                               target="gmql_doc">
-                                GMQL documentation
-                            </a>
-                            for specific use of querying language.
+                                        One statement extracts the selected items from a single dataset.
+                                        All datasets are unified into a single dataset for further use.
+                                        <br>
+                                        Please refer to
+                                        <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
+                                           target="gmql_doc">
+                                            GMQL documentation
+                                        </a>
+                                        for specific use of querying language.
 
-                            <br>
-                            Beware union of big datasets may result in long execution times.
-                        </p>
+                                        <br>
+                                        Beware union of big datasets may result in long execution times.
+                                    </p>
 
-                        <v-textarea
-                                label="GMQL query"
-                                :value="gmqlQuery"
-                        ></v-textarea>
-                    </v-card-text>
+                                    <v-textarea
+                                            label="GMQL query"
+                                            :value="gmqlQuery"
+                                    ></v-textarea>
+                                </v-card-text>
 
 
-                    <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="toClipboard()"
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="toClipboard()"
+                                    >
+                                        Copy to clipboard
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogGmql = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog
+                                v-model="dialogDownloadTable"
+                                width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="blue lighten-2">
+                                Download Table
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title>
+                                    Download metadata table
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+                                <v-card-text>
+                                    <p>
+                                        TODO text
+                                    </p>
+                                </v-card-text>
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="downloadTable">
+                                        Download
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogDownloadTable = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog
+                                v-model="dialogDownload"
+                                width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small color="blue lighten-2">
+                                Download Links
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title>
+                                    Download region files
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+
+
+                                <v-card-text>
+                                    <p>
+                                        Click the "Download" button below to download a "files.txt" file that contains
+                                        the
+                                        list
+                                        of
+                                        the URLs of the region data files related to the result items.
+                                    </p>
+                                    <p>
+                                        The following command using cURL can be used to download all the files in the
+                                        list:
+                                        <br>
+                                        <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
+                                    </p>
+
+
+                                </v-card-text>
+
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="download()">
+                                        Download
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogDownload = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+                    <v-flex m1 shrink align-self-center>
+                        <v-label>Replicated</v-label>
+                    </v-flex>
+                    <v-flex m1 d-flex align-self-center shrink class="padding-right">
+                        <v-switch label="Aggregated" v-model=agg_mode></v-switch>
+                        <v-dialog
+                                width="500"
                         >
-                            Copy to clipboard
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogGmql = false"
-                        >
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                            <v-btn slot="activator"
+                                   class="info-button"
+                                   small
+                                   flat icon color="blue">
+                                <v-icon class="info-icon">info</v-icon>
+                            </v-btn>
 
+                            <v-card>
+                                <v-card-title
+                                        class="headline grey lighten-2"
+                                        primary-title
+                                >
+                                    TODO title
+                                </v-card-title>
 
-            <v-dialog
-                    v-model="dialogDownload"
-                    width="500">
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2">
-                    Download
-                </v-btn>
+                                <v-card-text>
+                                    Generally, each row refers to one item. In case the item is derived from multiple
+                                    Replicates/Biosamples/Donors,
+                                    in the aggregated view: the related information is aggregated by concatenating the
+                                    possible values through the pipe "|";
+                                    in the replicated view: there is one row for each different Replicate (and
+                                    consequently Biosample/Donor).
+                                </v-card-text>
 
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title>
-                        Download region files
-                    </v-card-title>
-                    <v-progress-linear height="2" class="progress"
-                                       :indeterminate="downloadProgress"></v-progress-linear>
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+                    <v-flex m4 shrink align-self-center>
+                        <v-dialog width="500" v-model="dialogOrder">
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title
+                                >
+                                    Column order
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogOrder = false"
+                                    >
+                                        Apply
+                                    </v-btn>
+                                </v-card-title>
+                                <v-card-text>
+                                    <p>TODO text</p>
+                                    <draggable v-model="headers" @start="drag=true" @end="drag=false">
+                                        <v-list v-for="element in headers" :key="element.value">
+                                            <v-checkbox :label=element.text v-model=element.show></v-checkbox>
+                                        </v-list>
+                                    </draggable>
+                                </v-card-text>
+                                <v-divider></v-divider>
 
-
-                    <v-card-text>
-                        <p>
-                            Click the "Download" button below to download a "files.txt" file that contains the list of
-                            the URLs of the region data files related to the result items.
-                        </p>
-                        <p>
-                            The following command using cURL can be used to download all the files in the list:
-                            <br>
-                            <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
-                        </p>
-
-
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="download()">
-                            Download
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogDownload = false"
-                        >
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-
+                            </v-card>
+                            <v-btn dark
+                                   slot="activator"
+                                   small color="blue lighten-2"
+                            >
+                                Sort fields
+                            </v-btn>
+                        </v-dialog>
+                    </v-flex>
+                </v-layout>
+            </v-container>
             <!--<v-text-field-->
             <!--v-model="search"-->
             <!--append-icon="search"-->
@@ -187,10 +267,11 @@
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
-                :search="search"
                 :loading="isLoading"
                 class="data-table"
-                disable-initial-sort
+                :pagination.sync="pagination"
+                :rows-per-page-items="pagination.rowsPerPageItems"
+                :total-items="pagination.totalItems"
         >
             <template slot="items" slot-scope="props">
                 <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
@@ -212,14 +293,14 @@
                     <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
-            <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                Your search for "{{ search }}" found no results.
-            </v-alert>
+            <!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
+            <!--                Your search for "{{ search }}" found no results.-->
+            <!--            </v-alert>-->
 
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
-            <v-alert slot="no-data" :value="true" color="info" icon="info" v-else>
+            <v-alert slot="no-results" :value="true" color="info" icon="info" v-else>
                 Loading
             </v-alert>
         </v-data-table>
@@ -243,63 +324,80 @@
                 downloadProgress: false,
                 gmqlProgress: false,
                 dialogDownload: false,
+                dialogDownloadTable: false,
                 dialogGmql: false,
                 gmqlQuery: "",
                 isLoading: false,
                 search: '',
                 result: [],
                 agg_mode: true,
+                download_table: '',
                 dialogOrder: false,
                 headers: [
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
 
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,show: true},
-                    // {text: 'size', value: 'size'},
-                    // {text: 'date', value: 'date'},
-                    // {text: 'checksum', value: 'checksum'},
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable,show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable,show: true},
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,show: true},
+                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
 
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,show: true},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,show: true},
+                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
+                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
+                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
 
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable,show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable,show: true},
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable,show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,show: true},
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
 
-                    {text: 'Technique', value: 'technique', sortable: this.sortable,show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable,show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable,show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable,show: true},
+                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
+                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
+
+                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
+                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
+
+                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
+                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
+
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
+
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
 
                     {
                         text: 'Biological Replicate Number',
                         value: 'biological_replicate_number',
                         sortable: this.sortable,
-                        show: true
+                        show: false
                     },
-                    {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,show: true},
+                    {
+                        text: 'Technical Replicate Number',
+                        value: 'technical_replicate_number',
+                        sortable: this.sortable,
+                        show: false
+                    },
 
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable,show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable,show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable,show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,show: true},
+                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
+                    // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
 
-                    {text: 'Species', value: 'species', sortable: this.sortable,show: true},
-                    {text: 'Gender', value: 'gender', sortable: this.sortable,show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable,show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,show: true},
-
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable,show: true},
-                    {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: true},
-
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable,show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable,show: true}
+                    // {text: 'size', value: 'size'},
+                    // {text: 'date', value: 'date'},
+                    // {text: 'checksum', value: 'checksum'},
                 ],
+                pagination: {
+                    descending: false,
+                    page: 1,
+                    rowsPerPage: 10,
+                    sortBy: itemSourceIdName,
+                    totalItems: 0,
+                    rowsPerPageItems: [10, 100, 1000] //mani che si alzano
+                },
             }
         },
         watch: {
@@ -312,13 +410,18 @@
             agg_mode() {
                 this.applyQuery();
             },
+            pagination: {
+                handler() {
+                    this.applyQuery(false);
+                },
+                deep: true
+            },
             dialogGmql() {
                 if (this.dialogGmql) {
                     this.gmqlProgress = true;
                     this.gmqlQuery = "Loading!";
 
                     const url = `query/gmql?voc=${this.synonym}`;
-
 
                     // eslint-disable-next-line
                     axios.post(url, this.compound_query)
@@ -340,7 +443,8 @@
         methods: {
             ...mapMutations([
                 'openGraphDialog',
-                'openExtraMetadataDialog'
+                'openExtraMetadataDialog',
+                'setCount'
             ]),
             graphClicked(row) {
                 this.openGraphDialog(row[itemSourceIdName])
@@ -348,10 +452,26 @@
             extraMetadataClicked(row) {
                 this.openExtraMetadataDialog(row[itemSourceIdName])
             },
-            applyQuery() {
-                // console.log('test');
+            applyQuery(changeCount = true) {
+                if (changeCount) {
+                    var count_url = `query/count?agg=${this.agg_mode}`;
+                    // eslint-disable-next-line
+                    axios.post(count_url, this.compound_query)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            this.pagination.totalItems = res
+                        });
+                }
+                var orderDir = "";
 
-                const url = `query/table?agg=${this.agg_mode}`;
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
+
+                const url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 this.isLoading = true;
                 this.result = [];
                 // eslint-disable-next-line
@@ -373,7 +493,17 @@
                         this.result = res;
                         this.isLoading = false;
                     });
-
+                // if(changeCount) {
+                // const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                // // eslint-disable-next-line
+                // axios.post(csv_url, this.compound_query)
+                //     .then((res) => {
+                //         return res.data
+                //     })
+                //     .then((res) => {
+                //         this.download_table = res
+                //     });
+                // }
             },
             download() {
                 this.downloadProgress = true;
@@ -410,9 +540,49 @@
                 temp = temp.replace(/\|/g, "|<br/>")
                 return temp
             },
+            json2csv(input) {
+                var json = input;
+                var fields = [];
+                this.selected_headers.forEach(function (el) {
+                    if (el.value != "extra")
+                        fields.push(el.value)
+                });
+                var replacer = function (key, value) {
+                    return value === null ? 'N/D' : value
+                };
+                var csv = json.map(function (row) {
+                    return fields.map(function (fieldName) {
+                        return JSON.stringify(row[fieldName], replacer)
+                    }).join(',')
+                });
+                csv.unshift(fields.join(','));
+
+                return csv.join('\r\n')
+            },
+            downloadTable() {
+                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                this.downloadProgress = true
+                // eslint-disable-next-line
+                axios.post(csv_url, this.compound_query)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        let text = this.json2csv(res);
+                        let filename = "result.csv";
+                        let element = document.createElement('a');
+                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                        element.setAttribute('download', filename);
+                        element.style.display = 'none';
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
+                        this.downloadProgress = false;
+                    });
+            }
         },
         computed: {
-            ...mapState(['synonym',]),
+            ...mapState(['synonym', 'count']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
@@ -476,8 +646,8 @@
             selected_headers() {
                 var x;
                 var res = [];
-                for(x in this.headers) {
-                    if(this.headers[x].show){
+                for (x in this.headers) {
+                    if (this.headers[x].show) {
                         res.push(this.headers[x]);
                     }
                 }
@@ -492,6 +662,19 @@
 
     .progress {
         margin: 0;
+    }
+
+
+    .padding-right {
+        padding-right: 600px !important;
+    }
+
+    .info-icon {
+        font-size: 15px
+    }
+
+    .info-button {
+        width: 10px
     }
 
     .data-table {

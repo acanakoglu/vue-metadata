@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import {mapActions, mapState} from 'vuex'
+    import {mapActions, mapState, mapGetters} from 'vuex'
 
 
     export default {
@@ -45,15 +45,18 @@
             synonym() {
                 this.loadData();
             },
-            query() {
-                if(!this.synonym)
-                    this.loadData();
+            compound_query() {
+                // if(!this.synonym)
+                this.loadData();
             }
         },
         computed: {
             ...mapState([
                 'query', 'synonym',
             ]),
+             ...mapGetters({
+                compound_query: 'build_query'
+            }),
             selected: {
                 get() {
                     // console.log("GET" + this.fullQuery[this.field]);
@@ -95,11 +98,11 @@
                 return res;
             },
             loadData() {
-                const url = `field/${this.field}?voc=${this.synonym}`;
+                const url = `field/${this.field}`;
                 this.isLoading = true;
 
                 // eslint-disable-next-line
-                axios.post(url, this.query)
+                axios.post(url, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
