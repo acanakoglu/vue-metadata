@@ -38,12 +38,37 @@
                             <span class=label>General settings </span>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-radio-group v-model="typeLocal" label="Data search">
+                            <v-radio-group v-model="typeLocal" label="Data search" class="radio-group"
+                                           append-icon="info"
+                                           :append-icon-cb="openInfoDialog">
                                 <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
                                 <v-radio label="Original" id="original" value="original"></v-radio>
-                                <v-radio label="Synonym" id="synonym" value="synonym" ></v-radio>
+                                <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
                                 <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
                             </v-radio-group>
+                            <v-dialog
+                                    width="500"
+                                    v-model="infoDialog"
+                            >
+                                <v-card>
+                                    <v-card-title
+                                            class="headline grey lighten-2"
+                                            primary-title
+                                    >
+                                        TODO title
+                                    </v-card-title>
+
+                                    <v-card-text>
+                                        <p>Original: searches using metadata unchanged from the original data sources</p>
+                                        <p>Synonym: searches using original metadata and ontological term and synonyms
+                                            related to it</p>
+                                        <p>Hierarchy: searches using original metadata, ontological terms, and their
+                                            hypernyms and hyponyms</p>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+
                         </v-flex>
                         <v-flex xs3 class=" no-horizontal-padding">
                             <v-select solo
@@ -246,6 +271,7 @@
                 ],
                 selectedTab: 0,
                 queryString: '',
+                infoDialog: false
 
             }
         },
@@ -253,6 +279,9 @@
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
+            },
+            openInfoDialog() {
+                this.infoDialog = true;
             },
             afterQuerySelection(item) {
                 console.log(item);
@@ -359,8 +388,19 @@
         padding: 12px;
     }
 
+    .radio-group .v-input__icon--append .v-icon {
+        color: #2196F3;
+        font-size: 15px;
+    }
+
     .bottom-info {
         margin: 1.5em;
+    }
+
+    .v-input__append-outer {
+        margin-left: -1.9em;
+        margin-top: -0.7em !important;
+        z-index: 1;
     }
 
     .selected-query {

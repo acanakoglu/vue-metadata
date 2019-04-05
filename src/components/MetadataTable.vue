@@ -5,181 +5,257 @@
             <!--lighten-2-->
             <!--xs12-->
             <!--&gt;-->
-            <div v-if="isLoading">Loading...</div>
+            <!--            <div v-if="isLoading">Loading...</div>-->
             <!--            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>-->
             <!--            <div v-else-if="count>0">Shown {{result.length}} item<span-->
             <!--                    v-if="count>1">s</span>-->
             <!--            </div>-->
             <!--            <div v-else>No result</div>-->
             <!--</v-flex>-->
-            <v-dialog v-model="dialogOrder">
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title
-                    >
-                        Column order
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogOrder = false"
+            <v-container fluid grid-list-xs>
+                <v-layout justify-space-between row>
+                    <v-flex m4 align-self-center>
+                        <v-dialog
+                                v-model="dialogGmql"
                         >
-                            Apply
-                        </v-btn>
-                    </v-card-title>
-                                        <v-card-text>
-                        <draggable v-model="headers" @start="drag=true" @end="drag=false">
-                            <v-list v-for="element in headers" :key="element.value">
-                                <v-checkbox :label=element.text v-model=element.show></v-checkbox>
-                            </v-list>
-                        </draggable>
-                    </v-card-text>
-                    <v-divider></v-divider>
-
-                </v-card>
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2"
-                >
-                    Sort fields
-                </v-btn>
-            </v-dialog>
-            <v-btn color="blue lighten-2"
-                   dark
-                   small
-                   @click="downloadTable"
-            >
-                Download table
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
-            <v-label>Replicated</v-label>
-            <span style="padding-right: 1em"></span>
-            <v-switch label="Aggregated" v-model=agg_mode></v-switch>
-            <v-dialog
-                    full-width
-                    v-model="dialogGmql"
-            >
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2"
-                >
-                    GMQL
-                </v-btn>
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title
-                    >
-                        GMQL query
-                    </v-card-title>
-                    <v-progress-linear height="2" class="progress" :indeterminate="gmqlProgress"></v-progress-linear>
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="blue lighten-2"
+                            >
+                                GMQL
+                            </v-btn>
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title
+                                >
+                                    GMQL query
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="gmqlProgress"></v-progress-linear>
 
 
-                    <v-card-text>
-                        <p> Click "COPY TO CLIPBOARD" button and use whole query in
-                            <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
+                                <v-card-text>
+                                    <p> Click "COPY TO CLIPBOARD" button and use whole query in
+                                        <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
 
-                            One statement extracts the selected items from a single dataset.
-                            All datasets are unified into a single dataset for further use.
-                            <br>
-                            Please refer to
-                            <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
-                               target="gmql_doc">
-                                GMQL documentation
-                            </a>
-                            for specific use of querying language.
+                                        One statement extracts the selected items from a single dataset.
+                                        All datasets are unified into a single dataset for further use.
+                                        <br>
+                                        Please refer to
+                                        <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
+                                           target="gmql_doc">
+                                            GMQL documentation
+                                        </a>
+                                        for specific use of querying language.
 
-                            <br>
-                            Beware union of big datasets may result in long execution times.
-                        </p>
+                                        <br>
+                                        Beware union of big datasets may result in long execution times.
+                                    </p>
 
-                        <v-textarea
-                                label="GMQL query"
-                                :value="gmqlQuery"
-                        ></v-textarea>
-                    </v-card-text>
+                                    <v-textarea
+                                            label="GMQL query"
+                                            :value="gmqlQuery"
+                                    ></v-textarea>
+                                </v-card-text>
 
 
-                    <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="toClipboard()"
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="toClipboard()"
+                                    >
+                                        Copy to clipboard
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogGmql = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog
+                                v-model="dialogDownloadTable"
+                                width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="blue lighten-2">
+                                Download Table
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title>
+                                    Download metadata table
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+                                <v-card-text>
+                                    <p>
+                                        TODO text
+                                    </p>
+                                </v-card-text>
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="downloadTable">
+                                        Download
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogDownloadTable = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog
+                                v-model="dialogDownload"
+                                width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small color="blue lighten-2">
+                                Download Links
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title>
+                                    Download region files
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+
+
+                                <v-card-text>
+                                    <p>
+                                        Click the "Download" button below to download a "files.txt" file that contains
+                                        the
+                                        list
+                                        of
+                                        the URLs of the region data files related to the result items.
+                                    </p>
+                                    <p>
+                                        The following command using cURL can be used to download all the files in the
+                                        list:
+                                        <br>
+                                        <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
+                                    </p>
+
+
+                                </v-card-text>
+
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="download()">
+                                        Download
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogDownload = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+                    <v-flex m1 shrink align-self-center>
+                        <v-label>Replicated</v-label>
+                    </v-flex>
+                    <v-flex m1 d-flex align-self-center shrink class="padding-right">
+                        <v-switch label="Aggregated" v-model=agg_mode></v-switch>
+                        <v-dialog
+                                width="500"
                         >
-                            Copy to clipboard
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogGmql = false"
-                        >
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                            <v-btn slot="activator"
+                                   class="info-button"
+                                   small
+                                   flat icon color="blue">
+                                <v-icon class="info-icon">info</v-icon>
+                            </v-btn>
 
+                            <v-card>
+                                <v-card-title
+                                        class="headline grey lighten-2"
+                                        primary-title
+                                >
+                                    TODO title
+                                </v-card-title>
 
-            <v-dialog
-                    v-model="dialogDownload"
-                    width="500">
-                <v-btn dark
-                       slot="activator"
-                       small color="blue lighten-2">
-                    Download
-                </v-btn>
+                                <v-card-text>
+                                    Generally, each row refers to one item. In case the item is derived from multiple
+                                    Replicates/Biosamples/Donors,
+                                    in the aggregated view: the related information is aggregated by concatenating the
+                                    possible values through the pipe "|";
+                                    in the replicated view: there is one row for each different Replicate (and
+                                    consequently Biosample/Donor).
+                                </v-card-text>
 
-                <v-card>
-                    <v-card-title
-                            class="headline blue lighten-4"
-                            primary-title>
-                        Download region files
-                    </v-card-title>
-                    <v-progress-linear height="2" class="progress"
-                                       :indeterminate="downloadProgress"></v-progress-linear>
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+                    <v-flex m4 shrink align-self-center>
+                        <v-dialog width="500" v-model="dialogOrder">
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title
+                                >
+                                    Column order
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            flat
+                                            @click="dialogOrder = false"
+                                    >
+                                        Apply
+                                    </v-btn>
+                                </v-card-title>
+                                <v-card-text>
+                                    <p>TODO text</p>
+                                    <draggable v-model="headers" @start="drag=true" @end="drag=false">
+                                        <v-list v-for="element in headers" :key="element.value">
+                                            <v-checkbox :label=element.text v-model=element.show></v-checkbox>
+                                        </v-list>
+                                    </draggable>
+                                </v-card-text>
+                                <v-divider></v-divider>
 
-
-                    <v-card-text>
-                        <p>
-                            Click the "Download" button below to download a "files.txt" file that contains the list of
-                            the URLs of the region data files related to the result items.
-                        </p>
-                        <p>
-                            The following command using cURL can be used to download all the files in the list:
-                            <br>
-                            <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
-                        </p>
-
-
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="download()">
-                            Download
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="primary"
-                                flat
-                                @click="dialogDownload = false"
-                        >
-                            Close
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-
+                            </v-card>
+                            <v-btn dark
+                                   slot="activator"
+                                   small color="blue lighten-2"
+                            >
+                                Sort fields
+                            </v-btn>
+                        </v-dialog>
+                    </v-flex>
+                </v-layout>
+            </v-container>
             <!--<v-text-field-->
             <!--v-model="search"-->
             <!--append-icon="search"-->
@@ -248,6 +324,7 @@
                 downloadProgress: false,
                 gmqlProgress: false,
                 dialogDownload: false,
+                dialogDownloadTable: false,
                 dialogGmql: false,
                 gmqlQuery: "",
                 isLoading: false,
@@ -377,14 +454,13 @@
             },
             applyQuery(changeCount = true) {
                 if (changeCount) {
-                    var count_url = 'query/count';
+                    var count_url = `query/count?agg=${this.agg_mode}`;
                     // eslint-disable-next-line
                     axios.post(count_url, this.compound_query)
                         .then((res) => {
                             return res.data
                         })
                         .then((res) => {
-                            this.setCount(res)
                             this.pagination.totalItems = res
                         });
                 }
@@ -466,12 +542,11 @@
             },
             json2csv(input) {
                 var json = input;
-                var fields = []
+                var fields = [];
                 this.selected_headers.forEach(function (el) {
                     if (el.value != "extra")
                         fields.push(el.value)
                 });
-                console.log(fields);
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };
@@ -482,11 +557,11 @@
                 });
                 csv.unshift(fields.join(','));
 
-                // console.log(csv.join('\r\n'));
                 return csv.join('\r\n')
             },
             downloadTable() {
                 const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                this.downloadProgress = true
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
                     .then((res) => {
@@ -502,6 +577,7 @@
                         document.body.appendChild(element);
                         element.click();
                         document.body.removeChild(element);
+                        this.downloadProgress = false;
                     });
             }
         },
@@ -586,6 +662,19 @@
 
     .progress {
         margin: 0;
+    }
+
+
+    .padding-right {
+        padding-right: 600px !important;
+    }
+
+    .info-icon {
+        font-size: 15px
+    }
+
+    .info-button {
+        width: 10px
     }
 
     .data-table {
