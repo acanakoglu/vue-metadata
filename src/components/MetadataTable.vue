@@ -102,7 +102,12 @@
                                                    :indeterminate="downloadProgress"></v-progress-linear>
                                 <v-card-text>
                                     <p>
-                                        TODO text
+                                        Click the "Download" button below to download a "result.csv" file that contains
+                                        the comma-separated version of the table shown in the "RESULT ITEMS" section, preserving user defined fields order.
+                                    </p>
+                                    <p>
+                                        Please check size of selection.
+                                        Beware that downloading tables with many files may result in long waiting time.
                                     </p>
                                 </v-card-text>
                                 <v-divider></v-divider>
@@ -203,16 +208,16 @@
                                         class="headline grey lighten-2"
                                         primary-title
                                 >
-                                    TODO title
+                                    Replicated and aggregated view
                                 </v-card-title>
 
                                 <v-card-text>
-                                    Generally, each row refers to one item. In case the item is derived from multiple
-                                    Replicates/Biosamples/Donors,
-                                    in the aggregated view: the related information is aggregated by concatenating the
-                                    possible values through the pipe "|";
-                                    in the replicated view: there is one row for each different Replicate (and
-                                    consequently Biosample/Donor).
+                                    <p>Generally, each row refers to one item. In case the item is derived from multiple
+                                    Replicates/Biosamples/Donors:</p>
+                                    <p>- in the aggregated view the related information is aggregated by concatenating the
+                                    possible values through the pipe "|";</p>
+                                    <p>- in the replicated view: there is one row for each different Replicate (and
+                                    consequently Biosample/Donor).</p>
                                 </v-card-text>
 
                             </v-card>
@@ -236,7 +241,9 @@
                                     </v-btn>
                                 </v-card-title>
                                 <v-card-text>
-                                    <p>TODO text</p>
+                                    <p>Drag and drop field names in the desired position.
+                                    Check or uncheck fields to re-define table content.
+                                    Press APPLY to go back to the result window.</p>
                                     <draggable v-model="headers" @start="drag=true" @end="drag=false">
                                         <v-list v-for="element in headers" :key="element.value">
                                             <v-checkbox :label=element.text v-model=element.show></v-checkbox>
