@@ -55,7 +55,7 @@
                                             class="headline grey lighten-2"
                                             primary-title
                                     >
-                                        TODO title
+                                        Data search
                                     </v-card-title>
 
                                     <v-card-text>
