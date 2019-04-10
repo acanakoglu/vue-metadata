@@ -40,7 +40,7 @@
                         <v-flex xs2 class="no-horizontal-padding">
                             <v-radio-group v-model="typeLocal" label="Data search" class="radio-group"
                                            append-icon="info"
-                                           :append-icon-cb="openInfoDialog">
+                                           @click:append="openInfoDialog">
                                 <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
                                 <v-radio label="Original" id="original" value="original"></v-radio>
                                 <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
@@ -103,6 +103,7 @@
 
                 <MetadataDropDownList/>
                 <FullScreenGraphViewer/>
+                <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -200,6 +201,7 @@
     import FullScreenGraphViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
     import TextReader from "./components/TextReader"
+    import PairQuery from "./components/PairQuery"
 
     export default {
         name: 'App',
@@ -209,6 +211,7 @@
             MetadataDropDownList,
             CountTable,
             TextReader,
+            PairQuery,
         },
         data() {
             return {
