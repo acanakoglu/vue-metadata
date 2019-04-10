@@ -41,11 +41,9 @@
                     ></v-text-field>
                 </v-flex>
             </v-layout>
-            <v-expansion-panel >
-                <v-expansion-panel-content
-                        v-for="key in keys"
-                        :key="key"
-                        :value="key">
+            <v-expansion-panel>
+                <v-expansion-panel-content v-for="(item,i) in keys" :key="i">
+                    <div slot="header">{{item}}</div>
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
                                       primary-title>
@@ -63,6 +61,7 @@
                             </template>
                         </v-data-table>
                     </v-card>
+
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
                                       primary-title>PAIRS
@@ -79,6 +78,8 @@
                             </template>
                         </v-data-table>
                     </v-card>
+
+
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-content>
@@ -114,7 +115,6 @@
             </v-layout>
         </v-content>
         {{keys}}
-        {{panel}}
     </v-container>
 </template>
 
@@ -179,8 +179,8 @@
         font-size: 15px;
     }
 
-    .v-input__append-outer {
-        margin-left: -1.6em;
+   .radio-group2 .v-input__append-outer {
+        margin-left: -0.5em;
         margin-top: -0.7em !important;
         z-index: 1;
     }

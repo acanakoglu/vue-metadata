@@ -373,11 +373,6 @@
         max-width: 100%;
     }
 
-    /*.¬ {*/
-    /*margin-bottom: -10px;*/
-
-    /*}*/
-
     .fab-container {
         position: absolute;
         /*top: 64px;*/
