@@ -1,10 +1,9 @@
 <template>
     <v-container fluid grid-list-xl>
-        <h1>Pair Query</h1>
         <v-content v-if="pairQueryType=='key'" class="no-horizontal-padding">
             <v-layout>
                 <v-flex xs2 class="no-horizontal-padding">
-                    <v-radio-group label="Pair search" class="radio-group2"
+                    <v-radio-group label="Key-value search" class="radio-group2"
                                    append-icon="info"
                                    @click:append="openInfoDialog"
                                    v-model="pairQueryType">
@@ -20,11 +19,14 @@
                                     class="headline grey lighten-2"
                                     primary-title
                             >
-                                Data search
+                                Key-value search
                             </v-card-title>
 
                             <v-card-text>
-                                TODO text
+                                <p>Key: free text search over all attributes, including original metadata and GCM
+                                    fields.</p>
+                                <p>Value: free text search over all values, including original metadata and GCM
+                                    fields.</p>
                             </v-card-text>
 
                         </v-card>
@@ -108,22 +110,22 @@
                             <v-card-title
                                     class="headline blue lighten-4"
                                     primary-title>
-                                Values for key {{keyToSearch}}
+                                Values for key <b> {{keyToSearch}} </b>
                             </v-card-title>
 
                             <v-divider></v-divider>
                             <v-data-table
                                     :headers="valueHeaders"
-                                    :items="resultsValues"
+                                    :items="possibleValues"
                                     :loading="isLoading"
                                     class="data-table"
                             >
                                 <template slot="items" slot-scope="props">
                                     <td v-for="header in valueHeaders" :key="header.value">
                                         <span v-if="header.value==='selected'">
-                                        <v-checkbox></v-checkbox>
+                                        <v-checkbox v-model="props.item.selected" ></v-checkbox>
                                     </span>
-                                        <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
+                                        <span v-else v-html="updateCellTextFormat(props.item.a[header.value])"></span>
                                     </td>
                                 </template>
                             </v-data-table>
@@ -172,7 +174,9 @@
                 </v-flex>
             </v-layout>
         </v-content>
-        {{keys}}
+        <p>{{keys}}</p>
+        <p>{{kvLocal}}</p>
+        <p>{{selectedValues}}</p>
     </v-container>
 </template>
 
@@ -198,16 +202,19 @@
                     {text: 'Count', value: 'count', sortable: false},
                     {text: 'Selected', value: 'selected', sortable: false},
                 ],
-                resultsValues: [],
                 resultsGcm: [],
                 resultsPair: [],
                 isLoading: false,
                 keys: [],
                 panel: [],
                 keyDummy: "key",
+                valueDummy: "value",
                 valuesDialog: false,
                 keyToSearch: "",
                 isGcm: true,
+                // selectedValues: [],
+                possibleValues: [],
+                kvLocal: {},
             }
         },
         methods: {
@@ -245,8 +252,29 @@
             },
             resetSearch() {
                 this.valuesDialog = false;
-
             },
+            pushValue(input) {
+                if (!this.selectedValues.includes(input)) {
+                    this.selectedValues.push(input);
+                } else {
+                    this.selectedValues = this.selectedValues.filter(function (value) {
+                        return value != input
+                    })
+                }
+                console.log(this.selectedValues)
+            },
+        },
+        computed: {
+            selectedValues() {
+                var x;
+                var res = [];
+                for (x in this.possibleValues) {
+                    if (this.possibleValues[x].selected) {
+                        res.push(this.possibleValues[x].a.value);
+                    }
+                }
+                return res;
+            }
         },
         watch: {
             key() {
@@ -254,23 +282,33 @@
                 this.keys.push(this.key)
             },
             valuesDialog() {
+                let k = this.keyToSearch;
                 if (this.valuesDialog) {
                     this.isLoading = true;
                     let url = "pair/" + this.keyToSearch + "/values?is_gcm=" + this.isGcm;
-                    console.log(url)
                     // eslint-disable-next-line
                     axios.get(url)
                         .then((res) => {
                             return res.data
                         })
                         .then((res) => {
-                            console.log(res);
-                            this.resultsValues = res;
+                            var x;
+                            for (x in res) {
+                                let cur = this.kvLocal[k];
+                                console.log(cur);
+                                var selected = false;
+                                if(typeof cur !== 'undefined') {
+                                    selected = cur.includes(res[x].value);
+                                }
+                                this.possibleValues.push({'a': res[x], 'selected': selected});
+                            }
                             this.isLoading = false
                         });
                 } else {
+                    let v = this.selectedValues;
+                    this.kvLocal[k] = v;
                     this.keyToSearch = "";
-                    this.resultsValues = [];
+                    this.possibleValues = [];
                 }
             },
         }
@@ -279,8 +317,7 @@
 
 <style>
     .radio-group2 .v-input__icon--append .v-icon {
-        /*color: #2196F3;*/
-        color: rebeccapurple;
+        color: #2196F3;
         font-size: 15px;
     }
 
