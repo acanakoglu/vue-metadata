@@ -46,7 +46,7 @@
                     <div slot="header">{{item}}</div>
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
-                                      primary-title>
+                                      secondary-title>
                             GCM
                         </v-card-title>
                         <v-data-table
@@ -57,6 +57,17 @@
                         >
                             <template slot="items" slot-scope="props">
                                 <td v-for="header in headers" :key="header.value">
+                                    <span v-if="header.value === 'values'">
+                                        <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],true)
+                                               color="blue">
+                                            <v-icon>list</v-icon>
+                                         </v-btn>
+                                    </span>
+                                    <span v-else-if="header.value==='selected'">
+                                        <v-checkbox></v-checkbox>
+                                    </span>
+                                    <span v-else v-html="updateCellTextFormat(props.item[header.value])">
+                                    </span>
                                 </td>
                             </template>
                         </v-data-table>
@@ -64,7 +75,8 @@
 
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
-                                      primary-title>PAIRS
+                                      secondary-title>
+                            PAIRS
                         </v-card-title>
                         <v-data-table
                                 :headers="headers"
@@ -74,12 +86,58 @@
                         >
                             <template slot="items" slot-scope="props">
                                 <td v-for="header in headers" :key="header.value">
+                                    <span v-if="header.value === 'values'">
+                                        <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],false)
+                                               color="blue">
+                                            <v-icon>list</v-icon>
+                                         </v-btn>
+                                    </span>
+                                    <span v-else-if="header.value==='selected'">
+                                        <v-checkbox></v-checkbox>
+                                    </span>
+                                    <span v-else v-html="updateCellTextFormat(props.item[header.value])">
+                                    </span>
                                 </td>
                             </template>
                         </v-data-table>
                     </v-card>
+                    <v-dialog
+                            v-model="valuesDialog"
+                            fullscreen>
+                        <v-card>
+                            <v-card-title
+                                    class="headline blue lighten-4"
+                                    primary-title>
+                                Values for key {{keyToSearch}}
+                            </v-card-title>
 
-
+                            <v-divider></v-divider>
+                            <v-data-table
+                                    :headers="valueHeaders"
+                                    :items="resultsValues"
+                                    :loading="isLoading"
+                                    class="data-table"
+                            >
+                                <template slot="items" slot-scope="props">
+                                    <td v-for="header in valueHeaders" :key="header.value">
+                                        <span v-if="header.value==='selected'">
+                                        <v-checkbox></v-checkbox>
+                                    </span>
+                                        <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
+                                    </td>
+                                </template>
+                            </v-data-table>
+                            <v-card-actions>
+                                <v-btn
+                                        color="primary"
+                                        flat
+                                        @click="resetSearch"
+                                >
+                                    Close
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-content>
@@ -133,12 +191,23 @@
                     {text: 'Key', value: 'key', sortable: false},
                     {text: 'Selected', value: 'selected', sortable: false},
                     {text: 'Values', value: 'values', sortable: false},
+                    // {text: 'Values', value: 'values', sortable: false},
                 ],
+                valueHeaders: [
+                    {text: 'Value', value: 'value', sortable: false},
+                    {text: 'Count', value: 'count', sortable: false},
+                    {text: 'Selected', value: 'selected', sortable: false},
+                ],
+                resultsValues: [],
                 resultsGcm: [],
                 resultsPair: [],
                 isLoading: false,
                 keys: [],
                 panel: [],
+                keyDummy: "key",
+                valuesDialog: false,
+                keyToSearch: "",
+                isGcm: true,
             }
         },
         methods: {
@@ -158,16 +227,52 @@
                     })
                     .then((res) => {
                         this.resultsGcm = res['gcm'];
-                        this.resultsPair = res['pairs']
+                        this.resultsPair = res['pairs'];
                         this.isLoading = false
                     });
-            }
+            },
+            updateCellTextFormat(input) {
+                var temp = input;
+                if (temp === null)
+                    temp = 'N/D';
+                // temp = temp.replace(/\|/g, "|<br/>")
+                return temp
+            },
+            openValuesDialog(input, isGcm) {
+                this.valuesDialog = true;
+                this.keyToSearch = input;
+                this.isGcm = isGcm;
+            },
+            resetSearch() {
+                this.valuesDialog = false;
+
+            },
         },
         watch: {
             key() {
                 this.searchKey();
                 this.keys.push(this.key)
-            }
+            },
+            valuesDialog() {
+                if (this.valuesDialog) {
+                    this.isLoading = true;
+                    let url = "pair/" + this.keyToSearch + "/values?is_gcm=" + this.isGcm;
+                    console.log(url)
+                    // eslint-disable-next-line
+                    axios.get(url)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            console.log(res);
+                            this.resultsValues = res;
+                            this.isLoading = false
+                        });
+                } else {
+                    this.keyToSearch = "";
+                    this.resultsValues = [];
+                }
+            },
         }
     }
 </script>
@@ -179,7 +284,7 @@
         font-size: 15px;
     }
 
-   .radio-group2 .v-input__append-outer {
+    .radio-group2 .v-input__append-outer {
         margin-left: -0.5em;
         margin-top: -0.7em !important;
         z-index: 1;
