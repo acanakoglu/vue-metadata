@@ -13,6 +13,8 @@ export default new Vuex.Store({
         extraMetadataSourceId: null,
         count: null,
         showGraphQuery: false,
+        keys: [],
+        searchDisabled: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -24,6 +26,21 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setSearch: (state, value) => {
+            state.searchDisabled = value;
+            console.log(state.searchDisabled)
+        },
+        pushKey: (state, key) => {
+            if (!state.keys.includes(key))
+                state.keys.push(key)
+        },
+        deleteKey: (state, key) => {
+            var filtered = state.keys.filter(function (value) {
+                return value !== key
+            });
+            console.log(key)
+            state.keys = Object.assign([], filtered)
+        },
         setQuery: (state, query) => {
             state.query = Object.assign({}, query);
         },
