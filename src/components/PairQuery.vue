@@ -1,6 +1,6 @@
 <template>
     <v-container fluid grid-list-xl>
-        <v-content v-if="pairQueryType=='key'" class="no-horizontal-padding">
+        <v-content v-if="pairQueryType==='key'" class="no-horizontal-padding">
             <v-layout>
                 <v-flex xs2 class="no-horizontal-padding">
                     <v-radio-group label="Key-value search" class="radio-group2"
@@ -37,19 +37,21 @@
                             v-model="search"
                             append-icon="search"
                             @click:append="setKey"
+                            @keydown.enter="setKey"
                             label="Search"
                             single-line
                             hide-details
                     ></v-text-field>
                 </v-flex>
             </v-layout>
+            {{panel}}
             <v-expansion-panel>
                 <v-expansion-panel-content v-for="(item,i) in keys" :key="i">
                     <div slot="header">{{item}}</div>
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
                                       secondary-title>
-                            GCM
+                            Genomic Conceptual Model
                         </v-card-title>
                         <v-data-table
                                 :headers="headers"
@@ -65,8 +67,8 @@
                                             <v-icon>list</v-icon>
                                          </v-btn>
                                     </span>
-                                    <span v-else-if="header.value==='selected'">
-                                        <v-checkbox></v-checkbox>
+                                    <span v-else-if="header.value==='selected'"
+                                          v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
                                     </span>
                                     <span v-else v-html="updateCellTextFormat(props.item[header.value])">
                                     </span>
@@ -78,7 +80,7 @@
                     <v-card>
                         <v-card-title class="headline blue lighten-4"
                                       secondary-title>
-                            PAIRS
+                            Original key-value pairs
                         </v-card-title>
                         <v-data-table
                                 :headers="headers"
@@ -94,8 +96,8 @@
                                             <v-icon>list</v-icon>
                                          </v-btn>
                                     </span>
-                                    <span v-else-if="header.value==='selected'">
-                                        <v-checkbox></v-checkbox>
+                                    <span v-else-if="header.value==='selected'"
+                                          v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
                                     </span>
                                     <span v-else v-html="updateCellTextFormat(props.item[header.value])">
                                     </span>
@@ -123,9 +125,10 @@
                                 <template slot="items" slot-scope="props">
                                     <td v-for="header in valueHeaders" :key="header.value">
                                         <span v-if="header.value==='selected'">
-                                        <v-checkbox v-model="props.item.selected" ></v-checkbox>
+                                        <v-checkbox v-model="props.item.selected"></v-checkbox>
                                     </span>
-                                        <span v-else v-html="updateCellTextFormat(props.item.a[header.value])"></span>
+                                        <span v-else
+                                              v-html="updateCellTextFormat(props.item.a[header.value])"></span>
                                     </td>
                                 </template>
                             </v-data-table>
@@ -140,6 +143,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
+                    <!--                    <KvExpansionPanel :query_key="item"></KvExpansionPanel>-->
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-content>
@@ -181,10 +185,13 @@
 </template>
 
 <script>
-    // import {mapMutations, mapState, mapGetters} from 'vuex';
+    import {mapMutations, mapState, mapGetters} from 'vuex';
+
+    import KvExpansionPanel from "./KvExpansionPanel"
 
     export default {
         name: "PairQuery",
+        components: {KvExpansionPanel},
         data() {
             return {
                 search: "",
@@ -193,9 +200,9 @@
                 pairQueryType: "key",
                 headers: [
                     {text: 'Key', value: 'key', sortable: false},
-                    {text: 'Selected', value: 'selected', sortable: false},
+                    {text: 'N. Distinct Values', value: 'count_values', sortable: false},
+                    {text: 'N. Selected Values', value: 'selected', sortable: false},
                     {text: 'Values', value: 'values', sortable: false},
-                    // {text: 'Values', value: 'values', sortable: false},
                 ],
                 valueHeaders: [
                     {text: 'Value', value: 'value', sortable: false},
@@ -206,7 +213,7 @@
                 resultsPair: [],
                 isLoading: false,
                 keys: [],
-                panel: [],
+                panel: [true, false],
                 keyDummy: "key",
                 valueDummy: "value",
                 valuesDialog: false,
@@ -228,7 +235,7 @@
                 this.isLoading = true;
                 let url = "pair/keys?key=" + this.key;
                 // eslint-disable-next-line
-                axios.post(url)
+                axios.post(url, this.compound_query)
                     .then((res) => {
                         return res.data
                     })
@@ -253,18 +260,19 @@
             resetSearch() {
                 this.valuesDialog = false;
             },
-            pushValue(input) {
-                if (!this.selectedValues.includes(input)) {
-                    this.selectedValues.push(input);
-                } else {
-                    this.selectedValues = this.selectedValues.filter(function (value) {
-                        return value != input
-                    })
+            getSelectedCount(key) {
+                let cur = this.kvLocal[key]
+                if (typeof cur === 'undefined')
+                    return 0;
+                else {
+                    return cur.length
                 }
-                console.log(this.selectedValues)
-            },
+            }
         },
         computed: {
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
             selectedValues() {
                 var x;
                 var res = [];
@@ -274,7 +282,7 @@
                     }
                 }
                 return res;
-            }
+            },
         },
         watch: {
             key() {
@@ -287,7 +295,7 @@
                     this.isLoading = true;
                     let url = "pair/" + this.keyToSearch + "/values?is_gcm=" + this.isGcm;
                     // eslint-disable-next-line
-                    axios.get(url)
+                    axios.post(url, this.compound_query)
                         .then((res) => {
                             return res.data
                         })
@@ -295,9 +303,8 @@
                             var x;
                             for (x in res) {
                                 let cur = this.kvLocal[k];
-                                console.log(cur);
                                 var selected = false;
-                                if(typeof cur !== 'undefined') {
+                                if (typeof cur !== 'undefined') {
                                     selected = cur.includes(res[x].value);
                                 }
                                 this.possibleValues.push({'a': res[x], 'selected': selected});
