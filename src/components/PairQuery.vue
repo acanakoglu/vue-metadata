@@ -1,6 +1,5 @@
 <template>
     <v-container fluid grid-list-xl>
-        <v-content v-if="pairQueryType==='key'" class="no-horizontal-padding">
             <v-layout>
                 <v-flex xs2 class="no-horizontal-padding">
                     <v-radio-group label="Key-value search" class="radio-group2"
@@ -46,40 +45,8 @@
                 </v-flex>
             </v-layout>
             <v-expansion-panel>
-                <KvExpansionPanel v-for="(item, i) in keys" :query_key="item" :key="item"></KvExpansionPanel>
+                <KvExpansionPanel v-for="item in keys" :query_text="item" :query_type="pairQueryType" :key="item"></KvExpansionPanel>
             </v-expansion-panel>
-        </v-content>
-        <v-content v-else class="no-horizontal-padding">
-            <v-layout>
-                <v-flex xs2 class="no-horizontal-padding">
-                    <v-radio-group label="Pair search" class="radio-group2"
-                                   append-icon="info"
-                                   @click:append="openInfoDialog"
-                                   v-model="pairQueryType">
-                        <v-radio label="Key" id="key2" value="key"></v-radio>
-                        <v-radio label="Value" id="value2" value="value"></v-radio>
-                    </v-radio-group>
-                    <v-dialog
-                            width="500"
-                            v-model="infoDialog"
-                    >
-                        <v-card>
-                            <v-card-title
-                                    class="headline grey lighten-2"
-                                    primary-title
-                            >
-                                Data search
-                            </v-card-title>
-
-                            <v-card-text>
-                                TODO text
-                            </v-card-text>
-
-                        </v-card>
-                    </v-dialog>
-                </v-flex>
-            </v-layout>
-        </v-content>
         <p>{{keys}}</p>
     </v-container>
 </template>

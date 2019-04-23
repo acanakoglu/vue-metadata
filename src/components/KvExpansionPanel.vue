@@ -1,6 +1,8 @@
 <template>
     <v-expansion-panel-content :disabled="readOnly" :value="open">
-        <div slot="header">{{query_key}}{{kvLocal}}</div>
+        <div slot="header">{{query_text}}:{{kvLocal}}</div>
+        <p>{{selectedKvGcm}}</p>
+        <p>{{selectedKvPairs}}</p>
         <v-card>
             <v-card-title class="headline blue lighten-4"
                           secondary-title>
@@ -14,17 +16,20 @@
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headers" :key="header.value">
-                                    <span v-if="header.value === 'values'">
-                                        <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],true)
-                                               color="blue">
-                                            <v-icon>list</v-icon>
-                                         </v-btn>
-                                    </span>
-                        <span v-else-if="header.value==='selected'"
+                        <span v-if="header.value === 'values'">
+                            <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],true)
+                                   color="blue">
+                                <v-icon>list</v-icon>
+                            </v-btn>
+                        </span>
+                        <span v-else-if="header.value==='selectedNumber'"
                               v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
-                                    </span>
+                        </span>
+                        <span v-else-if="header.value==='selected'">
+                            <v-checkbox v-model="selectedKvGcm" :value="props.item"></v-checkbox>
+                        </span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value])">
-                                    </span>
+                        </span>
                     </td>
                 </template>
             </v-data-table>
@@ -43,21 +48,26 @@
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headers" :key="header.value">
-                                    <span v-if="header.value === 'values'">
-                                        <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],false)
-                                               color="blue">
-                                            <v-icon>list</v-icon>
-                                         </v-btn>
-                                    </span>
-                        <span v-else-if="header.value==='selected'"
+                        <span v-if="header.value === 'values'">
+                            <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],false)
+                                   color="blue">
+                                <v-icon>list</v-icon>
+                            </v-btn>
+                        </span>
+                        <span v-else-if="header.value==='selectedNumber'"
                               v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
-                                    </span>
+                        </span>
+                        <span v-else-if="header.value==='selected'">
+                            <v-checkbox v-model="selectedKvPairs" :value="props.item"></v-checkbox>
+                        </span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value])">
-                                    </span>
+
+                        </span>
                     </td>
                 </template>
             </v-data-table>
         </v-card>
+
         <v-dialog
                 v-model="valuesDialog"
                 fullscreen>
@@ -65,7 +75,7 @@
                 <v-card-title
                         class="headline blue lighten-4"
                         primary-title>
-                    Values for key <b> {{keyToSearch}} </b>
+                    Values for key {{keyToSearch}}
                 </v-card-title>
 
                 <v-divider></v-divider>
@@ -77,11 +87,11 @@
                 >
                     <template slot="items" slot-scope="props">
                         <td v-for="header in valueHeaders" :key="header.value">
-                                        <span v-if="header.value==='selected'">
-                                        <v-checkbox v-model="props.item.selected"></v-checkbox>
-                                    </span>
-                            <span v-else
-                                  v-html="updateCellTextFormat(props.item.a[header.value])"></span>
+                            <span v-if="header.value==='selected'">
+                                <v-checkbox v-model="props.item.selected"></v-checkbox>
+                            </span>
+                            <span v-else v-html="updateCellTextFormat(props.item.a[header.value])">
+                            </span>
                         </td>
                     </template>
                 </v-data-table>
@@ -107,18 +117,16 @@
     export default {
         name: "KvExpansionPanel",
         props: {
-            query_key: {type: String, required: true}
+            query_text: {type: String, required: true},
+            query_type: {type: String, required: true}
         },
         data() {
             return {
+                selectedKvGcm: [],
+                selectedKvPairs: [],
                 readOnly: false,
                 open: true,
-                headers: [
-                    {text: 'Key', value: 'key', sortable: false},
-                    {text: 'N. Distinct Values', value: 'count_values', sortable: false},
-                    {text: 'N. Selected Values', value: 'selected', sortable: false},
-                    {text: 'Values', value: 'values', sortable: false},
-                ],
+                headers: [],
                 valueHeaders: [
                     {text: 'Value', value: 'value', sortable: false},
                     {text: 'Count', value: 'count', sortable: false},
@@ -136,23 +144,44 @@
                 isGcm: true,
                 // selectedValues: [],
                 possibleValues: [],
-                kvLocal: {},
+                kvLocal: {
+                    type_query: this.query_type,
+                    query: {
+                        gcm: {},
+                        pairs: {},
+                    }
+                },
             }
         },
         mounted() {
-            this.searchKey();
-            this.key = this.query_key;
+            this.searchText();
+            this.key = this.query_text;
             this.setSearch(true)
+            if (this.query_type === 'key') {
+                this.headers = [
+                    {text: 'Key', value: 'key', sortable: false},
+                    {text: 'N. Distinct Values', value: 'count_values', sortable: false},
+                    {text: 'N. Selected Values', value: 'selectedNumber', sortable: false},
+                    {text: 'Values', value: 'values', sortable: false},
+                ]
+            } else {
+                this.headers = [
+                    {text: 'Key', value: 'key', sortable: false},
+                    {text: 'Value', value: 'value', sortable: false},
+                    {text: 'Count', value: 'count', sortable: false},
+                    {text: 'Selected', value: 'selected', sortable: false},
+                ]
+            }
         },
         methods: {
             ...mapMutations(["deleteKey", 'setKv', "setSearch"]),
             cancel() {
-                this.deleteKey(this.key)
+                this.deleteKey(this.key);
                 this.setSearch(false)
             },
-            searchKey() {
+            searchText() {
                 this.isLoading = true;
-                let url = "pair/keys?key=" + this.query_key;
+                let url = "pair/" + this.query_type + "s?q=" + this.query_text;
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
@@ -165,7 +194,40 @@
                     });
             },
             setKvLocal() {
-                this.setKv(this.kvLocal);
+                if (this.query_type === 'key') {
+                    this.setKv({kv: this.kvLocal, search_text: this.key});
+                } else {
+
+                    var keys_gcm = [];
+                    for(let x in this.selectedKvGcm){
+                        keys_gcm.push(this.selectedKvGcm[x].key)
+                    }
+
+                    var keys_pairs = [];
+                    for(let x in this.selectedKvPairs){
+                        keys_pairs.push(this.selectedKvPairs[x].key)
+                    }
+
+                    for (let x in keys_gcm){
+                        var a = [];
+                        this.selectedKvGcm.forEach(function (item) {
+                            if(item.key === keys_gcm[x])
+                                a.push(item.value)
+                        });
+                        this.kvLocal.query.gcm[keys_gcm[x]] = a;
+                    }
+
+                    for (let x in keys_pairs){
+                        var a = [];
+                        this.selectedKvPairs.forEach(function (item) {
+                            if(item.key === keys_pairs[x])
+                                a.push(item.value)
+                        });
+                        this.kvLocal.query.pairs[keys_pairs[x]] = a;
+                    }
+
+                    this.setKv({kv: this.kvLocal, search_text: this.key});
+                }
                 this.readOnly = true;
                 this.open = false;
                 this.setSearch(false)
@@ -186,11 +248,15 @@
                 this.valuesDialog = false;
             },
             getSelectedCount(key) {
-                let cur = this.kvLocal[key];
+                let cur = "";
+                if (this.isGcm)
+                    cur = this.kvLocal.query.gcm[key];
+                else
+                    cur = this.kvLocal.query.pairs[key];
+
                 if (typeof cur === 'undefined')
                     return 0;
                 else {
-                    console.log(cur.length);
                     return cur.length
                 }
             },
@@ -211,8 +277,8 @@
             },
         },
         watch: {
-            query_key() {
-                this.searchKey();
+            query_text() {
+                this.searchText();
             },
             valuesDialog() {
                 let k = this.keyToSearch;
@@ -228,7 +294,12 @@
                         .then((res) => {
                             var x;
                             for (x in res) {
-                                let cur = this.kvLocal[k];
+                                let cur = "";
+                                if (this.isGcm) {
+                                    cur = this.kvLocal.query.gcm[k];
+                                } else {
+                                    cur = this.kvLocal.query.pairs[k];
+                                }
                                 var selected = false;
                                 if (typeof cur !== 'undefined') {
                                     selected = cur.includes(res[x].value);
@@ -239,7 +310,12 @@
                         });
                 } else {
                     let v = this.selectedValues;
-                    this.kvLocal[k] = v;
+
+                    if (this.isGcm) {
+                        this.kvLocal.query.gcm[k] = v
+                    } else {
+                        this.kvLocal.query.pairs[k] = v
+                    }
                     this.keyToSearch = "";
                     this.possibleValues = [];
                 }
