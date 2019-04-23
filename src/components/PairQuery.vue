@@ -1,52 +1,54 @@
 <template>
     <v-container fluid grid-list-xl>
-            <v-layout>
-                <v-flex xs2 class="no-horizontal-padding">
-                    <v-radio-group label="Key-value search" class="radio-group2"
-                                   append-icon="info"
-                                   @click:append="openInfoDialog"
-                                   v-model="pairQueryType">
-                        <v-radio label="Key" id="key" value="key"></v-radio>
-                        <v-radio label="Value" id="value" value="value"></v-radio>
-                    </v-radio-group>
-                    <v-dialog
-                            width="500"
-                            v-model="infoDialog"
-                    >
-                        <v-card>
-                            <v-card-title
-                                    class="headline grey lighten-2"
-                                    primary-title
-                            >
-                                Key-value search
-                            </v-card-title>
+        <v-layout>
+            <v-flex xs2 class="no-horizontal-padding">
+                <v-radio-group label="Key-value search" class="radio-group2"
+                               append-icon="info"
+                               @click:append="openInfoDialog"
+                               v-model="pairQueryType"
+                               :disabled="searchDisabled">
+                    <v-radio label="Key" id="key" value="key"></v-radio>
+                    <v-radio label="Value" id="value" value="value"></v-radio>
+                </v-radio-group>
+                <v-dialog
+                        width="500"
+                        v-model="infoDialog"
+                >
+                    <v-card>
+                        <v-card-title
+                                class="headline grey lighten-2"
+                                primary-title
+                        >
+                            Key-value search
+                        </v-card-title>
 
-                            <v-card-text>
-                                <p>Key: free text search over all attributes, including original metadata and GCM
-                                    fields.</p>
-                                <p>Value: free text search over all values, including original metadata and GCM
-                                    fields.</p>
-                            </v-card-text>
+                        <v-card-text>
+                            <p>Key: free text search over all attributes, including original metadata and GCM
+                                fields.</p>
+                            <p>Value: free text search over all values, including original metadata and GCM
+                                fields.</p>
+                        </v-card-text>
 
-                        </v-card>
-                    </v-dialog>
-                </v-flex>
-                <v-flex xs6>
-                    <v-text-field
-                            v-model="search"
-                            append-icon="search"
-                            @click:append="setKey"
-                            @keydown.enter="setKey"
-                            label="Search"
-                            :disabled="searchDisabled"
-                            single-line
-                            hide-details
-                    ></v-text-field>
-                </v-flex>
-            </v-layout>
-            <v-expansion-panel>
-                <KvExpansionPanel v-for="item in keys" :query_text="item" :query_type="pairQueryType" :key="item"></KvExpansionPanel>
-            </v-expansion-panel>
+                    </v-card>
+                </v-dialog>
+            </v-flex>
+            <v-flex xs6>
+                <v-text-field
+                        v-model="search"
+                        append-icon="search"
+                        @click:append="setKey"
+                        @keydown.enter="setKey"
+                        label="Search"
+                        :disabled="searchDisabled"
+                        single-line
+                        hide-details
+                ></v-text-field>
+            </v-flex>
+        </v-layout>
+        <v-expansion-panel>
+            <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.indexOf(':'))"
+                              :query_type="pairQueryType" :key="item"></KvExpansionPanel>
+        </v-expansion-panel>
         <p>{{keys}}</p>
     </v-container>
 </template>
@@ -65,15 +67,6 @@
                 infoDialog: false,
                 key: "",
                 pairQueryType: "key",
-                valueHeaders: [
-                    {text: 'Value', value: 'value', sortable: false},
-                    {text: 'Count', value: 'count', sortable: false},
-                    {text: 'Selected', value: 'selected', sortable: false},
-                ],
-                keysLocal: [],
-                panel: [true, false],
-                // selectedValues: [],
-                possibleValues: [],
             }
         },
         methods: {
@@ -82,8 +75,8 @@
                 this.infoDialog = true
             },
             setKey() {
-                this.key = this.search
-                this.pushKey(this.key)
+                this.key = this.search;
+                this.pushKey(this.key + ":" + this.pairQueryType)
             },
         },
         computed: {
@@ -95,8 +88,7 @@
                 searchDisabled: 'searchDisabled',
             }),
         },
-        watch: {
-        }
+        watch: {}
     }
 </script>
 

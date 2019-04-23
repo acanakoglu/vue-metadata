@@ -176,7 +176,7 @@
         methods: {
             ...mapMutations(["deleteKey", 'setKv', "setSearch"]),
             cancel() {
-                this.deleteKey(this.key);
+                this.deleteKey(this.key+":"+this.query_type);
                 this.setSearch(false)
             },
             searchText() {
