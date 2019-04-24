@@ -66,7 +66,7 @@
                 search: "",
                 infoDialog: false,
                 key: "",
-                pairQueryType: "key",
+                pairQueryType: "value"
             }
         },
         methods: {

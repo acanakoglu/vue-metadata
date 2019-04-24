@@ -1,8 +1,9 @@
 <template>
     <!--    <v-layout>-->
     <!--        <v-flex>-->
-    <v-expansion-panel-content :disabled="readOnly" :value="open">
+    <v-expansion-panel-content :readonly="readOnly" :value="open">
         <div slot="header">{{query_text}}:{{kvLocal}}</div>
+        <v-btn v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">Delete Kv</v-btn>
         <p>{{selectedKvGcm}}</p>
         <p>{{selectedKvPairs}}</p>
         <v-card>
@@ -119,7 +120,7 @@
         },
         data() {
             return {
-                cancelButton: null,
+                cancelButton: false,
                 selectedKvGcm: [],
                 selectedKvPairs: [],
                 exampleValues: {},
@@ -181,32 +182,15 @@
         },
         methods: {
             ...mapMutations(["deleteKey", "setSearch", "deleteKvField"]),
-            ...mapActions(["setKv"]),
+            ...mapActions(["setKv", "deleteKv"]),
             cancel() {
-                this.deleteKey(this.key + ":" + this.query_type);
+                this.deleteKey(this.key + ":" + this.kvLocal.type_query);
                 this.setSearch(false)
             },
-            getExampleValues(keys) {
-                for (let x in keys) {
-                    let key = keys[x];
-                    let url = "pair/" + key + "/values?is_gcm=" + this.isGcm;
-                    var values = [];
-
-                    // eslint-disable-next-line
-                    axios.post(url, this.compound_query)
-                        .then((res) => {
-                            return res.data
-                        })
-                        .then((res) => {
-                            for (let x in res) {
-                                values.push(res[x].value)
-                            }
-                            console.log(values)
-                            this.exampleValues[key] = values;
-                            values = [];
-                            this.exampleValues = Object.assign({}, this.exampleValues)
-                        });
-                }
+            deleteKvLocal(){
+                console.log(this.query_text+"_"+this.kvLocal.type_query)
+                this.deleteKv(this.query_text+"_"+this.kvLocal.type_query)
+                this.cancel()
             },
             searchText() {
                 this.isLoading = true;
@@ -224,7 +208,7 @@
             },
             setKvLocal() {
                 if (this.query_type === 'key') {
-                    this.setKv({kv: this.kvLocal, search_text: this.key});
+                    this.setKv({kv: this.kvLocal, search_text: this.key+"_"+this.kvLocal.type_query});
                 } else {
 
                     var keys_gcm = [];
@@ -255,9 +239,10 @@
                         this.kvLocal.query.pairs[keys_pairs[x]] = b;
                     }
 
-                    this.setKv({kv: this.kvLocal, search_text: this.key});
+                    this.setKv({kv: this.kvLocal, search_text: this.key+"_"+this.kvLocal.type_query});
                 }
                 this.readOnly = true;
+                this.cancelButton = true
                 this.open = false;
                 this.setSearch(false)
             },
@@ -367,5 +352,4 @@
 </script>
 
 <style scoped>
-
 </style>
