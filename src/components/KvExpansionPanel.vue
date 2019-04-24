@@ -1,4 +1,6 @@
 <template>
+    <!--    <v-layout>-->
+    <!--        <v-flex>-->
     <v-expansion-panel-content :disabled="readOnly" :value="open">
         <div slot="header">{{query_text}}:{{kvLocal}}</div>
         <p>{{selectedKvGcm}}</p>
@@ -9,21 +11,14 @@
                 Genomic Conceptual Model
             </v-card-title>
             <v-data-table
-                    :headers="headers"
+                    :headers="headersGcm"
                     :items="resultsGcm"
                     :loading="isLoading"
                     class="data-table"
             >
                 <template slot="items" slot-scope="props">
-                    <td v-for="header in headers" :key="header.value">
-                        <span v-if="header.value === 'values'">
-                            <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],true)
-                                   color="blue">
-                                <v-icon>list</v-icon>
-                            </v-btn>
-                        </span>
-                        <span v-else-if="header.value==='selectedNumber'"
-                              v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
+                    <td v-for="header in headersGcm" :key="header.value">
+                        <span v-if="header.value === 'values'" v-html="updateCellTextFormat(props.item[header.value]).toString()">
                         </span>
                         <span v-else-if="header.value==='selected'">
                             <v-checkbox v-model="selectedKvGcm" :value="props.item"></v-checkbox>
@@ -67,7 +62,6 @@
                 </template>
             </v-data-table>
         </v-card>
-
         <v-dialog
                 v-model="valuesDialog"
                 fullscreen>
@@ -106,13 +100,16 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-btn color="info" @click="setKvLocal">Apply</v-btn>
+        <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
         <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
     </v-expansion-panel-content>
+    <!--        </v-flex>-->
+    <!--        <v-flex v-html="cancelButton"></v-flex>-->
+    <!--    </v-layout>-->
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex';
+    import {mapGetters, mapMutations, mapActions} from 'vuex';
 
     export default {
         name: "KvExpansionPanel",
@@ -122,11 +119,14 @@
         },
         data() {
             return {
+                cancelButton: null,
                 selectedKvGcm: [],
                 selectedKvPairs: [],
+                exampleValues: {},
                 readOnly: false,
                 open: true,
                 headers: [],
+                headersGcm: [],
                 valueHeaders: [
                     {text: 'Value', value: 'value', sortable: false},
                     {text: 'Count', value: 'count', sortable: false},
@@ -156,28 +156,57 @@
         mounted() {
             this.searchText();
             this.key = this.query_text;
-            this.setSearch(true)
+            this.setSearch(true);
             if (this.query_type === 'key') {
                 this.headers = [
                     {text: 'Key', value: 'key', sortable: false},
                     {text: 'N. Distinct Values', value: 'count_values', sortable: false},
                     {text: 'N. Selected Values', value: 'selectedNumber', sortable: false},
                     {text: 'Values', value: 'values', sortable: false},
-                ]
+                ];
+                this.headersGcm = [
+                    {text: 'Key', value: 'key', sortable: false},
+                    {text: 'N. Distinct Values', value: 'count_values', sortable: false},
+                    {text: 'Example Values', value: 'values', sortable: false},
+                ];
             } else {
                 this.headers = [
                     {text: 'Key', value: 'key', sortable: false},
                     {text: 'Value', value: 'value', sortable: false},
                     {text: 'Count', value: 'count', sortable: false},
                     {text: 'Selected', value: 'selected', sortable: false},
-                ]
+                ];
+                this.headersGcm = this.headers
             }
         },
         methods: {
-            ...mapMutations(["deleteKey", 'setKv', "setSearch"]),
+            ...mapMutations(["deleteKey", "setSearch", "deleteKvField"]),
+            ...mapActions(["setKv"]),
             cancel() {
-                this.deleteKey(this.key+":"+this.query_type);
+                this.deleteKey(this.key + ":" + this.query_type);
                 this.setSearch(false)
+            },
+            getExampleValues(keys) {
+                for (let x in keys) {
+                    let key = keys[x];
+                    let url = "pair/" + key + "/values?is_gcm=" + this.isGcm;
+                    var values = [];
+
+                    // eslint-disable-next-line
+                    axios.post(url, this.compound_query)
+                        .then((res) => {
+                            return res.data
+                        })
+                        .then((res) => {
+                            for (let x in res) {
+                                values.push(res[x].value)
+                            }
+                            console.log(values)
+                            this.exampleValues[key] = values;
+                            values = [];
+                            this.exampleValues = Object.assign({}, this.exampleValues)
+                        });
+                }
             },
             searchText() {
                 this.isLoading = true;
@@ -199,31 +228,31 @@
                 } else {
 
                     var keys_gcm = [];
-                    for(let x in this.selectedKvGcm){
+                    for (let x in this.selectedKvGcm) {
                         keys_gcm.push(this.selectedKvGcm[x].key)
                     }
 
                     var keys_pairs = [];
-                    for(let x in this.selectedKvPairs){
+                    for (let x in this.selectedKvPairs) {
                         keys_pairs.push(this.selectedKvPairs[x].key)
                     }
 
-                    for (let x in keys_gcm){
-                        var a = [];
+                    for (let x in keys_gcm) {
+                        let a = [];
                         this.selectedKvGcm.forEach(function (item) {
-                            if(item.key === keys_gcm[x])
+                            if (item.key === keys_gcm[x])
                                 a.push(item.value)
                         });
                         this.kvLocal.query.gcm[keys_gcm[x]] = a;
                     }
 
-                    for (let x in keys_pairs){
-                        var a = [];
+                    for (let x in keys_pairs) {
+                        let b = [];
                         this.selectedKvPairs.forEach(function (item) {
-                            if(item.key === keys_pairs[x])
-                                a.push(item.value)
+                            if (item.key === keys_pairs[x])
+                                b.push(item.value)
                         });
-                        this.kvLocal.query.pairs[keys_pairs[x]] = a;
+                        this.kvLocal.query.pairs[keys_pairs[x]] = b;
                     }
 
                     this.setKv({kv: this.kvLocal, search_text: this.key});
@@ -265,6 +294,10 @@
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            buttonDisabled() {
+                let a = Object.keys(this.kvLocal.query.gcm).length + Object.keys(this.kvLocal.query.pairs).length + this.selectedKvGcm.length + this.selectedKvPairs.length;
+                return a === 0
+            },
             selectedValues() {
                 var x;
                 var res = [];
@@ -277,9 +310,6 @@
             },
         },
         watch: {
-            query_text() {
-                this.searchText();
-            },
             valuesDialog() {
                 let k = this.keyToSearch;
                 if (this.valuesDialog) {
@@ -310,11 +340,22 @@
                         });
                 } else {
                     let v = this.selectedValues;
-
-                    if (this.isGcm) {
-                        this.kvLocal.query.gcm[k] = v
+                    if (v.length !== 0) {
+                        if (this.isGcm) {
+                            this.kvLocal.query.gcm[k] = v;
+                            this.kvLocal.query.gcm = Object.assign({}, this.kvLocal.query.gcm)
+                        } else {
+                            this.kvLocal.query.pairs[k] = v;
+                            this.kvLocal.query.pairs = Object.assign({}, this.kvLocal.query.pairs)
+                        }
                     } else {
-                        this.kvLocal.query.pairs[k] = v
+                        if (this.isGcm) {
+                            delete this.kvLocal.query.gcm[k];
+                            this.kvLocal.query.gcm = Object.assign({}, this.kvLocal.query.gcm)
+                        } else {
+                            delete this.kvLocal.query.pairs[k];
+                            this.kvLocal.query.pairs = Object.assign({}, this.kvLocal.query.pairs)
+                        }
                     }
                     this.keyToSearch = "";
                     this.possibleValues = [];

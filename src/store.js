@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        query: {},
+        query:  { "source": [ "tads" ] },
         synonym: false,
         kv: {},
         type: 'original',
@@ -46,8 +46,14 @@ export default new Vuex.Store({
         setQuery: (state, query) => {
             state.query = Object.assign({}, query);
         },
-        setKv: (state, payload) => {
-            state.kv = Object.assign(payload.kv)
+        setKvField: (state, payload) => {
+            state.kv[payload.search_text] = payload.kv
+        },
+        reloadKv: (state) =>{
+            state.kv = Object.assign({}, state.kv);
+        },
+        resetKvField: (state, field) => {
+            delete state.kv[field]
         },
         setType: (state, type) => {
             state.type = type;
@@ -93,6 +99,14 @@ export default new Vuex.Store({
         },
     },
     actions: {
+        deleteKv({commit, state},field) {
+            commit('resetKvField', field);
+            commit('reloadKv');
+        },
+        setKv({commit, state}, payload) {
+            commit('setKvField', payload);
+            commit('reloadKv');
+        },
         setDropDownSelected({commit, state}, payload) {
             const field = payload.field;
 
