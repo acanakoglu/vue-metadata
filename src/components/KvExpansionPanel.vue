@@ -22,7 +22,7 @@
                         <span v-if="header.value === 'values'" v-html="updateCellTextFormat(props.item[header.value]).toString()">
                         </span>
                         <span v-else-if="header.value==='selected'">
-                            <v-checkbox v-model="selectedKvGcm" :value="props.item"></v-checkbox>
+                            <v-checkbox :value = "kvSelected('gcm',props.item)" @change="selectKv('gcm',props.item)" ></v-checkbox>
                         </span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value])">
                         </span>
@@ -54,7 +54,7 @@
                               v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
                         </span>
                         <span v-else-if="header.value==='selected'">
-                            <v-checkbox v-model="selectedKvPairs" :value="props.item"></v-checkbox>
+                            <v-checkbox :value = "kvSelected('pairs',props.item)" @change="selectKv('pairs',props.item)" ></v-checkbox>
                         </span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value])">
 
@@ -186,6 +186,30 @@
             cancel() {
                 this.deleteKey(this.key + ":" + this.kvLocal.type_query);
                 this.setSearch(false)
+            },
+            selectKv(target, item) {
+                if(target === 'gcm'){
+                    if(this.selectedKvGcm.filter(a => (a.key === item.key && a.value === item.value)).length>0){
+                        this.selectedKvGcm.splice(this.selectedKvGcm.indexOf(item),1);
+                    }
+                    else {
+                        this.selectedKvGcm.push(item)
+                    }
+                }
+                else {
+                    if(this.selectedKvPairs.filter(a => (a.key === item.key && a.value === item.value)).length>0){
+                        this.selectedKvPairs.splice(this.selectedKvPairs.indexOf(item),1);
+                    }
+                    else {
+                        this.selectedKvPairs.push(item)
+                    }
+                }
+            },
+            kvSelected(target, item) {
+                if(target==='gcm')
+                    return this.selectedKvGcm.filter(a => (a.key === item.key && a.value === item.value)).length>0;
+                else return this.selectedKvPairs.filter(a => (a.key === item.key && a.value === item.value)).length>0
+
             },
             deleteKvLocal(){
                 console.log(this.query_text+"_"+this.kvLocal.type_query)

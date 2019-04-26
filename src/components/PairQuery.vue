@@ -75,8 +75,13 @@
                 this.infoDialog = true
             },
             setKey() {
-                this.key = this.search;
-                this.pushKey(this.key + ":" + this.pairQueryType)
+                if (this.search !== '') {
+                    this.key = this.search;
+                    this.pushKey(this.key + ":" + this.pairQueryType)
+                }
+                else {
+                    window.alert("Please input a search keyword")
+                }
             },
         },
         computed: {
