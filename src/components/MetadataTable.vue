@@ -390,6 +390,21 @@
                         show: false
                     },
 
+                    {
+                        text: 'Biological Replicate Count',
+                        value: 'biological_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Count',
+                        value: 'technical_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+
+                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
+
                     {text: 'Species', value: 'species', sortable: this.sortable, show: false},
                     // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
 
