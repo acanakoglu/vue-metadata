@@ -19,12 +19,12 @@
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headersGcm" :key="header.value">
-                        <span v-if="header.value === 'values'" v-html="updateCellTextFormat(props.item[header.value]).toString()">
+                        <span v-if="header.value === 'values'" v-html="updateCellTextFormat(props.item.a[header.value]).toString()">
                         </span>
                         <span v-else-if="header.value==='selected'">
-                            <v-checkbox :value = "kvSelected('gcm',props.item)" @change="selectKv('gcm',props.item)" ></v-checkbox>
+                            <v-checkbox v-model="props.item.selected"></v-checkbox>
                         </span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value])">
+                        <span v-else v-html="updateCellTextFormat(props.item.a[header.value])">
                         </span>
                     </td>
                 </template>
@@ -45,19 +45,18 @@
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headers" :key="header.value">
                         <span v-if="header.value === 'values'">
-                            <v-btn flat icon @click=openValuesDialog(props.item[keyDummy],false)
+                            <v-btn flat icon @click=openValuesDialog(props.item.a[keyDummy],false)
                                    color="blue">
                                 <v-icon>list</v-icon>
                             </v-btn>
                         </span>
                         <span v-else-if="header.value==='selectedNumber'"
-                              v-html="updateCellTextFormat(getSelectedCount(props.item[keyDummy]))">
+                              v-html="updateCellTextFormat(getSelectedCount(props.item.a[keyDummy]))">
                         </span>
                         <span v-else-if="header.value==='selected'">
-                            <v-checkbox :value = "kvSelected('pairs',props.item)" @change="selectKv('pairs',props.item)" ></v-checkbox>
+                            <v-checkbox v-model="props.item.selected"></v-checkbox>
                         </span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value])">
-
+                        <span v-else v-html="updateCellTextFormat(props.item.a[header.value])">
                         </span>
                     </td>
                 </template>
@@ -121,9 +120,8 @@
         data() {
             return {
                 cancelButton: false,
-                selectedKvGcm: [],
-                selectedKvPairs: [],
-                exampleValues: {},
+                possibleKvGcm: [],
+                possibleKvPairs: [],
                 readOnly: false,
                 open: true,
                 headers: [],
@@ -170,6 +168,7 @@
                     {text: 'N. Distinct Values', value: 'count_values', sortable: false},
                     {text: 'Example Values', value: 'values', sortable: false},
                 ];
+
             } else {
                 this.headers = [
                     {text: 'Key', value: 'key', sortable: false},
@@ -225,8 +224,14 @@
                         return res.data
                     })
                     .then((res) => {
-                        this.resultsGcm = res['gcm'];
-                        this.resultsPair = res['pairs'];
+                        var a = res['gcm'];
+                        for (let x in a){
+                            this.resultsGcm.push({'a': a[x], 'selected': false})
+                        }
+                        a = res['pairs'];
+                        for (let x in a){
+                            this.resultsPair.push({'a': a[x], 'selected': false})
+                        }
                         this.isLoading = false
                     });
             },
@@ -313,6 +318,26 @@
                 for (x in this.possibleValues) {
                     if (this.possibleValues[x].selected) {
                         res.push(this.possibleValues[x].a.value);
+                    }
+                }
+                return res;
+            },
+            selectedKvGcm() {
+                var x;
+                var res = [];
+                for (x in this.resultsGcm) {
+                    if (this.resultsGcm[x].selected) {
+                        res.push(this.resultsGcm[x].a);
+                    }
+                }
+                return res;
+            },
+            selectedKvPairs() {
+                var x;
+                var res = [];
+                for (x in this.resultsPair) {
+                    if (this.resultsPair[x].selected) {
+                        res.push(this.resultsPair[x].a);
                     }
                 }
                 return res;
