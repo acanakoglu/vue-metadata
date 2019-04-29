@@ -78,6 +78,7 @@
                 if (this.search !== '') {
                     this.key = this.search;
                     this.pushKey(this.key + ":" + this.pairQueryType)
+                    this.search=''
                 }
                 else {
                     window.alert("Please input a search keyword")

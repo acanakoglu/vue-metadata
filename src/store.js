@@ -99,11 +99,11 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        deleteKv({commit, state},field) {
+        deleteKv({commit},field) {
             commit('resetKvField', field);
             commit('reloadKv');
         },
-        setKv({commit, state}, payload) {
+        setKv({commit}, payload) {
             commit('setKvField', payload);
             commit('reloadKv');
         },

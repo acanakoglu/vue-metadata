@@ -1,7 +1,7 @@
 <template>
     <!--    <v-layout>-->
     <!--        <v-flex>-->
-    <v-expansion-panel-content :readonly="readOnly" :value="open">
+    <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
         <div slot="header">{{query_text}}:{{kvLocal}}</div>
         <v-btn v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">Delete Kv</v-btn>
         <p>{{selectedKvGcm}}</p>
@@ -123,7 +123,7 @@
                 possibleKvGcm: [],
                 possibleKvPairs: [],
                 readOnly: false,
-                open: true,
+                open: [true],
                 headers: [],
                 headersGcm: [],
                 valueHeaders: [
@@ -182,34 +182,14 @@
         methods: {
             ...mapMutations(["deleteKey", "setSearch", "deleteKvField"]),
             ...mapActions(["setKv", "deleteKv"]),
+            setOpen() {
+                this.open = [false];
+            },
             cancel() {
                 this.deleteKey(this.key + ":" + this.kvLocal.type_query);
                 this.setSearch(false)
             },
-            selectKv(target, item) {
-                if(target === 'gcm'){
-                    if(this.selectedKvGcm.filter(a => (a.key === item.key && a.value === item.value)).length>0){
-                        this.selectedKvGcm.splice(this.selectedKvGcm.indexOf(item),1);
-                    }
-                    else {
-                        this.selectedKvGcm.push(item)
-                    }
-                }
-                else {
-                    if(this.selectedKvPairs.filter(a => (a.key === item.key && a.value === item.value)).length>0){
-                        this.selectedKvPairs.splice(this.selectedKvPairs.indexOf(item),1);
-                    }
-                    else {
-                        this.selectedKvPairs.push(item)
-                    }
-                }
-            },
-            kvSelected(target, item) {
-                if(target==='gcm')
-                    return this.selectedKvGcm.filter(a => (a.key === item.key && a.value === item.value)).length>0;
-                else return this.selectedKvPairs.filter(a => (a.key === item.key && a.value === item.value)).length>0
 
-            },
             deleteKvLocal(){
                 console.log(this.query_text+"_"+this.kvLocal.type_query)
                 this.deleteKv(this.query_text+"_"+this.kvLocal.type_query)
@@ -271,7 +251,7 @@
                     this.setKv({kv: this.kvLocal, search_text: this.key+"_"+this.kvLocal.type_query});
                 }
                 this.readOnly = true;
-                this.cancelButton = true
+                this.cancelButton = true;
                 this.open = false;
                 this.setSearch(false)
             },
@@ -344,6 +324,14 @@
             },
         },
         watch: {
+            open: {
+                handler() {
+                    if(!this.readOnly) {
+                        this.open[this.open.length] = true
+                    }
+                },
+                deep: true
+            },
             valuesDialog() {
                 let k = this.keyToSearch;
                 if (this.valuesDialog) {

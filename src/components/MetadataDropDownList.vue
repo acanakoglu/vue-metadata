@@ -11,7 +11,11 @@
                 <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
+                    <span v-if="field.name==='age'">
+
+                    </span>
                     <MetadataDropDown
+                            v-else
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
