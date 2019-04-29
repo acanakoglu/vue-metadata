@@ -27,7 +27,6 @@
             <v-alert slot="no-results" :value="true" color="error" icon="warning">
                 Your search for "{{ search }}" found no results.
             </v-alert>
-
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
