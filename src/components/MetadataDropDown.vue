@@ -8,7 +8,6 @@
             :label="labelTitle"
             multiple
     >
-
         <template slot="item" slot-scope="data">
             <span class="item-value-span"> {{ rename(data.item)}}</span>
             <span class="item-count-span">{{data.item.count}}</span>
@@ -37,6 +36,7 @@
         },
         data() {
             return {
+                ageDialog: false,
                 isLoading: true,
                 values: [],//the list of values of the drop-down menu
             }
@@ -54,7 +54,7 @@
             ...mapState([
                 'query', 'synonym',
             ]),
-             ...mapGetters({
+            ...mapGetters({
                 compound_query: 'build_query'
             }),
             selected: {

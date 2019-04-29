@@ -107,6 +107,10 @@ export default new Vuex.Store({
             commit('setKvField', payload);
             commit('reloadKv');
         },
+        setAge({commit, state},age_item){
+            state.query['age'] = age_item;
+            commit('reloadQuery')
+        },
         setDropDownSelected({commit, state}, payload) {
             const field = payload.field;
 

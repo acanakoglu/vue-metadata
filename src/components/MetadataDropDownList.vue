@@ -8,17 +8,15 @@
                 <!--<v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">-->
                 <!--{{view.text}}:-->
                 <!--</v-flex>-->
-                <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
+                <v-flex :class= "getClass(field.name)"
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
-                    <span v-if="field.name==='age'">
-
-                    </span>
                     <MetadataDropDown
-                            v-else
+                            v-if ="field.name!=='age'"
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
+                    <AgeSelector v-else></AgeSelector>
                     <v-dialog
                             width="500"
                     >
@@ -54,10 +52,11 @@
 
 <script>
     import MetadataDropDown from "./MetadataDropDown";
+    import AgeSelector from "./AgeSelector";
 
     export default {
         name: "MetadataDropDownList",
-        components: {MetadataDropDown},
+        components: {AgeSelector, MetadataDropDown},
         // props: {
         //     field: {type: String, required: true,},// default: 100,
         // },
@@ -88,6 +87,12 @@
             // getGroupFields(groupValue) {
             //     return this.fields.filter(field => field.group === groupValue);
             // },
+            getClass(field) {
+                if (field==='age')
+                    return "no-horizontal-padding xs12 sm6 md4 d-flex";
+                else
+                    return "no-horizontal-padding xs12 sm6 md2 d-flex"
+            },
             getViewFields(viewValue) {
                 return this.fields.filter(field => field.view === viewValue);
             },
