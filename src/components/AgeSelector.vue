@@ -1,15 +1,17 @@
 <template>
     <v-container fluid grid-list-xl>
         <v-layout>
-            <v-flex>
-                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint :min="minInt" :max="max">
+            <v-flex md4>
+                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
+                              :min="minInt" :max="max">
                 </v-text-field>
             </v-flex>
-            <v-flex>
-                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint :max="maxInt" :min="min">
+            <v-flex md4>
+                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint
+                              :max="maxInt" :min="min">
                 </v-text-field>
             </v-flex>
-            <v-flex>
+            <v-flex md4>
                 <v-select
                         v-model="unit"
                         :items="units"
@@ -17,9 +19,8 @@
                 >
                 </v-select>
             </v-flex>
-            <v-flex>
+            <v-flex md4>
                 <v-checkbox v-model="isNull" label="N/D"></v-checkbox>
-                <!--                <v-btn color="error" flat @click="deleteAgeLocal()">Reset</v-btn>-->
             </v-flex>
         </v-layout>
     </v-container>
@@ -68,6 +69,12 @@
                     .then((res) => {
                         this.minAge = res['min_age'];
                         this.maxAge = res['max_age'];
+                        let ageItem = this.compound_query.gcm['age'];
+                        if (ageItem) {
+                            this.min = ageItem['min_age'] / this.unit;
+                            this.isNull = ageItem['null'];
+                            this.max = ageItem['max_age'] / this.unit;
+                        }
                     });
             },
             setAgeLocal() {
@@ -85,13 +92,6 @@
         watch: {
             compound_query() {
                 this.loadMinMaxAge();
-                let ageItem = this.compound_query.gcm['age']
-                console.log(ageItem)
-                if(ageItem) {
-                    this.min = ageItem['min_age'] / this.unit
-                    this.max = ageItem['max_age'] / this.unit
-                    this.isNull = ageItem['null']
-                }
             },
             selectedMin() {
                 if (this.selectedMin)
