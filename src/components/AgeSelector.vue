@@ -19,9 +19,14 @@
                 >
                 </v-select>
             </v-flex>
-            <v-flex md4>
+            <v-flex md2>
                 <v-checkbox v-model="isNull" label="N/D"></v-checkbox>
             </v-flex>
+            <v-flex md2>
+                <v-btn @click="setAgeLocal" color="info" flat>Apply</v-btn>
+                <v-btn @click="deleteAgeLocal" color="error" flat>Reset</v-btn>
+            </v-flex>
+
         </v-layout>
     </v-container>
 </template>
@@ -44,7 +49,6 @@
                     {'text': 'Weeks', 'value': 7},
                     {'text': 'Months', 'value': 30},
                     {'text': 'Years', 'value': 365},
-                    {'text': 'Reset', 'value': null}
                 ],
                 selectedAge: {},
             }
@@ -92,29 +96,13 @@
             compound_query() {
                 this.loadMinMaxAge();
             },
-            selectedMin(newVal, oldVal) {
-                let ageQuery = -1;
-                if (this.ageItem) {
-                    ageQuery = this.ageItem['min_age']
+            ageItem() {
+                if (!this.ageItem) {
+                    this.min = null;
+                    this.max = null;
+                    this.unit = 1;
+                    this.isNull = false;
                 }
-                if (this.selectedMin && newVal !== oldVal && newVal !== ageQuery)
-                    this.setAgeLocal()
-            },
-            selectedMax(newVal, oldVal) {
-                let ageQuery = -1;
-                if (this.ageItem) {
-                    ageQuery = this.ageItem['max_age']
-                }
-                if (this.selectedMax && newVal !== oldVal && newVal !== ageQuery)
-                    this.setAgeLocal()
-            },
-            isNull(newVal, oldVal) {
-                let ageQuery = null;
-                if (this.ageItem) {
-                    ageQuery = this.ageItem['null']
-                }
-                if (newVal !== oldVal && newVal !== ageQuery)
-                    this.setAgeLocal()
             },
             min() {
                 if ((this.unit * this.min) < this.minAge)
@@ -125,16 +113,10 @@
                     this.max = Math.trunc(this.maxAge / this.unit)
             },
             unit(newVal, oldVal) {
-                if (this.unit == null)
-                    this.deleteAgeLocal();
-                else {
-                    console.log(newVal, oldVal);
-                    this.min = Math.trunc(this.min * oldVal / newVal);
-                    this.max = Math.trunc(this.max * oldVal / newVal)
-                }
-            },
-        }
-        ,
+                this.min = Math.trunc(this.min * oldVal / newVal);
+                this.max = Math.trunc(this.max * oldVal / newVal);
+            }
+        },
         computed: {
             ...mapGetters({
                 compound_query: 'build_query'
@@ -143,10 +125,12 @@
                 return this.compound_query.gcm.age
             },
             selectedMin() {
-                return this.min * this.unit
+                if (this.min)
+                    return this.min * this.unit
             },
             selectedMax() {
-                return this.max * this.unit
+                if (this.max)
+                    return this.max * this.unit
             },
             maxString() {
                 return Math.trunc((this.maxAge / this.unit)).toString();
