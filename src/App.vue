@@ -94,6 +94,7 @@
                                     Selected query:
                                 </span>
                             {{ compound_query }}
+                            {{queryString}}
                             <!--</div>-->
                         </v-flex>
                     </v-layout>
@@ -218,15 +219,15 @@
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    {text: 'Clear Fields', value: {synonym: false, query: {}},},
-                    {text: 'Encode source', value: {synonym: false, query: {source: ["encode"]}},},
+                    {text: 'Clear Fields', value: {synonym: false, query: { "gcm": {}, "type": "original", "kv": {} }},},
+                    {text: 'Encode source', value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {} }},},
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
                             synonym: false,
                             query: {
-                                disease: ["prostate adenocarcinoma"],
-                                assembly: ["grch38"],
+                                "gcm": {disease: ["prostate adenocarcinoma"],
+                                assembly: ["grch38"]}, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -235,20 +236,20 @@
                         value: {
                             synonym: false,
                             query: {
-                                tissue: ["adrenal gland"],
-                                feature: ["copy number variation", "rna binding protein"],
-                            }
+                                "gcm": {
+                                    tissue: ["adrenal gland"],
+                                feature: ["copy number variation", "rna binding protein"]
+                                }, "type": "original", "kv": {},}
                         }
                     },
                     {
                         text: 'Example 3 - synonym enriched search',
                         value: {
                             synonym: true,
-                            query: {
-                                cell: ["gm12878"],
+                            query: { "gcm": {cell: ["gm12878"],
                                 assembly: ["hg19"],
                                 file_format: ["broadpeak"],
-                                technique: ["chip-seq"],
+                                technique: ["chip-seq"]}, "type": "synonym", "kv": {}
                             }
                         }
                     },
@@ -257,7 +258,7 @@
                         value: {
                             synonym: false,
                             query: {
-                                content_type: ["exon", "exon quantifications"],
+                                "gcm": {content_type: ["exon", "exon quantifications"]}, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -266,8 +267,8 @@
                         value: {
                             synonym: false,
                             query: {
-                                project_name: ["tads"],
-                                biological_replicate_number: [2],
+                                "gcm": {project_name: ["tads"],
+                                biological_replicate_count: [2]}, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -280,7 +281,7 @@
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
-            ...mapActions(["setKv"]),
+            ...mapActions(["setKv","setKvFull"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -289,8 +290,9 @@
             },
             afterQuerySelection(item) {
                 console.log(item.query);
-                this.setQuery(item.query);
+                this.setQuery(item.query.gcm);
                 this.setSynonym(item.synonym);
+                this.setKvFull(item.query.kv);
                 this.$nextTick(() => {
                     this.selectedQuery = null
                 })
@@ -316,13 +318,14 @@
             //     }
             // },
             queryString() {
-                const json = JSON.parse(this.queryString)
-                this.setQuery(json['gcm']);
-                this.setType(json['type']);
-                this.resetKv();
-                let kv = json['kv'];
-                for (let i in kv)
-                   this.setKv({'search_text': i, 'kv': kv[i]})
+                if(this.queryString !== ''){
+                    const json = JSON.parse(this.queryString)
+                    this.setQuery(json['gcm']);
+                    this.setType(json['type']);
+                    this.resetKv()
+                    this.setKvFull(json['kv']);
+                    this.queryString = ''
+                }
             }
         },
         computed: {

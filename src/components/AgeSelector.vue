@@ -2,17 +2,11 @@
     <v-container fluid grid-list-xl>
         <v-layout>
             <v-flex>
-                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString">
-                    <!--                              append-outer-icon="add"-->
-                    <!--                              @click:append-outer="increment('min')"-->
-                    <!--                              prepend-icon="remove" @click:prepend="decrement('min')">-->
+                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint :min="minInt" :max="max">
                 </v-text-field>
             </v-flex>
             <v-flex>
-                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString">
-                    <!--                              append-outer-icon="add"-->
-                    <!--                              @click:append-outer="increment('max')"-->
-                    <!--                              prepend-icon="remove" @click:prepend="decrement('max')">-->
+                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint :max="maxInt" :min="min">
                 </v-text-field>
             </v-flex>
             <v-flex>
@@ -25,7 +19,7 @@
             </v-flex>
             <v-flex>
                 <v-checkbox v-model="isNull" label="N/D"></v-checkbox>
-<!--                <v-btn color="error" flat @click="deleteAgeLocal()">Reset</v-btn>-->
+                <!--                <v-btn color="error" flat @click="deleteAgeLocal()">Reset</v-btn>-->
             </v-flex>
         </v-layout>
     </v-container>
@@ -61,6 +55,7 @@
                 this.min = null;
                 this.max = null;
                 this.unit = 1;
+                this.isNull = false;
             },
             loadMinMaxAge() {
                 const url = `field/age`;
@@ -88,19 +83,22 @@
             this.loadMinMaxAge()
         },
         watch: {
-            unit() {
-                if (this.unit == null)
-                    this.deleteAgeLocal()
-            },
             compound_query() {
                 this.loadMinMaxAge();
+                let ageItem = this.compound_query.gcm['age']
+                console.log(ageItem)
+                if(ageItem) {
+                    this.min = ageItem['min_age'] / this.unit
+                    this.max = ageItem['max_age'] / this.unit
+                    this.isNull = ageItem['null']
+                }
             },
             selectedMin() {
-                if(this.selectedMin)
+                if (this.selectedMin)
                     this.setAgeLocal()
             },
             selectedMax() {
-                if(this.selectedMax)
+                if (this.selectedMax)
                     this.setAgeLocal()
             },
             isNull() {
@@ -113,7 +111,16 @@
             max() {
                 if ((this.max * this.unit) > this.maxAge)
                     this.max = Math.trunc(this.maxAge / this.unit)
-            }
+            },
+            unit(newVal, oldVal) {
+                if (this.unit == null)
+                    this.deleteAgeLocal();
+                else {
+                    console.log(newVal, oldVal);
+                    this.min = Math.trunc(this.min * oldVal / newVal);
+                    this.max = Math.trunc(this.max * oldVal / newVal)
+                }
+            },
         },
         computed: {
             ...mapGetters({
@@ -126,10 +133,16 @@
                 return this.max * this.unit
             },
             maxString() {
-                return Math.trunc((this.maxAge/ this.unit)).toString();
+                return Math.trunc((this.maxAge / this.unit)).toString();
             },
             minString() {
                 return Math.trunc((this.minAge / this.unit)).toString();
+            },
+            maxInt() {
+                return Math.trunc((this.maxAge / this.unit))
+            },
+            minInt() {
+                return Math.trunc((this.minAge / this.unit))
             },
         }
     }

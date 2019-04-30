@@ -184,6 +184,7 @@
                 this.cancelButton=true;
                 this.kvLocal = this.query;
                 this.open=false;
+                this.setSearch(false)
             }
         },
         methods: {

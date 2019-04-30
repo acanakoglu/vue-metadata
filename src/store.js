@@ -111,6 +111,13 @@ export default new Vuex.Store({
             commit('setKvField', payload);
             commit('reloadKv');
         },
+        setKvFull: ({commit,state}, payload) => {
+            if(Object.keys(payload).length===0)
+                commit('resetKv');
+            else
+                state.kv = payload;
+            commit('reloadKv')
+        },
         setAge({commit, state},age_item){
             state.query['age'] = age_item;
             commit('reloadQuery')

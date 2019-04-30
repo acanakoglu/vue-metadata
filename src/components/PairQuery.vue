@@ -100,7 +100,8 @@
                 let kv = this.compound_query['kv'];
                 this.kvLocal = kv;
                 for (let i in kv)
-                    this.pushKey(i)
+                    if(!this.keys.includes(i))
+                        this.pushKey(i)
             }
         }
     }
