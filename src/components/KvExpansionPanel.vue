@@ -115,7 +115,8 @@
         name: "KvExpansionPanel",
         props: {
             query_text: {type: String, required: true},
-            query_type: {type: String, required: true}
+            query_type: {type: String, required: true},
+            query: {type: Object, required: false},
         },
         data() {
             return {
@@ -178,6 +179,12 @@
                 ];
                 this.headersGcm = this.headers
             }
+            if(this.query){
+                this.readOnly=true;
+                this.cancelButton=true;
+                this.kvLocal = this.query;
+                this.open=false;
+            }
         },
         methods: {
             ...mapMutations(["deleteKey", "setSearch", "deleteKvField"]),
@@ -186,12 +193,11 @@
                 this.open = [false];
             },
             cancel() {
-                this.deleteKey(this.key + ":" + this.kvLocal.type_query);
+                this.deleteKey(this.key + "_" + this.kvLocal.type_query);
                 this.setSearch(false)
             },
 
             deleteKvLocal(){
-                console.log(this.query_text+"_"+this.kvLocal.type_query)
                 this.deleteKv(this.query_text+"_"+this.kvLocal.type_query)
                 this.cancel()
             },

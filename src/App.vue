@@ -197,7 +197,7 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapMutations, mapState, mapGetters} from 'vuex'
+    import {mapMutations, mapState, mapActions, mapGetters} from 'vuex'
     import FullScreenGraphViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
     import TextReader from "./components/TextReader"
@@ -279,7 +279,8 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
+            ...mapActions(["setKv"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -287,7 +288,7 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                console.log(item);
+                console.log(item.query);
                 this.setQuery(item.query);
                 this.setSynonym(item.synonym);
                 this.$nextTick(() => {
@@ -316,9 +317,12 @@
             // },
             queryString() {
                 const json = JSON.parse(this.queryString)
-                this.setQuery(json['gcm'])
-                this.setType(json['type'])
-                this.setKv(json['kv'])
+                this.setQuery(json['gcm']);
+                this.setType(json['type']);
+                this.resetKv();
+                let kv = json['kv'];
+                for (let i in kv)
+                   this.setKv({'search_text': i, 'kv': kv[i]})
             }
         },
         computed: {

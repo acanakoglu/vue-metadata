@@ -2,14 +2,14 @@
     <v-container fluid grid-list-xl>
         <v-layout>
             <v-flex>
-                <v-text-field v-model="min" type="number" label="Min.age" :hint="minAge">
+                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString">
                     <!--                              append-outer-icon="add"-->
                     <!--                              @click:append-outer="increment('min')"-->
                     <!--                              prepend-icon="remove" @click:prepend="decrement('min')">-->
                 </v-text-field>
             </v-flex>
             <v-flex>
-                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxAge">
+                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString">
                     <!--                              append-outer-icon="add"-->
                     <!--                              @click:append-outer="increment('max')"-->
                     <!--                              prepend-icon="remove" @click:prepend="decrement('max')">-->
@@ -25,6 +25,7 @@
             </v-flex>
             <v-flex>
                 <v-checkbox v-model="isNull" label="N/D"></v-checkbox>
+<!--                <v-btn color="error" flat @click="deleteAgeLocal()">Reset</v-btn>-->
             </v-flex>
         </v-layout>
     </v-container>
@@ -37,8 +38,8 @@
         name: "AgeSelector",
         data() {
             return {
-                min: 0,
-                max: 0,
+                min: null,
+                max: null,
                 minAge: "",
                 maxAge: "",
                 isNull: false,
@@ -48,23 +49,18 @@
                     {'text': 'Weeks', 'value': 7},
                     {'text': 'Months', 'value': 30},
                     {'text': 'Years', 'value': 365},
+                    {'text': 'Reset', 'value': null}
                 ],
                 selectedAge: {},
             }
         },
         methods: {
-            ...mapActions(["setAge"]),
-            increment(target) {
-                if (target === 'min')
-                    this.min = parseInt(this.min, 10) + 1;
-                else
-                    this.max = parseInt(this.max, 10) + 1
-            },
-            decrement(target) {
-                if (target === 'min')
-                    this.min = parseInt(this.min, 10) - 1;
-                else
-                    this.max = parseInt(this.max, 10) - 1
+            ...mapActions(["setAge", "deleteAge"]),
+            deleteAgeLocal() {
+                this.deleteAge();
+                this.min = null;
+                this.max = null;
+                this.unit = 1;
             },
             loadMinMaxAge() {
                 const url = `field/age`;
@@ -75,8 +71,8 @@
                         return res.data
                     })
                     .then((res) => {
-                        this.minAge = res['min_age'].toString();
-                        this.maxAge = res['max_age'].toString();
+                        this.minAge = res['min_age'];
+                        this.maxAge = res['max_age'];
                     });
             },
             setAgeLocal() {
@@ -92,17 +88,31 @@
             this.loadMinMaxAge()
         },
         watch: {
+            unit() {
+                if (this.unit == null)
+                    this.deleteAgeLocal()
+            },
             compound_query() {
                 this.loadMinMaxAge();
             },
             selectedMin() {
-                this.setAgeLocal()
+                if(this.selectedMin)
+                    this.setAgeLocal()
             },
             selectedMax() {
-                this.setAgeLocal()
+                if(this.selectedMax)
+                    this.setAgeLocal()
             },
             isNull() {
                 this.setAgeLocal()
+            },
+            min() {
+                if ((this.unit * this.min) < this.minAge)
+                    this.min = Math.trunc(this.minAge / this.unit)
+            },
+            max() {
+                if ((this.max * this.unit) > this.maxAge)
+                    this.max = Math.trunc(this.maxAge / this.unit)
             }
         },
         computed: {
@@ -114,6 +124,12 @@
             },
             selectedMax() {
                 return this.max * this.unit
+            },
+            maxString() {
+                return Math.trunc((this.maxAge/ this.unit)).toString();
+            },
+            minString() {
+                return Math.trunc((this.minAge / this.unit)).toString();
             },
         }
     }

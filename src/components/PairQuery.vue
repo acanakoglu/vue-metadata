@@ -46,8 +46,8 @@
             </v-flex>
         </v-layout>
         <v-expansion-panel>
-            <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.indexOf(':'))"
-                              :query_type="pairQueryType" :key="item"></KvExpansionPanel>
+            <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.indexOf('_'))"
+                              :query_type="pairQueryType" :key="item" :query="kvLocal[item]"></KvExpansionPanel>
         </v-expansion-panel>
         <p>{{keys}}</p>
     </v-container>
@@ -66,7 +66,8 @@
                 search: "",
                 infoDialog: false,
                 key: "",
-                pairQueryType: "key"
+                pairQueryType: "key",
+                kvLocal: {},
             }
         },
         methods: {
@@ -76,8 +77,8 @@
             },
             setKey() {
                 if (this.search !== '') {
-                    this.key = this.search;
-                    this.pushKey(this.key + ":" + this.pairQueryType)
+                    this.key = this.search.replace("_","%");
+                    this.pushKey(this.key + "_" + this.pairQueryType);
                     this.search=''
                 }
                 else {
@@ -94,7 +95,14 @@
                 searchDisabled: 'searchDisabled',
             }),
         },
-        watch: {}
+        watch: {
+            compound_query() {
+                let kv = this.compound_query['kv'];
+                this.kvLocal = kv;
+                for (let i in kv)
+                    this.pushKey(i)
+            }
+        }
     }
 </script>
 

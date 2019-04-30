@@ -55,6 +55,10 @@ export default new Vuex.Store({
         resetKvField: (state, field) => {
             delete state.kv[field]
         },
+        resetKv: (state) => {
+            state.keys = []
+            state.kv = {}
+        },
         setType: (state, type) => {
             state.type = type;
         },
@@ -109,6 +113,10 @@ export default new Vuex.Store({
         },
         setAge({commit, state},age_item){
             state.query['age'] = age_item;
+            commit('reloadQuery')
+        },
+        deleteAge({commit}){
+            commit('resetQueryField','age');
             commit('reloadQuery')
         },
         setDropDownSelected({commit, state}, payload) {
