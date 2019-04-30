@@ -1,7 +1,7 @@
 <template>
     <span>
         <v-btn color="info" @click="$refs.inputUpload.click()">Upload Query</v-btn>
-        <input v-show="false" ref="inputUpload" type="file" @change="loadTextFromFile" >
+        <input v-show="false" ref="inputUpload" type="file" @change="loadTextFromFile">
     </span>
 </template>
 
@@ -11,9 +11,11 @@
             loadTextFromFile(ev) {
                 const file = ev.target.files[0];
                 const reader = new FileReader();
-
+                const input = this.$refs.inputUpload;
                 reader.onload = e => this.$emit("load", e.target.result);
                 reader.readAsText(file);
+                input.type = 'text';
+                input.type = 'file';
             }
         }
     };

@@ -281,7 +281,7 @@
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
-            ...mapActions(["setKv","setKvFull"]),
+            ...mapActions(["setKv","setKvFull","deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },

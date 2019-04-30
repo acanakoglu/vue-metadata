@@ -69,11 +69,10 @@
                     .then((res) => {
                         this.minAge = res['min_age'];
                         this.maxAge = res['max_age'];
-                        let ageItem = this.compound_query.gcm['age'];
-                        if (ageItem) {
-                            this.min = ageItem['min_age'] / this.unit;
-                            this.isNull = ageItem['null'];
-                            this.max = ageItem['max_age'] / this.unit;
+                        if (this.ageItem) {
+                            this.min = this.ageItem['min_age'] / this.unit;
+                            this.isNull = this.ageItem['null'];
+                            this.max = this.ageItem['max_age'] / this.unit;
                         }
                     });
             },
@@ -93,16 +92,29 @@
             compound_query() {
                 this.loadMinMaxAge();
             },
-            selectedMin() {
-                if (this.selectedMin)
+            selectedMin(newVal, oldVal) {
+                let ageQuery = -1;
+                if (this.ageItem) {
+                    ageQuery = this.ageItem['min_age']
+                }
+                if (this.selectedMin && newVal !== oldVal && newVal !== ageQuery)
                     this.setAgeLocal()
             },
-            selectedMax() {
-                if (this.selectedMax)
+            selectedMax(newVal, oldVal) {
+                let ageQuery = -1;
+                if (this.ageItem) {
+                    ageQuery = this.ageItem['max_age']
+                }
+                if (this.selectedMax && newVal !== oldVal && newVal !== ageQuery)
                     this.setAgeLocal()
             },
-            isNull() {
-                this.setAgeLocal()
+            isNull(newVal, oldVal) {
+                let ageQuery = null;
+                if (this.ageItem) {
+                    ageQuery = this.ageItem['null']
+                }
+                if (newVal !== oldVal && newVal !== ageQuery)
+                    this.setAgeLocal()
             },
             min() {
                 if ((this.unit * this.min) < this.minAge)
@@ -121,11 +133,15 @@
                     this.max = Math.trunc(this.max * oldVal / newVal)
                 }
             },
-        },
+        }
+        ,
         computed: {
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            ageItem() {
+                return this.compound_query.gcm.age
+            },
             selectedMin() {
                 return this.min * this.unit
             },
