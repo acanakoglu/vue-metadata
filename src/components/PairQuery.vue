@@ -71,7 +71,7 @@
             }
         },
         methods: {
-            ...mapMutations(["pushKey"]),
+            ...mapMutations(["pushKey","setSearch"]),
             openInfoDialog() {
                 this.infoDialog = true
             },
@@ -102,6 +102,7 @@
                 for (let i in kv)
                     if(!this.keys.includes(i))
                         this.pushKey(i)
+                this.setSearch(false)
             }
         }
     }
