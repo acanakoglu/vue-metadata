@@ -49,7 +49,6 @@
             <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.indexOf('_'))"
                               :query_type="pairQueryType" :key="item" :query="kvLocal[item]"></KvExpansionPanel>
         </v-expansion-panel>
-        <p>{{keys}}</p>
     </v-container>
 </template>
 
