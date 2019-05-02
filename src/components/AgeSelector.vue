@@ -3,12 +3,12 @@
         <v-layout>
             <v-flex md4>
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
-                              :min="minInt" :max="max">
+                              :min="minInt" :max="max" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
             <v-flex md4>
                 <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint
-                              :max="maxInt" :min="min">
+                              :max="maxInt" :min="min" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
             <v-flex md4>
@@ -16,15 +16,16 @@
                         v-model="unit"
                         :items="units"
                         label="Age unit"
+                        :disabled="searchDisabled"
                 >
                 </v-select>
             </v-flex>
             <v-flex md2>
-                <v-checkbox v-model="isNull" label="N/D"></v-checkbox>
+                <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D"></v-checkbox>
             </v-flex>
             <v-flex md2>
-                <v-btn @click="setAgeLocal" color="info" flat>Apply</v-btn>
-                <v-btn @click="deleteAgeLocal" color="error" flat>Reset</v-btn>
+                <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
+                <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Reset</v-btn>
             </v-flex>
 
         </v-layout>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex';
+    import {mapState, mapGetters, mapActions} from 'vuex';
 
     export default {
         name: "AgeSelector",
@@ -61,6 +62,7 @@
                 this.max = null;
                 this.unit = 1;
                 this.isNull = false;
+                console.log(this.min)
             },
             loadMinMaxAge() {
                 const url = `field/age`;
@@ -81,9 +83,25 @@
                     });
             },
             setAgeLocal() {
+                let c =0;
+                let b =0;
+
+                if(this.selectedMin) {
+                    c = this.selectedMin;
+                    console.log("min not null")
+                } else {
+                    c = this.minInt * this.unit;
+                    console.log("min null")
+                }
+                console.log(c);
+
+                if(this.selectedMax)
+                    b = this.selectedMax;
+                else b = this.maxInt * this.unit;
+
                 let a = {
-                    'min_age': this.selectedMin,
-                    'max_age': this.selectedMax,
+                    'min_age': c,
+                    'max_age': b,
                     'null': this.isNull
                 };
                 this.setAge(a)
@@ -118,6 +136,7 @@
             }
         },
         computed: {
+            ...mapState(["searchDisabled"]),
             ...mapGetters({
                 compound_query: 'build_query'
             }),

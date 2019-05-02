@@ -7,6 +7,7 @@
             item-value="value"
             :label="labelTitle"
             multiple
+            :disabled="searchDisabled"
     >
         <template slot="item" slot-scope="data">
             <span class="item-value-span"> {{ rename(data.item)}}</span>
@@ -52,7 +53,7 @@
         },
         computed: {
             ...mapState([
-                'query', 'synonym',
+                'query', 'synonym', "searchDisabled"
             ]),
             ...mapGetters({
                 compound_query: 'build_query'

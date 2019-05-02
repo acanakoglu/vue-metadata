@@ -93,8 +93,8 @@
                             <span class="label">
                                     Selected query:
                                 </span>
-                            {{ compound_query }}
-                            {{queryString}}
+                            {{ queryToShow }}
+<!--                            {{compound_query}}-->
                             <!--</div>-->
                         </v-flex>
                     </v-layout>
@@ -333,6 +333,17 @@
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            queryToShow() {
+                let a = []
+                for (let i in this.compound_query['gcm']){
+                    if(i==='age'){
+                        a.push(i +": {min_age: "+this.compound_query['gcm'][i]['min_age']+", max_age: "+this.compound_query['gcm'][i]['max_age']+", null: "+this.compound_query['gcm'][i]['null']+"}")
+                    }
+                    else
+                        a.push(i+": ["+this.compound_query['gcm'][i].join(", ")+"]")
+                }
+                return a.join(", ")
+            },
             typeLocal: {
                 get() {
                     return this.type;
