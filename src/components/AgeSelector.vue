@@ -133,16 +133,16 @@
                     return this.max * this.unit
             },
             maxString() {
-                return Math.trunc((this.maxAge / this.unit)).toString();
+                return Math.floor((this.maxAge / this.unit)).toString();
             },
             minString() {
-                return Math.trunc((this.minAge / this.unit)).toString();
+                return Math.ceil((this.minAge / this.unit)).toString();
             },
             maxInt() {
-                return Math.trunc((this.maxAge / this.unit))
+                return Math.floor((this.maxAge / this.unit))
             },
             minInt() {
-                return Math.trunc((this.minAge / this.unit))
+                return Math.ceil((this.minAge / this.unit))
             },
         }
     }
