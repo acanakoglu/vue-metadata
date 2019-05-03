@@ -134,7 +134,6 @@
                 <v-data-table
                         v-model="selectedValues"
                         :headers="valueHeaders"
-                        select-all
                         item-key="value"
                         :items="possibleValues"
                         :loading="isLoading"
@@ -144,7 +143,7 @@
                         <td>
                             <v-checkbox v-model="props.selected"></v-checkbox>
                         </td>
-                        <td v-for="header in valueHeaders" :key="header.value">
+                        <td v-for="header in valueHeaders" :key="header.value" v-if="header.value!=='selected'">
                             <span v-html="updateCellTextFormat(props.item[header.value])">
                             </span>
                         </td>
@@ -209,6 +208,7 @@
                     {text: 'Count', value: 'count', sortable: true},
                 ],
                 valueHeaders: [
+                    {text: 'Selected', value: 'selected',sortable: false},
                     {text: 'Value', value: 'value',},
                     {text: 'Count', value: 'count',},
                 ],
@@ -222,7 +222,6 @@
                 valuesDialog: false,
                 keyToSearch: "",
                 isGcm: true,
-                // selectedValues: [],
                 possibleValues: [],
                 kvLocal: {
                     type_query: this.query_type,
@@ -269,10 +268,6 @@
                         return res.data
                     })
                     .then((res) => {
-                        var a = res['gcm'];
-                        // for (let x in a) {
-                        //     this.resultsGcm.push({'a': a[x], 'selected': false})
-                        // }
                         this.resultsGcm = res['gcm'];
                         this.resultsPair = res['pairs'];
                         this.isLoading = false
@@ -362,34 +357,8 @@
                 let a = Object.keys(this.kvLocal.query.gcm).length + Object.keys(this.kvLocal.query.pairs).length + this.selectedKvGcm.length + this.selectedKvPairs.length;
                 return a === 0
             },
-            // queryToShow() {
-            //     let a = "";
-            //     a += this.query_type.toString() + ": ";
-            //     a += this.query_text.toString();
-            //     a += ", ";
-            //     a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
-            //     a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);
-            //     console.log(a)
-            //     // a += JSON.stringify(this.kvLocal.query);
-            //     return a;
-            // },
         },
         watch: {
-            // kvLocal: {
-            //     handler() {
-            //         let a = "";
-            //         a += this.query_type.toString() + ": ";
-            //         a += this.query_text.toString();
-            //         a += ", ";
-            //         a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
-            //         a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);
-            //         console.log(a);
-            //         // a += JSON.stringify(this.kvLocal.query);
-            //         console.log("allora madonna puttana")
-            //         this.queryToShow = a
-            //     },
-            //     deep: true
-            // },
             open: {
                 handler() {
                     if (!this.readOnly) {

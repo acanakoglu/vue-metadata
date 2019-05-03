@@ -324,12 +324,6 @@
             },
         },
         watch: {
-            // selectedTab() {
-            //     if (this.selectedTab == 3) {
-            //         this.setQueryGraph(true);
-            //         this.selectedTab = 999;
-            //     }
-            // },
             queryString() {
                 if (this.queryString !== '') {
                     const json = JSON.parse(this.queryString);
