@@ -340,7 +340,7 @@
                         a.push(i +": {min_age: "+this.compound_query['gcm'][i]['min_age']+", max_age: "+this.compound_query['gcm'][i]['max_age']+", null: "+this.compound_query['gcm'][i]['null']+"}")
                     }
                     else
-                        a.push(i+": ["+this.compound_query['gcm'][i].join(", ")+"]")
+                        a.push(i+": [ '"+this.compound_query['gcm'][i].join("', '")+"' ]")
                 }
                 return a.join(", ")
             },

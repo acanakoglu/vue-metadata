@@ -8,7 +8,7 @@
             </v-flex>
             <v-flex md4>
                 <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint
-                              :max="maxInt" :min="min" :disabled="searchDisabled">
+                              :min="min" :max="maxInt" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
             <v-flex md4>
@@ -41,8 +41,8 @@
             return {
                 min: null,
                 max: null,
-                minAge: "",
-                maxAge: "",
+                minAge: null,
+                maxAge: null,
                 isNull: false,
                 unit: 1,
                 units: [
@@ -59,8 +59,8 @@
             deleteAgeLocal() {
                 this.deleteAge();
                 this.min = null;
-                this.max = null;
                 this.unit = 1;
+                this.max = null;
                 this.isNull = false;
                 console.log(this.min)
             },
@@ -122,17 +122,21 @@
                     this.isNull = false;
                 }
             },
-            min() {
-                if ((this.unit * this.min) < this.minAge)
-                    this.min = Math.trunc(this.minAge / this.unit)
+            min(newVal) {
+                if(newVal !== null)
+                    if ((newVal * this.min) < this.minAge)
+                        this.min = Math.floor(this.minAge / this.unit)
             },
-            max() {
-                if ((this.max * this.unit) > this.maxAge)
-                    this.max = Math.trunc(this.maxAge / this.unit)
+            max(newVal) {
+                if(newVal !== null)
+                    if ((newVal* this.unit) > this.maxAge)
+                    this.max = Math.ceil(this.maxAge / this.unit)
             },
             unit(newVal, oldVal) {
-                this.min = Math.trunc(this.min * oldVal / newVal);
-                this.max = Math.trunc(this.max * oldVal / newVal);
+                if(this.min !== null)
+                    this.min = Math.floor(this.min * oldVal / newVal);
+                if(this.max !== null)
+                    this.max = Math.ceil(this.max * oldVal / newVal);
             }
         },
         computed: {
@@ -152,16 +156,16 @@
                     return this.max * this.unit
             },
             maxString() {
-                return Math.floor((this.maxAge / this.unit)).toString();
+                return Math.ceil((this.maxAge / this.unit)).toString();
             },
             minString() {
-                return Math.ceil((this.minAge / this.unit)).toString();
+                return Math.floor((this.minAge / this.unit)).toString();
             },
             maxInt() {
-                return Math.floor((this.maxAge / this.unit))
+                return Math.ceil((this.maxAge / this.unit))
             },
             minInt() {
-                return Math.ceil((this.minAge / this.unit))
+                return Math.floor((this.minAge / this.unit))
             },
         }
     }

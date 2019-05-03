@@ -53,16 +53,14 @@
                 v-else
                 v-model="selectedKvGcm"
                 :headers="headers"
-                select-all
                 :items="resultsGcm"
                 :loading="isLoading"
                 item-key="id"
             >
                 <template slot="items" slot-scope="props">
                     <td><v-checkbox v-model="props.selected"></v-checkbox></td>
-                    <td v-for="header in headers">
-                        <span v-if="header.value==='id'"></span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <td v-for="header in headers" v-if ="header.value!=='id'">
+                        <span v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
@@ -99,16 +97,14 @@
                 v-else
                 v-model="selectedKvPairs"
                 :headers="headers"
-                select-all
                 :items="resultsPair"
                 :loading="isLoading"
                 item-key="id"
             >
                 <template slot="items" slot-scope="props">
                     <td><v-checkbox v-model="props.selected"></v-checkbox></td>
-                    <td v-for="header in headers">
-                        <span v-if="header.value==='id'"></span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <td v-for="header in headers" v-if ="header.value!=='id'">
+                        <span v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
