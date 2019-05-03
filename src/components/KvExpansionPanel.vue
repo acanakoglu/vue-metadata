@@ -400,7 +400,7 @@
             },
             valuesDialog() {
                 let k = this.keyToSearch;
-                console.log(this.isGcm)
+                // console.log(this.isGcm)
                 if (this.valuesDialog) {
                     this.isLoading = true;
                     let url = "pair/" + this.keyToSearch + "/values?is_gcm=" + this.isGcm;

@@ -62,7 +62,7 @@
                 this.unit = 1;
                 this.max = null;
                 this.isNull = false;
-                console.log(this.min)
+                // console.log(this.min)
             },
             loadMinMaxAge() {
                 const url = `field/age`;
@@ -88,12 +88,12 @@
 
                 if(this.selectedMin) {
                     c = this.selectedMin;
-                    console.log("min not null")
+                    // console.log("min not null")
                 } else {
                     c = this.minInt * this.unit;
-                    console.log("min null")
+                    // console.log("min null")
                 }
-                console.log(c);
+                // console.log(c);
 
                 if(this.selectedMax)
                     b = this.selectedMax;

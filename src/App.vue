@@ -302,7 +302,7 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                console.log(item.query);
+                // console.log(item.query);
                 this.setQuery(item.query.gcm);
                 this.setSynonym(item.synonym);
                 this.setKvFull(item.query.kv);
@@ -312,7 +312,7 @@
             },
             downloadQuery() {
                 var text = JSON.stringify(this.compound_query);
-                console.log(text);
+                // console.log(text);
                 var filename = "query.txt";
                 var element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
