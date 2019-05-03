@@ -5,7 +5,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        // query:  {source:['tads']},
         query:  {},
         synonym: false,
         kv: {},
@@ -15,7 +14,7 @@ export default new Vuex.Store({
         count: null,
         showGraphQuery: false,
         keys: [],
-        searchDisabled: false,
+        panelActive: [],
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -25,16 +24,22 @@ export default new Vuex.Store({
             Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
             return res
         },
+        keysEmpty: (state) => state.keys.length === 0
     },
     mutations: {
+        setPanelActive: (state, value) => {
+            state.panelActive.push(value);
+        },
+        resetPanelActive: (state) => {
+            state.panelActive = [];
+        },
         setSearch: (state, value) => {
             state.searchDisabled = value;
         },
         pushKey: (state, key) => {
-            if (!state.keys.includes(key)){
+            if (!state.keys.includes(key)) {
                 state.keys.push(key);
-            }
-            else {
+            } else {
                 window.alert("Duplicate Key")
             }
         },
@@ -50,7 +55,7 @@ export default new Vuex.Store({
         setKvField: (state, payload) => {
             state.kv[payload.search_text] = payload.kv
         },
-        reloadKv: (state) =>{
+        reloadKv: (state) => {
             state.kv = Object.assign({}, state.kv);
         },
         resetKvField: (state, field) => {
@@ -104,7 +109,7 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        deleteKv({commit},field) {
+        deleteKv({commit}, field) {
             commit('resetKvField', field);
             commit('reloadKv');
         },
@@ -112,19 +117,19 @@ export default new Vuex.Store({
             commit('setKvField', payload);
             commit('reloadKv');
         },
-        setKvFull: ({commit,state}, payload) => {
-            if(Object.keys(payload).length===0)
+        setKvFull: ({commit, state}, payload) => {
+            if (Object.keys(payload).length === 0)
                 commit('resetKv');
             else
                 state.kv = payload;
             commit('reloadKv')
         },
-        setAge({commit, state},age_item){
+        setAge({commit, state}, age_item) {
             state.query['age'] = age_item;
             commit('reloadQuery')
         },
-        deleteAge({commit}){
-            commit('resetQueryField','age');
+        deleteAge({commit}) {
+            commit('resetQueryField', 'age');
             commit('reloadQuery')
         },
         setDropDownSelected({commit, state}, payload) {

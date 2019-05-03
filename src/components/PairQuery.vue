@@ -46,7 +46,7 @@
             </v-flex>
         </v-layout>
         <v-expansion-panel>
-            <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.indexOf('_'))"
+            <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.lastIndexOf('_'))"
                               :query_type="pairQueryType" :key="item" :query="kvLocal[item]"></KvExpansionPanel>
         </v-expansion-panel>
     </v-container>
@@ -70,13 +70,13 @@
             }
         },
         methods: {
-            ...mapMutations(["pushKey","setSearch"]),
+            ...mapMutations(["pushKey","setSearch","resetPanelActive"]),
             openInfoDialog() {
                 this.infoDialog = true
             },
             setKey() {
                 if (this.search !== '') {
-                    this.key = this.search.replace("_","%");
+                    this.key = this.search;
                     this.pushKey(this.key + "_" + this.pairQueryType);
                     this.search=''
                 }
@@ -87,12 +87,16 @@
         },
         computed: {
             ...mapGetters({
-                compound_query: 'build_query'
+                compound_query: 'build_query',
+                keysEmpty: "keysEmpty"
             }),
             ...mapState({
                 keys: 'keys',
-                searchDisabled: 'searchDisabled',
+                panelActive: "panelActive",
             }),
+            searchDisabled() {
+                return this.panelActive.length !== 0
+            },
         },
         watch: {
             compound_query() {
@@ -100,9 +104,13 @@
                 this.kvLocal = kv;
                 for (let i in kv)
                     if(!this.keys.includes(i))
-                        this.pushKey(i)
-                this.setSearch(false)
-            }
+                        this.pushKey(i);
+                // this.setSearch(false)
+            },
+            keysEmpty() {
+                if(this.keysEmpty)
+                    this.resetPanelActive()
+            },
         }
     }
 </script>

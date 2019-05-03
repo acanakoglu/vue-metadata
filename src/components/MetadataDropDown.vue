@@ -53,10 +53,10 @@
         },
         computed: {
             ...mapState([
-                'query', 'synonym', "searchDisabled"
+                'query', 'synonym',"panelActive"
             ]),
             ...mapGetters({
-                compound_query: 'build_query'
+                compound_query: 'build_query',
             }),
             selected: {
                 get() {
@@ -67,6 +67,9 @@
                     // console.log("SET" + value);
                     this.setDropDownSelected({field: this.field, list: value})
                 }
+            },
+            searchDisabled() {
+                return this.panelActive.length !== 0
             },
         },
         methods: {

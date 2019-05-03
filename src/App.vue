@@ -38,7 +38,8 @@
                             <span class=label>General settings </span>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-radio-group v-model="typeLocal" label="Data search" class="radio-group"
+                            <v-radio-group :disabled=searchDisabled v-model="typeLocal" label="Data search"
+                                           class="radio-group"
                                            append-icon="info"
                                            @click:append="openInfoDialog">
                                 <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
@@ -59,7 +60,8 @@
                                     </v-card-title>
 
                                     <v-card-text>
-                                        <p>Original: searches using metadata unchanged from the original data sources</p>
+                                        <p>Original: searches using metadata unchanged from the original data
+                                            sources</p>
                                         <p>Synonym: searches using original metadata and ontological term and synonyms
                                             related to it</p>
                                         <p>Hierarchy: searches using original metadata, ontological terms, and their
@@ -91,11 +93,11 @@
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                    Selected query:
-                                </span>
-                            {{ queryToShow }}
-<!--                            {{compound_query}}-->
-                            <!--</div>-->
+                                Selected query:
+                            </span>
+                            <span style="font-family:monospace; font-size:120%;">
+                                {{ queryToShow }}
+                            </span>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -219,15 +221,20 @@
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    {text: 'Clear Fields', value: {synonym: false, query: { "gcm": {}, "type": "original", "kv": {} }},},
-                    {text: 'Encode source', value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {} }},},
+                    {text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
+                    {
+                        text: 'Encode source',
+                        value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
+                    },
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
                             synonym: false,
                             query: {
-                                "gcm": {disease: ["prostate adenocarcinoma"],
-                                assembly: ["grch38"]}, "type": "original", "kv": {}
+                                "gcm": {
+                                    disease: ["prostate adenocarcinoma"],
+                                    assembly: ["grch38"]
+                                }, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -238,18 +245,22 @@
                             query: {
                                 "gcm": {
                                     tissue: ["adrenal gland"],
-                                feature: ["copy number variation", "rna binding protein"]
-                                }, "type": "original", "kv": {},}
+                                    feature: ["copy number variation", "rna binding protein"]
+                                }, "type": "original", "kv": {},
+                            }
                         }
                     },
                     {
                         text: 'Example 3 - synonym enriched search',
                         value: {
                             synonym: true,
-                            query: { "gcm": {cell: ["gm12878"],
-                                assembly: ["hg19"],
-                                file_format: ["broadpeak"],
-                                technique: ["chip-seq"]}, "type": "synonym", "kv": {}
+                            query: {
+                                "gcm": {
+                                    cell: ["gm12878"],
+                                    assembly: ["hg19"],
+                                    file_format: ["broadpeak"],
+                                    technique: ["chip-seq"]
+                                }, "type": "synonym", "kv": {}
                             }
                         }
                     },
@@ -267,8 +278,10 @@
                         value: {
                             synonym: false,
                             query: {
-                                "gcm": {project_name: ["tads"],
-                                biological_replicate_count: [2]}, "type": "original", "kv": {}
+                                "gcm": {
+                                    project_name: ["tads"],
+                                    biological_replicate_count: [2]
+                                }, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -281,7 +294,7 @@
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
-            ...mapActions(["setKv","setKvFull","deleteAge"]),
+            ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -318,29 +331,32 @@
             //     }
             // },
             queryString() {
-                if(this.queryString !== ''){
-                    const json = JSON.parse(this.queryString)
+                if (this.queryString !== '') {
+                    const json = JSON.parse(this.queryString);
                     this.setQuery(json['gcm']);
                     this.setType(json['type']);
-                    this.resetKv()
+                    this.resetKv();
                     this.setKvFull(json['kv']);
                     this.queryString = ''
                 }
             }
         },
         computed: {
-            ...mapState(['query', 'synonym', 'count', 'type']),
+            ...mapState(['query', 'synonym', 'count', 'type', "panelActive"]),
             ...mapGetters({
-                compound_query: 'build_query'
+                compound_query: 'build_query',
+
             }),
+            searchDisabled() {
+                return this.panelActive.length !== 0
+            },
             queryToShow() {
-                let a = []
-                for (let i in this.compound_query['gcm']){
-                    if(i==='age'){
-                        a.push(i +": {min_age: "+this.compound_query['gcm'][i]['min_age']+", max_age: "+this.compound_query['gcm'][i]['max_age']+", null: "+this.compound_query['gcm'][i]['null']+"}")
-                    }
-                    else
-                        a.push(i+": [ '"+this.compound_query['gcm'][i].join("', '")+"' ]")
+                let a = [];
+                for (let i in this.compound_query['gcm']) {
+                    if (i === 'age') {
+                        a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", null: " + this.compound_query['gcm'][i]['null'] + "}")
+                    } else
+                        a.push(i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']")
                 }
                 return a.join(", ")
             },
