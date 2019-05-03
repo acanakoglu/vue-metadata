@@ -3,7 +3,8 @@
     <!--        <v-flex>-->
     <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
         <div slot="header">{{query_text}}:{{kvLocal}}</div>
-        <v-btn v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">Delete Kv</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn class="delete-button" v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">Delete Kv</v-btn>
         <v-card>
             <v-card-title class="headline blue lighten-4"
                           secondary-title>
@@ -456,4 +457,7 @@
 </script>
 
 <style scoped>
+    .delete-button{
+        flex:none!important;
+    }
 </style>
