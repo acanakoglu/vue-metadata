@@ -89,7 +89,7 @@
             // },
             getClass(field) {
                 if (field==='age')
-                    return "no-horizontal-padding xs12 sm6 md4 d-flex";
+                    return "no-horizontal-padding xs12 sm12 md6 d-flex";
                 else
                     return "no-horizontal-padding xs12 sm6 md2 d-flex"
             },

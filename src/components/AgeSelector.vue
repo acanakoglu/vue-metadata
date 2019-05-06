@@ -25,7 +25,7 @@
             </v-flex>
             <v-flex md2>
                 <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
-                <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Reset</v-btn>
+                <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
             </v-flex>
 
         </v-layout>
