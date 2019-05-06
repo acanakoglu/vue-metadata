@@ -139,7 +139,7 @@
 
 
                         <div v-if="count === null">Loading...</div>
-                        <div v-else-if="count>0">{{count}} item<span
+                        <div style="font-size:1.5em; font-weight:bold;" v-else-if="count>0">{{count}} item<span
                                 v-if="count>1">s</span> found
                         </div>
                         <div v-else>No result</div>
