@@ -263,7 +263,6 @@
             searchText() {
                 this.isLoading = true;
                 let url = "pair/" + this.query_type + "s?q=" + this.query_text + "&exact="+this.exact_match;
-                window.alert(url)
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
