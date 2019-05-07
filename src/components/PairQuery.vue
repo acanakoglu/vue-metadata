@@ -44,10 +44,37 @@
                         hide-details
                 ></v-text-field>
             </v-flex>
+            <v-flex d-flex shrink>
+                <v-switch :disabled="searchDisabled" v-model="exact_match" label="Exact match"></v-switch>
+                <v-dialog
+                        width="500"
+                >
+                    <v-btn slot="activator"
+                           class="info-button"
+                           small
+                           flat icon color="blue">
+                        <v-icon class="info-icon">info</v-icon>
+                    </v-btn>
+
+                    <v-card>
+                        <v-card-title
+                                class="headline grey lighten-2"
+                                primary-title
+                        >
+                            Exact match
+                        </v-card-title>
+
+                        <v-card-text>
+                            TODO
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+            </v-flex>
         </v-layout>
         <v-expansion-panel>
             <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.lastIndexOf('_'))"
-                              :query_type="pairQueryType" :key="item" :query="kvLocal[item]"></KvExpansionPanel>
+                              :query_type="pairQueryType" :key="item" :exact_match="exact_match"
+                              :query="kvLocal[item]"></KvExpansionPanel>
         </v-expansion-panel>
     </v-container>
 </template>
@@ -67,10 +94,11 @@
                 key: "",
                 pairQueryType: "key",
                 kvLocal: {},
+                exact_match: false,
             }
         },
         methods: {
-            ...mapMutations(["pushKey","setSearch","resetPanelActive"]),
+            ...mapMutations(["pushKey", "setSearch", "resetPanelActive"]),
             openInfoDialog() {
                 this.infoDialog = true
             },
@@ -78,9 +106,8 @@
                 if (this.search !== '') {
                     this.key = this.search;
                     this.pushKey(this.key + "_" + this.pairQueryType);
-                    this.search=''
-                }
-                else {
+                    this.search = ''
+                } else {
                     window.alert("Please input a search keyword")
                 }
             },
@@ -103,12 +130,12 @@
                 let kv = this.compound_query['kv'];
                 this.kvLocal = kv;
                 for (let i in kv)
-                    if(!this.keys.includes(i))
+                    if (!this.keys.includes(i))
                         this.pushKey(i);
                 // this.setSearch(false)
             },
             keysEmpty() {
-                if(this.keysEmpty)
+                if (this.keysEmpty)
                     this.resetPanelActive()
             },
         }
@@ -125,5 +152,13 @@
         margin-left: -0.5em;
         margin-top: -0.7em !important;
         z-index: 1;
+    }
+
+    .info-icon {
+        font-size: 15px
+    }
+
+    .info-button {
+        width: 10px
     }
 </style>

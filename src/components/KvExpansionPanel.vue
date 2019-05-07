@@ -68,7 +68,7 @@
                     <td>
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
-                    <td v-for="header in headers" v-if="header.value!=='id'">
+                    <td v-for="header in headers" v-if="header.value!=='id'" :key="header.value">
                         <span v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
@@ -114,7 +114,7 @@
                     <td>
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
-                    <td v-for="header in headers" v-if="header.value!=='id'">
+                    <td v-for="header in headers" v-if="header.value!=='id'" :key="header.value">
                         <span v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
@@ -176,6 +176,7 @@
         props: {
             query_text: {type: String, required: true},
             query_type: {type: String, required: true},
+            exact_match: {type: Boolean, required: true},
             query: {type: Object, required: false},
         },
         data() {
@@ -261,7 +262,8 @@
             },
             searchText() {
                 this.isLoading = true;
-                let url = "pair/" + this.query_type + "s?q=" + this.query_text;
+                let url = "pair/" + this.query_type + "s?q=" + this.query_text + "&exact="+this.exact_match;
+                window.alert(url)
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
