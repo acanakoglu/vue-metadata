@@ -25,8 +25,7 @@
                         <v-card-text>
                             <p>Key: free text search over all attributes, including original metadata and GCM
                                 fields.</p>
-                            <p>Value: free text search over all values, including original metadata and GCM
-                                fields.</p>
+                            <p>Value: free text search over all values, including original metadata and GCM field values.</p>
                         </v-card-text>
 
                     </v-card>
