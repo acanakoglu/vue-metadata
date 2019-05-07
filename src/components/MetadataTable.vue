@@ -54,10 +54,11 @@
                                         Beware union of big datasets may result in long execution times.
                                     </p>
 
-                                    <v-textarea
+                                    <v-textarea v-if="count<=500"
                                             label="GMQL query"
                                             :value="gmqlQuery"
                                     ></v-textarea>
+                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL query, please select a smaller dataset</v-alert>
                                 </v-card-text>
 
 
@@ -65,6 +66,7 @@
 
                                 <v-card-actions>
                                     <v-btn
+                                            v-if="count<=500"
                                             color="primary"
                                             flat
                                             @click="toClipboard()"
@@ -439,7 +441,7 @@
                 deep: true
             },
             dialogGmql() {
-                if (this.dialogGmql) {
+                if (this.dialogGmql && this.count <=500) {
                     this.gmqlProgress = true;
                     this.gmqlQuery = "Loading!";
 
