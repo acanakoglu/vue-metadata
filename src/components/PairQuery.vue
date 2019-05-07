@@ -65,8 +65,8 @@
 
                         <v-card-text>
                             <p>When Exact match is disabled, the search is performed by checking the keys/values which contain the input string.</p>
-                            <p>When Exact match is enabled, the search is based on equality between the keys/values and the input string.
-                            <p>Note that also spaces, punctuation and underscores are considered, both as first and last characters.
+                            <p>When Exact match is enabled, the search is based on equality between the keys/values and the input string.</p>
+                            <p>Note that also spaces, punctuation and underscores are considered, both as first and last characters.</p>
                         </v-card-text>
                     </v-card>
                 </v-dialog>
