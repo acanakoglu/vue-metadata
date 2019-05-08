@@ -1,6 +1,6 @@
 <template>
     <v-container fluid grid-list-xl>
-        <v-layout>
+        <v-layout class="view container">
             <v-flex md4>
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
@@ -175,5 +175,16 @@
 </script>
 
 <style scoped>
+    .container {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0px;
 
+    }
+
+    .view {
+        margin-bottom: 0px!important;
+        margin-top: -12px !important;
+        outline: 1px solid black;
+    }
 </style>

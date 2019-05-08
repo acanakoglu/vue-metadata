@@ -51,6 +51,7 @@
                             </v-card>
                         </v-dialog>
                         </span>
+                        <span v-else-if="header.value === 'values'" v-html="updateCellTextFormat(props.item[header.value].join(', '))"></span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value].toString())">
                         </span>
                     </td>
@@ -63,18 +64,18 @@
                     :items="resultsGcm"
                     :loading="isLoading"
                     item-key="id"
+                    select-all
             >
                 <template slot="items" slot-scope="props">
                     <td>
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
-                    <td v-for="header in headers" v-if="header.value!=='id'" :key="header.value">
-                        <span v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <td v-for="header in headers" :key="header.value">
+                        <span v-if="header.value !== 'id'" v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
         </v-card>
-
         <v-card>
             <v-card-title class="headline blue lighten-4"
                           secondary-title>
@@ -109,13 +110,14 @@
                     :items="resultsPair"
                     :loading="isLoading"
                     item-key="id"
+                    select-all
             >
                 <template slot="items" slot-scope="props">
                     <td>
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
-                    <td v-for="header in headers" v-if="header.value!=='id'" :key="header.value">
-                        <span v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <td v-for="header in headers" :key="header.value" >
+                        <span v-if="header.value !== 'id'" v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
@@ -129,6 +131,15 @@
                         primary-title>
                     Values for key {{keyToSearch}}
                 </v-card-title>
+                <v-card-actions>
+                    <v-btn
+                            color="primary"
+                            flat
+                            @click="resetSearch"
+                    >
+                        Close
+                    </v-btn>
+                </v-card-actions>
 
                 <v-divider></v-divider>
                 <v-data-table
@@ -138,13 +149,14 @@
                         :items="possibleValues"
                         :loading="isLoading"
                         class="data-table"
+                        select-all
                 >
                     <template slot="items" slot-scope="props">
                         <td>
                             <v-checkbox v-model="props.selected"></v-checkbox>
                         </td>
-                        <td v-for="header in valueHeaders" :key="header.value" v-if="header.value!=='selected'">
-                            <span v-html="updateCellTextFormat(props.item[header.value])">
+                        <td v-for="header in valueHeaders" :key="header.value" >
+                            <span v-if="header.value!=='selected'" v-html="updateCellTextFormat(props.item[header.value])">
                             </span>
                         </td>
                     </template>
@@ -203,15 +215,14 @@
                     {text: 'Info', value: 'info', sortable: false}
                 ],
                 headers: [
-                    {text: '', value: 'id', sortable: false},
+                    {text: 'Count', value: 'count', sortable: true},
                     {text: 'Key', value: 'key', sortable: true},
                     {text: 'Value', value: 'value', sortable: true},
-                    {text: 'Count', value: 'count', sortable: true},
+                    {text: '', value: 'id', sortable: false},
                 ],
                 valueHeaders: [
-                    {text: 'Selected', value: 'selected',sortable: false},
-                    {text: 'Value', value: 'value',},
                     {text: 'Count', value: 'count',},
+                    {text: 'Value', value: 'value',},
                 ],
                 resultsGcm: [],
                 resultsPair: [],
@@ -252,13 +263,13 @@
                 this.open = [false];
             },
             cancel() {
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query);
+                this.deleteKey(this.key + "_" + this.kvLocal.type_query+this.exact_match);
                 this.resetPanelActive()
             },
 
             deleteKvLocal() {
-                this.deleteKv(this.query_text + "_" + this.kvLocal.type_query)
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query);
+                this.deleteKv(this.query_text + "_" + this.kvLocal.type_query+this.exact_match)
+                this.deleteKey(this.key + "_" + this.kvLocal.type_query+this.exact_match);
             },
             searchText() {
                 this.isLoading = true;
@@ -276,9 +287,8 @@
             },
             setKvLocal() {
                 if (this.query_type === 'key') {
-                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query});
+                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match});
                 } else {
-
                     var keys_gcm = [];
                     for (let x in this.selectedKvGcm) {
                         keys_gcm.push(this.selectedKvGcm[x].key)
@@ -306,11 +316,13 @@
                         });
                         this.kvLocal.query.pairs[keys_pairs[x]] = b;
                     }
-                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query});
+                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match});
                 }
                 let a = "";
                 a += this.query_type.toString() + ": ";
                 a += this.query_text.toString();
+                a += ", ";
+                a+= "exact: "+this.exact_match
                 a += ", ";
                 a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
                 a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);

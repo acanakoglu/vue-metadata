@@ -1,10 +1,9 @@
 <template>
     <!--{{filter}}-->
     <v-container fluid grid-list-xl>
-        <div v-for="view in views" :key="view.value" class="view"  :style="{}">
+        <div v-for="view in views" :key="view.value" class="view" :style="{}">
             <h4 style="text-align: center">{{view.text}}</h4>
             <v-layout wrap align-center class="container">
-
                 <!--<v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">-->
                 <!--{{view.text}}:-->
                 <!--</v-flex>-->

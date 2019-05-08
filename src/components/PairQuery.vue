@@ -105,8 +105,8 @@
             },
             setKey() {
                 if (this.search !== '') {
-                    this.key = this.search;
-                    this.pushKey(this.key + "_" + this.pairQueryType);
+                    this.key = this.search.toLowerCase();
+                    this.pushKey(this.key + "_" + this.pairQueryType + this.exact_match);
                     this.search = ''
                 } else {
                     window.alert("Please input a search keyword")

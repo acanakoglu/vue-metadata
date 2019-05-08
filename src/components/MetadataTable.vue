@@ -55,10 +55,12 @@
                                     </p>
 
                                     <v-textarea v-if="count<=500"
-                                            label="GMQL query"
-                                            :value="gmqlQuery"
+                                                label="GMQL query"
+                                                :value="gmqlQuery"
                                     ></v-textarea>
-                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL query, please select a smaller dataset (less than 500 items)</v-alert>
+                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL
+                                        query, please select a smaller dataset (less than 500 items)
+                                    </v-alert>
                                 </v-card-text>
 
 
@@ -105,7 +107,8 @@
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "result.csv" file that contains
-                                        the comma-separated version of the table shown in the "RESULT ITEMS" section, preserving user defined fields order.
+                                        the comma-separated version of the table shown in the "RESULT ITEMS" section,
+                                        preserving user defined fields order.
                                     </p>
                                     <p>
                                         Please check size of selection.
@@ -215,11 +218,12 @@
 
                                 <v-card-text>
                                     <p>Generally, each row refers to one item. In case the item is derived from multiple
-                                    Replicates/Biosamples/Donors:</p>
-                                    <p>- in the aggregated view the related information is aggregated by concatenating the
-                                    possible values through the pipe "|";</p>
+                                        Replicates/Biosamples/Donors:</p>
+                                    <p>- in the aggregated view the related information is aggregated by concatenating
+                                        the
+                                        possible values through the pipe "|";</p>
                                     <p>- in the replicated view: there is one row for each different Replicate (and
-                                    consequently Biosample/Donor).</p>
+                                        consequently Biosample/Donor).</p>
                                 </v-card-text>
 
                             </v-card>
@@ -234,7 +238,8 @@
                                 >
                                     Column order
                                     <v-spacer></v-spacer>
-                                    <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()" :label="sortCheckBoxLabel"></v-checkbox>
+                                    <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
+                                                :label="sortCheckBoxLabel"></v-checkbox>
                                     <v-btn
                                             color="primary"
                                             flat
@@ -245,8 +250,8 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <p>Drag and drop field names in the desired position.
-                                    Check or uncheck fields to re-define table content.
-                                    Press APPLY to go back to the result window.</p>
+                                        Check or uncheck fields to re-define table content.
+                                        Press APPLY to go back to the result window.</p>
                                     <draggable v-model="headers" @start="drag=true" @end="drag=false">
                                         <v-list v-for="element in headers" :key="element.value">
                                             <v-checkbox :label=element.text v-model=element.show></v-checkbox>
@@ -303,16 +308,17 @@
                     <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
-            <!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
-            <!--                Your search for "{{ search }}" found no results.-->
-            <!--            </v-alert>-->
-
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
             <v-alert slot="no-results" :value="true" color="info" icon="info" v-else>
                 Loading
             </v-alert>
+            <template slot="actions">
+                <td :colspan="headers.length">
+                    <strong>This is an extra footer</strong>
+                </td>
+            </template>
         </v-data-table>
     </v-card>
 </template>
@@ -443,7 +449,7 @@
                 deep: true
             },
             dialogGmql() {
-                if (this.dialogGmql && this.count <=500) {
+                if (this.dialogGmql && this.count <= 500) {
                     this.gmqlProgress = true;
                     this.gmqlQuery = "Loading!";
 
@@ -473,8 +479,8 @@
                 'setCount'
             ]),
             selectAllHeaders() {
-                if(this.sortCheckbox){
-                    for (let i in this.headers){
+                if (this.sortCheckbox) {
+                    for (let i in this.headers) {
                         this.headers[i].show = true
                     }
                 } else {
@@ -627,7 +633,7 @@
                 return this.result.length < 1000;
             },
             sortCheckBoxLabel() {
-                if(this.sortCheckbox)
+                if (this.sortCheckbox)
                     return "Deselect all";
                 else return "Select all"
             },
@@ -643,10 +649,9 @@
                     return res;
                 },
                 set(value) {
-                    if (value.length>0){
+                    if (value.length > 0) {
                         this.selected_headers = [...this.headers]
-                    }
-                    else this.selected_headers = []
+                    } else this.selected_headers = []
                 }
             },
         }
