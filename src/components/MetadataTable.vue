@@ -58,7 +58,7 @@
                                             label="GMQL query"
                                             :value="gmqlQuery"
                                     ></v-textarea>
-                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL query, please select a smaller dataset</v-alert>
+                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL query, please select a smaller dataset (less than 500 items)</v-alert>
                                 </v-card-text>
 
 
@@ -234,6 +234,7 @@
                                 >
                                     Column order
                                     <v-spacer></v-spacer>
+                                    <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()" :label="sortCheckBoxLabel"></v-checkbox>
                                     <v-btn
                                             color="primary"
                                             flat
@@ -330,6 +331,7 @@
         },
         data() {
             return {
+                sortCheckbox: false,
                 downloadProgress: false,
                 gmqlProgress: false,
                 dialogDownload: false,
@@ -470,6 +472,17 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
+            selectAllHeaders() {
+                if(this.sortCheckbox){
+                    for (let i in this.headers){
+                        this.headers[i].show = true
+                    }
+                } else {
+                    for (let i in this.headers) {
+                        this.headers[i].show = false
+                    }
+                }
+            },
             graphClicked(row) {
                 this.openGraphDialog(row[itemSourceIdName])
             },
@@ -613,69 +626,28 @@
             sortable() {
                 return this.result.length < 1000;
             },
-            // headers() {
-            //     return [
-            //         {text: 'Extra', value: 'extra', sortable: false,},
-            //
-            //         {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
-            //         // {text: 'size', value: 'size'},
-            //         // {text: 'date', value: 'date'},
-            //         // {text: 'checksum', value: 'checksum'},
-            //         {text: 'Content type', value: 'content_type', sortable: this.sortable,},
-            //         {text: 'Platform', value: 'platform', sortable: this.sortable,},
-            //         {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
-            //
-            //         {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
-            //         {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
-            //
-            //         {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,},
-            //         {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
-            //         {text: 'File Format', value: 'file_format', sortable: this.sortable,},
-            //         {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
-            //         {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,},
-            //
-            //         {text: 'Technique', value: 'technique', sortable: this.sortable,},
-            //         {text: 'Feature', value: 'feature', sortable: this.sortable,},
-            //         {text: 'Target', value: 'target', sortable: this.sortable,},
-            //         {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
-            //
-            //         {
-            //             text: 'Biological Replicate Number',
-            //             value: 'biological_replicate_number',
-            //             sortable: this.sortable,
-            //         },
-            //         {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
-            //
-            //         {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
-            //         {text: 'Disease', value: 'disease', sortable: this.sortable,},
-            //         {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
-            //         {text: 'Cell', value: 'cell', sortable: this.sortable,},
-            //         {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
-            //
-            //         {text: 'Species', value: 'species', sortable: this.sortable,},
-            //         {text: 'Gender', value: 'gender', sortable: this.sortable,},
-            //         {text: 'Age', value: 'age', sortable: this.sortable,},
-            //         {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
-            //
-            //         {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
-            //         {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
-            //
-            //         {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
-            //         {text: 'Source', value: 'source', sortable: this.sortable,}
-            //     ];
-            // },
-            // hiddenHeaders() {
-            //     []
-            // },
-            selected_headers() {
-                var x;
-                var res = [];
-                for (x in this.headers) {
-                    if (this.headers[x].show) {
-                        res.push(this.headers[x]);
+            sortCheckBoxLabel() {
+                if(this.sortCheckbox)
+                    return "Deselect all";
+                else return "Select all"
+            },
+            selected_headers: {
+                get() {
+                    var x;
+                    var res = [];
+                    for (x in this.headers) {
+                        if (this.headers[x].show) {
+                            res.push(this.headers[x]);
+                        }
                     }
+                    return res;
+                },
+                set(value) {
+                    if (value.length>0){
+                        this.selected_headers = [...this.headers]
+                    }
+                    else this.selected_headers = []
                 }
-                return res;
             },
         }
 
