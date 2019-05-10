@@ -51,7 +51,8 @@
                             </v-card>
                         </v-dialog>
                         </span>
-                        <span v-else-if="header.value === 'values'" v-html="updateCellTextFormat(props.item[header.value].join(', '))"></span>
+                        <span v-else-if="header.value === 'values'"
+                              v-html="updateCellTextFormat(props.item[header.value].join(', '))"></span>
                         <span v-else v-html="updateCellTextFormat(props.item[header.value].toString())">
                         </span>
                     </td>
@@ -71,7 +72,8 @@
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
                     <td v-for="header in headers" :key="header.value">
-                        <span v-if="header.value !== 'id'" v-html="updateCellTextFormat(props.item[header.value])"></span>
+                        <span v-if="header.value !== 'id'"
+                              v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
@@ -116,8 +118,9 @@
                     <td>
                         <v-checkbox v-model="props.selected"></v-checkbox>
                     </td>
-                    <td v-for="header in headers" :key="header.value" >
-                        <span v-if="header.value !== 'id'" v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <td v-for="header in headers" :key="header.value">
+                        <span v-if="header.value !== 'id'"
+                              v-html="updateCellTextFormat(props.item[header.value])"></span>
                     </td>
                 </template>
             </v-data-table>
@@ -155,8 +158,9 @@
                         <td>
                             <v-checkbox v-model="props.selected"></v-checkbox>
                         </td>
-                        <td v-for="header in valueHeaders" :key="header.value" >
-                            <span v-if="header.value!=='selected'" v-html="updateCellTextFormat(props.item[header.value])">
+                        <td v-for="header in valueHeaders" :key="header.value">
+                            <span v-if="header.value!=='selected'"
+                                  v-html="updateCellTextFormat(props.item[header.value])">
                             </span>
                         </td>
                     </template>
@@ -193,7 +197,11 @@
         },
         data() {
             return {
-                queryToShow: "",
+                queryToShow: this.query_type.toString() + ": '" + this.query_text.toString().replace("%20"," ") + "' " +
+                    ", " +
+                    "exact: " + this.exact_match +
+                    ", " +
+                    "gcm: {}, pairs: {}",
                 selectedValues: [],
                 selectedKvGcm: [],
                 selectedKvPairs: [],
@@ -263,17 +271,17 @@
                 this.open = [false];
             },
             cancel() {
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query+this.exact_match);
+                this.deleteKey(this.key + "_" + this.kvLocal.type_query + this.exact_match);
                 this.resetPanelActive()
             },
 
             deleteKvLocal() {
-                this.deleteKv(this.query_text + "_" + this.kvLocal.type_query+this.exact_match)
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query+this.exact_match);
+                this.deleteKv(this.query_text + "_" + this.kvLocal.type_query + this.exact_match)
+                this.deleteKey(this.key + "_" + this.kvLocal.type_query + this.exact_match);
             },
             searchText() {
                 this.isLoading = true;
-                let url = "pair/" + this.query_type + "s?q=" + this.query_text + "&exact="+this.exact_match;
+                let url = "pair/" + this.query_type + "s?q=" + this.query_text + "&exact=" + this.exact_match;
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
@@ -287,7 +295,10 @@
             },
             setKvLocal() {
                 if (this.query_type === 'key') {
-                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match});
+                    this.setKv({
+                        kv: this.kvLocal,
+                        search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match
+                    });
                 } else {
                     var keys_gcm = [];
                     for (let x in this.selectedKvGcm) {
@@ -316,13 +327,16 @@
                         });
                         this.kvLocal.query.pairs[keys_pairs[x]] = b;
                     }
-                    this.setKv({kv: this.kvLocal, search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match});
+                    this.setKv({
+                        kv: this.kvLocal,
+                        search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match
+                    });
                 }
                 let a = "";
-                a += this.query_type.toString() + ": ";
-                a += this.query_text.toString();
+                a += this.query_type.toString() + ": '";
+                a += this.query_text.toString().replace("%20"," ")+"' ";
                 a += ", ";
-                a+= "exact: "+this.exact_match
+                a += "exact: " + this.exact_match
                 a += ", ";
                 a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
                 a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);

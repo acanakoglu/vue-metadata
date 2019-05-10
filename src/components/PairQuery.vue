@@ -105,7 +105,7 @@
             },
             setKey() {
                 if (this.search !== '') {
-                    this.key = this.search.toLowerCase();
+                    this.key = this.search.toLowerCase().replace(" ","%20");
                     this.pushKey(this.key + "_" + this.pairQueryType + this.exact_match);
                     this.search = ''
                 } else {

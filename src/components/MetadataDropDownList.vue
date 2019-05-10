@@ -7,11 +7,11 @@
                 <!--<v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">-->
                 <!--{{view.text}}:-->
                 <!--</v-flex>-->
-                <v-flex :class= "getClass(field.name)"
+                <v-flex :class="getClass(field.name)"
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
                     <MetadataDropDown
-                            v-if ="field.name!=='age'"
+                            v-if="field.name!=='age'"
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
@@ -21,13 +21,21 @@
                     >
 
 
-                        <v-btn slot="activator"
+                        <v-btn v-if="field.name==='age'"
+                               style="margin-left:-6em"
+                               slot="activator"
                                class="info-button"
                                small
                                flat icon color="blue">
                             <v-icon class="info-icon">info</v-icon>
                         </v-btn>
-
+                        <v-btn v-else
+                               slot="activator"
+                               class="info-button"
+                               small
+                               flat icon color="blue">
+                            <v-icon class="info-icon">info</v-icon>
+                        </v-btn>
                         <v-card>
                             <v-card-title
                                     class="headline grey lighten-2"
@@ -87,7 +95,7 @@
             //     return this.fields.filter(field => field.group === groupValue);
             // },
             getClass(field) {
-                if (field==='age')
+                if (field === 'age')
                     return "no-horizontal-padding xs12 sm12 md6 d-flex";
                 else
                     return "no-horizontal-padding xs12 sm6 md2 d-flex"
@@ -148,9 +156,10 @@
 
         .info-button
             width: 10px
-    .view
-        margin: 15px
-        outline: 1px solid black
+
+        .view
+            margin: 15px
+            outline: 1px solid black
 
 
 </style>
