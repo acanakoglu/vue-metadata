@@ -8,7 +8,7 @@
             <p style="font-family:monospace;">{{ queryToShow }}</p>
         </div>
         <v-spacer></v-spacer>
-        <v-btn class="delete-button" v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">
+        <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat @click="deleteKvLocal()">
             Delete Kv
         </v-btn>
         <v-card>
@@ -185,7 +185,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations, mapActions} from 'vuex';
+    import {mapGetters, mapMutations, mapActions, mapState} from 'vuex';
 
     export default {
         name: "KvExpansionPanel",
@@ -261,7 +261,17 @@
                 this.cancelButton = true;
                 this.kvLocal = this.query;
                 this.open = false;
-                this.resetPanelActive()
+                this.resetPanelActive();
+                 let a = "";
+                a += this.query_type.toString() + ": '";
+                a += this.query_text.toString().replace("%20"," ")+"' ";
+                a += ", ";
+                a += "exact: " + this.exact_match;
+                a += ", ";
+                a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
+                a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);
+                // a += JSON.stringify(this.kvLocal.query);
+                this.queryToShow = a
             }
         },
         methods: {
@@ -377,12 +387,16 @@
             },
         },
         computed: {
+            ...mapState(["panelActive"]),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
             buttonDisabled() {
                 let a = Object.keys(this.kvLocal.query.gcm).length + Object.keys(this.kvLocal.query.pairs).length + this.selectedKvGcm.length + this.selectedKvPairs.length;
                 return a === 0
+            },
+            searchDisabled() {
+                return this.panelActive.length !== 0
             },
         },
         watch: {

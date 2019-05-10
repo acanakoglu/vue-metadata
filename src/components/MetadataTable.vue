@@ -279,8 +279,10 @@
             <!--hide-details-->
             <!--&gt;</v-text-field>-->
         </v-card-title>
-        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>
-        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>
+
+<!--        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>-->
+<!--        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>-->
+
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
@@ -506,8 +508,8 @@
                             return res.data
                         })
                         .then((res) => {
-                            this.pagination.totalItems = res;
-                            this.pagination.page = 1
+                            this.pagination.totalItems = res
+                            this.pagination.page= 1
                         });
                 }
                 var orderDir = "";

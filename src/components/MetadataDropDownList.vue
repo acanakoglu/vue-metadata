@@ -22,7 +22,7 @@
 
 
                         <v-btn v-if="field.name==='age'"
-                               style="margin-left:-6em"
+                               style="margin-left:-6em; margin-right:-6em"
                                slot="activator"
                                class="info-button"
                                small
