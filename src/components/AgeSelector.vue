@@ -1,6 +1,6 @@
 <template>
-    <v-container fluid grid-list-xl>
-        <v-layout class="view container">
+    <v-container fluid grid-list-xl class="mylay2">
+        <v-layout class="container view">
             <v-flex md4>
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
@@ -23,7 +23,7 @@
             <v-flex md2>
                 <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D"></v-checkbox>
             </v-flex>
-            <v-flex md2>
+            <v-flex md3>
                 <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
                 <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
             </v-flex>
@@ -83,10 +83,10 @@
                     });
             },
             setAgeLocal() {
-                let c =0;
-                let b =0;
+                let c = 0;
+                let b = 0;
 
-                if(this.selectedMin) {
+                if (this.selectedMin) {
                     c = this.selectedMin;
                     // console.log("min not null")
                 } else {
@@ -95,7 +95,7 @@
                 }
                 // console.log(c);
 
-                if(this.selectedMax)
+                if (this.selectedMax)
                     b = this.selectedMax;
                 else b = this.maxInt * this.unit;
 
@@ -123,19 +123,19 @@
                 }
             },
             min(newVal) {
-                if(newVal !== null)
+                if (newVal !== null)
                     if ((newVal * this.min) < this.minAge)
                         this.min = Math.floor(this.minAge / this.unit)
             },
             max(newVal) {
-                if(newVal !== null)
-                    if ((newVal* this.unit) > this.maxAge)
-                    this.max = Math.ceil(this.maxAge / this.unit)
+                if (newVal !== null)
+                    if ((newVal * this.unit) > this.maxAge)
+                        this.max = Math.ceil(this.maxAge / this.unit)
             },
             unit(newVal, oldVal) {
-                if(this.min !== null)
+                if (this.min !== null)
                     this.min = Math.floor(this.min * oldVal / newVal);
-                if(this.max !== null)
+                if (this.max !== null)
                     this.max = Math.ceil(this.max * oldVal / newVal);
             }
         },
@@ -176,15 +176,27 @@
 
 <style scoped>
     .container {
-        padding-top: 0;
-        padding-bottom: 0;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
         margin-bottom: 0px;
-
     }
 
     .view {
-        margin-bottom: 0px!important;
+        margin-bottom: 0px !important;
         margin-top: -12px !important;
         outline: 1px solid black;
+
     }
+
+    .mylay {
+
+    }
+
+    .mylay2 {
+        margin-left: -12px;
+        padding-right: 0px!important;
+    }
+
 </style>

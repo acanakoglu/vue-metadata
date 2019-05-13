@@ -23,7 +23,6 @@
             </v-btn>
             <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>
-
             <v-btn flat href="/repo-viewer/contact.html" target="_blank">
                 <span class="mr-2">Contact</span>
             </v-btn>
@@ -32,14 +31,38 @@
         <v-content class="main-content">
             <v-content v-show="mainContent">
                 <!--<v-layout column class="fab-container"> -->
-                <v-container fluid grid-list-xl>
+                <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>General settings </span>
+                            <span class=label>Query utilities</span>
+                        </v-flex>
+                        <v-flex xs3 class=" no-horizontal-padding">
+                            <v-select solo
+                                      :items="queryItems"
+                                      v-model="selectedQuery"
+                                      label="Predefined queries"
+                                      @input="afterQuerySelection"
+                                      single-line
+                            ></v-select>
+                        </v-flex>
+                        <v-flex xs1></v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
-                            <v-radio-group :disabled=searchDisabled v-model="typeLocal" label="Data search"
-                                           class="radio-group"
+                            <text-reader @load="queryString = $event"></text-reader>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+                <v-container fluid grid-list-xl style="background:#FFFFFF">
+                    <v-layout wrap align-center test style="background:#FFFFFF">
+                        <v-flex xs2 d-flex class="no-horizontal-padding">
+                            <span class=label>Data search</span>
+                        </v-flex>
+                        <v-flex xs4 class="no-horizontal-padding">
+                            <v-radio-group :disabled=searchDisabled
+                                           v-model="typeLocal" row
+                                           class="radio-group2"
                                            append-icon="info"
                                            @click:append="openInfoDialog">
                                 <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
@@ -70,26 +93,9 @@
 
                                 </v-card>
                             </v-dialog>
-
-                        </v-flex>
-                        <v-flex xs3 class=" no-horizontal-padding">
-                            <v-select solo
-                                      :items="queryItems"
-                                      v-model="selectedQuery"
-                                      label="Predefined queries"
-                                      @input="afterQuerySelection"
-                                      single-line
-                            ></v-select>
-                        </v-flex>
-                        <v-flex xs1></v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
-                        </v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <text-reader @load="queryString = $event"></text-reader>
                         </v-flex>
                     </v-layout>
-                    <v-layout wrap align-center test>
+                    <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
@@ -100,12 +106,10 @@
                             </span>
                         </v-flex>
                     </v-layout>
+                <MetadataDropDownList/>
                 </v-container>
 
-                <!--</v-layout>-->
-
-                <MetadataDropDownList/>
-                <FullScreenGraphViewer/>
+               <!-- <FullScreenGraphViewer/>-->
                 <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">

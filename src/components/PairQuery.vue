@@ -1,11 +1,15 @@
 <template>
-    <v-container fluid grid-list-xl>
+    <v-container fluid grid-list-xl style="background:#f1f3f4">
         <v-layout>
+            <v-flex xs2 d-flex class="no-horizontal-padding">
+                            <span class=label>Key-value search</span>
+            </v-flex>
             <v-flex xs2 class="no-horizontal-padding">
-                <v-radio-group label="Key-value search" class="radio-group2"
+                <v-radio-group class="radio-group2"
                                append-icon="info"
                                @click:append="openInfoDialog"
                                v-model="pairQueryType"
+                               row
                                :disabled="searchDisabled">
                     <v-radio label="Key" id="key" value="key"></v-radio>
                     <v-radio label="Value" id="value" value="value"></v-radio>
@@ -75,7 +79,8 @@
         <v-expansion-panel>
             <KvExpansionPanel v-for="item in keys" :query_text="item.substring(0,item.lastIndexOf('_'))"
                               :query_type="pairQueryType" :key="item" :exact_match="exact_match"
-                              :query="kvLocal[item]"></KvExpansionPanel>
+                              :query="kvLocal[item]"
+                              style="background:#f1f3f4"></KvExpansionPanel>
         </v-expansion-panel>
     </v-container>
 </template>

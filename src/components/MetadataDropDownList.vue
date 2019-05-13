@@ -1,6 +1,6 @@
 <template>
     <!--{{filter}}-->
-    <v-container fluid grid-list-xl>
+    <v-container fluid grid-list-xl style="background:#FFFFFF">
         <div v-for="view in views" :key="view.value" class="view" :style="{}">
             <h4 style="text-align: center">{{view.text}}</h4>
             <v-layout wrap align-center class="container">
@@ -16,13 +16,8 @@
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
                     <AgeSelector v-else></AgeSelector>
-                    <v-dialog
-                            width="500"
-                    >
-
-
+                    <v-dialog width="500">
                         <v-btn v-if="field.name==='age'"
-                               style="margin-left:-6em; margin-right:-6em"
                                slot="activator"
                                class="info-button"
                                small
