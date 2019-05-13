@@ -37,11 +37,11 @@ export default new Vuex.Store({
             state.searchDisabled = value;
         },
         pushKey: (state, key) => {
-            if (!state.keys.includes(key)) {
+            // if (!state.keys.includes(key)) {
                 state.keys.push(key);
-            } else {
-                window.alert("Duplicate Key")
-            }
+            // } else {
+            //     window.alert("Duplicate Key")
+            // }
         },
         deleteKey: (state, key) => {
             var filtered = state.keys.filter(function (value) {
