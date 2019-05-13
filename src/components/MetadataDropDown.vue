@@ -90,7 +90,16 @@
             rename(inp) {
                 let value;
                 if (inp.value !== null)
-                    value = inp.value;
+                    if(inp.value !== undefined) {
+                        if (inp.value.length > 20) {
+                            //go to newline
+                            value = inp.value.slice(0, inp.value.length/2) + "\n" + inp.value.slice(inp.value.length/2)
+                            //hide half of the string
+                            // value = inp.value.slice(0, inp.value.length/2)
+                        } else {
+                            value = inp.value;
+                        }
+                    }
                 else
                     value = 'N/D(not defined)';
 
