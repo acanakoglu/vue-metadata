@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        query:  {},
+        // query:  {},
+        query: {'source':['tads']},
         synonym: false,
         kv: {},
         type: 'original',
@@ -45,7 +46,7 @@ export default new Vuex.Store({
         },
         deleteKey: (state, key) => {
             var filtered = state.keys.filter(function (value) {
-                return value !== key
+                return value.id !== key
             });
             state.keys = Object.assign([], filtered)
         },

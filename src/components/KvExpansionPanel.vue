@@ -190,6 +190,7 @@
     export default {
         name: "KvExpansionPanel",
         props: {
+            id: {type: Number, required: true},
             query_text: {type: String, required: true},
             query_type: {type: String, required: true},
             exact_match: {type: Boolean, required: true},
@@ -245,6 +246,7 @@
                 possibleValues: [],
                 kvLocal: {
                     type_query: this.query_type,
+                    exact: this.exact_match,
                     query: {
                         gcm: {},
                         pairs: {},
@@ -281,13 +283,13 @@
                 this.open = [false];
             },
             cancel() {
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query + this.exact_match);
+                this.deleteKey(this.id);
                 this.resetPanelActive()
             },
 
             deleteKvLocal() {
-                this.deleteKv(this.query_text + "_" + this.kvLocal.type_query + this.exact_match)
-                this.deleteKey(this.key + "_" + this.kvLocal.type_query + this.exact_match);
+                this.deleteKv(this.query_text + "_" + this.id)
+                this.deleteKey(this.id);
             },
             searchText() {
                 this.isLoading = true;
@@ -307,7 +309,7 @@
                 if (this.query_type === 'key') {
                     this.setKv({
                         kv: this.kvLocal,
-                        search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match
+                        search_text: this.key + "_" + this.id
                     });
                 } else {
                     var keys_gcm = [];
@@ -339,7 +341,7 @@
                     }
                     this.setKv({
                         kv: this.kvLocal,
-                        search_text: this.key + "_" + this.kvLocal.type_query + this.exact_match
+                        search_text: this.key + "_" + this.id
                     });
                 }
                 let a = "";
