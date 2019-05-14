@@ -38,11 +38,18 @@ export default new Vuex.Store({
             state.searchDisabled = value;
         },
         pushKey: (state, key) => {
-            // if (!state.keys.includes(key)) {
+            let filtered = state.keys.filter(function (value) {
+                return (
+                    value.query_text === key.query_text &&
+                    value.query_type=== key.query_type &&
+                    value.exact === key.exact
+                )
+            });
+            if (filtered.length === 0) {
                 state.keys.push(key);
-            // } else {
-            //     window.alert("Duplicate Key")
-            // }
+            } else {
+                window.alert("Duplicate Key")
+            }
         },
         deleteKey: (state, key) => {
             var filtered = state.keys.filter(function (value) {

@@ -82,11 +82,11 @@
         </v-layout>
         <v-expansion-panel>
             <KvExpansionPanel v-for="item in keys" :query_text="item['query_text']"
-                              :query_type="pairQueryType" :id="item['id']" :key="item['id']" :exact_match="exact_match"
+                              :query_type="item['query_type']" :id="item['id']" :key="item['id']" :exact_match="item['exact']"
                               :query="kvLocal[item['id']]"
                               style="background:#f1f3f4"></KvExpansionPanel>
         </v-expansion-panel>
-<!--        {{keys}}-->
+        {{keys}}
     </v-container>
 </template>
 
