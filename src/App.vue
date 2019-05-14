@@ -87,7 +87,7 @@
                                             sources</p>
                                         <p>Synonym: searches using original metadata and ontological term and synonyms
                                             related to it</p>
-                                        <p>Hierarchy: searches using original metadata, ontological terms, and their
+                                        <p>Expanded: searches using original metadata, ontological terms, and their
                                             hypernyms and hyponyms</p>
                                     </v-card-text>
 

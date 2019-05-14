@@ -44,8 +44,8 @@
                                 </v-card-title>
 
                                 <v-card-text>
-                                    <p>Key {{props.item[keyDummy]}} is from GCM</p>
-                                    <p>Please use the GCM part</p>
+                                    <p>Key '{{props.item[keyDummy]}}' belongs to the Genomic Conceptual Model.</p>
+                                    <p>To select values from it, please use the Data search section at the top of this page.</p>
                                 </v-card-text>
 
                             </v-card>
@@ -53,7 +53,7 @@
                         </span>
                         <span v-else-if="header.value === 'values'"
                               v-html="updateCellTextFormat(props.item[header.value].join(', '))"></span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value].toString{())">
+                        <span v-else v-html="updateCellTextFormat(props.item[header.value].toString())">
                         </span>
                     </td>
                 </template>
@@ -198,7 +198,7 @@
         },
         data() {
             return {
-                queryToShow: this.query_type.toString() + ": '" + this.query_text.toString().replace("%20"," ") + "' " +
+                queryToShow: this.query_type.toString() + ": '" + this.query_text.toString().replace("%20"," ") + "'" +
                     ", " +
                     "exact: " + this.exact_match +
                     ", " +
@@ -266,7 +266,7 @@
                 this.resetPanelActive();
                  let a = "";
                 a += this.query_type.toString() + ": '";
-                a += this.query_text.toString().replace("%20"," ")+"' ";
+                a += this.query_text.toString().replace("%20"," ")+"'";
                 a += ", ";
                 a += "exact: " + this.exact_match;
                 a += ", ";
@@ -346,7 +346,7 @@
                 }
                 let a = "";
                 a += this.query_type.toString() + ": '";
-                a += this.query_text.toString().replace("%20"," ")+"' ";
+                a += this.query_text.toString().replace("%20"," ")+"'";
                 a += ", ";
                 a += "exact: " + this.exact_match
                 a += ", ";

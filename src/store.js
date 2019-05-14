@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         query:  {},
-        // query: {'source':['tads']},
+        //query: {'source':['tads']},
         synonym: false,
         kv: {},
         type: 'original',
