@@ -102,7 +102,7 @@
                 search: "",
                 infoDialog: false,
                 key: "",
-                pairQueryType: "value",
+                pairQueryType: "key",
                 kvLocal: {},
                 exact_match: false,
             }
