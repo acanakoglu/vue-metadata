@@ -45,11 +45,11 @@ export default new Vuex.Store({
                     value.exact === key.exact
                 )
             });
-            if (filtered.length === 0) {
+            // if (filtered.length === 0) {
                 state.keys.push(key);
-            } else {
-                window.alert("Duplicate Key")
-            }
+            // } else {
+            //     window.alert("Duplicate Key")
+            // }
         },
         deleteKey: (state, key) => {
             var filtered = state.keys.filter(function (value) {
