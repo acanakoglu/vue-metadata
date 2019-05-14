@@ -53,7 +53,7 @@
         },
         computed: {
             ...mapState([
-                'query', 'synonym',"panelActive"
+                'query', 'synonym', "panelActive"
             ]),
             ...mapGetters({
                 compound_query: 'build_query',
@@ -76,6 +76,14 @@
             ...mapActions([
                 'setDropDownSelected',
             ]),
+            nthIndex(str, pat, n) {
+                var L = str.length, i = -1;
+                while (n-- && i++ < L) {
+                    i = str.indexOf(pat, i);
+                    if (i < 0) break;
+                }
+                return i;
+            },
             //for the alternative solution
             // getValue() {
             //     console.log("GET" + this.fullQuery[this.field]);
@@ -90,18 +98,15 @@
             rename(inp) {
                 let value;
                 if (inp.value !== null)
-                    if(inp.value !== undefined) {
-                        if (inp.value.length > 20) {
-                            //go to newline
-                            value = inp.value.slice(0, inp.value.length/2) + "\n" + inp.value.slice(inp.value.length/2)
-                            //hide half of the string
-                            // value = inp.value.slice(0, inp.value.length/2)
+                    if (inp.value !== undefined) {
+                        if (this.field === 'dataset_name' && inp.value.length > 20) {
+                            let i = this.nthIndex(inp.value, "_", 2);
+                            value = inp.value.slice(0, i+1) + "\n" + inp.value.slice(i+1)
                         } else {
                             value = inp.value;
                         }
-                    }
-                else
-                    value = 'N/D(not defined)';
+                    } else
+                        value = 'N/D(not defined)';
 
                 let res;
                 if (inp.count)
@@ -109,7 +114,8 @@
                 else
                     res = value;
                 return res;
-            },
+            }
+            ,
             loadData() {
                 const url = `field/${this.field}`;
                 this.isLoading = true;
@@ -141,7 +147,8 @@
                 // console.log(this.selected.get().filter(v => this.values.indexOf(v) > -1));
 //
                 // this.selected.set(this.selected.get().filter(v => this.values.indexOf(v) > -1));
-            },
+            }
+            ,
         },
         created() {
             this.loadData();
