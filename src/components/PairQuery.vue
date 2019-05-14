@@ -86,7 +86,6 @@
                               :query="kvLocal[item['id']]"
                               style="background:#f1f3f4"></KvExpansionPanel>
         </v-expansion-panel>
-        {{keys}}
     </v-container>
 </template>
 
@@ -162,8 +161,6 @@
                     let filtered = this.keys.filter(function (value) {
                         return value.id === obj.id
                     });
-                    console.log(obj)
-                    console.log(filtered)
                     if (filtered.length===0)
                         this.pushKey(obj);
                 }

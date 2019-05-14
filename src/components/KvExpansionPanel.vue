@@ -53,7 +53,7 @@
                         </span>
                         <span v-else-if="header.value === 'values'"
                               v-html="updateCellTextFormat(props.item[header.value].join(', '))"></span>
-                        <span v-else v-html="updateCellTextFormat(props.item[header.value].toString())">
+                        <span v-else v-html="updateCellTextFormat(props.item[header.value].toString{())">
                         </span>
                     </td>
                 </template>
