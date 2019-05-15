@@ -38,13 +38,13 @@ export default new Vuex.Store({
             state.searchDisabled = value;
         },
         pushKey: (state, key) => {
-            let filtered = state.keys.filter(function (value) {
-                return (
-                    value.query_text === key.query_text &&
-                    value.query_type=== key.query_type &&
-                    value.exact === key.exact
-                )
-            });
+            // let filtered = state.keys.filter(function (value) {
+            //     return (
+            //         value.query_text === key.query_text &&
+            //         value.query_type=== key.query_type &&
+            //         value.exact === key.exact
+            //     )
+            // });
             // if (filtered.length === 0) {
                 state.keys.push(key);
             // } else {
