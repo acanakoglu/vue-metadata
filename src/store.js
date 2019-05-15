@@ -46,7 +46,7 @@ export default new Vuex.Store({
             //     )
             // });
             // if (filtered.length === 0) {
-                state.keys.push(key);
+            state.keys.push(key);
             // } else {
             //     window.alert("Duplicate Key")
             // }

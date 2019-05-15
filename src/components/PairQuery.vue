@@ -83,7 +83,7 @@
         <v-expansion-panel>
             <KvExpansionPanel v-for="item in keys" :query_text="item['query_text']"
                               :query_type="item['query_type']" :id="item['id']" :key="item['id']" :exact_match="item['exact']"
-                              :query="kvLocal[item['id']]"
+                              :query="kvLocal[item['query_text']+'_'+item['id']]"
                               style="background:#f1f3f4"></KvExpansionPanel>
         </v-expansion-panel>
     </v-container>
