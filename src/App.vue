@@ -109,7 +109,7 @@
                 <MetadataDropDownList/>
                 </v-container>
 
-               <!-- <FullScreenGraphViewer/>-->
+                <FullScreenViewer/>
                 <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
@@ -205,7 +205,7 @@
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
     import {mapMutations, mapState, mapActions, mapGetters} from 'vuex'
-    import FullScreenGraphViewer from "./components/FullScreenViewer";
+    import FullScreenViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
     import TextReader from "./components/TextReader"
     import PairQuery from "./components/PairQuery"
@@ -213,7 +213,7 @@
     export default {
         name: 'App',
         components: {
-            FullScreenGraphViewer,
+            FullScreenViewer,
             MetadataTable,
             MetadataDropDownList,
             CountTable,
