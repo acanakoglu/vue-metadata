@@ -23,8 +23,7 @@
             </v-btn>
             <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>
-
-            <v-btn flat @click="mainContent=false">
+            <v-btn flat href="/repo-viewer/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contact</span>
             </v-btn>
         </v-toolbar>
@@ -32,43 +31,10 @@
         <v-content class="main-content">
             <v-content v-show="mainContent">
                 <!--<v-layout column class="fab-container"> -->
-                <v-container fluid grid-list-xl>
+                <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>General settings </span>
-                        </v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <v-radio-group v-model="typeLocal" label="Data search" class="radio-group"
-                                           append-icon="info"
-                                           :append-icon-cb="openInfoDialog">
-                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
-                                <v-radio label="Original" id="original" value="original"></v-radio>
-                                <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
-                                <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
-                            </v-radio-group>
-                            <v-dialog
-                                    width="500"
-                                    v-model="infoDialog"
-                            >
-                                <v-card>
-                                    <v-card-title
-                                            class="headline grey lighten-2"
-                                            primary-title
-                                    >
-                                        Data search
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                        <p>Original: searches using metadata unchanged from the original data sources</p>
-                                        <p>Synonym: searches using original metadata and ontological term and synonyms
-                                            related to it</p>
-                                        <p>Hierarchy: searches using original metadata, ontological terms, and their
-                                            hypernyms and hyponyms</p>
-                                    </v-card-text>
-
-                                </v-card>
-                            </v-dialog>
-
+                            <span class=label>Query utilities</span>
                         </v-flex>
                         <v-flex xs3 class=" no-horizontal-padding">
                             <v-select solo
@@ -87,22 +53,64 @@
                             <text-reader @load="queryString = $event"></text-reader>
                         </v-flex>
                     </v-layout>
-                    <v-layout wrap align-center test>
+                </v-container>
+                <v-container fluid grid-list-xl style="background:#FFFFFF">
+                    <v-layout wrap align-center test style="background:#FFFFFF">
+                        <v-flex xs2 d-flex class="no-horizontal-padding">
+                            <span class=label>Data search</span>
+                        </v-flex>
+                        <v-flex xs4 class="no-horizontal-padding">
+                            <v-radio-group :disabled=searchDisabled
+                                           v-model="typeLocal" row
+                                           class="radio-group2"
+                                           append-icon="info"
+                                           @click:append="openInfoDialog">
+                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
+                                <v-radio label="Original" id="original" value="original"></v-radio>
+                                <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
+                                <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
+                            </v-radio-group>
+                            <v-dialog
+                                    width="500"
+                                    v-model="infoDialog"
+                            >
+                                <v-card>
+                                    <v-card-title
+                                            class="headline grey lighten-2"
+                                            primary-title
+                                    >
+                                        Data search
+                                    </v-card-title>
+
+                                    <v-card-text>
+                                        <p>Original: searches using metadata unchanged from the original data
+                                            sources</p>
+                                        <p>Synonym: searches using original metadata and ontological term and synonyms
+                                            related to it</p>
+                                        <p>Expanded: searches using original metadata, ontological terms, and their
+                                            hypernyms and hyponyms</p>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                    Selected query:
-                                </span>
-                            {{ compound_query }}
-                            <!--</div>-->
+                                Selected query:
+                            </span>
+                            <span style="font-family:monospace; font-size:120%;">
+                                {{ queryToShow }}
+                            </span>
                         </v-flex>
                     </v-layout>
+                <MetadataDropDownList/>
                 </v-container>
 
-                <!--</v-layout>-->
-
-                <MetadataDropDownList/>
-                <FullScreenGraphViewer/>
+                <FullScreenViewer/>
+                <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -135,7 +143,7 @@
 
 
                         <div v-if="count === null">Loading...</div>
-                        <div v-else-if="count>0">{{count}} item<span
+                        <div style="font-size:1.5em; font-weight:bold;" v-else-if="count>0">{{count}} item<span
                                 v-if="count>1">s</span> found
                         </div>
                         <div v-else>No result</div>
@@ -196,34 +204,41 @@
 <script>
     import MetadataDropDownList from "./components/MetadataDropDownList";
     import MetadataTable from "./components/MetadataTable";
-    import {mapMutations, mapState, mapGetters} from 'vuex'
-    import FullScreenGraphViewer from "./components/FullScreenViewer";
+    import {mapMutations, mapState, mapActions, mapGetters} from 'vuex'
+    import FullScreenViewer from "./components/FullScreenViewer";
     import CountTable from "./components/CountTable";
     import TextReader from "./components/TextReader"
+    import PairQuery from "./components/PairQuery"
 
     export default {
         name: 'App',
         components: {
-            FullScreenGraphViewer,
+            FullScreenViewer,
             MetadataTable,
             MetadataDropDownList,
             CountTable,
             TextReader,
+            PairQuery,
         },
         data() {
             return {
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    {text: 'Clear Fields', value: {synonym: false, query: {}},},
-                    {text: 'Encode source', value: {synonym: false, query: {source: ["encode"]}},},
+                    {text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
+                    {
+                        text: 'Encode source',
+                        value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
+                    },
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
                             synonym: false,
                             query: {
-                                disease: ["prostate adenocarcinoma"],
-                                assembly: ["grch38"],
+                                "gcm": {
+                                    disease: ["prostate adenocarcinoma"],
+                                    assembly: ["grch38"]
+                                }, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -232,8 +247,10 @@
                         value: {
                             synonym: false,
                             query: {
-                                tissue: ["adrenal gland"],
-                                feature: ["copy number variation", "rna binding protein"],
+                                "gcm": {
+                                    tissue: ["adrenal gland"],
+                                    feature: ["copy number variation", "rna binding protein"]
+                                }, "type": "original", "kv": {},
                             }
                         }
                     },
@@ -242,10 +259,12 @@
                         value: {
                             synonym: true,
                             query: {
-                                cell: ["gm12878"],
-                                assembly: ["hg19"],
-                                file_format: ["broadpeak"],
-                                technique: ["chip-seq"],
+                                "gcm": {
+                                    cell: ["gm12878"],
+                                    assembly: ["hg19"],
+                                    file_format: ["broadpeak"],
+                                    technique: ["chip-seq"]
+                                }, "type": "synonym", "kv": {}
                             }
                         }
                     },
@@ -254,7 +273,7 @@
                         value: {
                             synonym: false,
                             query: {
-                                content_type: ["exon", "exon quantifications"],
+                                "gcm": {content_type: ["exon", "exon quantifications"]}, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -263,8 +282,10 @@
                         value: {
                             synonym: false,
                             query: {
-                                project_name: ["tads"],
-                                biological_replicate_number: [2],
+                                "gcm": {
+                                    project_name: ["tads"],
+                                    biological_replicate_count: [2]
+                                }, "type": "original", "kv": {}
                             }
                         }
                     },
@@ -276,7 +297,8 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setKv', 'setSynonym', 'setQueryGraph']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
+            ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -284,16 +306,17 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                console.log(item);
-                this.setQuery(item.query);
+                // console.log(item.query);
+                this.setQuery(item.query.gcm);
                 this.setSynonym(item.synonym);
+                this.setKvFull(item.query.kv);
                 this.$nextTick(() => {
                     this.selectedQuery = null
                 })
             },
             downloadQuery() {
                 var text = JSON.stringify(this.compound_query);
-                console.log(text);
+                // console.log(text);
                 var filename = "query.txt";
                 var element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -305,24 +328,36 @@
             },
         },
         watch: {
-            // selectedTab() {
-            //     if (this.selectedTab == 3) {
-            //         this.setQueryGraph(true);
-            //         this.selectedTab = 999;
-            //     }
-            // },
             queryString() {
-                const json = JSON.parse(this.queryString)
-                this.setQuery(json['gcm'])
-                this.setType(json['type'])
-                this.setKv(json['kv'])
+                if (this.queryString !== '') {
+                    const json = JSON.parse(this.queryString);
+                    this.setQuery(json['gcm']);
+                    this.setType(json['type']);
+                    this.resetKv();
+                    this.setKvFull(json['kv']);
+                    this.queryString = ''
+                }
             }
         },
         computed: {
-            ...mapState(['query', 'synonym', 'count', 'type']),
+            ...mapState(['query', 'synonym', 'count', 'type', "panelActive"]),
             ...mapGetters({
-                compound_query: 'build_query'
+                compound_query: 'build_query',
+
             }),
+            searchDisabled() {
+                return this.panelActive.length !== 0
+            },
+            queryToShow() {
+                let a = [];
+                for (let i in this.compound_query['gcm']) {
+                    if (i === 'age') {
+                        a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", null: " + this.compound_query['gcm'][i]['null'] + "}")
+                    } else
+                        a.push(i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']")
+                }
+                return a.join(", ")
+            },
             typeLocal: {
                 get() {
                     return this.type;
@@ -369,11 +404,6 @@
         margin-bottom: 1.5em;
         max-width: 100%;
     }
-
-    /*.¬ {*/
-    /*margin-bottom: -10px;*/
-
-    /*}*/
 
     .fab-container {
         position: absolute;

@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        query: {},
+        query:  {},
+        //query: {'source':['tads']},
         synonym: false,
         kv: {},
         type: 'original',
@@ -13,6 +14,8 @@ export default new Vuex.Store({
         extraMetadataSourceId: null,
         count: null,
         showGraphQuery: false,
+        keys: [],
+        panelActive: [],
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -22,13 +25,53 @@ export default new Vuex.Store({
             Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
             return res
         },
+        keysEmpty: (state) => state.keys.length === 0
     },
     mutations: {
+        setPanelActive: (state, value) => {
+            state.panelActive.push(value);
+        },
+        resetPanelActive: (state) => {
+            state.panelActive = [];
+        },
+        setSearch: (state, value) => {
+            state.searchDisabled = value;
+        },
+        pushKey: (state, key) => {
+            // let filtered = state.keys.filter(function (value) {
+            //     return (
+            //         value.query_text === key.query_text &&
+            //         value.query_type=== key.query_type &&
+            //         value.exact === key.exact
+            //     )
+            // });
+            // if (filtered.length === 0) {
+            state.keys.push(key);
+            // } else {
+            //     window.alert("Duplicate Key")
+            // }
+        },
+        deleteKey: (state, key) => {
+            var filtered = state.keys.filter(function (value) {
+                return value.id !== key
+            });
+            state.keys = Object.assign([], filtered)
+        },
         setQuery: (state, query) => {
             state.query = Object.assign({}, query);
         },
-        setKv: (state, kv) => {
-            state.kv = Object.assign({}, kv);
+        setKvField: (state, payload) => {
+            state.kv[payload.search_text] = payload.kv
+        },
+        reloadKv: (state) => {
+            state.kv = Object.assign({}, state.kv);
+        },
+        resetKvField: (state, field) => {
+            delete state.kv[field]
+        },
+        resetKv: (state) => {
+            state.keys = []
+            state.kv = {}
         },
         setType: (state, type) => {
             state.type = type;
@@ -74,6 +117,29 @@ export default new Vuex.Store({
         },
     },
     actions: {
+        deleteKv({commit}, field) {
+            commit('resetKvField', field);
+            commit('reloadKv');
+        },
+        setKv({commit}, payload) {
+            commit('setKvField', payload);
+            commit('reloadKv');
+        },
+        setKvFull: ({commit, state}, payload) => {
+            if (Object.keys(payload).length === 0)
+                commit('resetKv');
+            else
+                state.kv = payload;
+            commit('reloadKv')
+        },
+        setAge({commit, state}, age_item) {
+            state.query['age'] = age_item;
+            commit('reloadQuery')
+        },
+        deleteAge({commit}) {
+            commit('resetQueryField', 'age');
+            commit('reloadQuery')
+        },
         setDropDownSelected({commit, state}, payload) {
             const field = payload.field;
 

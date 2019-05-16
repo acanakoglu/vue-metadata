@@ -54,10 +54,13 @@
                                         Beware union of big datasets may result in long execution times.
                                     </p>
 
-                                    <v-textarea
-                                            label="GMQL query"
-                                            :value="gmqlQuery"
+                                    <v-textarea v-if="count<=500"
+                                                label="GMQL query"
+                                                :value="gmqlQuery"
                                     ></v-textarea>
+                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL
+                                        query, please select a smaller dataset (less than 500 items)
+                                    </v-alert>
                                 </v-card-text>
 
 
@@ -65,6 +68,7 @@
 
                                 <v-card-actions>
                                     <v-btn
+                                            v-if="count<=500"
                                             color="primary"
                                             flat
                                             @click="toClipboard()"
@@ -103,7 +107,8 @@
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "result.csv" file that contains
-                                        the comma-separated version of the table shown in the "RESULT ITEMS" section, preserving user defined fields order.
+                                        the comma-separated version of the table shown in the "RESULT ITEMS" section,
+                                        preserving user defined fields order.
                                     </p>
                                     <p>
                                         Please check size of selection.
@@ -213,11 +218,12 @@
 
                                 <v-card-text>
                                     <p>Generally, each row refers to one item. In case the item is derived from multiple
-                                    Replicates/Biosamples/Donors:</p>
-                                    <p>- in the aggregated view the related information is aggregated by concatenating the
-                                    possible values through the pipe "|";</p>
+                                        Replicates/Biosamples/Donors:</p>
+                                    <p>- in the aggregated view the related information is aggregated by concatenating
+                                        the
+                                        possible values through the pipe "|";</p>
                                     <p>- in the replicated view: there is one row for each different Replicate (and
-                                    consequently Biosample/Donor).</p>
+                                        consequently Biosample/Donor).</p>
                                 </v-card-text>
 
                             </v-card>
@@ -232,6 +238,8 @@
                                 >
                                     Column order
                                     <v-spacer></v-spacer>
+                                    <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
+                                                :label="sortCheckBoxLabel"></v-checkbox>
                                     <v-btn
                                             color="primary"
                                             flat
@@ -242,8 +250,8 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <p>Drag and drop field names in the desired position.
-                                    Check or uncheck fields to re-define table content.
-                                    Press APPLY to go back to the result window.</p>
+                                        Check or uncheck fields to re-define table content.
+                                        Press APPLY to go back to the result window.</p>
                                     <draggable v-model="headers" @start="drag=true" @end="drag=false">
                                         <v-list v-for="element in headers" :key="element.value">
                                             <v-checkbox :label=element.text v-model=element.show></v-checkbox>
@@ -271,6 +279,10 @@
             <!--hide-details-->
             <!--&gt;</v-text-field>-->
         </v-card-title>
+
+<!--        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>-->
+<!--        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>-->
+
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
@@ -300,16 +312,17 @@
                     <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
                 </td>
             </template>
-            <!--            <v-alert slot="no-results" :value="true" color="error" icon="warning">-->
-            <!--                Your search for "{{ search }}" found no results.-->
-            <!--            </v-alert>-->
-
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
             <v-alert slot="no-results" :value="true" color="info" icon="info" v-else>
                 Loading
             </v-alert>
+            <template slot="actions">
+                <td :colspan="headers.length">
+                    <strong>This is an extra footer</strong>
+                </td>
+            </template>
         </v-data-table>
     </v-card>
 </template>
@@ -328,6 +341,7 @@
         },
         data() {
             return {
+                sortCheckbox: false,
                 downloadProgress: false,
                 gmqlProgress: false,
                 dialogDownload: false,
@@ -390,6 +404,21 @@
                         show: false
                     },
 
+                    {
+                        text: 'Biological Replicate Count',
+                        value: 'biological_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Count',
+                        value: 'technical_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+
+                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
+
                     {text: 'Species', value: 'species', sortable: this.sortable, show: false},
                     // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
 
@@ -424,7 +453,7 @@
                 deep: true
             },
             dialogGmql() {
-                if (this.dialogGmql) {
+                if (this.dialogGmql && this.count <= 500) {
                     this.gmqlProgress = true;
                     this.gmqlQuery = "Loading!";
 
@@ -453,6 +482,17 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
+            selectAllHeaders() {
+                if (this.sortCheckbox) {
+                    for (let i in this.headers) {
+                        this.headers[i].show = true
+                    }
+                } else {
+                    for (let i in this.headers) {
+                        this.headers[i].show = false
+                    }
+                }
+            },
             graphClicked(row) {
                 this.openGraphDialog(row[itemSourceIdName])
             },
@@ -469,6 +509,7 @@
                         })
                         .then((res) => {
                             this.pagination.totalItems = res
+                            this.pagination.page= 1
                         });
                 }
                 var orderDir = "";
@@ -596,69 +637,27 @@
             sortable() {
                 return this.result.length < 1000;
             },
-            // headers() {
-            //     return [
-            //         {text: 'Extra', value: 'extra', sortable: false,},
-            //
-            //         {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable,},
-            //         // {text: 'size', value: 'size'},
-            //         // {text: 'date', value: 'date'},
-            //         // {text: 'checksum', value: 'checksum'},
-            //         {text: 'Content type', value: 'content_type', sortable: this.sortable,},
-            //         {text: 'Platform', value: 'platform', sortable: this.sortable,},
-            //         {text: 'Pipeline', value: 'pipeline', sortable: this.sortable,},
-            //
-            //         {text: 'Source URI', value: 'source_url', sortable: false, is_link: true,},
-            //         {text: 'Local URI', value: 'local_url', sortable: false, is_link: true,},
-            //
-            //         {text: 'Dataset', value: 'dataset_name', sortable: this.sortable,},
-            //         {text: 'Data Type', value: 'data_type', sortable: this.sortable,},
-            //         {text: 'File Format', value: 'file_format', sortable: this.sortable,},
-            //         {text: 'Assembly', value: 'assembly', sortable: this.sortable,},
-            //         {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable,},
-            //
-            //         {text: 'Technique', value: 'technique', sortable: this.sortable,},
-            //         {text: 'Feature', value: 'feature', sortable: this.sortable,},
-            //         {text: 'Target', value: 'target', sortable: this.sortable,},
-            //         {text: 'Antibody', value: 'antibody', sortable: this.sortable,},
-            //
-            //         {
-            //             text: 'Biological Replicate Number',
-            //             value: 'biological_replicate_number',
-            //             sortable: this.sortable,
-            //         },
-            //         {text: 'Technical Replicate Number', value: 'technical_replicate_number', sortable: this.sortable,},
-            //
-            //         {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable,},
-            //         {text: 'Disease', value: 'disease', sortable: this.sortable,},
-            //         {text: 'Tissue', value: 'tissue', sortable: this.sortable,},
-            //         {text: 'Cell', value: 'cell', sortable: this.sortable,},
-            //         {text: 'Healthy', value: 'is_healthy', sortable: this.sortable,},
-            //
-            //         {text: 'Species', value: 'species', sortable: this.sortable,},
-            //         {text: 'Gender', value: 'gender', sortable: this.sortable,},
-            //         {text: 'Age', value: 'age', sortable: this.sortable,},
-            //         {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable,},
-            //
-            //         {text: 'Source Site', value: 'source_site', sortable: this.sortable,},
-            //         {text: 'External Reference', value: 'external_reference', sortable: this.sortable,},
-            //
-            //         {text: 'Project Name', value: 'project_name', sortable: this.sortable,},
-            //         {text: 'Source', value: 'source', sortable: this.sortable,}
-            //     ];
-            // },
-            // hiddenHeaders() {
-            //     []
-            // },
-            selected_headers() {
-                var x;
-                var res = [];
-                for (x in this.headers) {
-                    if (this.headers[x].show) {
-                        res.push(this.headers[x]);
+            sortCheckBoxLabel() {
+                if (this.sortCheckbox)
+                    return "Deselect all";
+                else return "Select all"
+            },
+            selected_headers: {
+                get() {
+                    var x;
+                    var res = [];
+                    for (x in this.headers) {
+                        if (this.headers[x].show) {
+                            res.push(this.headers[x]);
+                        }
                     }
+                    return res;
+                },
+                set(value) {
+                    if (value.length > 0) {
+                        this.selected_headers = [...this.headers]
+                    } else this.selected_headers = []
                 }
-                return res;
             },
         }
 

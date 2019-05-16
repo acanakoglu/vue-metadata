@@ -27,7 +27,7 @@
     import PairsTable from "./PairsTable";
 
     export default {
-        name: "FullScreenGraphViewer",
+        name: "FullScreenViewer",
         components: {PairsTable, GraphViewer},
         data() {
             return {

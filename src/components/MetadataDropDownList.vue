@@ -1,32 +1,36 @@
 <template>
     <!--{{filter}}-->
-    <v-container fluid grid-list-xl>
-        <div v-for="view in views" :key="view.value" class="view"  :style="{}">
+    <v-container fluid grid-list-xl style="background:#FFFFFF">
+        <div v-for="view in views" :key="view.value" class="view" :style="{}">
             <h4 style="text-align: center">{{view.text}}</h4>
             <v-layout wrap align-center class="container">
-
                 <!--<v-flex xs12 sm6 md2 d-flex class="label no-horizontal-padding">-->
                 <!--{{view.text}}:-->
                 <!--</v-flex>-->
-                <v-flex xs12 sm6 md2 d-flex class="no-horizontal-padding"
+                <v-flex :class="getClass(field.name)"
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
                     <MetadataDropDown
+                            v-if="field.name!=='age'"
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
-                    <v-dialog
-                            width="500"
-                    >
-
-
-                        <v-btn slot="activator"
+                    <AgeSelector v-else></AgeSelector>
+                    <v-dialog width="500">
+                        <v-btn v-if="field.name==='age'"
+                               slot="activator"
                                class="info-button"
                                small
                                flat icon color="blue">
                             <v-icon class="info-icon">info</v-icon>
                         </v-btn>
-
+                        <v-btn v-else
+                               slot="activator"
+                               class="info-button"
+                               small
+                               flat icon color="blue">
+                            <v-icon class="info-icon">info</v-icon>
+                        </v-btn>
                         <v-card>
                             <v-card-title
                                     class="headline grey lighten-2"
@@ -50,10 +54,11 @@
 
 <script>
     import MetadataDropDown from "./MetadataDropDown";
+    import AgeSelector from "./AgeSelector";
 
     export default {
         name: "MetadataDropDownList",
-        components: {MetadataDropDown},
+        components: {AgeSelector, MetadataDropDown},
         // props: {
         //     field: {type: String, required: true,},// default: 100,
         // },
@@ -84,6 +89,12 @@
             // getGroupFields(groupValue) {
             //     return this.fields.filter(field => field.group === groupValue);
             // },
+            getClass(field) {
+                if (field === 'age')
+                    return "no-horizontal-padding xs12 sm12 md6 d-flex";
+                else
+                    return "no-horizontal-padding xs12 sm6 md2 d-flex"
+            },
             getViewFields(viewValue) {
                 return this.fields.filter(field => field.view === viewValue);
             },
@@ -140,9 +151,10 @@
 
         .info-button
             width: 10px
-    .view
-        margin: 15px
-        outline: 1px solid black
+
+        .view
+            margin: 15px
+            outline: 1px solid black
 
 
 </style>

@@ -7,8 +7,8 @@
             item-value="value"
             :label="labelTitle"
             multiple
+            :disabled="searchDisabled"
     >
-
         <template slot="item" slot-scope="data">
             <span class="item-value-span"> {{ rename(data.item)}}</span>
             <span class="item-count-span">{{data.item.count}}</span>
@@ -37,6 +37,7 @@
         },
         data() {
             return {
+                ageDialog: false,
                 isLoading: true,
                 values: [],//the list of values of the drop-down menu
             }
@@ -52,10 +53,10 @@
         },
         computed: {
             ...mapState([
-                'query', 'synonym',
+                'query', 'synonym', "panelActive"
             ]),
-             ...mapGetters({
-                compound_query: 'build_query'
+            ...mapGetters({
+                compound_query: 'build_query',
             }),
             selected: {
                 get() {
@@ -67,11 +68,22 @@
                     this.setDropDownSelected({field: this.field, list: value})
                 }
             },
+            searchDisabled() {
+                return this.panelActive.length !== 0
+            },
         },
         methods: {
             ...mapActions([
                 'setDropDownSelected',
             ]),
+            nthIndex(str, pat, n) {
+                var L = str.length, i = -1;
+                while (n-- && i++ < L) {
+                    i = str.indexOf(pat, i);
+                    if (i < 0) break;
+                }
+                return i;
+            },
             //for the alternative solution
             // getValue() {
             //     console.log("GET" + this.fullQuery[this.field]);
@@ -86,9 +98,15 @@
             rename(inp) {
                 let value;
                 if (inp.value !== null)
-                    value = inp.value;
-                else
-                    value = 'N/D(not defined)';
+                    if (inp.value !== undefined) {
+                        if (this.field === 'dataset_name' && inp.value.length > 20) {
+                            let i = this.nthIndex(inp.value, "_", 3);
+                            value = inp.value.slice(0, i+1) + "\n" + inp.value.slice(i+1)
+                        } else {
+                            value = inp.value;
+                        }
+                    } else
+                        value = 'N/D(not defined)';
 
                 let res;
                 if (inp.count)
@@ -96,7 +114,8 @@
                 else
                     res = value;
                 return res;
-            },
+            }
+            ,
             loadData() {
                 const url = `field/${this.field}`;
                 this.isLoading = true;
@@ -128,7 +147,8 @@
                 // console.log(this.selected.get().filter(v => this.values.indexOf(v) > -1));
 //
                 // this.selected.set(this.selected.get().filter(v => this.values.indexOf(v) > -1));
-            },
+            }
+            ,
         },
         created() {
             this.loadData();
