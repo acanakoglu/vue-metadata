@@ -377,6 +377,7 @@
                     {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Age', value: 'age', sortable: this.sortable, show: true},
                     {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
+                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
 
                     {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
                     {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},

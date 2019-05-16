@@ -24,7 +24,7 @@
             <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>
             <v-btn flat href="/repo-viewer/repo_static/contact.html" target="_blank">
-                <span class="mr-2">Contact</span>
+                <span class="mr-2">Contacts</span>
             </v-btn>
         </v-toolbar>
 
