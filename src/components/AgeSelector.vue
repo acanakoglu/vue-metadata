@@ -88,7 +88,7 @@
 
                 if (this.selectedMin) {
                     c = this.selectedMin;
-                    // console.log("min not null")
+                    console.log("min not null")
                 } else {
                     c = this.minInt * this.unit;
                     // console.log("min null")
@@ -122,16 +122,16 @@
                     this.isNull = false;
                 }
             },
-            min(newVal) {
-                if (newVal !== null)
-                    if ((newVal * this.min) < this.minAge)
-                        this.min = Math.floor(this.minAge / this.unit)
-            },
-            max(newVal) {
-                if (newVal !== null)
-                    if ((newVal * this.unit) > this.maxAge)
-                        this.max = Math.ceil(this.maxAge / this.unit)
-            },
+            // min(newVal) {
+            //     if (newVal !== null)
+            //         if ((newVal * this.min) < this.minAge)
+            //             this.min = Math.floor(this.minAge / this.unit)
+            // },
+            // max(newVal) {
+            //     if (newVal !== null)
+            //         if ((newVal * this.unit) > this.maxAge)
+            //             this.max = Math.ceil(this.maxAge / this.unit)
+            // },
             unit(newVal, oldVal) {
                 if (this.min !== null)
                     this.min = Math.floor(this.min * oldVal / newVal);
