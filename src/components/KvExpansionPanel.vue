@@ -270,8 +270,9 @@
                 a += ", ";
                 a += "exact: " + this.exact_match;
                 a += ", ";
-                a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm) + ", ";
-                a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs);
+                a += "gcm: " + JSON.stringify(this.kvLocal.query.gcm).replace(/","/g, '", "');
+                a += ", ";
+                a += "pairs: " + JSON.stringify(this.kvLocal.query.pairs).replace(/","/g, '", "');
                 // a += JSON.stringify(this.kvLocal.query);
                 this.queryToShow = a
             }

@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid grid-list-xl style="background:#f1f3f4">
+    <v-container fluid grid-list-xl class="second-color">
         <v-layout>
             <v-flex xs2 d-flex class="no-horizontal-padding">
                 <span class=label>Key-value search</span>
@@ -84,7 +84,7 @@
             <KvExpansionPanel v-for="item in keys" :query_text="item['query_text']"
                               :query_type="item['query_type']" :id="item['id']" :key="item['id']" :exact_match="item['exact']"
                               :query="kvLocal[item['query_text']+'_'+item['id']]"
-                              style="background:#f1f3f4"></KvExpansionPanel>
+                              class="second-color"></KvExpansionPanel>
         </v-expansion-panel>
     </v-container>
 </template>
@@ -192,5 +192,15 @@
 
     .info-button {
         width: 10px
+    }
+    .second-color{
+        background:#f1f3f4!important;
+
+    }
+    .second-color .v-datatable{
+        background:#f1f3f4!important;
+    }
+    .second-color .v-datatable .v-datatable__actions{
+        background:#f1f3f4!important;
     }
 </style>
