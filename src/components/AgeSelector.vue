@@ -1,17 +1,17 @@
 <template>
     <v-container fluid grid-list-xl class="mylay2">
         <v-layout class="container view">
-            <v-flex md4>
+            <v-flex md4 class="age-comp">
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
-            <v-flex md4>
+            <v-flex md4 class="age-comp">
                 <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint
                               :min="min" :max="maxInt" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
-            <v-flex md4>
+            <v-flex md4 class="age-comp">
                 <v-select
                         v-model="unit"
                         :items="units"
@@ -20,12 +20,12 @@
                 >
                 </v-select>
             </v-flex>
-            <v-flex md2>
+            <v-flex md2 class="age-comp">
                 <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D"></v-checkbox>
             </v-flex>
-            <v-flex md3>
-                <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
-                <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
+            <v-flex md3 class="age-comp">
+                <v-btn tiny @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
+                <v-btn small @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
             </v-flex>
 
         </v-layout>
@@ -198,5 +198,8 @@
         margin-left: -12px;
         padding-right: 0px!important;
     }
-
+    .age-comp{
+        padding-top: 0px!important;
+        padding-bottom: 0px!important;
+    }
 </style>

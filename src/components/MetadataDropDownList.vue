@@ -21,7 +21,7 @@
                                slot="activator"
                                class="info-button"
                                small
-                               flat icon color="blue">
+                               flat icon color="blue" style="margin-top: -30px; margin-left: -0.4em;">
                             <v-icon class="info-icon">info</v-icon>
                         </v-btn>
                         <v-btn v-else
