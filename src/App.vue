@@ -47,6 +47,9 @@
                         </v-flex>
                         <v-flex xs1></v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="afterQuerySelection()">Clear All</v-btn>
+                        </v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
                             <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
@@ -65,7 +68,6 @@
                                            class="radio-group2"
                                            append-icon="info"
                                            @click:append="openInfoDialog">
-                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
                                 <v-radio label="Original" id="original" value="original"></v-radio>
                                 <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
                                 <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
@@ -228,12 +230,11 @@
                     {text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
                     {
                         text: 'Encode source',
-                        value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
+                        value: {query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
                     },
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
                                     disease: ["prostate adenocarcinoma"],
@@ -245,7 +246,6 @@
                     {
                         text: 'Example 2 - towards big data',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
                                     tissue: ["adrenal gland"],
@@ -257,7 +257,6 @@
                     {
                         text: 'Example 3 - synonym enriched search',
                         value: {
-                            synonym: true,
                             query: {
                                 "gcm": {
                                     cell: ["gm12878"],
@@ -271,7 +270,6 @@
                     {
                         text: 'Example 4 - experimental and annotation data',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {content_type: ["exon", "exon quantifications"]}, "type": "original", "kv": {}
                             }
@@ -280,12 +278,26 @@
                     {
                         text: 'Example 5 - combined replicas',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
                                     project_name: ["tads"],
                                     biological_replicate_count: [2]
                                 }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example X - expanded enriched search',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    cell: ["gm12878"],
+                                    assembly: ["hg19"],
+                                    file_format: ["broadpeak"],
+                                    technique: ["chip-seq"]
+                                },
+                                "type": "expanded",
+                                "kv": {}
                             }
                         }
                     },
@@ -297,7 +309,7 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
@@ -306,10 +318,16 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                // console.log(item.query);
-                this.setQuery(item.query.gcm);
-                this.setSynonym(item.synonym);
-                this.setKvFull(item.query.kv);
+                console.log(item);
+                if(item) {
+                    this.setQuery(item.query.gcm);
+                    this.setKvFull(item.query.kv);
+                    this.setType(item.query.type)
+                }else{
+                    this.resetType();
+                    this.resetKv();
+                    this.setType('original');
+                }
                 this.$nextTick(() => {
                     this.selectedQuery = null
                 })
@@ -365,21 +383,6 @@
                 set(value) {
                     if (value) {
                         this.setType(value)
-                    } else {
-                        this.resetType();
-                    }
-                }
-            },
-            synonymLocal: {
-                get() {
-                    // console.log("GET synonym " + this.synonym);
-                    return this.synonym;
-                },
-                set(value) {
-                    // console.log("SET synonym " + value);
-                    this.setSynonym(value);
-                    if (value) {
-                        this.setType('synonym')
                     } else {
                         this.resetType();
                     }

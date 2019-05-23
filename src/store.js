@@ -102,13 +102,6 @@ export default new Vuex.Store({
             state.extraMetadataSourceId = null;
             state.showGraphQuery = false;
         },
-        setSynonym: (state, synonym) => {
-            state.synonym = synonym;
-            if (synonym)
-                state.type = 'synonym';
-            else
-                state.type = 'original';
-        },
         setCount: (state, count) => {
             state.count = count;
         },
