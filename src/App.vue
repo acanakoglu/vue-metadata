@@ -227,9 +227,9 @@
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    {text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
+                    //{text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
                     {
-                        text: 'Encode source',
+                        text: 'Only ENCODE source',
                         value: {query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
                     },
                     {
@@ -268,36 +268,93 @@
                         }
                     },
                     {
-                        text: 'Example 4 - experimental and annotation data',
+                        text: 'Example 4 - ontology enriched search',
                         value: {
                             query: {
-                                "gcm": {content_type: ["exon", "exon quantifications"]}, "type": "original", "kv": {}
+                                "gcm": {
+                                    tissue: ["intestine"],
+                                    assembly: ["hg19"],
+                                    file_format: ["broadpeak"]
+                                },
+                                "type": "expanded",
+                                "kv": {}
                             }
                         }
                     },
                     {
-                        text: 'Example 5 - combined replicas',
+                        text: 'Example 5 - experimental and annotation data',
                         value: {
                             query: {
                                 "gcm": {
-                                    project_name: ["tads"],
-                                    biological_replicate_count: [2]
+                                    content_type: ["exon", "exon quantifications"]
                                 }, "type": "original", "kv": {}
                             }
                         }
                     },
                     {
-                        text: 'Example X - expanded enriched search',
+                        text: 'Example 6 - combined replicas',
                         value: {
                             query: {
                                 "gcm": {
-                                    cell: ["gm12878"],
-                                    assembly: ["hg19"],
-                                    file_format: ["broadpeak"],
+                                    assembly: ["grch38"],
+                                    tissue: ["liver"],
+                                    technique: ["chip-seq"],
+                                    target: ["rad21"],
+                                    content_type: ["peaks and background as input for idr"],
+                                    biological_replicate_count: ["2"]
+                                }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 7 - using the value-search',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    source: ["encode"],
+                                    file_format: ["narrowpeak"],
+                                    cell: ["k562"],
                                     technique: ["chip-seq"]
                                 },
-                                "type": "expanded",
+                                "type": "original",
+                                "kv": {
+                                    idr_peaks_0:{"type_query":"value","exact":false,"query":{"gcm":{"content_type":["optimal idr thresholded peaks"]},"pairs":{}}}
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 8 - combining different data types',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    disease: ["breast invasive carcinoma"],
+                                    assembly: ["grch38"],
+                                    data_type: ["gene expression quantification", "methylation beta value", "masked somatic mutation"],
+                                    is_healthy: ["false"],
+                                    age: {min_age: 9490, max_age: 14600, null: false}
+                                },
+                                "type": "original",
                                 "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 9 - using source specific metadata ',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    source:["roadmap epigenomics"],
+                                    technique:["dnase-seq"],
+                                    cell:["h1 cells"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    hotspot_0:{"type_query":"value","exact":true,"query":{"gcm":{"pipeline":["hotspot"]},"pairs":{}}},
+                                    open_chromatin_1:{"type_query":"value","exact":false,"query":{"gcm":{"feature":["open chromatin"]},"pairs":{}}},
+                                    broad_2:{"type_query":"value","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__region_type":["broad"]}}},
+                                    fdr_3:{"type_query":"key","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__fdr_threshold":["0.01"]}}}
+                                }
                             }
                         }
                     },

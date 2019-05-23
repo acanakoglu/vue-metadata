@@ -373,6 +373,7 @@
                     {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
                     {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
                     {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
+                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
 
                     {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Age', value: 'age', sortable: this.sortable, show: true},
