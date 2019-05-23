@@ -70,7 +70,7 @@ export default new Vuex.Store({
             delete state.kv[field]
         },
         resetKv: (state) => {
-            state.keys = []
+            state.keys = [];
             state.kv = {}
         },
         setType: (state, type) => {
@@ -90,6 +90,9 @@ export default new Vuex.Store({
         resetQueryField: (state, field) => {
             delete state.query[field];
             // Vue.delete(state.query, field);
+        },
+        resetQuery: (state) => {
+            state.query = {}
         },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;

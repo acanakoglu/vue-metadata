@@ -309,7 +309,7 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv"]),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
@@ -324,9 +324,9 @@
                     this.setKvFull(item.query.kv);
                     this.setType(item.query.type)
                 }else{
+                    this.resetQuery();
                     this.resetType();
                     this.resetKv();
-                    this.setType('original');
                 }
                 this.$nextTick(() => {
                     this.selectedQuery = null
