@@ -97,16 +97,15 @@
             // },
             rename(inp) {
                 let value;
-                if (inp.value !== null)
-                    if (inp.value !== undefined) {
-                        if (this.field === 'dataset_name' && inp.value.length > 20) {
-                            let i = this.nthIndex(inp.value, "_", 3);
-                            value = inp.value.slice(0, i+1) + "\n" + inp.value.slice(i+1)
-                        } else {
-                            value = inp.value;
-                        }
-                    } else
-                        value = 'N/D(not defined)';
+                if (inp.value !== null && inp.value !== undefined) {
+                    if (this.field === 'dataset_name' && inp.value.length > 20) {
+                        let i = this.nthIndex(inp.value, "_", 3);
+                        value = inp.value.slice(0, i+1) + "\n" + inp.value.slice(i+1);
+                    } else {
+                        value = inp.value;
+                    }
+                } else
+                    value = 'N/D(not defined)';
 
                 let res;
                 if (inp.count)

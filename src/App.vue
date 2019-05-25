@@ -24,7 +24,7 @@
             <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>
             <v-btn flat href="/repo-viewer/repo_static/contact.html" target="_blank">
-                <span class="mr-2">Contact</span>
+                <span class="mr-2">Contacts</span>
             </v-btn>
         </v-toolbar>
 
@@ -47,6 +47,9 @@
                         </v-flex>
                         <v-flex xs1></v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="afterQuerySelection()">Clear All</v-btn>
+                        </v-flex>
+                        <v-flex xs2 class="no-horizontal-padding">
                             <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
                         </v-flex>
                         <v-flex xs2 class="no-horizontal-padding">
@@ -65,7 +68,6 @@
                                            class="radio-group2"
                                            append-icon="info"
                                            @click:append="openInfoDialog">
-                                <!--<v-switch v-model="synonymLocal" label="Synonym" class="switch"/>-->
                                 <v-radio label="Original" id="original" value="original"></v-radio>
                                 <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
                                 <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
@@ -188,7 +190,7 @@
                             </v-list-tile>
                         </v-list>
                         <p>Repository viewer is supported by the <a
-                                href="http://www.bioinformatics.deib.polimi.it/GeCo/?home" target="GeCo">Data-Driven
+                                href="http://www.bioinformatics.deib.polimi.it/geco/" target="GeCo">Data-Driven
                             Genomic Computing (GeCo)</a> project,
                             funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center
                                 (ERC)</a> (Advanced ERC Grant 693174).</p>
@@ -225,15 +227,14 @@
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    {text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
+                    //{text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
                     {
-                        text: 'Encode source',
-                        value: {synonym: false, query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
+                        text: 'Only ENCODE source',
+                        value: {query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
                     },
                     {
                         text: 'Example 1 - disease content from multiple sources',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
                                     disease: ["prostate adenocarcinoma"],
@@ -245,7 +246,6 @@
                     {
                         text: 'Example 2 - towards big data',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
                                     tissue: ["adrenal gland"],
@@ -257,7 +257,6 @@
                     {
                         text: 'Example 3 - synonym enriched search',
                         value: {
-                            synonym: true,
                             query: {
                                 "gcm": {
                                     cell: ["gm12878"],
@@ -269,23 +268,93 @@
                         }
                     },
                     {
-                        text: 'Example 4 - experimental and annotation data',
+                        text: 'Example 4 - ontology enriched search',
                         value: {
-                            synonym: false,
                             query: {
-                                "gcm": {content_type: ["exon", "exon quantifications"]}, "type": "original", "kv": {}
+                                "gcm": {
+                                    tissue: ["intestine"],
+                                    assembly: ["hg19"],
+                                    file_format: ["broadpeak"]
+                                },
+                                "type": "expanded",
+                                "kv": {}
                             }
                         }
                     },
                     {
-                        text: 'Example 5 - combined replicas',
+                        text: 'Example 5 - experimental and annotation data',
                         value: {
-                            synonym: false,
                             query: {
                                 "gcm": {
-                                    project_name: ["tads"],
-                                    biological_replicate_count: [2]
+                                    content_type: ["exon", "exon quantifications"]
                                 }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 6 - combined replicas',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    assembly: ["grch38"],
+                                    tissue: ["liver"],
+                                    technique: ["chip-seq"],
+                                    target: ["rad21"],
+                                    content_type: ["peaks and background as input for idr"],
+                                    biological_replicate_count: ["2"]
+                                }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 7 - using the value-search',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    source: ["encode"],
+                                    file_format: ["narrowpeak"],
+                                    cell: ["k562"],
+                                    technique: ["chip-seq"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    idr_peaks_0:{"type_query":"value","exact":false,"query":{"gcm":{"content_type":["optimal idr thresholded peaks"]},"pairs":{}}}
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 8 - combining different data types',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    disease: ["breast invasive carcinoma"],
+                                    assembly: ["grch38"],
+                                    data_type: ["gene expression quantification", "methylation beta value", "masked somatic mutation"],
+                                    is_healthy: ["false"],
+                                    age: {min_age: 9490, max_age: 14600, null: false}
+                                },
+                                "type": "original",
+                                "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 9 - using source specific metadata ',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    source:["roadmap epigenomics"],
+                                    technique:["dnase-seq"],
+                                    cell:["h1 cells"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    hotspot_0:{"type_query":"value","exact":true,"query":{"gcm":{"pipeline":["hotspot"]},"pairs":{}}},
+                                    "open%20chromatin_1":{"type_query":"value","exact":false,"query":{"gcm":{"feature":["open chromatin"]},"pairs":{}}},
+                                    broad_2:{"type_query":"value","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__region_type":["broad"]}}},
+                                    fdr_3:{"type_query":"key","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__fdr_threshold":["0.01"]}}}
+                                }
                             }
                         }
                     },
@@ -297,7 +366,7 @@
             }
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setSynonym', 'setQueryGraph', "resetKv"]),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
@@ -306,10 +375,16 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                // console.log(item.query);
-                this.setQuery(item.query.gcm);
-                this.setSynonym(item.synonym);
-                this.setKvFull(item.query.kv);
+                console.log(item);
+                if(item) {
+                    this.setQuery(item.query.gcm);
+                    this.setKvFull(item.query.kv);
+                    this.setType(item.query.type)
+                }else{
+                    this.resetQuery();
+                    this.resetType();
+                    this.resetKv();
+                }
                 this.$nextTick(() => {
                     this.selectedQuery = null
                 })
@@ -365,21 +440,6 @@
                 set(value) {
                     if (value) {
                         this.setType(value)
-                    } else {
-                        this.resetType();
-                    }
-                }
-            },
-            synonymLocal: {
-                get() {
-                    // console.log("GET synonym " + this.synonym);
-                    return this.synonym;
-                },
-                set(value) {
-                    // console.log("SET synonym " + value);
-                    this.setSynonym(value);
-                    if (value) {
-                        this.setType('synonym')
                     } else {
                         this.resetType();
                     }

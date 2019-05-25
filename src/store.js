@@ -70,7 +70,7 @@ export default new Vuex.Store({
             delete state.kv[field]
         },
         resetKv: (state) => {
-            state.keys = []
+            state.keys = [];
             state.kv = {}
         },
         setType: (state, type) => {
@@ -91,6 +91,9 @@ export default new Vuex.Store({
             delete state.query[field];
             // Vue.delete(state.query, field);
         },
+        resetQuery: (state) => {
+            state.query = {}
+        },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;
         },
@@ -101,13 +104,6 @@ export default new Vuex.Store({
             state.graphSourceId = null;
             state.extraMetadataSourceId = null;
             state.showGraphQuery = false;
-        },
-        setSynonym: (state, synonym) => {
-            state.synonym = synonym;
-            if (synonym)
-                state.type = 'synonym';
-            else
-                state.type = 'original';
         },
         setCount: (state, count) => {
             state.count = count;
