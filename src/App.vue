@@ -351,7 +351,7 @@
                                 "type": "original",
                                 "kv": {
                                     hotspot_0:{"type_query":"value","exact":true,"query":{"gcm":{"pipeline":["hotspot"]},"pairs":{}}},
-                                    open_chromatin_1:{"type_query":"value","exact":false,"query":{"gcm":{"feature":["open chromatin"]},"pairs":{}}},
+                                    "open%20chromatin_1":{"type_query":"value","exact":false,"query":{"gcm":{"feature":["open chromatin"]},"pairs":{}}},
                                     broad_2:{"type_query":"value","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__region_type":["broad"]}}},
                                     fdr_3:{"type_query":"key","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__fdr_threshold":["0.01"]}}}
                                 }
