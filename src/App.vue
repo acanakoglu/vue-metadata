@@ -35,8 +35,9 @@
                     <v-layout wrap align-center test>
                         <v-flex xs2 d-flex class="no-horizontal-padding">
                             <span class=label>Query utilities</span>
-                        </v-flex>
-                        <v-flex xs3 class=" no-horizontal-padding">
+                        </v-flex>  <!--query utils-->
+
+                        <v-flex xs2 class=" no-horizontal-padding">
                             <v-select solo
                                       :items="queryItems"
                                       v-model="selectedQuery"
@@ -44,18 +45,12 @@
                                       @input="afterQuerySelection"
                                       single-line
                             ></v-select>
-                        </v-flex>
-                        <v-flex xs1></v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <v-btn color='info' @click="afterQuerySelection()">Clear All</v-btn>
-                        </v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
-                        </v-flex>
-                        <v-flex xs2 class="no-horizontal-padding">
-                            <text-reader @load="queryString = $event"></text-reader>
-                        </v-flex>
-                        <v-flex>
+                        </v-flex> <!--predefined queries-->
+                       <v-flex xs1 class="no-horizontal-padding">
+                            <v-btn color='info' @click="afterQuerySelection()">Clear all</v-btn>
+                        </v-flex>  <!--clear all-->
+                        <v-flex xs1></v-flex>                       <!--space-->
+                        <v-flex xs1 class="no-horizontal-padding">
                             <v-dialog
                                     v-model="dialogShowQuery"
                             >
@@ -63,7 +58,7 @@
                                        slot="activator"
                                        color="info"
                                 >
-                                    Show/load query
+                                    Modify query
                                 </v-btn>
                                 <v-card>
                                     <v-card-title
@@ -101,7 +96,17 @@
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
-                        </v-flex>
+                        </v-flex>  <!--show/load-->
+                        <v-flex xs1></v-flex>
+                        <v-flex xs1 class="no-horizontal-padding">
+                            <text-reader @load="queryString = $event"></text-reader>
+                        </v-flex>  <!--upload query-->
+                        <v-flex xs1></v-flex>
+                        <v-flex xs1 class="no-horizontal-padding">
+                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
+                        </v-flex>  <!--download query-->
+                        <v-flex xs1></v-flex>
+
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
