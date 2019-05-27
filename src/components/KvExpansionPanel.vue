@@ -21,6 +21,7 @@
                     :headers="headersGcm"
                     :items="resultsGcm"
                     :loading="isLoading"
+                    :pagination.sync="pagination"
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headersGcm" :key="header.value">
@@ -66,6 +67,7 @@
                     :loading="isLoading"
                     item-key="id"
                     select-all
+                    :pagination.sync="pagination"
             >
                 <template slot="items" slot-scope="props">
                     <td>
@@ -88,6 +90,7 @@
                     :headers="headersPair"
                     :items="resultsPair"
                     :loading="isLoading"
+                    :pagination.sync="pagination"
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headersPair" :key="header.value">
@@ -107,6 +110,7 @@
             </v-data-table>
             <v-data-table
                     v-else
+                    :pagination.sync="pagination"
                     v-model="selectedKvPairs"
                     :headers="headers"
                     :items="resultsPair"
@@ -146,6 +150,7 @@
 
                 <v-divider></v-divider>
                 <v-data-table
+                        :pagination.sync="pagination"
                         v-model="selectedValues"
                         :headers="valueHeaders"
                         item-key="value"
@@ -198,6 +203,7 @@
         },
         data() {
             return {
+                pagination: {rowsPerPage: 10},//show all
                 queryToShow: this.query_type.toString() + ": '" + this.query_text.toString().replace("%20"," ") + "'" +
                     ", " +
                     "exact: " + this.exact_match +

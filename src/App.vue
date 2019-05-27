@@ -91,7 +91,7 @@
                                         </v-btn>
                                         <v-spacer></v-spacer>
                                         <v-btn
-                                                :disabled = !inputValid
+                                                :disabled=!inputValid
                                                 color="primary"
                                                 flat
                                                 @click="setInputQuery"
@@ -441,8 +441,10 @@
         mounted() {
             const url = `field`;
 
-            this.fields = [];
+            window.addEventListener('beforeunload', null)
 
+
+            this.fields = [];
 
             // eslint-disable-next-line
             axios.get(url)
@@ -521,11 +523,11 @@
 
                 //check if type is correct value
                 let type = a['type'];
-                let typeCorrect = (type==='original' || type === 'synonym' || type==='expanded')
+                let typeCorrect = (type === 'original' || type === 'synonym' || type === 'expanded')
 
                 //check if a field in gcm query element is valid
                 let b = Object.keys(a['gcm']);
-                let allFields = this.arrayContainsArray(this.fields,b);
+                let allFields = this.arrayContainsArray(this.fields, b);
 
 
                 return allKeys && allFields && typeCorrect
