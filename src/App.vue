@@ -55,6 +55,50 @@
                         <v-flex xs2 class="no-horizontal-padding">
                             <text-reader @load="queryString = $event"></text-reader>
                         </v-flex>
+                        <v-flex>
+                            <v-dialog
+                                    v-model="dialogShowQuery"
+                            >
+                                <v-btn dark
+                                       slot="activator"
+                                       color="info"
+                                >
+                                    Show/load query
+                                </v-btn>
+                                <v-card>
+                                    <v-card-title
+                                            class="headline blue lighten-4"
+                                            primary-title
+                                    >
+                                    </v-card-title>
+
+                                    <v-text-field
+                                            v-model="queryInput"
+                                    >
+                                    </v-text-field>
+
+                                    <v-divider></v-divider>
+
+                                    <v-card-actions>
+                                        <v-btn
+                                                color="primary"
+                                                flat
+                                                @click="toClipboard()"
+                                        >
+                                            Copy to clipboard
+                                        </v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                                color="primary"
+                                                flat
+                                                @click="dialogShowQuery = false"
+                                        >
+                                            Close
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-flex>
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
@@ -108,7 +152,7 @@
                             </span>
                         </v-flex>
                     </v-layout>
-                <MetadataDropDownList/>
+                    <MetadataDropDownList/>
                 </v-container>
 
                 <FullScreenViewer/>
@@ -224,6 +268,7 @@
         },
         data() {
             return {
+                dialogShowQuery: false,
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
@@ -368,6 +413,9 @@
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
+            setQueryString(value) {
+                this.queryString = value
+            },
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
             },
@@ -401,6 +449,23 @@
                 element.click();
                 document.body.removeChild(element);
             },
+            toClipboard() {
+                this.$copyText(this.compound_query).then(function (e) {
+                    alert('Copied');
+                    console.log(e);
+                }, function (e) {
+                    alert('Can not copy');
+                    console.log(e);
+                })
+            },
+            validateJson(input) {
+                try {
+                    JSON.parse(input);
+                } catch (e) {
+                    return false;
+                }
+                return true;
+            }
         },
         watch: {
             queryString() {
@@ -420,9 +485,19 @@
                 compound_query: 'build_query',
 
             }),
+            queryInput: {
+                get() {
+                    return JSON.stringify(this.compound_query)
+                },
+                set(value) {
+                    if(this.validateJson(value) && (value.includes('original') || value.includes('synonym') || value.includes('expanded')))
+                        this.queryString = value
+                }
+            },
             searchDisabled() {
                 return this.panelActive.length !== 0
             },
+
             queryToShow() {
                 let a = [];
                 for (let i in this.compound_query['gcm']) {

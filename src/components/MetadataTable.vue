@@ -247,6 +247,12 @@
                                     >
                                         Apply
                                     </v-btn>
+                                    <v-btn color="primary"
+                                           flat
+                                           @click="resetHeadersOrder()"
+                                    >
+                                        Reset
+                                    </v-btn>
                                 </v-card-title>
                                 <v-card-text>
                                     <p>Drag and drop field names in the desired position.
@@ -280,8 +286,8 @@
             <!--&gt;</v-text-field>-->
         </v-card-title>
 
-<!--        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>-->
-<!--        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>-->
+        <!--        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>-->
+        <!--        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>-->
 
         <v-data-table
                 :headers="selected_headers"
@@ -354,6 +360,74 @@
                 agg_mode: true,
                 download_table: '',
                 dialogOrder: false,
+                headersConst: [
+                    {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
+
+                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
+
+                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
+                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
+                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
+
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
+                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
+                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
+
+                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
+                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
+                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
+
+                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
+                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
+
+                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
+                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
+
+                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
+
+                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
+                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
+
+                    {
+                        text: 'Biological Replicate Number',
+                        value: 'biological_replicate_number',
+                        sortable: this.sortable,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Number',
+                        value: 'technical_replicate_number',
+                        sortable: this.sortable,
+                        show: false
+                    },
+
+                    {
+                        text: 'Biological Replicate Count',
+                        value: 'biological_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Count',
+                        value: 'technical_replicate_count',
+                        sortable: this.sortable,
+                        show: false
+                    },
+
+                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
+
+                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
+                ],
                 headers: [
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
                     {text: 'Source', value: 'source', sortable: this.sortable, show: true},
@@ -484,6 +558,9 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
+            resetHeadersOrder() {
+                this.headers = [...this.headersConst]
+            },
             selectAllHeaders() {
                 if (this.sortCheckbox) {
                     for (let i in this.headers) {
@@ -511,7 +588,7 @@
                         })
                         .then((res) => {
                             this.pagination.totalItems = res
-                            this.pagination.page= 1
+                            this.pagination.page = 1
                         });
                 }
                 var orderDir = "";
