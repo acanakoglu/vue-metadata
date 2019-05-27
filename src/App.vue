@@ -1,19 +1,20 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-            <v-btn flat @click="mainContent=true">
 
-                <v-toolbar-title class="headline text-uppercase">
-                    <span>Repository</span>
-                    <span class="font-weight-light">Viewer</span>
+            <v-btn flat large @click="mainContent=true">
+
+                <v-toolbar-title class="headline" style = "text-transform: none !important; width:180px">
+                    <img
+                    :src="require('./assets/geco_logo.png')"
+                    contain
+                    height="40px"
+                    ></img>
+                    &nbsp
+                    <span>Geno</span>
+                    <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
-            <v-img
-                    :src="require('./assets/logo.png')"
-                    contain
-                    height="64px"
-            ></v-img>
-
             <v-spacer></v-spacer>
             <v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
