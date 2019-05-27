@@ -304,23 +304,6 @@
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <span v-else>N/D</span>
                     </span>
-                    <span v-else-if="header.is_multi_link">
-                        <span v-if="props.item[header.value]">
-                            <a v-if="props.item[header.value].split(',')[0]"
-                               :href="props.item[header.value].split(',')[0]" target="_blank">link</a>
-                            <span v-if="props.item[header.value].split(',')[0] && props.item[header.value].split(',')[1]">, </span>
-                            <a v-if="props.item[header.value].split(',')[1]"
-                               :href="props.item[header.value].split(',')[1]" target="_blank">link</a>
-                            <span v-if="props.item[header.value].split(',')[1] && props.item[header.value].split(',')[2]">, </span>
-                            <a v-if="props.item[header.value].split(',')[2]"
-                               :href="props.item[header.value].split(',')[2]" target="_blank">link</a>
-                            <span v-if="props.item[header.value].split(',')[2] && props.item[header.value].split(',')[3]">, </span>
-                            <a v-if="props.item[header.value].split(',')[3]"
-                               :href="props.item[header.value].split(',')[3]" target="_blank">link</a>
-                            <span v-if="props.item[header.value].split(',').length>4">...</span>
-                        </span>
-                        <span v-else>N/D</span>
-                    </span>
                     <span v-else-if="header.value === 'graph'">
                         <v-btn flat icon color="blue" @click="graphClicked(props.item)">
                             <v-icon>group_work</v-icon>
@@ -576,7 +559,7 @@
                 'setCount'
             ]),
             resetHeadersOrder() {
-                this.headers = [...this.headersConst]
+                this.headers = Object.assign([], this.headersConst)
             },
             selectAllHeaders() {
                 if (this.sortCheckbox) {
