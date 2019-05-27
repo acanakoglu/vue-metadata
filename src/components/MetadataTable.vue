@@ -338,7 +338,82 @@
     import {mapMutations, mapState, mapGetters} from 'vuex';
     import draggable from 'vuedraggable'
 
+
     const itemSourceIdName = 'item_source_id';
+    const constHeaders = [
+        {text: 'Extra', value: 'extra', sortable: false, show: true},
+        {text: 'Source', value: 'source', sortable: true, show: true},
+        {text: 'Source ID', value: itemSourceIdName, sortable: true, show: true},
+        {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
+        {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
+
+        {text: 'Assembly', value: 'assembly', sortable: true, show: true},
+        {text: 'Data Type', value: 'data_type', sortable: true, show: true},
+
+        {text: 'Technique', value: 'technique', sortable: true, show: true},
+        {text: 'Feature', value: 'feature', sortable: true, show: true},
+        {text: 'Target', value: 'target', sortable: true, show: true},
+
+        {text: 'Biosample Type', value: 'biosample_type', sortable: true, show: true},
+        {text: 'Cell', value: 'cell', sortable: true, show: true},
+        {text: 'Tissue', value: 'tissue', sortable: true, show: true},
+        {text: 'Disease', value: 'disease', sortable: true, show: true},
+        {text: 'Healthy', value: 'is_healthy', sortable: true, show: true},
+        {text: 'Biosample ID', value: 'biosample_source_id', sortable: true, show: true},
+
+        {text: 'Gender', value: 'gender', sortable: true, show: true},
+        {text: 'Age', value: 'age', sortable: true, show: true},
+        {text: 'Ethnicity', value: 'ethnicity', sortable: true, show: true},
+        {text: 'Donor ID', value: 'donor_source_id', sortable: true, show: true},
+
+        {text: 'Dataset', value: 'dataset_name', sortable: true, show: true},
+        {text: 'File Format', value: 'file_format', sortable: true, show: true},
+        {text: 'Is annotation', value: 'is_annotation', sortable: true, show: true},
+
+        {text: 'Content type', value: 'content_type', sortable: true, show: true},
+        {text: 'Platform', value: 'platform', sortable: true, show: true},
+
+        {text: 'Pipeline', value: 'pipeline', sortable: true, show: true},
+        {text: 'Antibody', value: 'antibody', sortable: true, show: true},
+
+        {text: 'Source Site', value: 'source_site', sortable: true, show: true},
+        {text: 'Project Name', value: 'project_name', sortable: true, show: true},
+
+        {
+            text: 'Biological Replicate Number',
+            value: 'biological_replicate_number',
+            sortable: true,
+            show: false
+        },
+        {
+            text: 'Technical Replicate Number',
+            value: 'technical_replicate_number',
+            sortable: true,
+            show: false
+        },
+
+        {
+            text: 'Biological Replicate Count',
+            value: 'biological_replicate_count',
+            sortable: true,
+            show: false
+        },
+        {
+            text: 'Technical Replicate Count',
+            value: 'technical_replicate_count',
+            sortable: true,
+            show: false
+        },
+
+        {text: 'Source Page', value: 'source_page', sortable: true, show: true},
+
+        {text: 'Species', value: 'species', sortable: true, show: false},
+        // {text: 'External Reference', value: 'external_reference', sortable: true,show: false}
+
+        // {text: 'size', value: 'size'},
+        // {text: 'date', value: 'date'},
+        // {text: 'checksum', value: 'checksum'},
+    ];
 
     export default {
         name: "MetadataTable",
@@ -347,6 +422,80 @@
         },
         data() {
             return {
+                headersConst: [
+                    {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    {text: 'Source', value: 'source', sortable: true, show: true},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: true, show: true},
+                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
+                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
+
+                    {text: 'Assembly', value: 'assembly', sortable: true, show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: true, show: true},
+
+                    {text: 'Technique', value: 'technique', sortable: true, show: true},
+                    {text: 'Feature', value: 'feature', sortable: true, show: true},
+                    {text: 'Target', value: 'target', sortable: true, show: true},
+
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: true, show: true},
+                    {text: 'Cell', value: 'cell', sortable: true, show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: true, show: true},
+                    {text: 'Disease', value: 'disease', sortable: true, show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: true, show: true},
+                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: true, show: true},
+
+                    {text: 'Gender', value: 'gender', sortable: true, show: true},
+                    {text: 'Age', value: 'age', sortable: true, show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: true, show: true},
+                    {text: 'Donor ID', value: 'donor_source_id', sortable: true, show: true},
+
+                    {text: 'Dataset', value: 'dataset_name', sortable: true, show: true},
+                    {text: 'File Format', value: 'file_format', sortable: true, show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: true, show: true},
+
+                    {text: 'Content type', value: 'content_type', sortable: true, show: true},
+                    {text: 'Platform', value: 'platform', sortable: true, show: true},
+
+                    {text: 'Pipeline', value: 'pipeline', sortable: true, show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: true, show: true},
+
+                    {text: 'Source Site', value: 'source_site', sortable: true, show: true},
+                    {text: 'Project Name', value: 'project_name', sortable: true, show: true},
+
+                    {
+                        text: 'Biological Replicate Number',
+                        value: 'biological_replicate_number',
+                        sortable: true,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Number',
+                        value: 'technical_replicate_number',
+                        sortable: true,
+                        show: false
+                    },
+
+                    {
+                        text: 'Biological Replicate Count',
+                        value: 'biological_replicate_count',
+                        sortable: true,
+                        show: false
+                    },
+                    {
+                        text: 'Technical Replicate Count',
+                        value: 'technical_replicate_count',
+                        sortable: true,
+                        show: false
+                    },
+
+                    {text: 'Source Page', value: 'source_page', sortable: true, show: true},
+
+                    {text: 'Species', value: 'species', sortable: true, show: false},
+                    // {text: 'External Reference', value: 'external_reference', sortable: true,show: false}
+
+                    // {text: 'size', value: 'size'},
+                    // {text: 'date', value: 'date'},
+                    // {text: 'checksum', value: 'checksum'},
+                ],
                 sortCheckbox: false,
                 downloadProgress: false,
                 gmqlProgress: false,
@@ -360,143 +509,75 @@
                 agg_mode: true,
                 download_table: '',
                 dialogOrder: false,
-                headersConst: [
-                    {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
-
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
-
-                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
-
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
-
-                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
-                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
-
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
-
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
-
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
-
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
-
-                    {
-                        text: 'Biological Replicate Number',
-                        value: 'biological_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Number',
-                        value: 'technical_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {
-                        text: 'Biological Replicate Count',
-                        value: 'biological_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Count',
-                        value: 'technical_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
-
-                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
-                ],
                 headers: [
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source', value: 'source', sortable: true, show: true},
+                    {text: 'Source ID', value: itemSourceIdName, sortable: true, show: true},
                     {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
                     {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
 
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
+                    {text: 'Assembly', value: 'assembly', sortable: true, show: true},
+                    {text: 'Data Type', value: 'data_type', sortable: true, show: true},
 
-                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
+                    {text: 'Technique', value: 'technique', sortable: true, show: true},
+                    {text: 'Feature', value: 'feature', sortable: true, show: true},
+                    {text: 'Target', value: 'target', sortable: true, show: true},
 
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
-                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
+                    {text: 'Biosample Type', value: 'biosample_type', sortable: true, show: true},
+                    {text: 'Cell', value: 'cell', sortable: true, show: true},
+                    {text: 'Tissue', value: 'tissue', sortable: true, show: true},
+                    {text: 'Disease', value: 'disease', sortable: true, show: true},
+                    {text: 'Healthy', value: 'is_healthy', sortable: true, show: true},
+                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: true, show: true},
 
-                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
-                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
+                    {text: 'Gender', value: 'gender', sortable: true, show: true},
+                    {text: 'Age', value: 'age', sortable: true, show: true},
+                    {text: 'Ethnicity', value: 'ethnicity', sortable: true, show: true},
+                    {text: 'Donor ID', value: 'donor_source_id', sortable: true, show: true},
 
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
+                    {text: 'Dataset', value: 'dataset_name', sortable: true, show: true},
+                    {text: 'File Format', value: 'file_format', sortable: true, show: true},
+                    {text: 'Is annotation', value: 'is_annotation', sortable: true, show: true},
 
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
+                    {text: 'Content type', value: 'content_type', sortable: true, show: true},
+                    {text: 'Platform', value: 'platform', sortable: true, show: true},
 
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
+                    {text: 'Pipeline', value: 'pipeline', sortable: true, show: true},
+                    {text: 'Antibody', value: 'antibody', sortable: true, show: true},
 
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
+                    {text: 'Source Site', value: 'source_site', sortable: true, show: true},
+                    {text: 'Project Name', value: 'project_name', sortable: true, show: true},
 
                     {
                         text: 'Biological Replicate Number',
                         value: 'biological_replicate_number',
-                        sortable: this.sortable,
+                        sortable: true,
                         show: false
                     },
                     {
                         text: 'Technical Replicate Number',
                         value: 'technical_replicate_number',
-                        sortable: this.sortable,
+                        sortable: true,
                         show: false
                     },
 
                     {
                         text: 'Biological Replicate Count',
                         value: 'biological_replicate_count',
-                        sortable: this.sortable,
+                        sortable: true,
                         show: false
                     },
                     {
                         text: 'Technical Replicate Count',
                         value: 'technical_replicate_count',
-                        sortable: this.sortable,
+                        sortable: true,
                         show: false
                     },
 
-                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
+                    {text: 'Source Page', value: 'source_page', sortable: true, show: true},
 
-                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
-                    // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
+                    {text: 'Species', value: 'species', sortable: true, show: false},
+                    // {text: 'External Reference', value: 'external_reference', sortable: true,show: false}
 
                     // {text: 'size', value: 'size'},
                     // {text: 'date', value: 'date'},
@@ -559,7 +640,9 @@
                 'setCount'
             ]),
             resetHeadersOrder() {
-                this.headers = [...this.headersConst]
+                this.headersConst = Object.assign([], constHeaders)
+                console.log(constHeaders[0]);
+                this.headers = Object.assign([], this.headersConst)
             },
             selectAllHeaders() {
                 if (this.sortCheckbox) {

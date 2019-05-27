@@ -71,7 +71,9 @@
                                             primary-title
                                     >
                                     </v-card-title>
-
+                                    <v-alert color="info" :value="true" v-if="!inputValid">
+                                        Input not valid
+                                    </v-alert>
                                     <v-text-field
                                             v-model="queryInput"
                                     >
@@ -89,11 +91,12 @@
                                         </v-btn>
                                         <v-spacer></v-spacer>
                                         <v-btn
+                                                :disabled = !inputValid
                                                 color="primary"
                                                 flat
-                                                @click="dialogShowQuery = false"
+                                                @click="setInputQuery"
                                         >
-                                            Close
+                                            Apply
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -268,6 +271,8 @@
         },
         data() {
             return {
+                inputValid: true,
+                inputQuery: "",
                 dialogShowQuery: false,
                 mainContent: true,
                 selectedQuery: null,
@@ -363,7 +368,14 @@
                                 },
                                 "type": "original",
                                 "kv": {
-                                    idr_peaks_0:{"type_query":"value","exact":false,"query":{"gcm":{"content_type":["optimal idr thresholded peaks"]},"pairs":{}}}
+                                    idr_peaks_0: {
+                                        "type_query": "value",
+                                        "exact": false,
+                                        "query": {
+                                            "gcm": {"content_type": ["optimal idr thresholded peaks"]},
+                                            "pairs": {}
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -389,16 +401,32 @@
                         value: {
                             query: {
                                 "gcm": {
-                                    source:["roadmap epigenomics"],
-                                    technique:["dnase-seq"],
-                                    cell:["h1 cells"]
+                                    source: ["roadmap epigenomics"],
+                                    technique: ["dnase-seq"],
+                                    cell: ["h1 cells"]
                                 },
                                 "type": "original",
                                 "kv": {
-                                    hotspot_0:{"type_query":"value","exact":true,"query":{"gcm":{"pipeline":["hotspot"]},"pairs":{}}},
-                                    "open%20chromatin_1":{"type_query":"value","exact":false,"query":{"gcm":{"feature":["open chromatin"]},"pairs":{}}},
-                                    broad_2:{"type_query":"value","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__region_type":["broad"]}}},
-                                    fdr_3:{"type_query":"key","exact":false,"query":{"gcm":{},"pairs":{"manually_curated__fdr_threshold":["0.01"]}}}
+                                    hotspot_0: {
+                                        "type_query": "value",
+                                        "exact": true,
+                                        "query": {"gcm": {"pipeline": ["hotspot"]}, "pairs": {}}
+                                    },
+                                    "open%20chromatin_1": {
+                                        "type_query": "value",
+                                        "exact": false,
+                                        "query": {"gcm": {"feature": ["open chromatin"]}, "pairs": {}}
+                                    },
+                                    broad_2: {
+                                        "type_query": "value",
+                                        "exact": false,
+                                        "query": {"gcm": {}, "pairs": {"manually_curated__region_type": ["broad"]}}
+                                    },
+                                    fdr_3: {
+                                        "type_query": "key",
+                                        "exact": false,
+                                        "query": {"gcm": {}, "pairs": {"manually_curated__fdr_threshold": ["0.01"]}}
+                                    }
                                 }
                             }
                         }
@@ -406,15 +434,33 @@
                 ],
                 selectedTab: 0,
                 queryString: '',
-                infoDialog: false
-
+                infoDialog: false,
+                fields: []
             }
+        },
+        mounted() {
+            const url = `field`;
+
+            this.fields = [];
+
+
+            // eslint-disable-next-line
+            axios.get(url)
+                .then((res) => {
+                    return res.data
+                })
+                .then((res) => {
+                    for (let i in res.fields) {
+                        this.fields.push(res.fields[i].name)
+                    }
+                });
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
-            setQueryString(value) {
-                this.queryString = value
+            setInputQuery() {
+                this.queryString = this.inputQuery
+                this.dialogShowQuery = false
             },
             getFieldTitle(field) {
                 return `${field.name} (${field.group})`
@@ -424,11 +470,11 @@
             },
             afterQuerySelection(item) {
                 console.log(item);
-                if(item) {
+                if (item) {
                     this.setQuery(item.query.gcm);
                     this.setKvFull(item.query.kv);
                     this.setType(item.query.type)
-                }else{
+                } else {
                     this.resetQuery();
                     this.resetType();
                     this.resetKv();
@@ -450,7 +496,7 @@
                 document.body.removeChild(element);
             },
             toClipboard() {
-                this.$copyText(this.compound_query).then(function (e) {
+                this.$copyText(JSON.stringify(this.compound_query)).then(function (e) {
                     alert('Copied');
                     console.log(e);
                 }, function (e) {
@@ -459,12 +505,35 @@
                 })
             },
             validateJson(input) {
+                var a = null;
                 try {
-                    JSON.parse(input);
+                    a = JSON.parse(input);
                 } catch (e) {
                     return false;
                 }
-                return true;
+                let keys = Object.keys(a);
+                //check if all three major query elements are present
+                let allKeys = (keys.includes("gcm") && keys.includes("type") && keys.includes("kv"));
+
+                if (!allKeys) {
+                    return false;
+                }
+
+                //check if type is correct value
+                let type = a['type'];
+                let typeCorrect = (type==='original' || type === 'synonym' || type==='expanded')
+
+                //check if a field in gcm query element is valid
+                let b = Object.keys(a['gcm']);
+                let allFields = this.arrayContainsArray(this.fields,b);
+
+
+                return allKeys && allFields && typeCorrect
+            },
+            arrayContainsArray(superset, subset) {
+                return subset.every(function (value) {
+                    return (superset.indexOf(value) >= 0);
+                });
             }
         },
         watch: {
@@ -477,6 +546,9 @@
                     this.setKvFull(json['kv']);
                     this.queryString = ''
                 }
+            },
+            inputQuery() {
+                this.inputValid = this.validateJson(this.inputQuery)
             }
         },
         computed: {
@@ -490,8 +562,7 @@
                     return JSON.stringify(this.compound_query)
                 },
                 set(value) {
-                    if(this.validateJson(value) && (value.includes('original') || value.includes('synonym') || value.includes('expanded')))
-                        this.queryString = value
+                    this.inputQuery = value
                 }
             },
             searchDisabled() {
