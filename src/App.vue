@@ -1,21 +1,11 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-<img
-                    :src="require('./assets/geco_logo.png')"
-                    contain
-                    height="40px"
-                    ></img>
+        <img :src="require('./assets/geco_logo.png')" contain height="40px"></img>
             <v-btn flat  @click="mainContent=true">
-
                 <v-toolbar-title class="headline" style = "text-transform: none !important;">
-
-
-
-
                     <span>Geno</span>
                     <span class="font-weight-light">Surf</span>
-
                 </v-toolbar-title>
             </v-btn>
             <v-spacer></v-spacer>
@@ -27,11 +17,10 @@
             </v-btn>
             <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>
-            <v-btn flat href="/repo-viewer/repo_static/contact.html" target="_blank">
+            <v-btn flat href="/genosurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
         </v-toolbar>
-
         <v-content class="main-content">
             <v-content v-show="mainContent">
                 <!--<v-layout column class="fab-container"> -->
@@ -44,14 +33,11 @@
                             <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear</v-btn>
                         </v-flex>  <!--clear all-->
                         <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-dialog
-                                    v-model="dialogShowQuery"
-                            >
+                            <v-dialog v-model="dialogShowQuery">
                                 <v-btn flat class="small-btn" dark small
                                        slot="activator"
                                        color="info"
-                                >
-                                    Modify
+                                >Modify
                                 </v-btn>
                                 <v-card>
                                     <v-card-title
@@ -99,7 +85,6 @@
                             <v-btn flat  class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
                         </v-flex>  <!--download query-->
 
-
                         <v-spacer></v-spacer>
 
                         <v-flex  md4 sm8 class=" no-horizontal-padding">
@@ -112,12 +97,6 @@
                                       single-line
                             ></v-select>
                         </v-flex> <!--predefined queries-->
-
-
-
-
-
-
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
@@ -252,7 +231,7 @@
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
-                        <p>Repository viewer is supported by the <a
+                        <p>GenoSurf is supported by the <a
                                 href="http://www.bioinformatics.deib.polimi.it/geco/" target="GeCo">Data-Driven
                             Genomic Computing (GeCo)</a> project,
                             funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center
