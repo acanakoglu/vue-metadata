@@ -1,18 +1,21 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-
-            <v-btn flat large @click="mainContent=true">
-
-                <v-toolbar-title class="headline" style = "text-transform: none !important; width:180px">
-                    <img
+<img
                     :src="require('./assets/geco_logo.png')"
                     contain
                     height="40px"
                     ></img>
-                    &nbsp
+            <v-btn flat  @click="mainContent=true">
+
+                <v-toolbar-title class="headline" style = "text-transform: none !important;">
+
+
+
+
                     <span>Geno</span>
                     <span class="font-weight-light">Surf</span>
+
                 </v-toolbar-title>
             </v-btn>
             <v-spacer></v-spacer>
@@ -34,32 +37,21 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
-                        <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>Query utilities</span>
+                        <v-flex md2 sm2 d-flex class="no-horizontal-padding">
+                            <span class=label>Query:</span>
                         </v-flex>  <!--query utils-->
-
-                        <v-flex xs2 class=" no-horizontal-padding">
-                            <v-select solo
-                                      :items="queryItems"
-                                      v-model="selectedQuery"
-                                      label="Predefined queries"
-                                      @input="afterQuerySelection"
-                                      single-line
-                            ></v-select>
-                        </v-flex> <!--predefined queries-->
-                       <v-flex xs1 class="no-horizontal-padding">
-                            <v-btn color='info' @click="afterQuerySelection()">Clear all</v-btn>
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear</v-btn>
                         </v-flex>  <!--clear all-->
-                        <v-flex xs1></v-flex>                       <!--space-->
-                        <v-flex xs1 class="no-horizontal-padding">
+                        <v-flex md1 sm2 class="no-horizontal-padding">
                             <v-dialog
                                     v-model="dialogShowQuery"
                             >
-                                <v-btn dark
+                                <v-btn flat class="small-btn" dark small
                                        slot="activator"
                                        color="info"
                                 >
-                                    Modify query
+                                    Modify
                                 </v-btn>
                                 <v-card>
                                     <v-card-title
@@ -97,25 +89,43 @@
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
-                        </v-flex>  <!--show/load-->
-                        <v-flex xs1></v-flex>
-                        <v-flex xs1 class="no-horizontal-padding">
+                        </v-flex>  <!--modify-->
+
+                        <v-flex md1 sm2 class="no-horizontal-padding">
                             <text-reader @load="queryString = $event"></text-reader>
                         </v-flex>  <!--upload query-->
-                        <v-flex xs1></v-flex>
-                        <v-flex xs1 class="no-horizontal-padding">
-                            <v-btn color='info' @click="downloadQuery">Download Query</v-btn>
+
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-btn flat  class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
                         </v-flex>  <!--download query-->
-                        <v-flex xs1></v-flex>
+
+
+                        <v-spacer></v-spacer>
+
+                        <v-flex  md4 sm8 class=" no-horizontal-padding">
+                            <v-select solo
+                                      class="predef-q"
+                                      :items="queryItems"
+                                      v-model="selectedQuery"
+                                      label="Chose a predefined query"
+                                      @input="afterQuerySelection"
+                                      single-line
+                            ></v-select>
+                        </v-flex> <!--predefined queries-->
+
+
+
+
+
 
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
                     <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>Data search</span>
+                            <span class=label>Data search:</span>
                         </v-flex>
-                        <v-flex xs4 class="no-horizontal-padding">
+                        <v-flex xs10 class="no-horizontal-padding">
                             <v-radio-group :disabled=searchDisabled
                                            v-model="typeLocal" row
                                            class="radio-group2"
@@ -198,7 +208,7 @@
 
 
                         <div v-if="count === null">Loading...</div>
-                        <div style="font-size:1.5em; font-weight:bold;" v-else-if="count>0">{{count}} item<span
+                        <div style="font-size:1.4em;" v-else-if="count>0">{{count}} item<span
                                 v-if="count>1">s</span> found
                         </div>
                         <div v-else>No result</div>
@@ -649,5 +659,14 @@
 
     .selected-query {
         padding-top: 15px;
+    }
+
+    .predef-q .v-input__control .v-text-field__details{
+        display: none;
+    }
+
+    .small-btn{
+
+
     }
 </style>

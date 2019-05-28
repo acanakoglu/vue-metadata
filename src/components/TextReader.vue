@@ -1,6 +1,6 @@
 <template>
     <span>
-        <v-btn color="info" @click="$refs.inputUpload.click()">Upload Query</v-btn>
+        <v-btn flat class="small-btn" small color="info" @click="$refs.inputUpload.click()">Upload</v-btn>
         <input v-show="false" ref="inputUpload" type="file" @change="loadTextFromFile">
     </span>
 </template>
