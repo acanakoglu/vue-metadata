@@ -10,5 +10,5 @@ module.exports = {
             },
         }
     },
-    baseUrl: '/repo-viewer/',
+    baseUrl: '/genosurf/',
 }
