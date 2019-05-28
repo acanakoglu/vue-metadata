@@ -72,6 +72,13 @@
                                         >
                                             Apply
                                         </v-btn>
+                                        <v-btn
+                                                color="primary"
+                                                flat
+                                                @click="dialogShowQuery = false"
+                                        >
+                                            Close
+                                        </v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
