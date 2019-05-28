@@ -96,6 +96,8 @@
 
                         <v-flex  md4 sm8 class=" no-horizontal-padding">
                             <v-select solo
+                                      dense
+                                      :menu-props='{"maxHeight":1000}'
                                       class="predef-q"
                                       :items="queryItems"
                                       v-model="selectedQuery"
