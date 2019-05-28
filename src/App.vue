@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-        <img :src="require('./assets/geco_logo.png')" contain height="40px"></img>
+        <v-img :src="require('./assets/geco_logo.png')" contain max-width="40px" max-height="40px"></v-img>
             <v-btn flat  @click="mainContent=true">
                 <v-toolbar-title class="headline" style = "text-transform: none !important;">
                     <span>Geno</span>
@@ -45,8 +45,8 @@
                                             primary-title
                                     >
                                     </v-card-title>
-                                    <v-alert color="info" :value="true" v-if="!inputValid">
-                                        Input not valid
+                                    <v-alert type="error" :value="true" v-if="!inputValid">
+                                        Input is not valid
                                     </v-alert>
                                     <v-text-field
                                             v-model="queryInput"
