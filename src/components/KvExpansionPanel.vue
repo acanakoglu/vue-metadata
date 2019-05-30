@@ -21,7 +21,7 @@
                     :headers="headersGcm"
                     :items="resultsGcm"
                     :loading="isLoading"
-                    :pagination.sync="pagination"
+                    :pagination.sync="pagination_gcm_key"
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headersGcm" :key="header.value">
@@ -67,7 +67,7 @@
                     :loading="isLoading"
                     item-key="id"
                     select-all
-                    :pagination.sync="pagination"
+                    :pagination.sync="pagination_gcm_value"
             >
                 <template slot="items" slot-scope="props">
                     <td>
@@ -90,7 +90,7 @@
                     :headers="headersPair"
                     :items="resultsPair"
                     :loading="isLoading"
-                    :pagination.sync="pagination"
+                    :pagination.sync="pagination_orig_key"
             >
                 <template slot="items" slot-scope="props">
                     <td v-for="header in headersPair" :key="header.value">
@@ -110,7 +110,7 @@
             </v-data-table>
             <v-data-table
                     v-else
-                    :pagination.sync="pagination"
+                    :pagination.sync="pagination_orig_value"
                     v-model="selectedKvPairs"
                     :headers="headers"
                     :items="resultsPair"
@@ -150,7 +150,7 @@
 
                 <v-divider></v-divider>
                 <v-data-table
-                        :pagination.sync="pagination"
+                        :pagination.sync="pagination_one_key_values"
                         v-model="selectedValues"
                         :headers="valueHeaders"
                         item-key="value"
@@ -203,7 +203,11 @@
         },
         data() {
             return {
-                pagination: {rowsPerPage: 10},//show all
+                pagination_gcm_key: {rowsPerPage: 10},
+                pagination_gcm_value: {rowsPerPage: 10},
+                pagination_orig_key: {rowsPerPage: 10},
+                pagination_orig_value: {rowsPerPage: 10},
+                pagination_one_key_values: {rowsPerPage: 10},
                 queryToShow: this.query_type.toString() + ": '" + this.query_text.toString().replace("%20"," ") + "'" +
                     ", " +
                     "exact: " + this.exact_match +
@@ -377,6 +381,7 @@
                 this.valuesDialog = true;
                 this.keyToSearch = input;
                 this.isGcm = isGcm;
+                this.pagination_one_key_values.page = 1;
             },
             resetSearch() {
                 this.valuesDialog = false;

@@ -44,14 +44,15 @@
                                             class="headline blue lighten-4"
                                             primary-title
                                     >
+                                        Copy, modify or paste query
                                     </v-card-title>
                                     <v-alert type="error" :value="true" v-if="!inputValid">
                                         Input is not valid
                                     </v-alert>
-                                    <v-text-field
+                                    <v-textarea class="mytextarea"
                                             v-model="queryInput"
                                     >
-                                    </v-text-field>
+                                    </v-textarea>
 
                                     <v-divider></v-divider>
 
@@ -656,5 +657,9 @@
     .small-btn{
 
 
+    }
+
+    .mytextarea{
+        padding: 16px;
     }
 </style>
