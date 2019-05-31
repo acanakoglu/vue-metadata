@@ -236,7 +236,7 @@
                                         class="headline blue lighten-4"
                                         primary-title
                                 >
-                                    Column order
+                                    Field order
                                     <v-spacer></v-spacer>
                                     <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
                                                 :label="sortCheckBoxLabel"></v-checkbox>
@@ -245,7 +245,7 @@
                                             flat
                                             @click="dialogOrder = false"
                                     >
-                                        Apply
+                                        Close
                                     </v-btn>
                                     <v-btn color="primary"
                                            flat

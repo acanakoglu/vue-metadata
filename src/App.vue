@@ -299,7 +299,7 @@
                         }
                     },
                     {
-                        text: 'Example 2 - towards big data',
+                        text: 'Example 2 - different data for specific tissue',
                         value: {
                             query: {
                                 "gcm": {
