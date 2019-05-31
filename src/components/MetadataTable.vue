@@ -236,7 +236,7 @@
                                         class="headline blue lighten-4"
                                         primary-title
                                 >
-                                    Column order
+                                    Field order
                                     <v-spacer></v-spacer>
                                     <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
                                                 :label="sortCheckBoxLabel"></v-checkbox>
@@ -245,7 +245,7 @@
                                             flat
                                             @click="dialogOrder = false"
                                     >
-                                        Apply
+                                        Close
                                     </v-btn>
                                     <v-btn color="primary"
                                            flat
@@ -712,7 +712,7 @@
             },
             downloadTable() {
                 const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
-                this.downloadProgress = true
+                this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
                     .then((res) => {
@@ -722,9 +722,9 @@
                         let text = this.json2csv(res);
                         let filename = "result.csv";
                         let element = document.createElement('a');
-                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
                         element.setAttribute('download', filename);
-                        element.style.display = 'none';
+                        var data = new Blob([text]);
+                        element.href = URL.createObjectURL(data);
                         document.body.appendChild(element);
                         element.click();
                         document.body.removeChild(element);
