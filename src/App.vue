@@ -581,8 +581,12 @@
                 for (let i in this.compound_query['gcm']) {
                     if (i === 'age') {
                         a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", null: " + this.compound_query['gcm'][i]['null'] + "}")
-                    } else
-                        a.push(i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']")
+                    } else {
+                        let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']"
+                        // b.replace("''","'N/D")
+                        a.push(b.replace("''","N/D(not defined)"))
+                    }
+
                 }
                 return a.join(", ")
             },

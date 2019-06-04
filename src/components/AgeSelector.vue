@@ -90,14 +90,14 @@
                     c = this.selectedMin;
                     console.log("min not null")
                 } else {
-                    c = this.minInt * this.unit;
+                    c = null
                     // console.log("min null")
                 }
                 // console.log(c);
 
                 if (this.selectedMax)
                     b = this.selectedMax;
-                else b = this.maxInt * this.unit;
+                else b = null
 
                 let a = {
                     'min_age': c,
