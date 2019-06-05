@@ -131,6 +131,8 @@
                     // window.alert(this.key + "_" + this.pairQueryType + this.exact_match+i);
                     this.pushKey(a);
                     this.search = ''
+                    this.exact_match = false
+                    this.pairQueryType = 'key'
                 } else {
                     window.alert("Please input a search keyword")
                 }
