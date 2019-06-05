@@ -1,9 +1,6 @@
 <template>
     <v-container fluid grid-list-xl class="mylay2">
-         <v-text-field type="number">
-                </v-text-field>
-
-        <v-layout class="container view">
+         <v-layout class="container view">
             <v-flex md4 class="age-comp">
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
