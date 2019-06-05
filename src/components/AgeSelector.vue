@@ -1,5 +1,8 @@
 <template>
     <v-container fluid grid-list-xl class="mylay2">
+         <v-text-field type="number">
+                </v-text-field>
+
         <v-layout class="container view">
             <v-flex md4 class="age-comp">
                 <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
@@ -76,9 +79,13 @@
                         this.minAge = res['min_age'];
                         this.maxAge = res['max_age'];
                         if (this.ageItem) {
-                            this.min = this.ageItem['min_age'] / this.unit;
-                            this.isNull = this.ageItem['null'];
-                            this.max = this.ageItem['max_age'] / this.unit;
+                            if(this.ageItem['min_age'] != null) {
+                                this.min = this.ageItem['min_age'] / this.unit;
+                            }
+                            this.isNull = this.ageItem['is_null'];
+                            if(this.ageItem['max_age'] != null) {
+                                this.max = this.ageItem['max_age'] / this.unit;
+                            }
                         }
                     });
             },
@@ -102,7 +109,7 @@
                 let a = {
                     'min_age': c,
                     'max_age': b,
-                    'null': this.isNull
+                    'is_null': this.isNull
                 };
                 this.setAge(a)
             },

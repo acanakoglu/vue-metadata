@@ -394,7 +394,7 @@
                                     assembly: ["grch38"],
                                     data_type: ["gene expression quantification", "methylation beta value", "masked somatic mutation"],
                                     is_healthy: ["false"],
-                                    age: {min_age: 9490, max_age: 14600, null: false}
+                                    age: {min_age: 9490, max_age: 14600, is_null: false}
                                 },
                                 "type": "original",
                                 "kv": {}
@@ -580,11 +580,11 @@
                 let a = [];
                 for (let i in this.compound_query['gcm']) {
                     if (i === 'age') {
-                        a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", null: " + this.compound_query['gcm'][i]['null'] + "}")
+                        a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
                     } else {
-                        let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']"
+                        let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
                         // b.replace("''","'N/D")
-                        a.push(b.replace("''","N/D(not defined)"))
+                        a.push(b.replace("''","null"))
                     }
 
                 }
