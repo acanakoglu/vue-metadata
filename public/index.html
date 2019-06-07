@@ -93,7 +93,7 @@
 
 <div id="app"></div>
 <script>
-        var supportsES6 = function() {
+        var supportsVue = function() {
           try {
             new Function("(a = 0) => a");
             return true;
@@ -102,9 +102,14 @@
             return false;
           }
         }();
-        console.log("supportsES6" + supportsES6)
+        console.log("supportsES6" + supportsVue)
 
-        if(!supportsES6)
+        var ua = window.navigator.userAgent;
+
+        if(ua.indexOf("Edge") > -1)
+            supportsVue = false;
+
+        if(!supportsVue)
             document.getElementById("noES6").style.display = "block";
 </script>
 <!-- built files will be auto injected -->
