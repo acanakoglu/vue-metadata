@@ -139,8 +139,8 @@
                                     <v-card-text>
                                         <p>Original: searches using metadata unchanged from the original data
                                             sources</p>
-                                        <p>Synonym: searches using original metadata and ontological term and synonyms
-                                            related to it</p>
+                                        <p>Synonym: searches using original metadata, ontological terms, and synonyms
+                                            related to them</p>
                                         <p>Expanded: searches using original metadata, ontological terms, and their
                                             hypernyms and hyponyms</p>
                                     </v-card-text>
