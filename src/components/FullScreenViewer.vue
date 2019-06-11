@@ -15,7 +15,6 @@
             <PairsTable v-if="sourceId2"/>
             <GraphViewer v-if="dialog3" class="graph--fullscreen"/>
 
-            <div v-else-if="sourceId2">TABLE</div>
         </v-card>
     </v-dialog>
 </template>
