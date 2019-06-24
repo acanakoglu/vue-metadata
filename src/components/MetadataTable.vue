@@ -148,7 +148,7 @@
                                 <v-card-title
                                         class="headline blue lighten-4"
                                         primary-title>
-                                    Download region files
+                                    Download files
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
                                                    :indeterminate="downloadProgress"></v-progress-linear>
@@ -160,7 +160,7 @@
                                         the
                                         list
                                         of
-                                        the URLs of the region data files related to the result items.
+                                        the URLs of the region data and metadata files related to the result items.
                                     </p>
                                     <p>
                                         The following command using cURL can be used to download all the files in the

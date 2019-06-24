@@ -83,7 +83,7 @@
         <v-card>
             <v-card-title class="headline blue lighten-4"
                           secondary-title>
-                Original key-value pairs
+                Source key-value pairs
             </v-card-title>
             <v-data-table
                     v-if="query_type==='key'"
