@@ -711,7 +711,13 @@
                 return csv.join('\r\n')
             },
             downloadTable() {
-                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
+                var orderDir = "";
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
+
+                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
