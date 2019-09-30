@@ -1,26 +1,7 @@
 # vue-metadata
 
-## Project setup
-```
-npm install
-```
+Vue-metadata project implements the front-end of GenoSurf http://gmql.eu/genosurf/,
+an integrated metadata-based semantic search server for genomic datasets. 
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+The back-end packages are available in the companion project [flask-metadata](https://github.com/DEIB-GECO/flask-metadata).
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
