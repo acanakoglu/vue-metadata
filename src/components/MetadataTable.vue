@@ -381,6 +381,7 @@
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
                     {text: 'Source', value: 'source', sortable: this.sortable, show: true},
                     {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source alt-ID', value: 'alt_item_source_id', sortable: this.sortable, show: false},
                     {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
                     {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
 
@@ -397,12 +398,13 @@
                     {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
                     {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
                     {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
-                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: true},
+                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: false},
 
                     {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Age', value: 'age', sortable: this.sortable, show: true},
                     {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
                     {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
+                    {text: 'Donor alt-ID', value: 'alt_donor_source_id', sortable: this.sortable, show: false},
 
                     {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
                     {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
@@ -451,6 +453,7 @@
                     {text: 'Extra', value: 'extra', sortable: false, show: true},
                     {text: 'Source', value: 'source', sortable: this.sortable, show: true},
                     {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Source alt-ID', value: 'alt_item_source_id', sortable: this.sortable, show: false},
                     {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
                     {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
 
@@ -467,12 +470,13 @@
                     {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
                     {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
                     {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
-                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: true},
+                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: false},
 
                     {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Age', value: 'age', sortable: this.sortable, show: true},
                     {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
                     {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
+                    {text: 'Donor alt-ID', value: 'alt_donor_source_id', sortable: this.sortable, show: false},
 
                     {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
                     {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
