@@ -171,22 +171,22 @@
                 <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
-                        <v-tab>
-                            Source count
-                        </v-tab>
-                        <v-tab>
-                            Dataset count
-                        </v-tab>
+<!--                        <v-tab>-->
+<!--                            Source count-->
+<!--                        </v-tab>-->
+<!--                        <v-tab>-->
+<!--                            Dataset count-->
+<!--                        </v-tab>-->
                         <v-tab>
                             Result items
                         </v-tab>
 
-                        <v-tab-item>
-                            <CountTable countType="source"/>
-                        </v-tab-item>
-                        <v-tab-item>
-                            <CountTable countType="dataset"/>
-                        </v-tab-item>
+<!--                        <v-tab-item>-->
+<!--                            <CountTable countType="source"/>-->
+<!--                        </v-tab-item>-->
+<!--                        <v-tab-item>-->
+<!--                            <CountTable countType="dataset"/>-->
+<!--                        </v-tab-item>-->
                         <v-tab-item>
                             <MetadataTable/>
                         </v-tab-item>

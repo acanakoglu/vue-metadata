@@ -193,42 +193,42 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
-                    <v-flex m1 shrink align-self-center>
-                        <v-label>Replicated</v-label>
-                    </v-flex>
-                    <v-flex m1 d-flex align-self-center shrink class="padding-right">
-                        <v-switch label="Aggregated" v-model=agg_mode></v-switch>
-                        <v-dialog
-                                width="500"
-                        >
-                            <v-btn slot="activator"
-                                   class="info-button"
-                                   small
-                                   flat icon color="blue">
-                                <v-icon class="info-icon">info</v-icon>
-                            </v-btn>
+<!--                    <v-flex m1 shrink align-self-center>-->
+<!--                        <v-label>Replicated</v-label>-->
+<!--                    </v-flex>-->
+<!--                    <v-flex m1 d-flex align-self-center shrink class="padding-right">-->
+<!--                        <v-switch label="Aggregated" v-model=agg_mode></v-switch>-->
+<!--                        <v-dialog-->
+<!--                                width="500"-->
+<!--                        >-->
+<!--                            <v-btn slot="activator"-->
+<!--                                   class="info-button"-->
+<!--                                   small-->
+<!--                                   flat icon color="blue">-->
+<!--                                <v-icon class="info-icon">info</v-icon>-->
+<!--                            </v-btn>-->
 
-                            <v-card>
-                                <v-card-title
-                                        class="headline grey lighten-2"
-                                        primary-title
-                                >
-                                    Replicated and aggregated view
-                                </v-card-title>
+<!--                            <v-card>-->
+<!--                                <v-card-title-->
+<!--                                        class="headline grey lighten-2"-->
+<!--                                        primary-title-->
+<!--                                >-->
+<!--                                    Replicated and aggregated view-->
+<!--                                </v-card-title>-->
 
-                                <v-card-text>
-                                    <p>Generally, each row refers to one item. In case the item is derived from multiple
-                                        Replicates/Biosamples/Donors:</p>
-                                    <p>- in the aggregated view the related information is aggregated by concatenating
-                                        the
-                                        possible values through the pipe "|";</p>
-                                    <p>- in the replicated view: there is one row for each different Replicate (and
-                                        consequently Biosample/Donor).</p>
-                                </v-card-text>
+<!--                                <v-card-text>-->
+<!--                                    <p>Generally, each row refers to one item. In case the item is derived from multiple-->
+<!--                                        Replicates/Biosamples/Donors:</p>-->
+<!--                                    <p>- in the aggregated view the related information is aggregated by concatenating-->
+<!--                                        the-->
+<!--                                        possible values through the pipe "|";</p>-->
+<!--                                    <p>- in the replicated view: there is one row for each different Replicate (and-->
+<!--                                        consequently Biosample/Donor).</p>-->
+<!--                                </v-card-text>-->
 
-                            </v-card>
-                        </v-dialog>
-                    </v-flex>
+<!--                            </v-card>-->
+<!--                        </v-dialog>-->
+<!--                    </v-flex>-->
                     <v-flex m4 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
                             <v-card>
@@ -355,7 +355,7 @@
     import {mapMutations, mapState, mapGetters} from 'vuex';
     import draggable from 'vuedraggable'
 
-    const itemSourceIdName = 'item_source_id';
+    const itemSourceIdName = 'accession_id';
 
     export default {
         name: "MetadataTable",
@@ -374,163 +374,20 @@
                 isLoading: false,
                 search: '',
                 result: [],
-                agg_mode: true,
+                agg_mode: false,
                 download_table: '',
                 dialogOrder: false,
                 headersConst: [
-                    {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-                    {text: 'Source alt-ID', value: 'alt_item_source_id', sortable: this.sortable, show: false},
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
+                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
 
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
-
-                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
-
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
-                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
-                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: false},
-
-                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
-                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
-                    {text: 'Donor alt-ID', value: 'alt_donor_source_id', sortable: this.sortable, show: false},
-
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
-
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
-
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
-
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
-
-                    {
-                        text: 'Biological Replicate Number',
-                        value: 'biological_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Number',
-                        value: 'technical_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {
-                        text: 'Biological Replicate Count',
-                        value: 'biological_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Count',
-                        value: 'technical_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {text: 'Source Page', value: 'source_page', sortable: this.sortable, show: true},
-
-                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
                 ],
                 headers: [
-                    {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Source ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-                    {text: 'Source alt-ID', value: 'alt_item_source_id', sortable: this.sortable, show: false},
-                    {text: 'Source URI', value: 'source_url', sortable: false, is_link: true, show: true},
-                    {text: 'Local URI', value: 'local_url', sortable: false, is_link: true, show: true},
+                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
 
-                    {text: 'Assembly', value: 'assembly', sortable: this.sortable, show: true},
-                    {text: 'Data Type', value: 'data_type', sortable: this.sortable, show: true},
-
-                    {text: 'Technique', value: 'technique', sortable: this.sortable, show: true},
-                    {text: 'Feature', value: 'feature', sortable: this.sortable, show: true},
-                    {text: 'Target', value: 'target', sortable: this.sortable, show: true},
-
-                    {text: 'Biosample Type', value: 'biosample_type', sortable: this.sortable, show: true},
-                    {text: 'Cell', value: 'cell', sortable: this.sortable, show: true},
-                    {text: 'Tissue', value: 'tissue', sortable: this.sortable, show: true},
-                    {text: 'Disease', value: 'disease', sortable: this.sortable, show: true},
-                    {text: 'Healthy', value: 'is_healthy', sortable: this.sortable, show: true},
-                    {text: 'Biosample ID', value: 'biosample_source_id', sortable: this.sortable, show: true},
-                    {text: 'Biosample alt-ID', value: 'alt_biosample_source_id', sortable: this.sortable, show: false},
-
-                    {text: 'Gender', value: 'gender', sortable: this.sortable, show: true},
-                    {text: 'Age', value: 'age', sortable: this.sortable, show: true},
-                    {text: 'Ethnicity', value: 'ethnicity', sortable: this.sortable, show: true},
-                    {text: 'Donor ID', value: 'donor_source_id', sortable: this.sortable, show: true},
-                    {text: 'Donor alt-ID', value: 'alt_donor_source_id', sortable: this.sortable, show: false},
-
-                    {text: 'Dataset', value: 'dataset_name', sortable: this.sortable, show: true},
-                    {text: 'File Format', value: 'file_format', sortable: this.sortable, show: true},
-                    {text: 'Is annotation', value: 'is_annotation', sortable: this.sortable, show: true},
-
-                    {text: 'Content type', value: 'content_type', sortable: this.sortable, show: true},
-                    {text: 'Platform', value: 'platform', sortable: this.sortable, show: true},
-
-                    {text: 'Pipeline', value: 'pipeline', sortable: this.sortable, show: true},
-                    {text: 'Antibody', value: 'antibody', sortable: this.sortable, show: true},
-
-                    {text: 'Source Site', value: 'source_site', sortable: this.sortable, show: true},
-                    {text: 'Project Name', value: 'project_name', sortable: this.sortable, show: true},
-
-                    {
-                        text: 'Biological Replicate Number',
-                        value: 'biological_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Number',
-                        value: 'technical_replicate_number',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {
-                        text: 'Biological Replicate Count',
-                        value: 'biological_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-                    {
-                        text: 'Technical Replicate Count',
-                        value: 'technical_replicate_count',
-                        sortable: this.sortable,
-                        show: false
-                    },
-
-                    {
-                        text: 'Source Page',
-                        value: 'source_page',
-                        sortable: this.sortable,
-                        is_multi_link: true,
-                        show: true
-                    },
-
-                    {text: 'Species', value: 'species', sortable: this.sortable, show: false},
-                    // {text: 'External Reference', value: 'external_reference', sortable: this.sortable,show: false}
-
-                    // {text: 'size', value: 'size'},
-                    // {text: 'date', value: 'date'},
-                    // {text: 'checksum', value: 'checksum'},
                 ],
                 pagination: {
                     descending: false,

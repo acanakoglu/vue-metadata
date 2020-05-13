@@ -80,7 +80,7 @@
                 views: [
                     {text: 'Management', value: 'management', color: '#FFBF5B'},
                     {text: 'Extraction', value: 'extraction', color: '#B3E1FF'},
-                    {text: 'Biology ', value: 'biological', color: '#FFA9BF'},
+                    {text: 'Biology', value: 'biological', color: '#FFA9BF'},
                     {text: 'Technology', value: 'technological', color: '#DEFFC5'},
                 ],
             }
