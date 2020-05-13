@@ -377,18 +377,7 @@
                 agg_mode: false,
                 download_table: '',
                 dialogOrder: false,
-                headersConst: [
-                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-
-                ],
-                headers: [
-                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
-                    {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-
-                ],
+                headers: this.getHeaders(),
                 pagination: {
                     descending: false,
                     page: 1,
@@ -445,8 +434,15 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
+            getHeaders(){
+                return [
+                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
+                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                ];
+            },
             resetHeadersOrder() {
-                this.headers = Object.assign([], JSON.parse(JSON.stringify(this.headersConst)))
+                this.headers = this.getHeaders()
             },
             selectAllHeaders() {
                 if (this.sortCheckbox) {
@@ -607,6 +603,7 @@
                 compound_query: 'build_query'
             }),
             sortable() {
+                console.log("asd " + this.result.length);
                 return this.result.length < 1000;
             },
             sortCheckBoxLabel() {
