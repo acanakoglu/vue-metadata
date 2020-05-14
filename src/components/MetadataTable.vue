@@ -470,8 +470,9 @@
                             return res.data
                         })
                         .then((res) => {
-                            this.pagination.totalItems = res
-                            this.pagination.page = 1
+                            this.pagination.totalItems = res;
+                            this.setCount(res);
+                            this.pagination.page = 1;
                         });
                 }
                 var orderDir = "";
