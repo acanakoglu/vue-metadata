@@ -437,6 +437,7 @@
             getHeaders(){
                 return [
                     //sequence
+                    {text: 'Source Page', value: itemSourceIdName, sortable: this.sortable, show: true, is_link: true},
                     {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
                     {text: 'Strain', value: 'strain_name', sortable: this.sortable, show: true},
                     {text: 'Reference', value: 'is_reference', sortable: this.sortable, show: true},
@@ -450,14 +451,14 @@
                     {text: 'Coverage', value: 'coverage', sortable: this.sortable, show: true},
                     //sequencing_project
                     {text: 'Seq. Lab', value: 'sequencing_lab', sortable: this.sortable, show: false},
-                    //{text: 'Submission date', value: 'submission_date', sortable: this.sortable, show: true},
+                    {text: 'Submission date', value: 'submission_date', sortable: this.sortable, show: true},
                     {text: 'BioProject', value: 'bioproject_id', sortable: this.sortable, show: true},
                     {text: 'Database', value: 'database_source', sortable: this.sortable, show: true},
                     //host_sample
                     //{text: 'Species', value: 'species', sortable: this.sortable, show: true},
                     //{text: 'Species TaxonID', value: 'species_taxon_id', sortable: this.sortable, show: false},
                     //{text: 'Isolation source', value: 'isolation_source', sortable: this.sortable, show: true},
-                    //{text: 'Origin Lab', value: 'oritinating_lab', sortable: this.sortable, show: true},
+                    //{text: 'Origin Lab', value: 'originating_lab', sortable: this.sortable, show: true},
                     //{text: 'Country', value: 'country', sortable: this.sortable, show: true},
                     //{text: 'Region', value: 'region', sortable: this.sortable, show: true},
                     //{text: 'GeoGroup', value: 'geo_group', sortable: this.sortable, show: true},
@@ -465,7 +466,7 @@
                     //{text: 'Virus TaxonID', value: 'virus_taxonomy_id', sortable: this.sortable, show: true},
                     //{text: 'Family', value: 'family', sortable: this.sortable, show: false},
                     //{text: 'SubFamily', value: 'sub_family', sortable: this.sortable, show: false},
-                    //{text: 'Origin Lab', value: 'oritinating_lab', sortable: this.sortable, show: false},
+                    //{text: 'Origin Lab', value: 'originating_lab', sortable: this.sortable, show: false},
                     //{text: 'Genus', value: 'genus', sortable: this.sortable, show: false},
                     //{text: 'Species', value: 'species_name', sortable: this.sortable, show: false},
                     //{text: 'Species Taxon ID', value: 'species_taxon_id', sortable: this.sortable, show: false},
