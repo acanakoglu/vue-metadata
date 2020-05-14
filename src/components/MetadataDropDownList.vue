@@ -78,10 +78,10 @@
                 //     {text: 'Case study', value: 'CaseStudy'},
                 // ],
                 views: [
-                    {text: 'Management', value: 'management', color: '#FFBF5B'},
-                    {text: 'Extraction', value: 'extraction', color: '#B3E1FF'},
-                    {text: 'Biology', value: 'biological', color: '#FFA9BF'},
                     {text: 'Technology', value: 'technological', color: '#DEFFC5'},
+                    {text: 'Organization', value: 'organizational', color: '#FFBF5B'},
+                    {text: 'Biology', value: 'biological', color: '#FFA9BF'},
+                    {text: 'Analysis', value: 'analytical', color: '#B3E1FF'},
                 ],
             }
         },

@@ -1,27 +1,27 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-        <v-img :src="require('./assets/geco_logo.png')" contain max-width="40px" max-height="40px"></v-img>
+        <v-img :src="require('./assets/virusurf_logo.png')" contain max-width="40px" max-height="40px"></v-img>
             <v-btn flat  @click="mainContent=true">
                 <v-toolbar-title class="headline" style = "text-transform: none !important;">
-                    <span>Geno</span>
+                    <span>Viru</span>
                     <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn flat href="http://gmql.eu" target="_blank">
+            <!--<v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
-            </v-btn>
+            </v-btn>-->
             <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
                 <span class="font-weight-light">doc</span></span>
             </v-btn>
-            <v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
-                    class="mr-2">Wiki</span></v-btn>
-            <v-btn flat href="https://www.youtube.com/watch?v=cjH0oXu3iyo&list=PLfWxoOMC6swIJ2Fzd9qQR-PVYfaP3C501" target="_blank"><span
-                    class="mr-2">Videos</span></v-btn>
-            <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/1/" target="_blank"><span
-                    class="mr-2">Survey</span></v-btn>
-            <v-btn flat href="/genosurf/repo_static/contact.html" target="_blank">
+            <!--<v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
+                    class="mr-2">Wiki</span></v-btn>-->
+            <!--<v-btn flat href="https://www.youtube.com/watch?v=cjH0oXu3iyo&list=PLfWxoOMC6swIJ2Fzd9qQR-PVYfaP3C501" target="_blank"><span
+                    class="mr-2">Videos</span></v-btn>-->
+            <!--<v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/1/" target="_blank"><span
+                    class="mr-2">Survey</span></v-btn>-->
+            <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
         </v-toolbar>
@@ -114,7 +114,7 @@
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
-                    <v-layout wrap align-center test style="background:#FFFFFF">
+                    <!--<v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs2 d-flex class="no-horizontal-padding">
                             <span class=label>Data search:</span>
                         </v-flex>
@@ -152,7 +152,7 @@
                                 </v-card>
                             </v-dialog>
                         </v-flex>
-                    </v-layout>
+                    </v-layout> -->
                     <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
@@ -287,7 +287,7 @@
                 selectedQuery: null,
                 queryItems: [
                     //{text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
-                    {
+                    /*{
                         text: 'Only ENCODE source',
                         value: {query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
                     },
@@ -440,6 +440,30 @@
                             }
                         }
                     },
+                    */
+                    {
+                        text: 'Example 1 - Sequences from GenBank that are complete',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    database_source: ["genbank"],
+                                    is_complete: [true]
+                                }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 2 - Sequences from Illumina with 100X coverage',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    sequencing_technology: ["illumina"],
+                                    coverage: ["100x"]
+                                }, "type": "original", "kv": {}
+                            }
+                        }
+                    },
+
                 ],
                 selectedTab: 0,
                 queryString: '',

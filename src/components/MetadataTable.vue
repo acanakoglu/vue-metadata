@@ -15,7 +15,7 @@
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
                     <v-flex m4 align-self-center>
-                        <v-dialog
+                       <!-- <v-dialog
                                 v-model="dialogGmql"
                         >
                             <v-btn dark
@@ -85,7 +85,7 @@
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
-                        </v-dialog>
+                        </v-dialog>-->
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
@@ -436,9 +436,46 @@
             ]),
             getHeaders(){
                 return [
-                    // {text: 'Extra', value: 'extra', sortable: false, show: true},
-                    // {text: 'Source', value: 'source', sortable: this.sortable, show: true},
+                    //sequence
                     {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
+                    {text: 'Strain', value: 'strain_name', sortable: this.sortable, show: true},
+                    {text: 'Reference', value: 'is_reference', sortable: this.sortable, show: true},
+                    {text: 'Complete', value: 'is_complete', sortable: this.sortable, show: true},
+                    {text: 'Strand', value: 'strand', sortable: this.sortable, show: true},
+                    {text: 'Length', value: 'length', sortable: this.sortable, show: true},
+                    {text: 'GC%', value: 'gc_percentage', sortable: this.sortable, show: true},
+                    //experiment_type
+                    {text: 'Seq. Technology', value: 'sequencing_technology', sortable: this.sortable, show: true},
+                    {text: 'Assembly Method', value: 'assembly_method', sortable: this.sortable, show: true},
+                    {text: 'Coverage', value: 'coverage', sortable: this.sortable, show: true},
+                    //sequencing_project
+                    {text: 'Seq. Lab', value: 'sequencing_lab', sortable: this.sortable, show: false},
+                    //{text: 'Submission date', value: 'submission_date', sortable: this.sortable, show: true},
+                    {text: 'BioProject', value: 'bioproject_id', sortable: this.sortable, show: true},
+                    {text: 'Database', value: 'database_source', sortable: this.sortable, show: true},
+                    //host_sample
+                    //{text: 'Species', value: 'species', sortable: this.sortable, show: true},
+                    //{text: 'Species TaxonID', value: 'species_taxon_id', sortable: this.sortable, show: false},
+                    //{text: 'Isolation source', value: 'isolation_source', sortable: this.sortable, show: true},
+                    //{text: 'Origin Lab', value: 'oritinating_lab', sortable: this.sortable, show: true},
+                    //{text: 'Country', value: 'country', sortable: this.sortable, show: true},
+                    //{text: 'Region', value: 'region', sortable: this.sortable, show: true},
+                    //{text: 'GeoGroup', value: 'geo_group', sortable: this.sortable, show: true},
+                    //virus
+                    //{text: 'Virus TaxonID', value: 'virus_taxonomy_id', sortable: this.sortable, show: true},
+                    //{text: 'Family', value: 'family', sortable: this.sortable, show: false},
+                    //{text: 'SubFamily', value: 'sub_family', sortable: this.sortable, show: false},
+                    //{text: 'Origin Lab', value: 'oritinating_lab', sortable: this.sortable, show: false},
+                    //{text: 'Genus', value: 'genus', sortable: this.sortable, show: false},
+                    //{text: 'Species', value: 'species_name', sortable: this.sortable, show: false},
+                    //{text: 'Species Taxon ID', value: 'species_taxon_id', sortable: this.sortable, show: false},
+                    //{text: 'GenBank name', value: 'genbank_acronym', sortable: this.sortable, show: true},
+                    //{text: 'Equivalent names', value: 'species_name', sortable: this.sortable, show: false},
+                    //{text: 'Molecule type', value: 'species_name', sortable: this.sortable, show: false},
+                    //{text: 'Single stranded', value: 'is_single_stranded', sortable: this.sortable, show: false},
+                    //{text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
+
+                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: false},
                 ];
             },
             resetHeadersOrder() {

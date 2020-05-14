@@ -10,5 +10,5 @@ module.exports = {
             },
         }
     },
-    baseUrl: '/genosurf/',
+    baseUrl: '/virusurf/',
 }
