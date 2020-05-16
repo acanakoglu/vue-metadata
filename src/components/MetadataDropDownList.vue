@@ -80,8 +80,7 @@
                 views: [
                     {text: 'Technology', value: ['technological'], color: '#DEFFC5'},
                     {text: 'Organization', value: ['organizational'], color: '#FFBF5B'},
-                    {text: 'Biology-virus', value: ['biological_v', 'biological_h'], color: '#FFA9BF'},
-                    // {text: 'Biology-host', value: [], color: '#FFA9BF'},
+                    {text: 'Biology', value: ['biological_v', 'biological_h'], color: '#FFA9BF'},
                     // {text: 'Analysis', value: 'analytical', color: '#B3E1FF'},
                 ],
             }
