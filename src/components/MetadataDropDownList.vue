@@ -78,10 +78,11 @@
                 //     {text: 'Case study', value: 'CaseStudy'},
                 // ],
                 views: [
-                    {text: 'Technology', value: 'technological', color: '#DEFFC5'},
-                    {text: 'Organization', value: 'organizational', color: '#FFBF5B'},
-                    {text: 'Biology', value: 'biological', color: '#FFA9BF'},
-                    {text: 'Analysis', value: 'analytical', color: '#B3E1FF'},
+                    {text: 'Technology', value: ['technological'], color: '#DEFFC5'},
+                    {text: 'Organization', value: ['organizational'], color: '#FFBF5B'},
+                    {text: 'Biology-virus', value: ['biological_v', 'biological_h'], color: '#FFA9BF'},
+                    // {text: 'Biology-host', value: [], color: '#FFA9BF'},
+                    // {text: 'Analysis', value: 'analytical', color: '#B3E1FF'},
                 ],
             }
         },
@@ -96,7 +97,7 @@
                     return "no-horizontal-padding xs12 sm6 md2 d-flex"
             },
             getViewFields(viewValue) {
-                return this.fields.filter(field => field.view === viewValue);
+                return this.fields.filter(field => viewValue.includes(field.view));
             },
             getFieldTitle: (field) => {
                 let upperField = field.name;
