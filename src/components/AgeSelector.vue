@@ -2,16 +2,16 @@
     <v-container fluid grid-list-xl class="mylay2">
          <v-layout class="container view">
             <v-flex md4 class="age-comp">
-                <v-text-field v-model="min" type="number" label="Min.age" :hint="minString" persistent-hint
+                <v-text-field v-model="min" type="number" label="Min years" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
             <v-flex md4 class="age-comp">
-                <v-text-field v-model="max" type="number" label="Max.age" :hint="maxString" persistent-hint
+                <v-text-field v-model="max" type="number" label="Max years" :hint="maxString" persistent-hint
                               :min="min" :max="maxInt" :disabled="searchDisabled">
                 </v-text-field>
             </v-flex>
-            <v-flex md4 class="age-comp">
+            <!--<v-flex md4 class="age-comp">
                 <v-select
                         v-model="unit"
                         :items="units"
@@ -19,7 +19,7 @@
                         :disabled="searchDisabled"
                 >
                 </v-select>
-            </v-flex>
+            </v-flex>-->
             <v-flex md2 class="age-comp">
                 <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D"></v-checkbox>
             </v-flex>
@@ -46,10 +46,10 @@
                 isNull: false,
                 unit: 1,
                 units: [
-                    {'text': 'Days', 'value': 1},
-                    {'text': 'Weeks', 'value': 7},
-                    {'text': 'Months', 'value': 30},
-                    {'text': 'Years', 'value': 365},
+                   // {'text': 'Days', 'value': 1},
+                  //  {'text': 'Weeks', 'value': 7},
+                  //  {'text': 'Months', 'value': 30},
+                    {'text': 'Years', 'value': 1},
                 ],
                 selectedAge: {},
             }
