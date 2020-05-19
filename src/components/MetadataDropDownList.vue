@@ -15,7 +15,7 @@
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
-                    <AgeSelector v-else></AgeSelector>
+                    <MetadataRangeSlider v-else></MetadataRangeSlider>
                     <v-dialog width="500">
                         <v-btn v-if="field.name==='age'"
                                slot="activator"
@@ -55,10 +55,11 @@
 <script>
     import MetadataDropDown from "./MetadataDropDown";
     import AgeSelector from "./AgeSelector";
+    import MetadataRangeSlider from "./MetadataRangeSlider";
 
     export default {
         name: "MetadataDropDownList",
-        components: {AgeSelector, MetadataDropDown},
+        components: {AgeSelector, MetadataDropDown,MetadataRangeSlider},
         // props: {
         //     field: {type: String, required: true,},// default: 100,
         // },
