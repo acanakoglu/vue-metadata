@@ -33,9 +33,15 @@
                 </v-flex>
                 <v-flex shrink style="width: 200px">
                     <v-layout row>
-                        <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D" @change="setAgeLocal"></v-checkbox>
-                      <!--  <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
-                        <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn> -->
+                        <v-checkbox
+                                v-model="isNull"
+                                :disabled="searchDisabled"
+                                label="N/D"
+                                @change="setAgeLocal"
+                                input-value="true">
+                        </v-checkbox>
+                        <!--  <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
+                          <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn> -->
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -101,8 +107,6 @@
                 let c = 0;
                 let b = 0;
 
-                console.log("****this.selectedMin= " + this.selectedMin + " ******");
-
                 if (this.selectedMin) {
                     c = this.selectedMin;
                 } else {
@@ -111,9 +115,8 @@
 
                 if (this.selectedMax) {
                     b = this.selectedMax;
-                }
-                else {
-                     b = null;
+                } else {
+                    b = null;
                 }
 
                 let a = {
@@ -156,17 +159,15 @@
                 return this.panelActive.length !== 0
             },
             ageItem() {
-                console.log("++++++++++this.min= " + this.min + "++++++++++++")
                 return this.compound_query.gcm.age
             },
             selectedMin() {
-                console.log("++++++++++this.min= " + this.min + "++++++++++++")
-                if (this.min)
-                    return this.min * this.unit
+                if (this.range[0])
+                    return this.range[0] * this.unit
             },
             selectedMax() {
-                if (this.max)
-                    return this.max * this.unit
+                if (this.range[1])
+                    return this.range[1] * this.unit
             },
             maxString() {
                 return Math.ceil((this.maxAge / this.unit)).toString();
