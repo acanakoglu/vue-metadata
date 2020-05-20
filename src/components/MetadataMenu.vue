@@ -1,53 +1,61 @@
 <template>
     <v-menu
-      :close-on-content-click="false"
-      :nudge-width="200"
-      v-model="menu"
-      offset-x
+            :close-on-content-click="false"
+            :nudge-width="200"
+            v-model="menu"
+            offset-y
     >
-      <v-btn slot="activator" color="white" >Menu as Popover</v-btn>
-      <v-card>
-        <v-list>
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <img src="/static/doc-images/john.jpg" alt="John">
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>John Leider</v-list-tile-title>
-              <v-list-tile-sub-title>Founder of Vuetify.js</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-btn
-                :class="fav ? 'red--text' : ''"
-                icon
-                @click="fav = !fav"
-              >
-                <v-icon>favorite</v-icon>
-              </v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-        </v-list>
-        <v-divider></v-divider>
-        <v-list>
-          <v-list-tile>
-            <v-list-tile-action>
-              <v-switch v-model="message" color="purple"></v-switch>
-            </v-list-tile-action>
-            <v-list-tile-title>Enable messages</v-list-tile-title>
-          </v-list-tile>
-          <v-list-tile>
-            <v-list-tile-action>
-              <v-switch v-model="hints" color="purple"></v-switch>
-            </v-list-tile-action>
-            <v-list-tile-title>Enable hints</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn flat @click="menu = false">Cancel</v-btn>
-          <v-btn color="primary" flat @click="menu = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-text-field slot="activator"
+                      id="testing"
+                      name="input-1"
+                      label="Label Text"
+                      v-model="textBoxValue"
+                      :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
+                      :disabled="menu"
+        ></v-text-field>
+
+        <v-card>
+            <v-list>
+                <v-list-tile avatar>
+                    <v-list-tile-avatar>
+                        <img src="/static/doc-images/john.jpg" alt="John">
+                    </v-list-tile-avatar>
+                    <v-list-tile-content>
+                        <v-list-tile-title>John Leider</v-list-tile-title>
+                        <v-list-tile-sub-title>Founder of Vuetify.js</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                        <v-btn
+                                :class="fav ? 'red--text' : ''"
+                                icon
+                                @click="fav = !fav"
+                        >
+                            <v-icon>favorite</v-icon>
+                        </v-btn>
+                    </v-list-tile-action>
+                </v-list-tile>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+                <v-list-tile>
+                    <v-list-tile-action>
+                        <v-switch v-model="message" color="purple"></v-switch>
+                    </v-list-tile-action>
+                    <v-list-tile-title>Enable messages</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile>
+                    <v-list-tile-action>
+                        <v-switch v-model="hints" color="purple"></v-switch>
+                    </v-list-tile-action>
+                    <v-list-tile-title>Enable hints</v-list-tile-title>
+                </v-list-tile>
+            </v-list>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat @click="menu = false">Cancel</v-btn>
+                <v-btn color="primary" flat @click="menu = false">Save</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-menu>
 </template>
 
@@ -58,11 +66,11 @@
         name: "MetadataMenu",
         data() {
             return {
-          //    TODO REMOVE
-          fav: true,
-          menu: false,
-          message: false,
-          hints: true,
+                menu: false,
+                //    TODO REMOVE
+                fav: true,
+                message: false,
+                hints: true,
 
                 min: null, //goes to query
                 max: null, //goes to query
@@ -162,6 +170,17 @@
             ...mapGetters({
                 compound_query: 'build_query',
             }),
+            //here we will calculate the value of textbox
+            textBoxValue() {
+                // if (this.fav || this.message || this.hints) {
+                let f = this.fav ? ' fav ' : '';
+                f += this.message ? ' message ' : '';
+                f += this.hints ? ' hints ' : '';
+                return f;
+                // }
+                // else
+                //   return null;
+            },
             searchDisabled() {
                 return this.panelActive.length !== 0
             },
