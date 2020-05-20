@@ -302,7 +302,8 @@
                 <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
-                        <span v-else>N/D</span>
+<!--                        <span v-else>N/D</span>-->
+                        <span v-else><a href="#TODO">link</a></span>
                     </span>
                     <span v-else-if="header.is_multi_link">
                         <span v-if="props.item[header.value]">
@@ -437,7 +438,7 @@
             getHeaders(){
                 return [
                     //sequence
-                    {text: 'Source Page', value: itemSourceIdName, sortable: this.sortable, show: true, is_link: true},
+                    {text: 'Source Page', value: itemSourceIdName + 'dummy', sortable: this.sortable, show: true, is_link: true},
                     {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
                     {text: 'Strain', value: 'strain_name', sortable: this.sortable, show: true},
                     {text: 'Reference', value: 'is_reference', sortable: this.sortable, show: true},

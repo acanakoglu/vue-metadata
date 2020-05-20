@@ -1,65 +1,69 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-card flat color="transparent">
-        <v-card-text>
-            <v-layout row class="myslider">
-                <v-header>Age</v-header>
-                <v-flex shrink style="width: 100px">
-                    <v-text-field
-                            v-model="range[0]"
-                            class="mt-0"
-                            hide-details
-                            single-line
-                            type="number"
-                    ></v-text-field>
-                </v-flex>
-                <v-flex> <!--min/max are the bounds of age slider segment-->
-                    <v-range-slider
-                            v-model="range"
-                            :min="minAge"
-                            :max="maxAge"
-                            :step="1"
-                            @end="setAgeLocal"
-                            @change="setAgeLocal"
-                            thumb-label="always"
-                            :thumb-size="24"
-
-                    ></v-range-slider>
-                </v-flex>
-                <v-flex shrink style="width: 110px">
-                    <v-text-field
-                            v-model="range[1]"
-                            class="mt-0"
-                            hide-details
-                            single-line
-                            type="number"
-                    ></v-text-field>
-                </v-flex>
-                <v-flex shrink style="width: 200px">
-                    <v-layout row>
-                        <v-checkbox
-                                v-model="isNull"
-                                :disabled="searchDisabled"
-                                label="N/D"
-                                @change="setAgeLocal"
-                                input-value="true">
-                        </v-checkbox>
-                        <!--  <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn> -->
-                          <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
-                    </v-layout>
-                </v-flex>
-            </v-layout>
-
-        </v-card-text>
-    </v-card>
+<template>
+    <v-menu
+      :close-on-content-click="false"
+      :nudge-width="200"
+      v-model="menu"
+      offset-x
+    >
+      <v-btn slot="activator" color="white" >Menu as Popover</v-btn>
+      <v-card>
+        <v-list>
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <img src="/static/doc-images/john.jpg" alt="John">
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>John Leider</v-list-tile-title>
+              <v-list-tile-sub-title>Founder of Vuetify.js</v-list-tile-sub-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn
+                :class="fav ? 'red--text' : ''"
+                icon
+                @click="fav = !fav"
+              >
+                <v-icon>favorite</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-switch v-model="message" color="purple"></v-switch>
+            </v-list-tile-action>
+            <v-list-tile-title>Enable messages</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-switch v-model="hints" color="purple"></v-switch>
+            </v-list-tile-action>
+            <v-list-tile-title>Enable hints</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click="menu = false">Cancel</v-btn>
+          <v-btn color="primary" flat @click="menu = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
 </template>
 
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: "AgeSelector",
+        name: "MetadataMenu",
         data() {
             return {
+          //    TODO REMOVE
+          fav: true,
+          menu: false,
+          message: false,
+          hints: true,
+
                 min: null, //goes to query
                 max: null, //goes to query
                 minAge: null, //resulting from range available on the currently selected dataset
