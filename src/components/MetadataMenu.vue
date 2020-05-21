@@ -15,42 +15,6 @@
         ></v-text-field>
 
         <v-card>
-            <!--<v-list>
-                <v-list-tile avatar>
-                    <v-list-tile-avatar>
-                        <img src="/static/doc-images/john.jpg" alt="John">
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                        <v-list-tile-title>John Leider</v-list-tile-title>
-                        <v-list-tile-sub-title>Founder of Vuetify.js</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                        <v-btn
-                                :class="fav ? 'red--text' : ''"
-                                icon
-                                @click="fav = !fav"
-                        >
-                            <v-icon>favorite</v-icon>
-                        </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-                <v-list-tile>
-                    <v-list-tile-action>
-                        <v-switch v-model="message" color="purple"></v-switch>
-                    </v-list-tile-action>
-                    <v-list-tile-title>Enable messages</v-list-tile-title>
-                </v-list-tile>
-                <v-list-tile>
-                    <v-list-tile-action>
-                        <v-switch v-model="hints" color="purple"></v-switch>
-                    </v-list-tile-action>
-                    <v-list-tile-title>Enable hints</v-list-tile-title>
-                </v-list-tile>
-            </v-list>
-            <v-divider></v-divider>-->
             <v-container fluid grid-list-xl class="mylay2">
                 <!--<v-layout class="container view">-->
                 <v-layout>
@@ -108,7 +72,7 @@
 
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
-    import AgeSelector from "./AgeSelector";
+    //import AgeSelector from "./AgeSelector";
 
     export default {
         name: "MetadataMenu",
@@ -116,15 +80,14 @@
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
         },
-        components: {AgeSelector},
+        //components: {AgeSelector},
         data() {
             return {
                 menu: false,
                 //    TODO REMOVE
-                fav: true,
-                message: false,
-                hints: true,
-
+                //fav: true,
+                //message: false,
+                //hints: true,
                 min: null, //goes to query
                 max: null, //goes to query
                 minAge: null, //resulting from range available on the currently selected dataset
@@ -141,16 +104,16 @@
             }
         },
         methods: {
-            ...mapActions(["setAge", "deleteAge"]),
+            ...mapActions(["setNumerical", "deleteNumerical"]),
             deleteAgeLocal() {
-                this.deleteAge();
+                this.deleteNumerical();
                 this.min = null;
                 this.unit = 1;
                 this.max = null;
                 this.isNull = false;
             },
             loadMinMaxAge() {
-                const url = `field/age`;
+                const url = `field/numerical/${this.field}`;
 
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
@@ -174,7 +137,6 @@
                     });
             },
             setAgeLocal() {
-                console.log('*****IMHERE***')
                 let c = 0;
                 let b = 0;
 
@@ -189,14 +151,15 @@
                 } else {
                     b = null;
                 }
-                console.log('*****C***' + c)
                 let a = {
                     'min_age': c,
                     'max_age': b,
                     'is_null': this.isNull
                 };
 
-                this.setAge(a)
+                let p = {'field': this.field, 'setting_a': a}
+
+                this.setNumerical(p)
             },
         },
         mounted() {
@@ -245,7 +208,7 @@
                 return this.panelActive.length !== 0
             },
             ageItem() {
-                return this.compound_query.gcm.age
+                return this.compound_query.gcm[this.field]
             },
             selectedMin() {
                 if (this.min)

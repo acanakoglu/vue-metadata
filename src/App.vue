@@ -607,7 +607,7 @@
             queryToShow() {
                 let a = [];
                 for (let i in this.compound_query['gcm']) {
-                    if (i === 'age') {
+                    if (i === 'age' || i === 'length') {
                         a.push(i + ": {min_age: " + this.compound_query['gcm'][i]['min_age'] + ", max_age: " + this.compound_query['gcm'][i]['max_age'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
                     } else {
                         let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";

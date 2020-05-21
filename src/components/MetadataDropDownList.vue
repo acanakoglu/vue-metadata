@@ -11,23 +11,23 @@
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
                     <MetadataDropDown
-                            v-if="field.name!=='age'"
+                            v-if="field.name!=='age' && field.name!=='length'"
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
                     <MetadataMenu v-else
-                        :field="field.name"
-                        :labelTitle="getFieldTitle(field)"
+                                  :field="field.name"
+                                  :labelTitle="getFieldTitle(field)"
                     ></MetadataMenu>
                     <v-dialog width="500">
-                        <v-btn v-if="field.name==='age'"
+                        <!--<v-btn v-if="field.name==='age'"
                                slot="activator"
                                class="info-button"
                                small
                                flat icon color="blue" style="margin-top: -30px; margin-left: -0.4em;">
                             <v-icon class="info-icon">info</v-icon>
-                        </v-btn>
-                        <v-btn v-else
+                        </v-btn>-->
+                        <v-btn
                                slot="activator"
                                class="info-button"
                                small
@@ -94,7 +94,8 @@
             // getGroupFields(groupValue) {
             //     return this.fields.filter(field => field.group === groupValue);
             // },
-            getClass(field) {
+            //getClass(field) {
+            getClass() {
                 // if (field === 'age')
                 //     return "no-horizontal-padding xs12 sm12 md6 d-flex";
                 // else

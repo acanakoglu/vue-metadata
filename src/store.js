@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        query:  {},
+        query: {},
         synonym: false,
         kv: {},
         type: 'original',
@@ -127,14 +127,25 @@ export default new Vuex.Store({
                 state.kv = payload;
             commit('reloadKv')
         },
-        setAge({commit, state}, age_item) {
+        /*setAge({commit, state}, age_item) {
             state.query['age'] = age_item;
             commit('reloadQuery')
         },
         deleteAge({commit}) {
             commit('resetQueryField', 'age');
             commit('reloadQuery')
+        },*/
+
+        setNumerical({commit, state}, payload) {
+            const field = payload.field;
+            state.query[field] = payload.setting_a;
+            commit('reloadQuery')
         },
+        deleteNumerical({commit}, payload) {
+            commit('resetQueryField', payload.field);
+            commit('reloadQuery')
+        },
+
         setDropDownSelected({commit, state}, payload) {
             const field = payload.field;
 
