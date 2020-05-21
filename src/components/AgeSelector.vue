@@ -1,6 +1,7 @@
 <template>
     <v-container fluid grid-list-xl class="mylay2">
-         <v-layout class="container view">
+         <!--<v-layout class="container view">-->
+        <v-layout>
             <v-flex md4 class="age-comp">
                 <v-text-field v-model="min" type="number" label="Min years" :hint="minString" persistent-hint
                               :min="minInt" :max="max" :disabled="searchDisabled">
@@ -21,12 +22,17 @@
                 </v-select>
             </v-flex>-->
             <v-flex md2 class="age-comp">
-                <v-checkbox v-model="isNull" :disabled="searchDisabled" label="N/D"></v-checkbox>
+                <v-checkbox v-model="isNull"
+                            :disabled="searchDisabled"
+                            label="N/D"
+                            input-value="true">
+                </v-checkbox>
             </v-flex>
-            <v-flex md3 class="age-comp">
+
+            <!--<v-flex md3 class="age-comp">
                 <v-btn tiny @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
                 <v-btn small @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
-            </v-flex>
+            </v-flex>-->
 
         </v-layout>
     </v-container>
@@ -39,6 +45,7 @@
         name: "AgeSelector",
         data() {
             return {
+
                 min: null,
                 max: null,
                 minAge: null,
@@ -46,9 +53,9 @@
                 isNull: false,
                 unit: 1,
                 units: [
-                   // {'text': 'Days', 'value': 1},
-                  //  {'text': 'Weeks', 'value': 7},
-                  //  {'text': 'Months', 'value': 30},
+                    // {'text': 'Days', 'value': 1},
+                    //  {'text': 'Weeks', 'value': 7},
+                    //  {'text': 'Months', 'value': 30},
                     {'text': 'Years', 'value': 1},
                 ],
                 selectedAge: {},
@@ -76,11 +83,11 @@
                         this.minAge = res['min_age'];
                         this.maxAge = res['max_age'];
                         if (this.ageItem) {
-                            if(this.ageItem['min_age'] != null) {
+                            if (this.ageItem['min_age'] != null) {
                                 this.min = this.ageItem['min_age'] / this.unit;
                             }
                             this.isNull = this.ageItem['is_null'];
-                            if(this.ageItem['max_age'] != null) {
+                            if (this.ageItem['max_age'] != null) {
                                 this.max = this.ageItem['max_age'] / this.unit;
                             }
                         }
@@ -199,11 +206,13 @@
     }
 
     .mylay2 {
-        margin-left: -12px;
-        padding-right: 0px!important;
+        margin-left: 20px;
+        margin-right: -80px;
+        padding-right: 0px !important;
     }
-    .age-comp{
-        padding-top: 0px!important;
-        padding-bottom: 0px!important;
+
+    .age-comp {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
     }
 </style>

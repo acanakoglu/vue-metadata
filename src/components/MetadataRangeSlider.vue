@@ -57,7 +57,7 @@
     import {mapState, mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: "AgeSelector",
+        name: "MetadataRangeSlider",
         data() {
             return {
                 min: null, //goes to query

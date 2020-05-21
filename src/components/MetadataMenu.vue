@@ -8,14 +8,14 @@
         <v-text-field slot="activator"
                       id="testing"
                       name="input-1"
-                      label="Label Text"
+                      :label="labelTitle"
                       v-model="textBoxValue"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
                       :disabled="menu"
         ></v-text-field>
 
         <v-card>
-            <v-list>
+            <!--<v-list>
                 <v-list-tile avatar>
                     <v-list-tile-avatar>
                         <img src="/static/doc-images/john.jpg" alt="John">
@@ -50,10 +50,57 @@
                     <v-list-tile-title>Enable hints</v-list-tile-title>
                 </v-list-tile>
             </v-list>
+            <v-divider></v-divider>-->
+            <v-container fluid grid-list-xl class="mylay2">
+                <!--<v-layout class="container view">-->
+                <v-layout>
+                    <v-flex md4 class="age-comp">
+                        <v-text-field v-model="min" type="number" label="Min years" :hint="minString" persistent-hint
+                                      :min="minInt" :max="max" :disabled="searchDisabled">
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex md4 class="age-comp">
+                        <v-text-field v-model="max" type="number" label="Max years" :hint="maxString" persistent-hint
+                                      :min="min" :max="maxInt" :disabled="searchDisabled">
+                        </v-text-field>
+                    </v-flex>
+                    <!--<v-flex md4 class="age-comp">
+                        <v-select
+                                v-model="unit"
+                                :items="units"
+                                label="Age unit"
+                                :disabled="searchDisabled"
+                        >
+                        </v-select>
+                    </v-flex>-->
+                    <v-flex md2 class="age-comp">
+                        <v-checkbox v-model="isNull"
+                                    :disabled="searchDisabled"
+                                    label="N/D"
+                                    input-value="true">
+                        </v-checkbox>
+                    </v-flex>
+
+                    <!--<v-flex md3 class="age-comp">
+                        <v-btn tiny @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
+                        <v-btn small @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
+                    </v-flex>-->
+
+                </v-layout>
+            </v-container>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="menu = false">Cancel</v-btn>
-                <v-btn color="primary" flat @click="menu = false">Save</v-btn>
+                <v-btn
+                        color="primary"
+                        flat
+                        @click="setAgeLocal();menu=false;">
+                    Apply
+                </v-btn>
+                <v-btn
+                        flat
+                        @click="deleteAgeLocal();menu=false;">
+                    Clear
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-menu>
@@ -61,9 +108,15 @@
 
 <script>
     import {mapState, mapGetters, mapActions} from 'vuex';
+    import AgeSelector from "./AgeSelector";
 
     export default {
         name: "MetadataMenu",
+        props: {
+            labelTitle: {type: String, required: true,},
+            field: {type: String, required: true,},
+        },
+        components: {AgeSelector},
         data() {
             return {
                 menu: false,
@@ -76,10 +129,12 @@
                 max: null, //goes to query
                 minAge: null, //resulting from range available on the currently selected dataset
                 maxAge: null,
-                range: [40, 60],
                 isNull: false,
                 unit: 1,
                 units: [
+                    // {'text': 'Days', 'value': 1},
+                    //  {'text': 'Weeks', 'value': 7},
+                    //  {'text': 'Months', 'value': 30},
                     {'text': 'Years', 'value': 1},
                 ],
                 selectedAge: {},
@@ -119,6 +174,7 @@
                     });
             },
             setAgeLocal() {
+                console.log('*****IMHERE***')
                 let c = 0;
                 let b = 0;
 
@@ -133,7 +189,7 @@
                 } else {
                     b = null;
                 }
-
+                console.log('*****C***' + c)
                 let a = {
                     'min_age': c,
                     'max_age': b,
@@ -173,9 +229,13 @@
             //here we will calculate the value of textbox
             textBoxValue() {
                 // if (this.fav || this.message || this.hints) {
-                let f = this.fav ? ' fav ' : '';
-                f += this.message ? ' message ' : '';
-                f += this.hints ? ' hints ' : '';
+                //let f = this.fav ? ' fav ' : '';
+                //f += this.message ? ' message ' : '';
+                //f += this.hints ? ' hints ' : '';
+                let f = this.min ? ' min: ' + this.min + '; ': '';
+                f += this.max ? ' max: ' + this.max : '';
+                f += this.max && this.isNull ? '; ' : '';
+                f += this.isNull ? ' N/D ' : '';
                 return f;
                 // }
                 // else
@@ -188,12 +248,12 @@
                 return this.compound_query.gcm.age
             },
             selectedMin() {
-                if (this.range[0])
-                    return this.range[0] * this.unit
+                if (this.min)
+                    return this.min * this.unit
             },
             selectedMax() {
-                if (this.range[1])
-                    return this.range[1] * this.unit
+                if (this.max)
+                    return this.max * this.unit
             },
             maxString() {
                 return Math.ceil((this.maxAge / this.unit)).toString();
@@ -214,9 +274,9 @@
 
 <style scoped>
 
-    .myslider {
-        transform: scale(0.8);
-        transform-origin: left;
+    .mylay2 {
+        margin-left: 20px;
+        margin-right: -80px;
+        padding-right: 0px !important;
     }
-
 </style>

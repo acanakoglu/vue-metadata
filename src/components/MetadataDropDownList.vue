@@ -15,7 +15,10 @@
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
-                    <MetadataMenu v-else></MetadataMenu>
+                    <MetadataMenu v-else
+                        :field="field.name"
+                        :labelTitle="getFieldTitle(field)"
+                    ></MetadataMenu>
                     <v-dialog width="500">
                         <v-btn v-if="field.name==='age'"
                                slot="activator"
@@ -60,7 +63,7 @@
 
     export default {
         name: "MetadataDropDownList",
-        components: {AgeSelector, MetadataDropDown,MetadataRangeSlider, MetadataMenu},
+        components: {AgeSelector, MetadataDropDown, MetadataRangeSlider, MetadataMenu},
         // props: {
         //     field: {type: String, required: true,},// default: 100,
         // },
@@ -95,7 +98,7 @@
                 // if (field === 'age')
                 //     return "no-horizontal-padding xs12 sm12 md6 d-flex";
                 // else
-                    return "no-horizontal-padding xs12 sm6 md2 d-flex"
+                return "no-horizontal-padding xs12 sm6 md2 d-flex"
             },
             getViewFields(viewValue) {
                 return this.fields.filter(field => field.view === viewValue);
