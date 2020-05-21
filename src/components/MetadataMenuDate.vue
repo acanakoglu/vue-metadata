@@ -20,43 +20,10 @@
             <v-card-title>
                 <h4 class="headline mb-0">{{labelTitle}}</h4>
             </v-card-title>
-            <v-container fluid grid-list-xl class="mylay2">
-                <!--<v-layout class="container view">-->
-                <v-layout>
-                    <v-flex md4 class="age-comp">
-                        <v-text-field v-model="min" type="number" label="Min value" :hint="minString" persistent-hint
-                                      :min="minInt" :max="max" :disabled="searchDisabled">
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex md4 class="age-comp">
-                        <v-text-field v-model="max" type="number" label="Max value" :hint="maxString" persistent-hint
-                                      :min="min" :max="maxInt" :disabled="searchDisabled">
-                        </v-text-field>
-                    </v-flex>
-                    <!--<v-flex md4 class="age-comp">
-                        <v-select
-                                v-model="unit"
-                                :items="units"
-                                label="Age unit"
-                                :disabled="searchDisabled"
-                        >
-                        </v-select>
-                    </v-flex>-->
-                    <v-flex md2 class="age-comp">
-                        <v-checkbox v-model="isNull"
-                                    :disabled="searchDisabled"
-                                    label="N/D"
-                                    input-value="true">
-                        </v-checkbox>
-                    </v-flex>
-
-                    <!--<v-flex md3 class="age-comp">
-                        <v-btn tiny @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn>
-                        <v-btn small @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
-                    </v-flex>-->
-
-                </v-layout>
-            </v-container>
+            <v-date-picker v-model="picker" :landscape="landscape" type="month" color="grey" no-title
+                           show-current></v-date-picker>
+            <v-date-picker v-model="picker" :landscape="landscape" type="month" color="grey" no-title
+                           show-current></v-date-picker>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -92,13 +59,15 @@
     import {mapState, mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: "MetadataMenu",
+        name: "MetadataMenuDate",
         props: {
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
         },
         data() {
             return {
+                picker: null,
+                landscape: false,
                 menu: false,
                 min: null, //goes to query
                 max: null, //goes to query
@@ -116,9 +85,9 @@
             }
         },
         methods: {
-            ...mapActions(["setNumerical", "deleteNumerical"]),
+            ...mapActions(["setDate", "deleteDate"]),
             deleteAgeLocal() {
-                this.deleteNumerical(this.field);
+                this.deleteDate(this.field);
                 this.min = null;
                 this.unit = 1;
                 this.max = null;
@@ -133,17 +102,17 @@
                         return res.data
                     })
                     .then((res) => {
-                        this.minAge = res['min_val'];
+                        this.minAge = res['min_date'];
 
-                        this.maxAge = res['max_val'];
+                        this.maxAge = res['max_date'];
 
                         if (this.ageItem) {
-                            if (this.ageItem['min_val'] != null) {
-                                this.min = this.ageItem['min_val'] / this.unit;
+                            if (this.ageItem['min_date'] != null) {
+                                this.min = this.ageItem['min_date'] / this.unit;
                             }
                             this.isNull = this.ageItem['is_null'];
-                            if (this.ageItem['max_val'] != null) {
-                                this.max = this.ageItem['max_val'] / this.unit;
+                            if (this.ageItem['max_date'] != null) {
+                                this.max = this.ageItem['max_date'] / this.unit;
                             }
                         }
                     });
@@ -164,14 +133,14 @@
                     b = null;
                 }
                 let a = {
-                    'min_val': c,
-                    'max_val': b,
+                    'min_date': c,
+                    'max_date': b,
                     'is_null': this.isNull
                 };
 
                 let p = {'field': this.field, 'setting_a': a}
 
-                this.setNumerical(p)
+                this.setDate(p)
             },
         },
         mounted() {

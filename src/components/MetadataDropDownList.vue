@@ -10,15 +10,21 @@
                 <v-flex :class="getClass(field.name)"
                         v-for="field in getViewFields(view.value)"
                         :key="field.name">
+                    <MetadataMenu
+                            v-if="field.is_numerical"
+                            :field="field.name"
+                            :labelTitle="getFieldTitle(field)"
+                    ></MetadataMenu>
+                    <MetadataMenuDate
+                            v-if="field.is_date"
+                            :field="field.name"
+                            :labelTitle="getFieldTitle(field)"
+                    ></MetadataMenuDate>
                     <MetadataDropDown
-                            v-if="field.name!=='age' && field.name!=='length'"
+                            v-if="!field.is_date && !field.is_numerical"
                             :field="field.name"
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
-                    <MetadataMenu v-else
-                                  :field="field.name"
-                                  :labelTitle="getFieldTitle(field)"
-                    ></MetadataMenu>
                     <v-dialog width="500">
                         <!--<v-btn v-if="field.name==='age'"
                                slot="activator"
@@ -28,10 +34,10 @@
                             <v-icon class="info-icon">info</v-icon>
                         </v-btn>-->
                         <v-btn
-                               slot="activator"
-                               class="info-button"
-                               small
-                               flat icon color="blue">
+                                slot="activator"
+                                class="info-button"
+                                small
+                                flat icon color="blue">
                             <v-icon class="info-icon">info</v-icon>
                         </v-btn>
                         <v-card>
@@ -57,13 +63,12 @@
 
 <script>
     import MetadataDropDown from "./MetadataDropDown";
-    import AgeSelector from "./AgeSelector";
-    import MetadataRangeSlider from "./MetadataRangeSlider";
     import MetadataMenu from "./MetadataMenu";
+    import MetadataMenuDate from "./MetadataMenuDate";
 
     export default {
         name: "MetadataDropDownList",
-        components: {AgeSelector, MetadataDropDown, MetadataRangeSlider, MetadataMenu},
+        components: {MetadataDropDown, MetadataMenu, MetadataMenuDate},
         // props: {
         //     field: {type: String, required: true,},// default: 100,
         // },

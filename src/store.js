@@ -141,7 +141,19 @@ export default new Vuex.Store({
             state.query[field] = payload.setting_a;
             commit('reloadQuery')
         },
+
         deleteNumerical({commit}, field) {
+            commit('resetQueryField', field);
+            commit('reloadQuery')
+        },
+
+        setDate({commit, state}, payload) {
+            const field = payload.field;
+            state.query[field] = payload.setting_a;
+            commit('reloadQuery')
+        },
+
+        deleteDate({commit}, field) {
             commit('resetQueryField', field);
             commit('reloadQuery')
         },
