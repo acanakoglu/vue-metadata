@@ -61,6 +61,7 @@
                     Apply
                 </v-btn>
                 <v-btn
+                        color="error"
                         flat
                         @click="deleteAgeLocal();menu=false;">
                     Clear
@@ -106,7 +107,7 @@
         methods: {
             ...mapActions(["setNumerical", "deleteNumerical"]),
             deleteAgeLocal() {
-                this.deleteNumerical();
+                this.deleteNumerical(this.field);
                 this.min = null;
                 this.unit = 1;
                 this.max = null;
@@ -191,18 +192,12 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                // if (this.fav || this.message || this.hints) {
-                //let f = this.fav ? ' fav ' : '';
-                //f += this.message ? ' message ' : '';
-                //f += this.hints ? ' hints ' : '';
-                let f = this.min ? ' min: ' + this.min + '; ': '';
+                let f = this.min ? ' min: ' + this.min : '';
+                f += this.min && this.max ? '; ' : '';
                 f += this.max ? ' max: ' + this.max : '';
                 f += this.max && this.isNull ? '; ' : '';
                 f += this.isNull ? ' N/D ' : '';
                 return f;
-                // }
-                // else
-                //   return null;
             },
             searchDisabled() {
                 return this.panelActive.length !== 0
