@@ -1,17 +1,16 @@
 <template>
     <v-menu
-            :close-on-click="false"
+            :close-on-click="true"
             :close-on-content-click="false"
             :nudge-width="200"
             v-model="menu"
             offset-y
-            dark
     >
         <v-text-field slot="activator"
                       id="testing"
                       name="input-1"
                       :label="labelTitle"
-                      v-model="textBoxValue"
+                      v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
                       :disabled="menu"
         ></v-text-field>
@@ -73,16 +72,16 @@
                         outline
                         @click="deleteAgeLocal();menu=false;">
                     Clear
-                    <v-icon dark right>remove_circle</v-icon>
+                    <v-icon dark right>block</v-icon>
                 </v-btn>
-                <v-btn
-                        color="white"
+                <!--<v-btn
+                        color="grey"
                         flat
                         outline
                         @click="menu=false;">
                     Close
                     <v-icon dark right>remove_circle</v-icon>
-                </v-btn>
+                </v-btn>-->
             </v-card-actions>
         </v-card>
     </v-menu>
@@ -100,6 +99,7 @@
         data() {
             return {
                 menu: false,
+                shown_value: null,
                 min: null, //goes to query
                 max: null, //goes to query
                 minAge: null, //resulting from range available on the currently selected dataset
@@ -123,6 +123,7 @@
                 this.unit = 1;
                 this.max = null;
                 this.isNull = false;
+                this.shown_value = null;
             },
             loadMinMaxAge() {
                 const url = `field/numerical/${this.field}`;
@@ -171,7 +172,8 @@
 
                 let p = {'field': this.field, 'setting_a': a}
 
-                this.setNumerical(p)
+                this.setNumerical(p);
+                this.shown_value = this.textBoxValue;
             },
         },
         mounted() {

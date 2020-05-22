@@ -5,7 +5,6 @@
             :nudge-width="200"
             v-model="menu"
             offset-y
-            dark
     >
         <v-text-field slot="activator"
                       id="testing"
@@ -20,11 +19,11 @@
             <v-card-title>
                 <h4 class="headline mb-0">{{labelTitle}}</h4>
             </v-card-title>
-            <v-date-picker v-model="picker" :landscape="landscape" type="month" color="grey" no-title
+            <v-date-picker v-model="min" :landscape="landscape" type="month" color="grey" no-title
                            show-current></v-date-picker>
-            <v-date-picker v-model="picker" :landscape="landscape" type="month" color="grey" no-title
+            <v-date-picker v-model="max" :landscape="landscape" type="month" color="grey" no-title
                            show-current></v-date-picker>
-            <v-card-actions>
+                        <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
                         color="blue"
@@ -40,10 +39,10 @@
                         outline
                         @click="deleteAgeLocal();menu=false;">
                     Clear
-                    <v-icon dark right>remove_circle</v-icon>
+                    <v-icon dark right>block</v-icon>
                 </v-btn>
                 <v-btn
-                        color="white"
+                        color="grey"
                         flat
                         outline
                         @click="menu=false;">
@@ -66,6 +65,7 @@
         },
         data() {
             return {
+                anna: null,
                 picker: null,
                 landscape: false,
                 menu: false,
@@ -102,17 +102,17 @@
                         return res.data
                     })
                     .then((res) => {
-                        this.minAge = res['min_date'];
+                        this.minAge = res['min_val'];
 
-                        this.maxAge = res['max_date'];
+                        this.maxAge = res['max_val'];
 
                         if (this.ageItem) {
-                            if (this.ageItem['min_date'] != null) {
-                                this.min = this.ageItem['min_date'] / this.unit;
+                            if (this.ageItem['min_val'] != null) {
+                                this.min = this.ageItem['min_val'] / this.unit;
                             }
                             this.isNull = this.ageItem['is_null'];
-                            if (this.ageItem['max_date'] != null) {
-                                this.max = this.ageItem['max_date'] / this.unit;
+                            if (this.ageItem['max_val'] != null) {
+                                this.max = this.ageItem['max_val'] / this.unit;
                             }
                         }
                     });
@@ -133,8 +133,8 @@
                     b = null;
                 }
                 let a = {
-                    'min_date': c,
-                    'max_date': b,
+                    'min_val': c,
+                    'max_val': b,
                     'is_null': this.isNull
                 };
 
@@ -172,11 +172,8 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                let f = this.min ? ' min: ' + this.min : '';
-                f += (this.min && this.max) || (this.min && this.isNull) ? '; ' : '';
-                f += this.max ? ' max: ' + this.max : '';
-                f += this.max && this.isNull ? '; ' : '';
-                f += this.isNull ? ' N/D ' : '';
+                let f = this.min ? ' from ' + this.min : '';
+                f += this.max ? ' until ' + this.max : '';
                 return f;
             },
             searchDisabled() {

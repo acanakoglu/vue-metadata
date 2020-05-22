@@ -26,13 +26,6 @@
                             :labelTitle="getFieldTitle(field)"
                     ></MetadataDropDown>
                     <v-dialog width="500">
-                        <!--<v-btn v-if="field.name==='age'"
-                               slot="activator"
-                               class="info-button"
-                               small
-                               flat icon color="blue" style="margin-top: -30px; margin-left: -0.4em;">
-                            <v-icon class="info-icon">info</v-icon>
-                        </v-btn>-->
                         <v-btn
                                 slot="activator"
                                 class="info-button"

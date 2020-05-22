@@ -15,6 +15,7 @@ export default new Vuex.Store({
         showGraphQuery: false,
         keys: [],
         panelActive: [],
+        numerical: new Set(),
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -139,6 +140,7 @@ export default new Vuex.Store({
         setNumerical({commit, state}, payload) {
             const field = payload.field;
             state.query[field] = payload.setting_a;
+            state.numerical.add(field);
             commit('reloadQuery')
         },
 
@@ -150,6 +152,7 @@ export default new Vuex.Store({
         setDate({commit, state}, payload) {
             const field = payload.field;
             state.query[field] = payload.setting_a;
+            state.numerical.add(field);
             commit('reloadQuery')
         },
 

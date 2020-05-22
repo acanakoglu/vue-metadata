@@ -587,7 +587,7 @@
             }
         },
         computed: {
-            ...mapState(['query', 'synonym', 'count', 'type', "panelActive"]),
+            ...mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical']),
             ...mapGetters({
                 compound_query: 'build_query',
 
@@ -607,10 +607,8 @@
             queryToShow() {
                 let a = [];
                 for (let i in this.compound_query['gcm']) {
-                    if (i === 'age' || i === 'length' || i === 'gc_percentage') {
+                    if (this.numerical.has(i)){
                         a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
-                    } else if (i === 'submission_date' || i === 'collection_date') {
-                        a.push(i + ": {min_date: " + this.compound_query['gcm'][i]['min_date'] + ", max_date: " + this.compound_query['gcm'][i]['max_date'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
                     } else {
                         let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
                         // b.replace("''","'N/D")
