@@ -170,6 +170,8 @@
                     'is_null': this.isNull
                 };
 
+                console.log(a)
+
                 let p = {'field': this.field, 'setting_a': a}
 
                 this.setNumerical(p);
