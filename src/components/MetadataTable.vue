@@ -460,6 +460,7 @@
                     {text: 'Host Species TaxonID', value: 'host_taxon_id', sortable: this.sortable, show: false},
                     {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Host Age', value: 'age', sortable: this.sortable, show: true},
+                    {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
                     {text: 'Isolation source', value: 'isolation_source', sortable: this.sortable, show: true},
                     {text: 'Origin Lab', value: 'originating_lab', sortable: this.sortable, show: false},
                     {text: 'Country', value: 'country', sortable: this.sortable, show: true},

@@ -170,8 +170,6 @@
                     'is_null': this.isNull
                 };
 
-                console.log(a)
-
                 let p = {'field': this.field, 'setting_a': a}
 
                 this.setNumerical(p);
@@ -221,6 +219,7 @@
                 return this.compound_query.gcm[this.field]
             },
             selectedMin() {
+
                 if (this.min)
                     return this.min * this.unit
             },

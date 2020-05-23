@@ -17,14 +17,28 @@
 
         <v-card>
             <v-card-title>
-                <h4 class="headline mb-0">{{labelTitle}}</h4>
+                <h4 class="headline mb-0">{{labelTitle}} interval</h4>
+
             </v-card-title>
-            <v-date-picker v-model="min" :landscape="landscape" type="month" color="grey" no-title
-                           show-current></v-date-picker>
-            <v-date-picker v-model="max" :landscape="landscape" type="month" color="grey" no-title
-                           show-current></v-date-picker>
-                        <v-card-actions>
+            <v-layout row wrap>
+                <v-flex xs12 sm6>
+                    <!--<v-subheader>From date</v-subheader>-->
+                    <v-date-picker v-model="min" :landscape="landscape" show-current no-title></v-date-picker>
+                </v-flex>
+                <v-flex xs12 sm6 class="hidden-xs-only">
+                    <!--<v-subheader>To date</v-subheader>-->
+                    <v-date-picker v-model="max" :landscape="landscape" show-current no-title></v-date-picker>
+                </v-flex>
+            </v-layout>
+            <v-card-actions>
                 <v-spacer></v-spacer>
+                 <v-flex md2 class="age-comp">
+                        <v-checkbox v-model="isNull"
+                                    :disabled="searchDisabled"
+                                    label="N/D"
+                                    input-value="true">
+                        </v-checkbox>
+                    </v-flex>
                 <v-btn
                         color="blue"
                         flat
@@ -73,13 +87,6 @@
                 minAge: null, //resulting from range available on the currently selected dataset
                 maxAge: null,
                 isNull: false,
-                unit: 1,
-                units: [
-                    // {'text': 'Days', 'value': 1},
-                    //  {'text': 'Weeks', 'value': 7},
-                    //  {'text': 'Months', 'value': 30},
-                    {'text': 'Years', 'value': 1},
-                ],
                 selectedAge: {},
             }
         },
@@ -88,7 +95,6 @@
             deleteAgeLocal() {
                 this.deleteDate(this.field);
                 this.min = null;
-                this.unit = 1;
                 this.max = null;
                 this.isNull = false;
                 this.shown_value = null;
@@ -108,11 +114,11 @@
 
                         if (this.ageItem) {
                             if (this.ageItem['min_val'] != null) {
-                                this.min = this.ageItem['min_val'] / this.unit;
+                                this.min = this.ageItem['min_val'];
                             }
                             this.isNull = this.ageItem['is_null'];
                             if (this.ageItem['max_val'] != null) {
-                                this.max = this.ageItem['max_val'] / this.unit;
+                                this.max = this.ageItem['max_val'];
                             }
                         }
                     });
@@ -138,8 +144,6 @@
                     'is_null': this.isNull
                 };
 
-                console.log(a)
-
                 let p = {'field': this.field, 'setting_a': a}
 
                 this.setDate(p)
@@ -157,16 +161,15 @@
                 if (!this.ageItem) {
                     this.min = null;
                     this.max = null;
-                    this.unit = 1;
                     this.isNull = false;
                 }
             },
-            unit(newVal, oldVal) {
+            /*unit(newVal, oldVal) {
                 if (this.min !== null)
                     this.min = Math.floor(this.min * oldVal / newVal);
                 if (this.max !== null)
                     this.max = Math.ceil(this.max * oldVal / newVal);
-            }
+            }*/
         },
         computed: {
             ...mapState(["panelActive"]),
@@ -175,8 +178,9 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                let f = this.min ? ' from ' + this.min : '';
-                f += this.max ? ' until ' + this.max : '';
+                let f = this.min ? this.min + ' < ' : '';
+                f += this.min || this.max ? 'date' : '';
+                f += this.max ? ' < ' + this.max : '';
                 return f;
             },
             searchDisabled() {
@@ -187,23 +191,23 @@
             },
             selectedMin() {
                 if (this.min)
-                    return this.min * this.unit
+                    return this.min
             },
             selectedMax() {
                 if (this.max)
-                    return this.max * this.unit
+                    return this.max
             },
             maxString() {
-                return Math.ceil((this.maxAge / this.unit)).toString();
+                return Math.ceil(this.maxAge).toString();
             },
             minString() {
-                return Math.floor((this.minAge / this.unit)).toString();
+                return Math.floor(this.minAge).toString();
             },
             maxInt() {
-                return Math.ceil((this.maxAge / this.unit))
+                return Math.ceil(this.maxAge)
             },
             minInt() {
-                return Math.floor((this.minAge / this.unit))
+                return Math.floor(this.minAge)
             },
         }
     }
