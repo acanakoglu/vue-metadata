@@ -168,7 +168,7 @@
                 </v-container>
 
                 <FullScreenViewer/>
-                <PairQuery/>
+<!--                <PairQuery/>-->
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
 <!--                        <v-tab>-->
