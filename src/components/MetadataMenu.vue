@@ -195,13 +195,13 @@
                 }
             },
             min(){
-                this.shown_value = 'hello' + this.textBoxValue;
+                this.shown_value = this.textBoxValue;
             },
             max(){
-                this.shown_value = 'hello' + this.textBoxValue;
+                this.shown_value = this.textBoxValue;
             },
             isNull(){
-                this.shown_value = 'hello' + this.textBoxValue;
+                this.shown_value = this.textBoxValue;
             },
             unit(newVal, oldVal) {
                 if (this.min !== null)
