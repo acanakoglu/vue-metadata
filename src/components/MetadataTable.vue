@@ -138,11 +138,11 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
-                            <v-btn dark
+                           <!-- <v-btn dark
                                    slot="activator"
                                    small color="blue lighten-2">
                                 Download Links
-                            </v-btn>
+                            </v-btn>-->
 
                             <v-card>
                                 <v-card-title
@@ -271,7 +271,7 @@
                                    slot="activator"
                                    small color="blue lighten-2"
                             >
-                                Sort fields
+                                Select/Sort fields
                             </v-btn>
                         </v-dialog>
                     </v-flex>
