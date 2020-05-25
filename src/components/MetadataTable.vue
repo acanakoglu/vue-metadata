@@ -478,7 +478,7 @@
                     {text: 'Single stranded', value: 'is_single_stranded', sortable: this.sortable, show: false},
                     {text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
 
-                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: false},
+                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: true},
                 ];
             },
             resetHeadersOrder() {
