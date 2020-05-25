@@ -62,7 +62,7 @@
                         color="blue"
                         flat
                         outline
-                        @click="setAgeLocal();menu=false;">
+                        @click="setAgeLocal">
                     Apply
                     <v-icon dark right>check_circle</v-icon>
                 </v-btn>
@@ -70,7 +70,7 @@
                         color="red"
                         flat
                         outline
-                        @click="deleteAgeLocal();menu=false;">
+                        @click="deleteAgeLocal">
                     Clear
                     <v-icon dark right>block</v-icon>
                 </v-btn>
@@ -123,7 +123,8 @@
                 this.unit = 1;
                 this.max = null;
                 this.isNull = false;
-                this.shown_value = null;
+
+                this.menu=false;
             },
             loadMinMaxAge() {
                 const url = `field/numerical/${this.field}`;
@@ -173,7 +174,9 @@
                 let p = {'field': this.field, 'setting_a': a}
 
                 this.setNumerical(p);
-                this.shown_value = this.textBoxValue;
+
+
+                this.menu=false;
             },
         },
         mounted() {
@@ -190,6 +193,15 @@
                     this.unit = 1;
                     this.isNull = false;
                 }
+            },
+            min(){
+                this.shown_value = 'hello' + this.textBoxValue;
+            },
+            max(){
+                this.shown_value = 'hello' + this.textBoxValue;
+            },
+            isNull(){
+                this.shown_value = 'hello' + this.textBoxValue;
             },
             unit(newVal, oldVal) {
                 if (this.min !== null)
