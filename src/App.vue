@@ -1,13 +1,19 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-        <v-img :src="require('./assets/virusurf_logo.png')" contain max-width="40px" max-height="40px"></v-img>
-            <v-btn flat  @click="mainContent=true">
-                <v-toolbar-title class="headline" style = "text-transform: none !important;">
+            <v-img :src="require('./assets/virusurf_logo.png')" contain max-width="40px" max-height="40px"></v-img>
+            <v-btn flat @click="mainContent=true">
+                <v-toolbar-title class="headline" style="text-transform: none !important;">
                     <span>Viru</span>
                     <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
+            <span style="font-size: 22px;">enabled by data from
+                <a href="https://www.gisaid.org" target="_blank">
+                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo" height="24px"/>
+                </a>
+            </span>
+            <!--            <span style="font-size: 22px">and GenBank.</span>-->
             <v-spacer></v-spacer>
             <!--<v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
@@ -34,7 +40,8 @@
                             <span class=label>Query:</span>
                         </v-flex>  <!--query utils-->
                         <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear</v-btn>
+                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
+                            </v-btn>
                         </v-flex>  <!--clear all-->
                         <v-flex md1 sm2 class="no-horizontal-padding">
                             <v-dialog v-model="dialogShowQuery">
@@ -54,7 +61,7 @@
                                         Input is not valid
                                     </v-alert>
                                     <v-textarea class="mytextarea"
-                                            v-model="queryInput"
+                                                v-model="queryInput"
                                     >
                                     </v-textarea>
 
@@ -94,12 +101,12 @@
                         </v-flex>  <!--upload query-->
 
                         <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat  class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
+                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
                         </v-flex>  <!--download query-->
 
                         <v-spacer></v-spacer>
 
-                        <v-flex  md4 sm8 class=" no-horizontal-padding">
+                        <v-flex md4 sm8 class=" no-horizontal-padding">
                             <v-select solo
                                       dense
                                       :menu-props='{"maxHeight":1000}'
@@ -168,35 +175,46 @@
                 </v-container>
 
                 <FullScreenViewer/>
-<!--                <PairQuery/>-->
+                <!--                <PairQuery/>-->
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
-<!--                        <v-tab>-->
-<!--                            Source count-->
-<!--                        </v-tab>-->
-<!--                        <v-tab>-->
-<!--                            Dataset count-->
-<!--                        </v-tab>-->
+                        <!--                        <v-tab>-->
+                        <!--                            Source count-->
+                        <!--                        </v-tab>-->
+                        <!--                        <v-tab>-->
+                        <!--                            Dataset count-->
+                        <!--                        </v-tab>-->
                         <v-tab>
                             Result items
                         </v-tab>
 
-<!--                        <v-tab-item>-->
-<!--                            <CountTable countType="source"/>-->
-<!--                        </v-tab-item>-->
-<!--                        <v-tab-item>-->
-<!--                            <CountTable countType="dataset"/>-->
-<!--                        </v-tab-item>-->
+                        <!--                        <v-tab-item>-->
+                        <!--                            <CountTable countType="source"/>-->
+                        <!--                        </v-tab-item>-->
+                        <!--                        <v-tab-item>-->
+                        <!--                            <CountTable countType="dataset"/>-->
+                        <!--                        </v-tab-item>-->
                         <v-tab-item>
                             <MetadataTable/>
                         </v-tab-item>
                     </v-tabs>
                 </div>
+
                 <v-footer app>
                     <v-flex
                             lighten-2
+                            xs6
+                            class="bottom-info"
+                            style="font-size:12px;">
+                        <div>GISAID data provided on this website is subject to GISAID’s <a
+                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms
+                            and Conditions</a>.
+                        </div>
+                    </v-flex>
+                    <v-flex
+                            lighten-2
                             text-xs-right
-                            xs12
+                            xs6
                             class="bottom-info">
 
 
@@ -607,12 +625,12 @@
             queryToShow() {
                 let a = [];
                 for (let i in this.compound_query['gcm']) {
-                    if (this.numerical.has(i)){
+                    if (this.numerical.has(i)) {
                         a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
                     } else {
                         let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
                         // b.replace("''","'N/D")
-                        a.push(b.replace("''","null"))
+                        a.push(b.replace("''", "null"))
                     }
 
                 }
@@ -682,16 +700,16 @@
         padding-top: 15px;
     }
 
-    .predef-q .v-input__control .v-text-field__details{
+    .predef-q .v-input__control .v-text-field__details {
         display: none;
     }
 
-    .small-btn{
+    .small-btn {
 
 
     }
 
-    .mytextarea{
+    .mytextarea {
         padding: 16px;
     }
 </style>
