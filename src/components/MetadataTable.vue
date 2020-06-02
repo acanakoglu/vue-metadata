@@ -1,91 +1,25 @@
 <template>
     <v-card>
+        <span id="mousehovermessage" :style="mousehovermessageStyle">
+            <table style="background-color:#000000; color:#FFF;text-align:left;">
+              <tr>
+                <th>Originating Lab </th>
+                <td> {{mousehovermessage_originating}}</td>
+              </tr>
+              <tr>
+                <th>Submitting Lab </th>
+                <td> {{mousehovermessage_submitting}}</td>
+              </tr>
+              <tr>
+                <th>Authors </th>
+                <td> {{mousehovermessage_authors}}</td>
+              </tr>
+            </table>
+        </span>
         <v-card-title>
-            <!--<v-flex-->
-            <!--lighten-2-->
-            <!--xs12-->
-            <!--&gt;-->
-            <!--            <div v-if="isLoading">Loading...</div>-->
-            <!--            <div v-else-if="count===1000" class="center">Shown up to 1000 items</div>-->
-            <!--            <div v-else-if="count>0">Shown {{result.length}} item<span-->
-            <!--                    v-if="count>1">s</span>-->
-            <!--            </div>-->
-            <!--            <div v-else>No result</div>-->
-            <!--</v-flex>-->
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
                     <v-flex m4 align-self-center>
-                       <!-- <v-dialog
-                                v-model="dialogGmql"
-                        >
-                            <v-btn dark
-                                   slot="activator"
-                                   small
-                                   color="blue lighten-2"
-                            >
-                                GMQL
-                            </v-btn>
-                            <v-card>
-                                <v-card-title
-                                        class="headline blue lighten-4"
-                                        primary-title
-                                >
-                                    GMQL query
-                                </v-card-title>
-                                <v-progress-linear height="2" class="progress"
-                                                   :indeterminate="gmqlProgress"></v-progress-linear>
-
-
-                                <v-card-text>
-                                    <p> Click "COPY TO CLIPBOARD" button and use whole query in
-                                        <a href="http://gmql.eu/" target="gmql">GMQL interface</a>.
-
-                                        One statement extracts the selected items from a single dataset.
-                                        All datasets are unified into a single dataset for further use.
-                                        <br>
-                                        Please refer to
-                                        <a href="http://www.bioinformatics.deib.polimi.it/genomic_computing/GMQLsystem/documentation.html"
-                                           target="gmql_doc">
-                                            GMQL documentation
-                                        </a>
-                                        for specific use of querying language.
-
-                                        <br>
-                                        Beware union of big datasets may result in long execution times.
-                                    </p>
-
-                                    <v-textarea v-if="count<=1000"
-                                                label="GMQL query"
-                                                :value="gmqlQuery"
-                                    ></v-textarea>
-                                    <v-alert outline color="info" :value="true" v-else>Dataset too big to generate GMQL
-                                        query, please select a smaller dataset (less than 1000 items)
-                                    </v-alert>
-                                </v-card-text>
-
-
-                                <v-divider></v-divider>
-
-                                <v-card-actions>
-                                    <v-btn
-                                            v-if="count<=500"
-                                            color="primary"
-                                            flat
-                                            @click="toClipboard()"
-                                    >
-                                        Copy to clipboard
-                                    </v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            color="primary"
-                                            flat
-                                            @click="dialogGmql = false"
-                                    >
-                                        Close
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>-->
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
@@ -138,12 +72,6 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
-                           <!-- <v-btn dark
-                                   slot="activator"
-                                   small color="blue lighten-2">
-                                Download Links
-                            </v-btn>-->
-
                             <v-card>
                                 <v-card-title
                                         class="headline blue lighten-4"
@@ -193,42 +121,6 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
-<!--                    <v-flex m1 shrink align-self-center>-->
-<!--                        <v-label>Replicated</v-label>-->
-<!--                    </v-flex>-->
-<!--                    <v-flex m1 d-flex align-self-center shrink class="padding-right">-->
-<!--                        <v-switch label="Aggregated" v-model=agg_mode></v-switch>-->
-<!--                        <v-dialog-->
-<!--                                width="500"-->
-<!--                        >-->
-<!--                            <v-btn slot="activator"-->
-<!--                                   class="info-button"-->
-<!--                                   small-->
-<!--                                   flat icon color="blue">-->
-<!--                                <v-icon class="info-icon">info</v-icon>-->
-<!--                            </v-btn>-->
-
-<!--                            <v-card>-->
-<!--                                <v-card-title-->
-<!--                                        class="headline grey lighten-2"-->
-<!--                                        primary-title-->
-<!--                                >-->
-<!--                                    Replicated and aggregated view-->
-<!--                                </v-card-title>-->
-
-<!--                                <v-card-text>-->
-<!--                                    <p>Generally, each row refers to one item. In case the item is derived from multiple-->
-<!--                                        Replicates/Biosamples/Donors:</p>-->
-<!--                                    <p>- in the aggregated view the related information is aggregated by concatenating-->
-<!--                                        the-->
-<!--                                        possible values through the pipe "|";</p>-->
-<!--                                    <p>- in the replicated view: there is one row for each different Replicate (and-->
-<!--                                        consequently Biosample/Donor).</p>-->
-<!--                                </v-card-text>-->
-
-<!--                            </v-card>-->
-<!--                        </v-dialog>-->
-<!--                    </v-flex>-->
                     <v-flex m4 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
                             <v-card>
@@ -277,18 +169,7 @@
                     </v-flex>
                 </v-layout>
             </v-container>
-            <!--<v-text-field-->
-            <!--v-model="search"-->
-            <!--append-icon="search"-->
-            <!--label="Search"-->
-            <!--single-line-->
-            <!--hide-details-->
-            <!--&gt;</v-text-field>-->
         </v-card-title>
-
-        <!--        <v-btn @click="pagination.page=1" color="primary" flat>First Page</v-btn>-->
-        <!--        <v-btn color="primary" flat @click="pagination.page=Math.ceil(pagination.totalItems/pagination.rowsPerPage)">Last Page</v-btn>-->
-
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
@@ -302,8 +183,25 @@
                 <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
-<!--                        <span v-else>N/D</span>-->
+                        <!--                        <span v-else>N/D</span>-->
                         <span v-else><a href="#TODO">link</a></span>
+                    </span>
+                    <span v-else-if="header.is_multi_link">
+                        <span v-if="props.item[header.value]">
+                            <a v-if="props.item[header.value].split(',')[0]"
+                               :href="props.item[header.value].split(',')[0]" target="_blank">link</a>
+                            <span v-if="props.item[header.value].split(',')[0] && props.item[header.value].split(',')[1]">, </span>
+                            <a v-if="props.item[header.value].split(',')[1]"
+                               :href="props.item[header.value].split(',')[1]" target="_blank">link</a>
+                            <span v-if="props.item[header.value].split(',')[1] && props.item[header.value].split(',')[2]">, </span>
+                            <a v-if="props.item[header.value].split(',')[2]"
+                               :href="props.item[header.value].split(',')[2]" target="_blank">link</a>
+                            <span v-if="props.item[header.value].split(',')[2] && props.item[header.value].split(',')[3]">, </span>
+                            <a v-if="props.item[header.value].split(',')[3]"
+                               :href="props.item[header.value].split(',')[3]" target="_blank">link</a>
+                            <span v-if="props.item[header.value].split(',').length>4">...</span>
+                        </span>
+                        <span v-else>N/D</span>
                     </span>
                     <span v-else-if="header.is_multi_link">
                         <span v-if="props.item[header.value]">
@@ -333,7 +231,13 @@
                             <v-icon>list</v-icon>
                         </v-btn>
                     </span>
-                    <span v-else v-html="updateCellTextFormat(props.item[header.value])"></span>
+                    <span v-else-if="header.value === 'accession_id' && props.item['database_source'] == 'GISAID'">
+                        <span v-html="updateCellTextFormat(props.item[header.value])"
+                              @mouseover="mouseOver(props.item[header.value], $event)"
+                              @mouseleave="mouseLeave"
+                        />
+                    </span>
+                    <span v-else v-html="updateCellTextFormat(props.item[header.value])"/>
                 </td>
             </template>
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
@@ -365,6 +269,12 @@
         },
         data() {
             return {
+                mousehovermessage_originating: '...loading...',
+                mousehovermessage_submitting: '...loading...',
+                mousehovermessage_authors: '...loading...',
+                mousehovermessage_left: null,
+                mousehovermessage_top: null,
+                mousehovermessage_show: false,
                 sortCheckbox: false,
                 downloadProgress: false,
                 gmqlProgress: false,
@@ -435,10 +345,44 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
-            getHeaders(){
+            mouseOver(accessionId, e) {
+                this.mousehovermessage_left = e.clientX;
+                this.mousehovermessage_top = e.clientY;
+                this.mousehovermessage_show = true;
+
+                const l1 = accessionId.substring(accessionId.length-4,accessionId.length-2)
+                const l2 = accessionId.substring(accessionId.length-2,accessionId.length)
+
+                const url = `https://www.epicov.org/acknowledgement/${l1}/${l2}/${accessionId}.json`;
+                // eslint-disable-next-line
+                axios.get(url)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        console.log(res)
+                        this.mousehovermessage_authors = res.covv_authors;
+                        this.mousehovermessage_originating = res.covv_orig_lab;
+                        this.mousehovermessage_submitting = res.covv_subm_lab;
+                    })
+            },
+            mouseLeave() {
+                console.log('mouseLeave')
+                this.mousehovermessage_show = false;
+                this.mousehovermessage_originating = '...loading...';
+                this.mousehovermessage_submitting = '...loading...';
+                this.mousehovermessage_authors = '...loading...';
+            },
+            getHeaders() {
                 return [
                     //sequence
-                    {text: 'Source Page', value: itemSourceIdName + 'dummy', sortable: this.sortable, show: true, is_link: true},
+                    {
+                        text: 'Source Page',
+                        value: itemSourceIdName + 'dummy',
+                        sortable: this.sortable,
+                        show: true,
+                        is_link: true
+                    },
                     {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
                     {text: 'Strain', value: 'strain_name', sortable: this.sortable, show: true},
                     {text: 'Reference', value: 'is_reference', sortable: this.sortable, show: true},
@@ -544,17 +488,6 @@
                         this.result = res;
                         this.isLoading = false;
                     });
-                // if(changeCount) {
-                // const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}`;
-                // // eslint-disable-next-line
-                // axios.post(csv_url, this.compound_query)
-                //     .then((res) => {
-                //         return res.data
-                //     })
-                //     .then((res) => {
-                //         this.download_table = res
-                //     });
-                // }
             },
             download() {
                 this.downloadProgress = true;
@@ -643,8 +576,14 @@
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            mousehovermessageStyle() {
+                if (this.mousehovermessage_show) {
+                    return `position:fixed;top: ${this.mousehovermessage_top -30}px; left: ${this.mousehovermessage_left +30}px;`;
+                } else {
+                    return 'display: none;';
+                }
+            },
             sortable() {
-                console.log("asd " + this.result.length);
                 return this.result.length < 1000;
             },
             sortCheckBoxLabel() {
