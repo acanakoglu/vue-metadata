@@ -184,7 +184,7 @@
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <!--                        <span v-else>N/D</span>-->
-                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/CoV2020" target="_blank">link</a>
+                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/" target="_blank">link</a>
                         <a v-else-if="props.item['database_source'] === 'GenBank' || props.item['database_source'] === 'RefSeq'" :href="'https://www.ncbi.nlm.nih.gov/nuccore/' + props.item['accession_id']" target="nuccore">link</a>
                         <a v-else href="#TODO">link</a>
                     </span>
