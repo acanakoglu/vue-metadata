@@ -1,14 +1,14 @@
 <template>
     <v-app>
         <v-toolbar dark color="primary" app>
-            <v-img :src="require('./assets/virusurf_logo.png')" contain max-width="40px" max-height="40px"></v-img>
+            <v-img :src="require('./assets/virusurf_logo.png')" contain max-width="39px" max-height="39px"></v-img>
             <v-btn flat @click="mainContent=true">
-                <v-toolbar-title class="headline" style="text-transform: none !important;">
+                <v-toolbar-title class="headline" style="font-size: 32px;text-transform: none !important;">
                     <span>Viru</span>
                     <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
-            <span style="font-size: 22px;">enabled by data from
+            <span style="font-size: 24px;">enabled by data from
                 <a href="https://www.gisaid.org" target="_blank">
                     <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo" height="24px"/>
                 </a>
