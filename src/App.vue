@@ -18,9 +18,9 @@
             <!--<v-btn flat href="http://gmql.eu" target="_blank">
                 <span class="mr-2">GMQL</span>
             </v-btn>-->
-            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
-                <span class="font-weight-light">doc</span></span>
-            </v-btn>
+<!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
+<!--                <span class="font-weight-light">doc</span></span>-->
+<!--            </v-btn>-->
             <!--<v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
                     class="mr-2">Wiki</span></v-btn>-->
             <!--<v-btn flat href="https://www.youtube.com/watch?v=cjH0oXu3iyo&list=PLfWxoOMC6swIJ2Fzd9qQR-PVYfaP3C501" target="_blank"><span
