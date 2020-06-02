@@ -184,7 +184,9 @@
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <!--                        <span v-else>N/D</span>-->
-                        <span v-else><a href="#TODO">link</a></span>
+                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/CoV2020" target="_blank">link</a>
+                        <a v-else-if="props.item['database_source'] === 'GenBank' || props.item['database_source'] === 'RefSeq'" :href="'https://www.ncbi.nlm.nih.gov/nuccore/' + props.item['accession_id']" target="nuccore">link</a>
+                        <a v-else href="#TODO">link</a>
                     </span>
                     <span v-else-if="header.is_multi_link">
                         <span v-if="props.item[header.value]">
@@ -230,6 +232,10 @@
                         <v-btn flat icon color="blue" @click="extraMetadataClicked(props.item)">
                             <v-icon>list</v-icon>
                         </v-btn>
+                    </span>
+                    <span v-else-if="header.value === 'lineage_clade'">
+                        <span v-if="props.item['lineage'] || props.item['clade']">{{updateCellTextFormat(props.item['lineage'])}} ({{updateCellTextFormat(props.item['clade'])}})</span>
+                        <span v-else v-html="updateCellTextFormat(null)"></span>
                     </span>
                     <span v-else-if="header.value === 'accession_id' && props.item['database_source'] == 'GISAID'">
                         <span v-html="updateCellTextFormat(props.item[header.value])"
@@ -390,6 +396,10 @@
                     {text: 'Strand', value: 'strand', sortable: this.sortable, show: true},
                     {text: 'Length', value: 'length', sortable: this.sortable, show: true},
                     {text: 'GC%', value: 'gc_percentage', sortable: this.sortable, show: true},
+                    {text: 'Lineage (Clade)', value: 'lineage_clade', sortable: this.sortable, show: true},
+                    // {text: 'Lineage', value: 'lineage', sortable: this.sortable, show: true},
+                    // {text: 'Clade', value: 'clade', sortable: this.sortable, show: true},
+
                     //experiment_type
                     {text: 'Seq. Technology', value: 'sequencing_technology', sortable: this.sortable, show: true},
                     {text: 'Assembly Method', value: 'assembly_method', sortable: this.sortable, show: true},
