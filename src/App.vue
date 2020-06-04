@@ -13,20 +13,8 @@
                     <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo" height="24px"/>
                 </a>
             </span>
-            <!--            <span style="font-size: 22px">and GenBank.</span>-->
+            <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-            <!--<v-btn flat href="http://gmql.eu" target="_blank">
-                <span class="mr-2">GMQL</span>
-            </v-btn>-->
-<!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
-<!--                <span class="font-weight-light">doc</span></span>-->
-<!--            </v-btn>-->
-            <!--<v-btn flat href="https://github.com/acanakoglu/flask-metadata/wiki" target="_blank"><span
-                    class="mr-2">Wiki</span></v-btn>-->
-            <!--<v-btn flat href="https://www.youtube.com/watch?v=cjH0oXu3iyo&list=PLfWxoOMC6swIJ2Fzd9qQR-PVYfaP3C501" target="_blank"><span
-                    class="mr-2">Videos</span></v-btn>-->
-            <!--<v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/1/" target="_blank"><span
-                    class="mr-2">Survey</span></v-btn>-->
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
@@ -40,70 +28,10 @@
                             <span class=label>Query:</span>
                         </v-flex>  <!--query utils-->
                         <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
+                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">
+                                Clear Query
                             </v-btn>
                         </v-flex>  <!--clear all-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-dialog v-model="dialogShowQuery">
-                                <v-btn flat class="small-btn" dark small
-                                       slot="activator"
-                                       color="info"
-                                >Modify
-                                </v-btn>
-                                <v-card>
-                                    <v-card-title
-                                            class="headline blue lighten-4"
-                                            primary-title
-                                    >
-                                        Copy, modify or paste query
-                                    </v-card-title>
-                                    <v-alert type="error" :value="true" v-if="!inputValid">
-                                        Input is not valid
-                                    </v-alert>
-                                    <v-textarea class="mytextarea"
-                                                v-model="queryInput"
-                                    >
-                                    </v-textarea>
-
-                                    <v-divider></v-divider>
-
-                                    <v-card-actions>
-                                        <v-btn
-                                                color="primary"
-                                                flat
-                                                @click="toClipboard()"
-                                        >
-                                            Copy to clipboard
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                                :disabled=!inputValid
-                                                color="primary"
-                                                flat
-                                                @click="setInputQuery"
-                                        >
-                                            Apply
-                                        </v-btn>
-                                        <v-btn
-                                                color="primary"
-                                                flat
-                                                @click="dialogShowQuery = false"
-                                        >
-                                            Close
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </v-flex>  <!--modify-->
-
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <text-reader @load="queryString = $event"></text-reader>
-                        </v-flex>  <!--upload query-->
-
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
-                        </v-flex>  <!--download query-->
-
                         <v-spacer></v-spacer>
 
                         <v-flex md4 sm8 class=" no-horizontal-padding">
@@ -121,45 +49,6 @@
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
-                    <!--<v-layout wrap align-center test style="background:#FFFFFF">
-                        <v-flex xs2 d-flex class="no-horizontal-padding">
-                            <span class=label>Data search:</span>
-                        </v-flex>
-                        <v-flex xs10 class="no-horizontal-padding">
-                            <v-radio-group :disabled=searchDisabled
-                                           v-model="typeLocal" row
-                                           class="radio-group2"
-                                           append-icon="info"
-                                           @click:append="openInfoDialog">
-                                <v-radio label="Original" id="original" value="original"></v-radio>
-                                <v-radio label="Synonym" id="synonym" value="synonym"></v-radio>
-                                <v-radio label="Expanded" id="expanded" value="expanded"></v-radio>
-                            </v-radio-group>
-                            <v-dialog
-                                    width="500"
-                                    v-model="infoDialog"
-                            >
-                                <v-card>
-                                    <v-card-title
-                                            class="headline grey lighten-2"
-                                            primary-title
-                                    >
-                                        Data search
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                        <p>Original: searches using metadata unchanged from the original data
-                                            sources</p>
-                                        <p>Synonym: searches using original metadata, ontological terms, and synonyms
-                                            related to them</p>
-                                        <p>Expanded: searches using original metadata, ontological terms, and their
-                                            hypernyms and hyponyms</p>
-                                    </v-card-text>
-
-                                </v-card>
-                            </v-dialog>
-                        </v-flex>
-                    </v-layout> -->
                     <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
@@ -178,22 +67,9 @@
                 <!--                <PairQuery/>-->
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
-                        <!--                        <v-tab>-->
-                        <!--                            Source count-->
-                        <!--                        </v-tab>-->
-                        <!--                        <v-tab>-->
-                        <!--                            Dataset count-->
-                        <!--                        </v-tab>-->
                         <v-tab>
                             Result items
                         </v-tab>
-
-                        <!--                        <v-tab-item>-->
-                        <!--                            <CountTable countType="source"/>-->
-                        <!--                        </v-tab-item>-->
-                        <!--                        <v-tab-item>-->
-                        <!--                            <CountTable countType="dataset"/>-->
-                        <!--                        </v-tab-item>-->
                         <v-tab-item>
                             <MetadataTable/>
                         </v-tab-item>
@@ -304,161 +180,6 @@
                 mainContent: true,
                 selectedQuery: null,
                 queryItems: [
-                    //{text: 'Clear Fields', value: {synonym: false, query: {"gcm": {}, "type": "original", "kv": {}}},},
-                    /*{
-                        text: 'Only ENCODE source',
-                        value: {query: {"gcm": {source: ["encode"]}, "type": "original", "kv": {}}},
-                    },
-                    {
-                        text: 'Example 1 - disease content from multiple sources',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    disease: ["prostate adenocarcinoma"],
-                                    assembly: ["grch38"]
-                                }, "type": "original", "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 2 - different data for specific tissue',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    tissue: ["adrenal gland"],
-                                    feature: ["copy number variation", "rna binding protein"]
-                                }, "type": "original", "kv": {},
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 3 - synonym enriched search',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    cell: ["gm12878"],
-                                    assembly: ["hg19"],
-                                    file_format: ["broadpeak"],
-                                    technique: ["chip-seq"]
-                                }, "type": "synonym", "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 4 - ontology enriched search',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    tissue: ["intestine"],
-                                    assembly: ["hg19"],
-                                    file_format: ["broadpeak"]
-                                },
-                                "type": "expanded",
-                                "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 5 - experimental and annotation data',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    content_type: ["exon", "exon quantifications"]
-                                }, "type": "original", "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 6 - combined replicas',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    assembly: ["grch38"],
-                                    tissue: ["liver"],
-                                    technique: ["chip-seq"],
-                                    target: ["rad21"],
-                                    content_type: ["peaks and background as input for idr"],
-                                    biological_replicate_count: ["2"]
-                                }, "type": "original", "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 7 - using the value-search',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    source: ["encode"],
-                                    file_format: ["narrowpeak"],
-                                    cell: ["k562"],
-                                    technique: ["chip-seq"]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    idr_peaks_0: {
-                                        "type_query": "value",
-                                        "exact": false,
-                                        "query": {
-                                            "gcm": {"content_type": ["optimal idr thresholded peaks"]},
-                                            "pairs": {}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 8 - combining different data types',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    disease: ["breast invasive carcinoma"],
-                                    assembly: ["grch38"],
-                                    data_type: ["gene expression quantification", "methylation beta value", "masked somatic mutation"],
-                                    is_healthy: ["false"],
-                                    age: {min_age: 9490, max_age: 14600, is_null: false}
-                                },
-                                "type": "original",
-                                "kv": {}
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 9 - using source specific metadata ',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    source: ["roadmap epigenomics"],
-                                    technique: ["dnase-seq"],
-                                    cell: ["h1 cells"]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    hotspot_0: {
-                                        "type_query": "value",
-                                        "exact": true,
-                                        "query": {"gcm": {"pipeline": ["hotspot"]}, "pairs": {}}
-                                    },
-                                    "open%20chromatin_1": {
-                                        "type_query": "value",
-                                        "exact": false,
-                                        "query": {"gcm": {"feature": ["open chromatin"]}, "pairs": {}}
-                                    },
-                                    broad_2: {
-                                        "type_query": "value",
-                                        "exact": false,
-                                        "query": {"gcm": {}, "pairs": {"manually_curated__region_type": ["broad"]}}
-                                    },
-                                    fdr_3: {
-                                        "type_query": "key",
-                                        "exact": false,
-                                        "query": {"gcm": {}, "pairs": {"manually_curated__fdr_threshold": ["0.01"]}}
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    */
                     {
                         text: 'Example 1 - Sequences from GenBank that are complete',
                         value: {
