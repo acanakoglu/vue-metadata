@@ -183,13 +183,7 @@
                 <td v-for="header in selected_headers" :key="header.value" v-show="header.show">
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
-                        <!--                        <span v-else>N/D</span>-->
-                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/"
-                           target="_blank">link</a>
-                        <a v-else-if="props.item['database_source'] === 'GenBank' || props.item['database_source'] === 'RefSeq'"
-                           :href="'https://www.ncbi.nlm.nih.gov/nuccore/' + props.item['accession_id']"
-                           target="nuccore">link</a>
-                        <a v-else href="#TODO">link</a>
+                        <span v-else>N/D</span>
                     </span>
                     <span v-else-if="header.is_multi_link">
                         <span v-if="props.item[header.value]">
@@ -387,7 +381,7 @@
                     //sequence
                     {
                         text: 'Source Page',
-                        value: itemSourceIdName + 'dummy',
+                        value: 'source_page',
                         sortable: this.sortable,
                         show: true,
                         is_link: true
@@ -488,6 +482,9 @@
                         return res.data
                     })
                     .then((res) => {
+                        return this.addLink(res);
+                    })
+                    .then((res) => {
                         return res.map((t) => {
                             if (t.local_url) {
                                 t.local_url = t.local_url.replace("www.gmql.eu", "genomic.deib.polimi.it");
@@ -537,6 +534,16 @@
                 temp = temp.replace(/\|/g, "|<br/>")
                 return temp
             },
+            addLink(input) {
+                for (const row of input) {
+                    if(row['database_source'] == 'GISAID')
+                        row['source_page'] = "https://gisaid.org/";
+                    else if(row['database_source'] === 'GenBank' || row['database_source'] === 'RefSeq')
+                        row['source_page'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + row['accession_id'];
+                    //else do nothing
+                }
+                return input;
+            },
             json2csv(input) {
                 var json = input;
                 var fields = [];
@@ -568,7 +575,10 @@
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
                     .then((res) => {
-                        return res.data
+                        return res.data;
+                    })
+                    .then((res) => {
+                        return this.addLink(res);
                     })
                     .then((res) => {
                         let text = this.json2csv(res);
