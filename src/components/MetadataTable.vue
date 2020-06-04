@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <span id="mousehovermessage" :style="mousehovermessageStyle">
+        <span id="mousehovermessage" class="mousehovermessageClass" :style="mousehovermessageStyle">
             <table style="background-color:#000000; color:#FFF;text-align:left;">
               <tr>
                 <th>Originating Lab </th>
@@ -184,8 +184,11 @@
                     <span v-if="header.is_link">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <!--                        <span v-else>N/D</span>-->
-                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/" target="_blank">link</a>
-                        <a v-else-if="props.item['database_source'] === 'GenBank' || props.item['database_source'] === 'RefSeq'" :href="'https://www.ncbi.nlm.nih.gov/nuccore/' + props.item['accession_id']" target="nuccore">link</a>
+                        <a v-else-if="props.item['database_source'] === 'GISAID'" href="https://gisaid.org/"
+                           target="_blank">link</a>
+                        <a v-else-if="props.item['database_source'] === 'GenBank' || props.item['database_source'] === 'RefSeq'"
+                           :href="'https://www.ncbi.nlm.nih.gov/nuccore/' + props.item['accession_id']"
+                           target="nuccore">link</a>
                         <a v-else href="#TODO">link</a>
                     </span>
                     <span v-else-if="header.is_multi_link">
@@ -356,8 +359,8 @@
                 this.mousehovermessage_top = e.clientY;
                 this.mousehovermessage_show = true;
 
-                const l1 = accessionId.substring(accessionId.length-4,accessionId.length-2)
-                const l2 = accessionId.substring(accessionId.length-2,accessionId.length)
+                const l1 = accessionId.substring(accessionId.length - 4, accessionId.length - 2)
+                const l2 = accessionId.substring(accessionId.length - 2, accessionId.length)
 
                 const url = `https://www.epicov.org/acknowledgement/${l1}/${l2}/${accessionId}.json`;
                 // eslint-disable-next-line
@@ -588,7 +591,7 @@
             }),
             mousehovermessageStyle() {
                 if (this.mousehovermessage_show) {
-                    return `position:fixed;top: ${this.mousehovermessage_top -30}px; left: ${this.mousehovermessage_left +30}px;`;
+                    return `position:fixed;top: ${this.mousehovermessage_top - 30}px; left: ${this.mousehovermessage_left + 30}px;`;
                 } else {
                     return 'display: none;';
                 }
@@ -624,6 +627,13 @@
 </script>
 
 <style scoped>
+
+    .mousehovermessageClass table, .mousehovermessageClass table th, .mousehovermessageClass table td {
+        border-collapse: collapse;
+        border: 2px solid gray;
+        padding: 3px;
+        padding: 3px;
+    }
 
     .progress {
         margin: 0;
