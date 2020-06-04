@@ -11,9 +11,7 @@
                     <v-icon>close</v-icon>
                 </v-btn>
             </v-toolbar>
-            <GraphViewer v-if="sourceId1" class="graph--fullscreen"/>
             <PairsTable v-if="sourceId2"/>
-            <GraphViewer v-if="dialog3" class="graph--fullscreen"/>
 
         </v-card>
     </v-dialog>
@@ -22,12 +20,11 @@
 <script>
     import {mapGetters, mapMutations, mapState} from 'vuex'
 
-    import GraphViewer from "./GraphViewer";
     import PairsTable from "./PairsTable";
 
     export default {
         name: "FullScreenViewer",
-        components: {PairsTable, GraphViewer},
+        components: {PairsTable},
         data() {
             return {
                 notifications: false,
