@@ -10,7 +10,8 @@
             </v-btn>
             <span style="font-size: 24px;">enabled by data from
                 <a href="https://www.gisaid.org" target="_blank">
-                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo" height="24px"/>
+                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"
+                         height="24px"/>
                 </a>
             </span>
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
@@ -65,6 +66,33 @@
 
                 <FullScreenViewer/>
                 <!--                <PairQuery/>-->
+                <div class="aa_div">
+                    <h1>Amino acid variant search:</h1>
+                    <label>Gene name:</label>
+                    <input type="text" id="gene_name" ref="gene_name" name="gene_name"><br>
+
+                    <label>Product:</label>
+                    <input type="text" id="product" ref="product" name="product"><br>
+
+                    <label>Amino acid change type:</label>
+                    <input type="text" id="variant_aa_type" ref="variant_aa_type" name="variant_aa_type"><br>
+
+                    <label>Position start:</label>
+                    <input type="text" id="start_aa" ref="start_aa" name="start_aa"><br>
+
+                    <label>Position end:</label>
+                    <input type="text" id="end_aa" ref="end_aa" name="end_aa"><br>
+
+                    <label>Original amino acid:</label>
+                    <input type="text" id="sequence_aa_original" ref="sequence_aa_original" name="sequence_aa_original"><br>
+
+                    <label>Alternative amino acid:</label>
+                    <input type="text" id="sequence_aa_alternative" ref="sequence_aa_alternative" name="sequence_aa_alternative"><br>
+
+
+
+                    <v-btn color="info"  value="Apply" @click="applyAA">Apply</v-btn>
+                </div>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -231,7 +259,7 @@
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
-            ...mapActions(["setKv", "setKvFull", "deleteAge"]),
+            ...mapActions(["setKv", "setKvFull", "deleteAge",'setAA']),
             setInputQuery() {
                 this.queryString = this.inputQuery
                 this.dialogShowQuery = false
@@ -249,6 +277,7 @@
                     this.setKvFull(item.query.kv);
                     this.setType(item.query.type)
                 } else {
+                    this.clearAA();
                     this.resetQuery();
                     this.resetType();
                     this.resetKv();
@@ -308,7 +337,23 @@
                 return subset.every(function (value) {
                     return (superset.indexOf(value) >= 0);
                 });
-            }
+            },
+            clearAA(){
+                let query = {};
+                for(const ref in this.$refs){
+                    this.$refs[ref].value = ''
+                }
+                this.setAA(query)
+            },
+            applyAA(){
+                let query = {};
+                for(const ref in this.$refs){
+                    const ref_val = this.$refs[ref];
+                    if(ref_val.value)
+                        query[ref] = ref_val.value;
+                }
+                this.setAA(query)
+            },
         },
         watch: {
             queryString() {
@@ -433,4 +478,9 @@
     .mytextarea {
         padding: 16px;
     }
+
+    .aa_div input {
+      border: 1px solid black;
+    }
+
 </style>

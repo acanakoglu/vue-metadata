@@ -113,6 +113,10 @@ export default new Vuex.Store({
         },
     },
     actions: {
+        setAA: ({commit, state}, value) => {
+            state.kv=value;
+            commit('reloadQuery')
+        },
         deleteKv({commit}, field) {
             commit('resetKvField', field);
             commit('reloadKv');
