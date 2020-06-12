@@ -68,25 +68,25 @@
                 <!--                <PairQuery/>-->
                 <div class="aa_div">
                     <h1>Amino acid variant search:</h1>
-                    <label>Gene name (exp: 'N', 'ORF3a', 'S'):</label>
+                    <label>Gene name (e.g. 'N', 'ORF3a', 'S'):</label>
                     <input type="text" id="gene_name" ref="gene_name" name="gene_name"><br>
 
 <!--                    <label>Product:</label>-->
 <!--                    <input type="text" id="product" ref="product" name="product"><br>-->
 
-                    <label>Amino acid change type (exp: 'DEL', 'SUB',  'INS'):</label>
+                    <label>Amino acid change type (e.g. 'DEL', 'SUB',  'INS'):</label>
                     <input type="text" id="variant_aa_type" ref="variant_aa_type" name="variant_aa_type"><br>
 
-                    <label>Variant position start (exp: '1'):</label>
+                    <label>Variant position start (e.g. '1'):</label>
                     <input type="text" id="start_aa" ref="start_aa" name="start_aa"><br>
 
-                    <label>Variant position end (exp: '1000'):</label>
+                    <label>Variant position end (e.g. '1000'):</label>
                     <input type="text" id="end_aa" ref="end_aa" name="end_aa"><br>
 
-                    <label>Original amino acid (exp: 'D'):</label>
+                    <label>Original amino acid (e.g. 'D'):</label>
                     <input type="text" id="sequence_aa_original" ref="sequence_aa_original" name="sequence_aa_original"><br>
 
-                    <label>Alternative amino acid (exp: 'G'):</label>
+                    <label>Alternative amino acid (e.g. 'G'):</label>
                     <input type="text" id="sequence_aa_alternative" ref="sequence_aa_alternative" name="sequence_aa_alternative"><br>
 
 
