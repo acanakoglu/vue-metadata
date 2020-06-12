@@ -83,10 +83,10 @@
                     <label>Variant position end (e.g. '1000'):</label>
                     <input type="text" id="end_aa" ref="end_aa" name="end_aa"><br>
 
-                    <label>Original amino acid (e.g. 'D'):</label>
+                    <label>Original amino acid (e.g. 'D', 'A', 'Q'):</label>
                     <input type="text" id="sequence_aa_original" ref="sequence_aa_original" name="sequence_aa_original"><br>
 
-                    <label>Alternative amino acid (e.g. 'G'):</label>
+                    <label>Alternative amino acid (e.g. 'G', 'H', 'V'):</label>
                     <input type="text" id="sequence_aa_alternative" ref="sequence_aa_alternative" name="sequence_aa_alternative"><br>
 
 
