@@ -71,8 +71,8 @@
                     <label>Gene name (e.g. 'N', 'ORF3a', 'S'):</label>
                     <input type="text" id="gene_name" ref="gene_name" name="gene_name"><br>
 
-<!--                    <label>Product:</label>-->
-<!--                    <input type="text" id="product" ref="product" name="product"><br>-->
+                    <label>Product (e.g. 'N/D'):</label>
+                    <input type="text" id="product" ref="product" name="product"><br>
 
                     <label>Amino acid change type (e.g. 'DEL', 'SUB',  'INS'):</label>
                     <input type="text" id="variant_aa_type" ref="variant_aa_type" name="variant_aa_type"><br>
