@@ -5,13 +5,14 @@
             :nudge-width="200"
             v-model="menu"
             offset-y
+            :disabled="searchDisabled"
     >
         <v-text-field slot="activator"
                       name="input-1"
                       :label="labelTitle"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="menu"
+                      :disabled="menu ||searchDisabled"
         ></v-text-field>
 
         <v-card>
@@ -123,7 +124,7 @@
                 this.max = null;
                 this.isNull = false;
 
-                this.menu=false;
+                this.menu = false;
             },
             loadMinMaxAge() {
                 const url = `field/numerical/${this.field}`;
@@ -175,7 +176,7 @@
                 this.setNumerical(p);
 
 
-                this.menu=false;
+                this.menu = false;
             },
         },
         mounted() {
@@ -193,13 +194,13 @@
                     this.isNull = false;
                 }
             },
-            min(){
+            min() {
                 this.shown_value = this.textBoxValue;
             },
-            max(){
+            max() {
                 this.shown_value = this.textBoxValue;
             },
-            isNull(){
+            isNull() {
                 this.shown_value = this.textBoxValue;
             },
             unit(newVal, oldVal) {
