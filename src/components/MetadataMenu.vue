@@ -7,7 +7,6 @@
             offset-y
     >
         <v-text-field slot="activator"
-                      id="testing"
                       name="input-1"
                       :label="labelTitle"
                       v-model="shown_value"
