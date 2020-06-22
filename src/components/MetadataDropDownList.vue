@@ -81,7 +81,7 @@
                 //     {text: 'Case study', value: 'CaseStudy'},
                 // ],
                 views: [
-                    {text: 'Virus', value: 'biological_v', color: '#B3E1FF'},
+                    {text: 'Sequences of SARS-CoV2 virus (severe acute respiratory syndrome coronavirus 2, NCBI Taxon ID: 2697049)', value: 'biological_v', color: '#B3E1FF'},
                     {text: 'Host Organism', value: 'biological_h', color: '#FFA9BF'},
                     {text: 'Technology', value: 'technological', color: '#DEFFC5'},
                     {text: 'Organization', value: 'organizational', color: '#FFBF5B'},

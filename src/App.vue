@@ -208,23 +208,23 @@
                 selectedQuery: null,
                 queryItems: [
                     {
-                        text: 'Example 1 - Sequences from GenBank that are complete',
+                        text: 'Example 1 - Sequences from Central America that are complete',
                         value: {
                             query: {
                                 "gcm": {
-                                    database_source: ["genbank"],
+                                    geo_group: ["central america"],
                                     is_complete: [true]
                                 }, "type": "original", "kv": {}
                             }
                         }
                     },
                     {
-                        text: 'Example 2 - Sequences from Illumina with 100X coverage',
+                        text: 'Example 2 - Sequences of B.1.1 GISAID lineage with minimum length 29850 bases',
                         value: {
                             query: {
                                 "gcm": {
-                                    sequencing_technology: ["illumina"],
-                                    coverage: ["100x"]
+                                    lineage: ["b.1.1"],
+                                    length:{"min_val":29850,"max_val":null,"is_null":false}
                                 }, "type": "original", "kv": {}
                             }
                         }
