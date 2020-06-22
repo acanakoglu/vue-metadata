@@ -27,22 +27,21 @@
                                    slot="activator"
                                    small
                                    color="blue lighten-2">
-                                Download Table
+                                Download Accession IDs
                             </v-btn>
 
                             <v-card>
                                 <v-card-title
                                         class="headline blue lighten-4"
                                         primary-title>
-                                    Download metadata table
+                                    Download Accession IDs
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
                                                    :indeterminate="downloadProgress"></v-progress-linear>
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "result.csv" file that contains
-                                        the comma-separated version of the table shown in the "RESULT ITEMS" section,
-                                        preserving user defined fields order.
+                                        Accession IDs.
                                     </p>
                                     <p>
                                         Please check size of selection.
@@ -546,11 +545,11 @@
             },
             json2csv(input) {
                 var json = input;
-                var fields = [];
-                this.selected_headers.forEach(function (el) {
-                    if (el.value != "extra")
-                        fields.push(el.value)
-                });
+                var fields = ['accession_id'];
+                // this.selected_headers.forEach(function (el) {
+                //     if (el.value != "extra")
+                //         fields.push(el.value)
+                // });
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };
