@@ -8,12 +8,12 @@
                     <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
-            <span style="font-size: 24px;">enabled by data from
-                <a href="https://www.gisaid.org" target="_blank">
-                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"
-                         height="24px"/>
-                </a>
-            </span>
+<!--            <span style="font-size: 24px;">enabled by data from-->
+<!--                <a href="https://www.gisaid.org" target="_blank">-->
+<!--                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"-->
+<!--                         height="24px"/>-->
+<!--                </a>-->
+<!--            </span>-->
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
             <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
@@ -146,10 +146,10 @@
                             xs6
                             class="bottom-info"
                             style="font-size:12px;">
-                        <div>GISAID data provided on this website is subject to GISAID’s <a
-                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms
-                            and Conditions</a>.
-                        </div>
+<!--                        <div>GISAID data provided on this website is subject to GISAID’s <a-->
+<!--                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms-->
+<!--                            and Conditions</a>.-->
+<!--                        </div>-->
                     </v-flex>
                     <v-flex
                             lighten-2
