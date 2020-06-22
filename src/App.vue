@@ -16,7 +16,7 @@
             </span>
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-            <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+            <v-btn flat href="/virusurf_gisaid/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
         </v-toolbar>
