@@ -16,6 +16,9 @@
             </span>
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
+            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
+                <span class="font-weight-light">doc</span></span>
+            </v-btn>
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
@@ -29,10 +32,70 @@
                             <span class=label>Query:</span>
                         </v-flex>  <!--query utils-->
                         <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">
-                                Clear Query
+                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
                             </v-btn>
                         </v-flex>  <!--clear all-->
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-dialog v-model="dialogShowQuery">
+                                <v-btn flat class="small-btn" dark small
+                                       slot="activator"
+                                       color="info"
+                                >Modify
+                                </v-btn>
+                                <v-card>
+                                    <v-card-title
+                                            class="headline blue lighten-4"
+                                            primary-title
+                                    >
+                                        Copy, modify or paste query
+                                    </v-card-title>
+                                    <v-alert type="error" :value="true" v-if="!inputValid">
+                                        Input is not valid
+                                    </v-alert>
+                                    <v-textarea class="mytextarea"
+                                                v-model="queryInput"
+                                    >
+                                    </v-textarea>
+
+                                    <v-divider></v-divider>
+
+                                    <v-card-actions>
+                                        <v-btn
+                                                color="primary"
+                                                flat
+                                                @click="toClipboard()"
+                                        >
+                                            Copy to clipboard
+                                        </v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                                :disabled=!inputValid
+                                                color="primary"
+                                                flat
+                                                @click="setInputQuery"
+                                        >
+                                            Apply
+                                        </v-btn>
+                                        <v-btn
+                                                color="primary"
+                                                flat
+                                                @click="dialogShowQuery = false"
+                                        >
+                                            Close
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-flex>  <!--modify-->
+
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <text-reader @load="queryString = $event"></text-reader>
+                        </v-flex>  <!--upload query-->
+
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
+                        </v-flex>  <!--download query-->
+
                         <v-spacer></v-spacer>
 
                         <v-flex md4 sm8 class=" no-horizontal-padding">
@@ -65,33 +128,7 @@
                 </v-container>
 
                 <FullScreenViewer/>
-                <!--                <PairQuery/>-->
-                <div class="aa_div">
-                    <h1>Amino acid variant search:</h1>
-                    <label>Gene name (e.g. 'N', 'ORF3a', 'S'):</label>
-                    <input type="text" id="gene_name" ref="gene_name" name="gene_name"><br>
-
-                    <label>Product (e.g. 'N/D'):</label>
-                    <input type="text" id="product" ref="product" name="product"><br>
-
-                    <label>Amino acid change type (e.g. 'DEL', 'SUB',  'INS'):</label>
-                    <input type="text" id="variant_aa_type" ref="variant_aa_type" name="variant_aa_type"><br>
-
-                    <label>Variant position start (e.g. '1'):</label>
-                    <input type="text" id="start_aa" ref="start_aa" name="start_aa"><br>
-
-                    <label>Variant position end (e.g. '1000'):</label>
-                    <input type="text" id="end_aa" ref="end_aa" name="end_aa"><br>
-
-                    <label>Original amino acid (e.g. 'D', 'A', 'Q'):</label>
-                    <input type="text" id="sequence_aa_original" ref="sequence_aa_original" name="sequence_aa_original"><br>
-
-                    <label>Alternative amino acid (e.g. 'G', 'H', 'V'):</label>
-                    <input type="text" id="sequence_aa_alternative" ref="sequence_aa_alternative" name="sequence_aa_alternative"><br>
-
-
-                    <v-btn color="info"  value="Apply" @click="applyAA">Apply</v-btn>
-                </div>
+                <PairQuery/>
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -258,7 +295,7 @@
         },
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
-            ...mapActions(["setKv", "setKvFull", "deleteAge",'setAA']),
+            ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             setInputQuery() {
                 this.queryString = this.inputQuery
                 this.dialogShowQuery = false
@@ -276,7 +313,6 @@
                     this.setKvFull(item.query.kv);
                     this.setType(item.query.type)
                 } else {
-                    this.clearAA();
                     this.resetQuery();
                     this.resetType();
                     this.resetKv();
@@ -336,23 +372,7 @@
                 return subset.every(function (value) {
                     return (superset.indexOf(value) >= 0);
                 });
-            },
-            clearAA(){
-                let query = {};
-                for(const ref in this.$refs){
-                    this.$refs[ref].value = ''
-                }
-                this.setAA(query)
-            },
-            applyAA(){
-                let query = {};
-                for(const ref in this.$refs){
-                    const ref_val = this.$refs[ref];
-                    if(ref_val.value)
-                        query[ref] = ref_val.value;
-                }
-                this.setAA(query)
-            },
+            }
         },
         watch: {
             queryString() {
@@ -478,8 +498,5 @@
         padding: 16px;
     }
 
-    .aa_div input {
-      border: 1px solid black;
-    }
 
 </style>
