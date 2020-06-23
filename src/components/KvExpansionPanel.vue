@@ -56,19 +56,24 @@
             </v-layout>
         </v-container>
 
+        <div>
+            <v-btn color="info" @click="addNewCondition()">
+                Add new condition
+            </v-btn>
+        </div>
 
-        <v-btn color="info" @click="addNewCondition()">
-            Add new condition
-        </v-btn>
+        <div v-if="isDev">
+            <br>
+            list_of_conditions: {{list_of_conditions}}
+            <br>
+            getInnerQuery: {{getInnerQuery}}
+            <br>
+        </div>
 
-        <br>
-        list_of_conditions: {{list_of_conditions}}
-        <br>
-        getInnerQuery: {{getInnerQuery}}
-        <br>
-
-        <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
-        <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
+        <div>
+            <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
+            <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
+        </div>
     </v-expansion-panel-content>
 </template>
 
@@ -196,7 +201,11 @@
                     }
                 }
                 return res_list;
+            },
+            isDev() {
+                return process.env.NODE_ENV === 'development';
             }
+
         },
         watch: {
             open: {
