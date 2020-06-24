@@ -16,9 +16,9 @@
 <!--            </span>-->
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API
-                <span class="font-weight-light">doc</span></span>
-            </v-btn>
+<!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
+<!--                <span class="font-weight-light">doc</span></span>-->
+<!--            </v-btn>-->
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
@@ -35,66 +35,66 @@
                             <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
                             </v-btn>
                         </v-flex>  <!--clear all-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-dialog v-model="dialogShowQuery">
-                                <v-btn flat class="small-btn" dark small
-                                       slot="activator"
-                                       color="info"
-                                >Modify
-                                </v-btn>
-                                <v-card>
-                                    <v-card-title
-                                            class="headline blue lighten-4"
-                                            primary-title
-                                    >
-                                        Copy, modify or paste query
-                                    </v-card-title>
-                                    <v-alert type="error" :value="true" v-if="!inputValid">
-                                        Input is not valid
-                                    </v-alert>
-                                    <v-textarea class="mytextarea"
-                                                v-model="queryInput"
-                                    >
-                                    </v-textarea>
+<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+<!--                            <v-dialog v-model="dialogShowQuery">-->
+<!--                                <v-btn flat class="small-btn" dark small-->
+<!--                                       slot="activator"-->
+<!--                                       color="info"-->
+<!--                                >Modify-->
+<!--                                </v-btn>-->
+<!--                                <v-card>-->
+<!--                                    <v-card-title-->
+<!--                                            class="headline blue lighten-4"-->
+<!--                                            primary-title-->
+<!--                                    >-->
+<!--                                        Copy, modify or paste query-->
+<!--                                    </v-card-title>-->
+<!--                                    <v-alert type="error" :value="true" v-if="!inputValid">-->
+<!--                                        Input is not valid-->
+<!--                                    </v-alert>-->
+<!--                                    <v-textarea class="mytextarea"-->
+<!--                                                v-model="queryInput"-->
+<!--                                    >-->
+<!--                                    </v-textarea>-->
 
-                                    <v-divider></v-divider>
+<!--                                    <v-divider></v-divider>-->
 
-                                    <v-card-actions>
-                                        <v-btn
-                                                color="primary"
-                                                flat
-                                                @click="toClipboard()"
-                                        >
-                                            Copy to clipboard
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                                :disabled=!inputValid
-                                                color="primary"
-                                                flat
-                                                @click="setInputQuery"
-                                        >
-                                            Apply
-                                        </v-btn>
-                                        <v-btn
-                                                color="primary"
-                                                flat
-                                                @click="dialogShowQuery = false"
-                                        >
-                                            Close
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </v-flex>  <!--modify-->
+<!--                                    <v-card-actions>-->
+<!--                                        <v-btn-->
+<!--                                                color="primary"-->
+<!--                                                flat-->
+<!--                                                @click="toClipboard()"-->
+<!--                                        >-->
+<!--                                            Copy to clipboard-->
+<!--                                        </v-btn>-->
+<!--                                        <v-spacer></v-spacer>-->
+<!--                                        <v-btn-->
+<!--                                                :disabled=!inputValid-->
+<!--                                                color="primary"-->
+<!--                                                flat-->
+<!--                                                @click="setInputQuery"-->
+<!--                                        >-->
+<!--                                            Apply-->
+<!--                                        </v-btn>-->
+<!--                                        <v-btn-->
+<!--                                                color="primary"-->
+<!--                                                flat-->
+<!--                                                @click="dialogShowQuery = false"-->
+<!--                                        >-->
+<!--                                            Close-->
+<!--                                        </v-btn>-->
+<!--                                    </v-card-actions>-->
+<!--                                </v-card>-->
+<!--                            </v-dialog>-->
+<!--                        </v-flex>  &lt;!&ndash;modify&ndash;&gt;-->
 
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <text-reader @load="queryString = $event"></text-reader>
-                        </v-flex>  <!--upload query-->
+<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+<!--                            <text-reader @load="queryString = $event"></text-reader>-->
+<!--                        </v-flex>  &lt;!&ndash;upload query&ndash;&gt;-->
 
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>
-                        </v-flex>  <!--download query-->
+<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+<!--                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>-->
+<!--                        </v-flex>  &lt;!&ndash;download query&ndash;&gt;-->
 
                         <v-spacer></v-spacer>
 
