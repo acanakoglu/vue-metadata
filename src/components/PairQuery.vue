@@ -4,10 +4,16 @@
             <v-flex xs2 d-flex class="no-horizontal-padding">
                 <span class=label>Variant search</span>
             </v-flex>
-            <v-flex xs1>
+            <v-flex xs2>
                 <v-btn @click='setKey("aa")'
                        color="info"
                        :disabled="searchDisabled">Add amino acid</v-btn>
+
+            </v-flex>
+            <v-flex xs2>
+                <v-btn @click='setKey("nuc")'
+                       color="info"
+                       :disabled="searchDisabled">Add nucleotide</v-btn>
 
             </v-flex>
         </v-layout>

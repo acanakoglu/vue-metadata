@@ -11,48 +11,19 @@
         </v-btn>
 
 
-        <v-container v-if="open" v-for="view in list_of_conditions" fluid grid-list-xl>
+        <v-container v-if="open" v-for="cond in list_of_conditions" fluid grid-list-xl>
             <v-layout wrap align-center class="container">
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotDropDown
-                            labelTitle="gene_name"
-                            field="gene_name"
-                            v-model="view['gene_name']"/>
-                </v-flex>
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotDropDown
-                            labelTitle="product"
-                            field="product"
-                            v-model="view['product']"/>
-                </v-flex>
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotDropDown
-                            labelTitle="variant_aa_type"
-                            field="variant_aa_type"
-                            v-model="view['variant_aa_type']"/>
-                </v-flex>
+                <v-flex v-for="element in cond" class="no-horizontal-padding xs12 sm6 md2 d-flex">
+                    <AnnotDropDown v-if="element['type'] == 'dropdown'"
+                                   :labelTitle="element['labelTitle']"
+                                   :field="element['field']"
+                                   v-model="element['value']"/>
 
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotDropDown
-                            labelTitle="sequence_aa_original"
-                            field="sequence_aa_original"
-                            v-model="view['sequence_aa_original']"/>
+                    <AnnotMenu v-else
+                               :labelTitle="element['labelTitle']"
+                               :field="element['field']"
+                               v-model="element['value']"/>
                 </v-flex>
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotDropDown
-                            labelTitle="sequence_aa_alternative"
-                            field="sequence_aa_alternative"
-                            v-model="view['sequence_aa_alternative']"/>
-                </v-flex>
-
-                <v-flex class="no-horizontal-padding xs12 sm6 md2 d-flex">
-                    <AnnotMenu
-                            labelTitle="aa_position"
-                            field="aa_position"
-                            v-model="view['aa_position']"/>
-                </v-flex>
-
-
             </v-layout>
         </v-container>
 
@@ -63,11 +34,11 @@
         </div>
 
         <div v-if="isDev">
+            query_type: {{query_type}}
             <br>
             list_of_conditions: {{list_of_conditions}}
             <br>
             getInnerQuery: {{getInnerQuery}}
-            <br>
         </div>
 
         <div>
@@ -129,14 +100,110 @@
                 this.list_of_conditions.push(this.getEmptyElement())
             },
             getEmptyElement() {
-                return {
-                    gene_name: [],
-                    product: [],
-                    variant_aa_type: [],
-                    aa_position: null,
-                    sequence_aa_original: [],
-                    sequence_aa_alternative: [],
+                if (this.query_type === 'aa') {
+                    return [
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Gene name',
+                            field: 'gene_name',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Product protein',
+                            field: 'product',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Change type',
+                            field: 'variant_aa_type',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Original sequence',
+                            field: 'sequence_aa_original',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Alternative sequence',
+                            field: 'sequence_aa_alternative',
+                            value: [],
+                        },
+                        {
+                            type: 'min-max',
+                            labelTitle: 'Position range',
+                            field: 'aa_position',
+                            value: null
+                        },
+                    ];
+                } else if (this.query_type === 'nuc') {
+                    return [
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Annotation type',
+                            field: 'n_feature_type',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Gene name',
+                            field: 'n_gene_name',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Product protein',
+                            field: 'n_product',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Variant type',
+                            field: 'variant_type',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Original sequence',
+                            field: 'sequence_original',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Alternative sequence',
+                            field: 'sequence_alternative',
+                            value: [],
+                        },
+                        {
+                            type: 'min-max',
+                            labelTitle: 'Position range',
+                            field: 'var_position',
+                            value: null
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Effect',
+                            field: 'effect',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Putative impact',
+                            field: 'putative_impact',
+                            value: [],
+                        },
+                        {
+                            type: 'dropdown',
+                            labelTitle: 'Impacted gene',
+                            field: 'impact_gene_name',
+                            value: [],
+                        },
+                    ];
                 }
+
             },
             setOpen() {
                 this.open = [false];
@@ -179,27 +246,25 @@
             },
             getInnerQuery() {
                 let res_list = []
-                for (const cond_i in this.list_of_conditions) {
-                    const cond = this.list_of_conditions[cond_i]
-                    console.log('cond', cond)
+                this.list_of_conditions.forEach(cond => {
+                    console.log(cond);
                     let res = {}
-                    for (const ref in cond) {
-                        const ref_val = cond[ref];
-                        if (ref_val)
-                            if (Array.isArray(ref_val)) {
-                                if (ref_val.length)
-                                    res[ref] = ref_val;
+                    cond.forEach(element => {
+                        const value = element['value'];
+                        const field = element['field']
+                        if (value) {
+                            if (Array.isArray(value)) {
+                                if (value.length)
+                                    res[field] = value;
                             } else {
-                                res[ref] = ref_val;
+                                res[field] = value;
                             }
-
-                    }
-                    console.log('getInnerQuery', res)
-                    console.log(Object.keys(res).length)
+                        }
+                    });
                     if (Object.keys(res).length > 0) {
                         res_list.push(res);
                     }
-                }
+                });
                 return res_list;
             },
             isDev() {
