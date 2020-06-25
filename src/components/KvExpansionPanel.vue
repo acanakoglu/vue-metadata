@@ -23,6 +23,30 @@
                                :labelTitle="element['labelTitle']"
                                :field="element['field']"
                                v-model="element['value']"/>
+                    <v-dialog width="500">
+                        <v-btn
+                                slot="activator"
+                                class="info-button"
+                                small
+                                flat icon color="blue">
+                            <v-icon class="info-icon">info</v-icon>
+                        </v-btn>
+                        <v-card>
+                            <v-card-title
+                                    class="headline grey lighten-2"
+                                    primary-title
+                            >
+                                <!--{{field.labelTitle}}-->
+                                FIELD NAME
+                            </v-card-title>
+
+                            <v-card-text>
+                                <!--{{field.description}}-->
+                                DESCRIPTION
+                            </v-card-text>
+
+                        </v-card>
+                    </v-dialog>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -107,36 +131,42 @@
                             labelTitle: 'Gene name',
                             field: 'gene_name',
                             value: [],
+                            description: 'Gene within which the amino acid change occurs'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Product protein',
                             field: 'product',
                             value: [],
+                            description: 'Protein produced by the sub-sequence within which the amino acid change occurs'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Change type',
                             field: 'variant_aa_type',
                             value: [],
+                            description: 'Type of amino acid change (SUB = substitution, INS = insertion, DEL = deletion)'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Original sequence',
                             field: 'sequence_aa_original',
                             value: [],
+                            description: 'Affected amino acid sequence from the corresponding reference sequence of the chosen Virus'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Alternative sequence',
                             field: 'sequence_aa_alternative',
                             value: [],
+                            description: 'Changed amino acid sequence (in the target sequence) with respect to the reference one'
                         },
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
                             field: 'aa_position',
-                            value: null
+                            value: null,
+                            description: 'Range of positions within the aminoacid sequence of the gene'
                         },
                     ];
                 } else if (this.query_type === 'nuc') {
@@ -146,60 +176,70 @@
                             labelTitle: 'Annotation type',
                             field: 'n_feature_type',
                             value: [],
+                            description: 'Characterization of sub-sequence'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Gene name',
                             field: 'n_gene_name',
                             value: [],
+                            description: 'Gene to which the sub-sequence belongs'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Product protein',
                             field: 'n_product',
                             value: [],
+                            description: 'Protein encoded by the sequence of aminoacids'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Variant type',
                             field: 'variant_type',
                             value: [],
+                            description: 'Type of amino acid change (SUB = substitution, INS = insertion, DEL = deletion)'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Original sequence',
                             field: 'sequence_original',
                             value: [],
+                            description: 'Affected nucleotide sequence from the corresponding reference sequence of the chosen Virus'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Alternative sequence',
                             field: 'sequence_alternative',
                             value: [],
+                            description: 'Changed nucleotide sequence (in the target sequence) with respect to the reference one'
                         },
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
                             field: 'var_position',
-                            value: null
+                            value: null,
+                            description: 'Range of positions within the full nucleotide sequence'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Effect',
                             field: 'effect',
                             value: [],
+                            description: 'Effect of the variant, annotated using the Sequence Ontology terms (http://www.sequenceontology.org/), predicted by SnpEff (http://snpeff.sourceforge.net/)'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Putative impact',
                             field: 'putative_impact',
                             value: [],
+                            description: 'A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}, predicted by SnpEff (http://snpeff.sourceforge.net/)'
                         },
                         {
                             type: 'dropdown',
                             labelTitle: 'Impacted gene',
                             field: 'impact_gene_name',
                             value: [],
+                            description: 'Common gene name (HGNC, https://www.genenames.org/). Optional: use closest gene when the variant is intergenic, predicted by SnpEff (http://snpeff.sourceforge.net/),'
                         },
                     ];
                 }

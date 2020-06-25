@@ -19,6 +19,12 @@
 <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
 <!--                <span class="font-weight-light">doc</span></span>-->
 <!--            </v-btn>-->
+            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+                <span class="mr-2">GenoSurf</span>
+            </v-btn>
+            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
+                <span class="mr-2">WIKI</span>
+            </v-btn>
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
