@@ -2,82 +2,19 @@
     <v-container fluid grid-list-xl class="second-color">
         <v-layout>
             <v-flex xs2 d-flex class="no-horizontal-padding">
-                <span class=label>Key-value search</span>
+                <span class=label>Variant search</span>
             </v-flex>
-            <v-flex xs2 class="no-horizontal-padding">
-                <v-radio-group class="radio-group2"
-                               append-icon="info"
-                               @click:append="openInfoDialog"
-                               v-model="pairQueryType"
-                               row
-                               :disabled="searchDisabled">
-                    <v-radio label="Key" id="key" value="key"></v-radio>
-                    <v-radio label="Value" id="value" value="value"></v-radio>
-                </v-radio-group>
-                <v-dialog
-                        width="500"
-                        v-model="infoDialog"
-                >
-                    <v-card>
-                        <v-card-title
-                                class="headline grey lighten-2"
-                                primary-title
-                        >
-                            Key-value search
-                        </v-card-title>
+            <v-flex xs2>
+                <v-btn @click='setKey("aa")'
+                       color="info"
+                       :disabled="searchDisabled">Add amino acid</v-btn>
 
-                        <v-card-text>
-                            <p>Key: free text search over all attributes, including original metadata and GCM
-                                fields.</p>
-                            <p>Value: free text search over all values, including original metadata and GCM field
-                                values.</p>
-                        </v-card-text>
-
-                    </v-card>
-                </v-dialog>
             </v-flex>
-            <v-flex xs6>
-                <v-text-field
-                        v-model="search"
-                        append-icon="search"
-                        @click:append="setKey"
-                        @keydown.enter="setKey"
-                        label="Search"
-                        :disabled="searchDisabled"
-                        single-line
-                        hide-details
-                ></v-text-field>
-            </v-flex>
-            <v-flex d-flex shrink>
-                <v-switch :disabled="searchDisabled" v-model="exact_match" label="Exact match"></v-switch>
-                <v-dialog
-                        width="500"
-                >
-                    <v-btn slot="activator"
-                           class="info-button"
-                           small
-                           flat icon color="blue">
-                        <v-icon class="info-icon">info</v-icon>
-                    </v-btn>
+            <v-flex xs2>
+                <v-btn @click='setKey("nuc")'
+                       color="info"
+                       :disabled="searchDisabled">Add nucleotide</v-btn>
 
-                    <v-card>
-                        <v-card-title
-                                class="headline grey lighten-2"
-                                primary-title
-                        >
-                            Exact match
-                        </v-card-title>
-
-                        <v-card-text>
-                            <p>When Exact match is disabled, the search is performed by checking the keys/values which
-                                contain the input string.</p>
-                            <p>When Exact match is enabled, the search is based on equality between the keys/values and
-                                the input string.</p>
-                            <p>Note that also spaces, punctuation and underscores are considered, both as first and last
-                                characters.</p>
-                        </v-card-text>
-                    </v-card>
-                </v-dialog>
             </v-flex>
         </v-layout>
         <v-expansion-panel>
@@ -112,7 +49,8 @@
             openInfoDialog() {
                 this.infoDialog = true
             },
-            setKey() {
+            setKey(inp){
+                this.search = inp;
                 if (this.search !== '') {
                     this.key = this.search.toLowerCase().replace(" ", "%20");
                     let last = this.keys[this.keys.length - 1];
@@ -125,7 +63,7 @@
                     let a = {
                         'id': i,
                         'query_text': this.key,
-                        'query_type': this.pairQueryType,
+                        'query_type': inp,
                         'exact': this.exact_match
                     };
                     // window.alert(this.key + "_" + this.pairQueryType + this.exact_match+i);

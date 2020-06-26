@@ -392,6 +392,7 @@
                     {text: 'Strand', value: 'strand', sortable: this.sortable, show: true},
                     {text: 'Length', value: 'length', sortable: this.sortable, show: true},
                     {text: 'GC%', value: 'gc_percentage', sortable: this.sortable, show: true},
+                    {text: 'N%', value: 'n_percentage', sortable: this.sortable, show: true},
                     {text: 'Lineage (Clade)', value: 'lineage_clade', sortable: this.sortable, show: true},
                     // {text: 'Lineage', value: 'lineage', sortable: this.sortable, show: true},
                     // {text: 'Clade', value: 'clade', sortable: this.sortable, show: true},
