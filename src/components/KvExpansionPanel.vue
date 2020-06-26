@@ -8,7 +8,7 @@
         <v-spacer></v-spacer>
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
                @click="deleteKvLocal()">
-            Delete Kv
+            Remove condition
         </v-btn>
 
 
