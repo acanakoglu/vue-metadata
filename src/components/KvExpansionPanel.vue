@@ -12,7 +12,7 @@
 
 
         <v-container v-if="open" v-for="cond in list_of_conditions" fluid grid-list-xl>
-            <v-layout wrap align-center class="container">
+            <v-layout wrap align-center>
                 <v-flex v-for="element in cond" class="no-horizontal-padding xs12 sm6 md2 d-flex">
                     <AnnotDropDown v-if="element['type'] == 'dropdown'"
                                    :labelTitle="element['labelTitle']"
