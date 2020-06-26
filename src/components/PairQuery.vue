@@ -2,18 +2,18 @@
     <v-container fluid grid-list-xl class="second-color">
         <v-layout>
             <v-flex xs2 d-flex class="no-horizontal-padding">
-                <span class=label>Variant search</span>
+                <span class=label>Variants query</span>
             </v-flex>
             <v-flex xs2>
                 <v-btn @click='setKey("aa")'
                        color="info"
-                       :disabled="searchDisabled">Add amino acid</v-btn>
+                       :disabled="searchDisabled">Add condition on amino acids</v-btn>
 
             </v-flex>
             <v-flex xs2>
                 <v-btn @click='setKey("nuc")'
                        color="info"
-                       :disabled="searchDisabled">Add nucleotide</v-btn>
+                       :disabled="searchDisabled">Add condition on nucleotides</v-btn>
 
             </v-flex>
         </v-layout>

@@ -1,7 +1,7 @@
 <template>
     <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
         <div slot="header">
-            <h3>Selected Query: </h3>
+            <h3>{{getFullQueryType()}} query: </h3>
             <p style="font-family:monospace;">{{ queryToShow }}</p>
         </div>
         <v-spacer></v-spacer>
@@ -120,6 +120,10 @@
             ...mapActions(["setKv", "deleteKv"]),
             addNewCondition() {
                 this.list_of_conditions.push(this.getEmptyElement())
+            },
+            getFullQueryType(){
+                 if (this.query_type === 'aa') { return 'Amino acid'; }
+                 else {return 'Nucleotide';}
             },
             getEmptyElement() {
                 if (this.query_type === 'aa') {

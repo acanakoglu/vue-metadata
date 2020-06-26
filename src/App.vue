@@ -34,11 +34,11 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
-                        <v-flex md2 sm2 d-flex class="no-horizontal-padding">
+                        <!--<v-flex md2 sm2 d-flex class="no-horizontal-padding">
                             <span class=label>Query:</span>
-                        </v-flex>  <!--query utils-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
+                        </v-flex>-->  <!--query utils-->
+                        <v-flex md2 sm2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
                         </v-flex>  <!--clear all-->
 <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
@@ -104,7 +104,7 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-flex md4 sm8 class=" no-horizontal-padding">
+                        <v-flex md8 sm8 class=" no-horizontal-padding">
                             <v-select solo
                                       dense
                                       :menu-props='{"maxHeight":1000}'
@@ -123,7 +123,7 @@
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                Selected query:
+                                Metadata query
                             </span>
                             <span style="font-family:monospace; font-size:120%;">
                                 {{ queryToShow }}
