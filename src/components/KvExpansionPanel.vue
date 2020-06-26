@@ -36,13 +36,11 @@
                                     class="headline grey lighten-2"
                                     primary-title
                             >
-                                <!--{{field.labelTitle}}-->
-                                FIELD NAME
+                                {{element['labelTitle']}}
                             </v-card-title>
 
                             <v-card-text>
-                                <!--{{field.description}}-->
-                                DESCRIPTION
+                                {{element['description']}}
                             </v-card-text>
 
                         </v-card>
