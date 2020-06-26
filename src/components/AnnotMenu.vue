@@ -152,7 +152,7 @@
 
                 // this.setNumerical(p);
 
-                console.log("a", a)
+                // console.log("a", a)
 
                 let res = {};
 

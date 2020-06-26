@@ -313,7 +313,7 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                console.log(item);
+                // console.log(item);
                 if (item) {
                     this.setQuery(item.query.gcm);
                     this.setKvFull(item.query.kv);
@@ -342,10 +342,10 @@
             toClipboard() {
                 this.$copyText(JSON.stringify(this.compound_query)).then(function (e) {
                     alert('Copied');
-                    console.log(e);
+                    // console.log(e);
                 }, function (e) {
                     alert('Can not copy');
-                    console.log(e);
+                    // console.log(e);
                 })
             },
             validateJson(input) {

@@ -289,9 +289,9 @@
                 });
 
                 let outer_list = [];
-                console.log(this.getInnerQuery);
+                // console.log(this.getInnerQuery);
                 this.getInnerQuery.forEach(element => {
-                    console.log(element);
+                    // console.log(element);
                     let inner_list = [];
                     Object.keys(element).forEach(key => {
                         const value = element[key];
