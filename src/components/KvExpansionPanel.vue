@@ -1,8 +1,9 @@
 <template>
     <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
         <div slot="header">
-            <h3>{{getFullQueryType()}} query: </h3>
-            <p style="font-family:monospace;">{{ queryToShow }}</p>
+            <span class="label">{{getFullQueryType()}} query: </span>
+            <span style="font-family:monospace" v-html="queryToShow"></span>
+
         </div>
         <v-spacer></v-spacer>
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
@@ -121,9 +122,12 @@
             addNewCondition() {
                 this.list_of_conditions.push(this.getEmptyElement())
             },
-            getFullQueryType(){
-                 if (this.query_type === 'aa') { return 'Amino acid'; }
-                 else {return 'Nucleotide';}
+            getFullQueryType() {
+                if (this.query_type === 'aa') {
+                    return 'Amino acid';
+                } else {
+                    return 'Nucleotide';
+                }
             },
             getEmptyElement() {
                 if (this.query_type === 'aa') {
@@ -278,7 +282,25 @@
                 compound_query: 'build_query'
             }),
             queryToShow() {
-                return JSON.stringify(this.kvLocal.query);
+                // return JSON.stringify(this.getInnerQuery);
+                let el = {};
+                this.getEmptyElement().forEach(element => {
+                    el[element['field']] = element['labelTitle'];
+                });
+
+                let outer_list = [];
+                console.log(this.getInnerQuery);
+                this.getInnerQuery.forEach(element => {
+                    console.log(element);
+                    let inner_list = [];
+                    Object.keys(element).forEach(key => {
+                        const value = element[key];
+                        inner_list.push(key + ': ' + JSON.stringify(value));
+                    });
+                    outer_list.push(inner_list.join(", "))
+                });
+
+                return "<br/>" + outer_list.join("<br/><b>OR</b><br/>");
             },
             buttonDisabled() {
                 return this.getInnerQuery.length == 0;
@@ -289,7 +311,7 @@
             getInnerQuery() {
                 let res_list = []
                 this.list_of_conditions.forEach(cond => {
-                    console.log(cond);
+                    // console.log(cond);
                     let res = {}
                     cond.forEach(element => {
                         const value = element['value'];
@@ -353,6 +375,11 @@
         .view
             margin: 15px
             outline: 1px solid black
+
+        .label
+            font-size: 1.3em
+            font-weight: bold
+            padding: 12px
 
 
 </style>
