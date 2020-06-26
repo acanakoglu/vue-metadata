@@ -10,12 +10,12 @@
                        :disabled="searchDisabled">Add amino acid</v-btn>
 
             </v-flex>
-            <v-flex xs2>
-                <v-btn @click='setKey("nuc")'
-                       color="info"
-                       :disabled="searchDisabled">Add nucleotide</v-btn>
+<!--            <v-flex xs2>-->
+<!--                <v-btn @click='setKey("nuc")'-->
+<!--                       color="info"-->
+<!--                       :disabled="searchDisabled">Add nucleotide</v-btn>-->
 
-            </v-flex>
+<!--            </v-flex>-->
         </v-layout>
         <v-expansion-panel>
             <KvExpansionPanel v-for="item in keys" :query_text="item['query_text']"
