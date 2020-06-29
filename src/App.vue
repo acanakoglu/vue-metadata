@@ -37,6 +37,7 @@
                         <!--<v-flex md2 sm2 d-flex class="no-horizontal-padding">
                             <span class=label>Query:</span>
                         </v-flex>-->  <!--query utils-->
+                        <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
                         <v-flex md2 sm2 class="no-horizontal-padding">
                             <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
@@ -515,6 +516,9 @@
                     }
                 }
             },
+            isDev() {
+                return process.env.NODE_ENV === 'development';
+            }
         },
     }
 </script>

@@ -102,6 +102,7 @@
                     exact: this.exact_match,
                     query: {}
                 },
+                precalculatedShowQuery: null,
             }
         },
         mounted() {
@@ -114,6 +115,8 @@
                 this.kvLocal = this.query;
                 this.open = false;
                 this.resetPanelActive();
+
+                this.precalculatedShowQuery = this.queryToShow2(this.query.query)
             }
         },
         methods: {
@@ -275,13 +278,7 @@
                 this.open = false;
                 this.resetPanelActive()
             },
-        },
-        computed: {
-            ...mapState(["panelActive"]),
-            ...mapGetters({
-                compound_query: 'build_query'
-            }),
-            queryToShow() {
+            queryToShow2(input) {
                 // return JSON.stringify(this.getInnerQuery);
                 let el = {};
                 this.getEmptyElement().forEach(element => {
@@ -290,7 +287,7 @@
 
                 let outer_list = [];
                 // console.log(this.getInnerQuery);
-                this.getInnerQuery.forEach(element => {
+                input.forEach(element => {
                     // console.log(element);
                     let inner_list = [];
                     Object.keys(element).forEach(key => {
@@ -301,6 +298,19 @@
                 });
 
                 return "<br/>" + outer_list.join("<br/><b>OR</b><br/>");
+            },
+        },
+        computed: {
+            ...mapState(["panelActive"]),
+            ...mapGetters({
+                compound_query: 'build_query'
+            }),
+            queryToShow() {
+                if (this.precalculatedShowQuery) {
+                    return this.precalculatedShowQuery;
+                } else {
+                    return this.queryToShow2(this.getInnerQuery);
+                }
             },
             buttonDisabled() {
                 return this.getInnerQuery.length == 0;
