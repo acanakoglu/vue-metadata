@@ -272,6 +272,82 @@
                             }
                         }
                     },
+                    {
+                        text: 'Example 3 - Tang et al. Two major types (S and L) of SARS-CoV2',
+                        value: {
+                            query: {
+                                "gcm": {},
+                                "type": "original",
+                                "kv": {
+                                    nuc_0: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["c"],
+                                            "sequence_alternative": ["t"],
+                                            "var_position": {"min_val": 8782, "max_val": 8782}
+                                        }]
+                                    },
+                                    nuc_1: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["t"],
+                                            "sequence_alternative": ["c"],
+                                            "var_position": {"min_val": 28144, "max_val": 28144}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 4 - Gudbjartsson et al. Icelandic A clade of SARS-CoV2',
+                        value: {
+                            query: {
+                                "gcm": {},
+                                "type": "original",
+                                "kv": {
+                                    nuc_0: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["c"],
+                                            "sequence_alternative": ["t"],
+                                            "var_position": {"min_val": 20229, "max_val": 20229}
+                                        }]
+                                    },
+                                    nuc_1: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["c"],
+                                            "sequence_alternative": ["t"],
+                                            "var_position": {"min_val": 13064, "max_val": 13064}
+                                        }]
+                                    },
+                                    nuc_2: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["t"],
+                                            "sequence_alternative": ["c"],
+                                            "var_position": {"min_val": 18483, "max_val": 18483}
+                                        }]
+                                    },
+                                    nuc_3: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["a"],
+                                            "sequence_alternative": ["g"],
+                                            "var_position": {"min_val": 8017, "max_val": 8017}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
 
                 ],
                 selectedTab: 0,
