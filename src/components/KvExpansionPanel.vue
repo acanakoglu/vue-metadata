@@ -175,7 +175,7 @@
                             labelTitle: 'Position range',
                             field: 'aa_position',
                             value: null,
-                            description: 'Range of positions within the aminoacid sequence of the gene'
+                            description: 'Range of positions within the amino acid sequence of the gene, based on the reference sequence'
                         },
                     ];
                 } else if (this.query_type === 'nuc') {
@@ -227,7 +227,7 @@
                             labelTitle: 'Position range',
                             field: 'var_position',
                             value: null,
-                            description: 'Range of positions within the full nucleotide sequence'
+                            description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'
                         },
                         {
                             type: 'dropdown',

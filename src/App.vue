@@ -303,7 +303,7 @@
                         }
                     },
                     {
-                        text: 'Example 4 - Gudbjartsson et al. Icelandic A clade of SARS-CoV2',
+                        text: 'Example 4 - Gudbjartsson et al. Icelandic A3 clade of SARS-CoV2',
                         value: {
                             query: {
                                 "gcm": {},
@@ -313,18 +313,18 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c"],
-                                            "sequence_alternative": ["t"],
-                                            "var_position": {"min_val": 20229, "max_val": 20229}
+                                            "sequence_original": ["g"],
+                                            "sequence_alternative": ["a"],
+                                            "var_position": {"min_val": 1397, "max_val": 1397}
                                         }]
                                     },
                                     nuc_1: {
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c"],
+                                            "sequence_original": ["g"],
                                             "sequence_alternative": ["t"],
-                                            "var_position": {"min_val": 13064, "max_val": 13064}
+                                            "var_position": {"min_val": 11083, "max_val": 11083}
                                         }]
                                     },
                                     nuc_2: {
@@ -333,23 +333,90 @@
                                         "query": [{
                                             "sequence_original": ["t"],
                                             "sequence_alternative": ["c"],
-                                            "var_position": {"min_val": 18483, "max_val": 18483}
+                                            "var_position": {"min_val": 28688, "max_val": 28688}
                                         }]
                                     },
                                     nuc_3: {
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["a"],
-                                            "sequence_alternative": ["g"],
-                                            "var_position": {"min_val": 8017, "max_val": 8017}
+                                            "sequence_original": ["g"],
+                                            "sequence_alternative": ["t"],
+                                            "var_position": {"min_val": 29742, "max_val": 29742}
                                         }]
                                     }
                                 }
                             }
                         }
                     },
-
+                    {
+                        text: 'Example 5a - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein before March (included)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                     "collection_date": {"min_val": null, "max_val": "2020-03-31", "is_null": false}
+                                },
+                                "type": "original",
+                                "kv": {
+                                    aa_0: {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": [ "s" ],
+                                            "sequence_aa_original": ["d"],
+                                            "sequence_aa_alternative": ["g"],
+                                            "aa_position": {"min_val": 614, "max_val": 614}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 5b - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein after March',
+                        value: {
+                            query: {
+                                "gcm": {
+                                     "collection_date": {"min_val": "2020-04-01", "max_val": null, "is_null": false}
+                                },
+                                "type": "original",
+                                "kv": {
+                                    aa_0: {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": [ "s" ],
+                                            "sequence_aa_original": ["d"],
+                                            "sequence_aa_alternative": ["g"],
+                                            "aa_position": {"min_val": 614, "max_val": 614}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 6 - Pachetti et al. P4715L mutation in the RdRp',
+                        value: {
+                            query: {
+                                "gcm": {
+                                     //"collection_date": {"min_val": "2020-04-01", "max_val": null, "is_null": false}
+                                },
+                                "type": "original",
+                                "kv": {
+                                    aa_0: {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_aa_original": ["p"],
+                                            "sequence_aa_alternative": ["l"],
+                                            "aa_position": {"min_val": 14408, "max_val": 14408}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
                 ],
                 selectedTab: 0,
                 queryString: '',
