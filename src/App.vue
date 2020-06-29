@@ -408,9 +408,32 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
+                                            "gene_name": [ "orf1ab" ],
                                             "sequence_aa_original": ["p"],
                                             "sequence_aa_alternative": ["l"],
-                                            "aa_position": {"min_val": 14408, "max_val": 14408}
+                                            "aa_position": {"min_val": 4715, "max_val": 4715}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 7 - Chaw et al. G251V in ORF3',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "collection_date":{"min_val":null,"max_val":"2020-01-22","is_null":false}
+                                    },
+                                "type":"original",
+                                "kv":{
+                                    aa_0:{
+                                        "type_query":"aa",
+                                        "exact":false,
+                                        "query":[{
+                                            "gene_name":["orf3a"],
+                                            "sequence_aa_original":["g"],
+                                            "aa_position":{"min_val":251,"max_val":251}
                                         }]
                                     }
                                 }
