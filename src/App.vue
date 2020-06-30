@@ -595,18 +595,19 @@
             },
 
             queryToShow() {
-                let a = [];
-                for (let i in this.compound_query['gcm']) {
-                    if (this.numerical.has(i)) {
-                        a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
-                    } else {
-                        let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
-                        // b.replace("''","'N/D")
-                        a.push(b.replace("''", "null"))
-                    }
-
-                }
-                return a.join(", ")
+                return "TODO";
+                // let a = [];
+                // for (let i in this.compound_query['gcm']) {
+                //     if (this.numerical.has(i)) {
+                //         a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
+                //     } else {
+                //         let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
+                //         // b.replace("''","'N/D")
+                //         a.push(b.replace("''", "null"))
+                //     }
+                //
+                // }
+                // return a.join(", ")
             },
             typeLocal: {
                 get() {
