@@ -598,19 +598,25 @@
             },
 
             queryToShow() {
-                return "TODO";
-                // let a = [];
-                // for (let i in this.compound_query['gcm']) {
-                //     if (this.numerical.has(i)) {
-                //         a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
-                //     } else {
-                //         let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
-                //         // b.replace("''","'N/D")
-                //         a.push(b.replace("''", "null"))
-                //     }
-                //
-                // }
-                // return a.join(", ")
+                let inner_list = [];
+                Object.keys(this.compound_query['gcm']).forEach(key => {
+                    const value2 = [];
+                    const value = this.compound_query['gcm'][key];
+                    if (Array.isArray(value)) {
+                        value.forEach(val => {
+                            if (val === null)
+                                value2.push("N/D");
+                            else
+                                value2.push(val);
+                        });
+                        inner_list.push(key + ': ' + JSON.stringify(value2));
+                    } else {
+                        inner_list.push(key + ': ' + JSON.stringify(value));
+                    }
+
+
+                });
+                return inner_list.join(", ");
             },
             typeLocal: {
                 get() {
