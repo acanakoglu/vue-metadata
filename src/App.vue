@@ -28,6 +28,9 @@
             <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
                 <span class="mr-2">WIKI</span>
             </v-btn>
+            <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
+                <span class="mr-2">Acknowledgements</span>
+            </v-btn>
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
