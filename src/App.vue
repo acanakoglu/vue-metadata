@@ -19,6 +19,9 @@
 <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
 <!--                <span class="font-weight-light">doc</span></span>-->
 <!--            </v-btn>-->
+            <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
+                <span class="mr-2">ViruSurf GISAID</span>
+            </v-btn>
             <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
                 <span class="mr-2">GenoSurf</span>
             </v-btn>
@@ -124,7 +127,7 @@
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                Metadata query
+                                Metadata search
                             </span>
                             <span style="font-family:monospace; font-size:120%;">
                                 {{ queryToShow }}
@@ -166,7 +169,7 @@
 
 
                         <div v-if="count === null">Loading...</div>
-                        <div style="font-size:1.4em;" v-else-if="count>0">{{count}} item<span
+                        <div style="font-size:1.4em;" v-else-if="count>0">{{count}} sequence<span
                                 v-if="count>1">s</span> found
                         </div>
                         <div v-else>No result</div>
@@ -400,7 +403,7 @@
                         value: {
                             query: {
                                 "gcm": {
-                                     //"collection_date": {"min_val": "2020-04-01", "max_val": null, "is_null": false}
+                                     "country": ["italy"]
                                 },
                                 "type": "original",
                                 "kv": {
