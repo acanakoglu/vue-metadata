@@ -41,7 +41,7 @@
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "result.csv" file that contains
-                                        the comma-separated version of the table shown in the "RESULT ITEMS" section,
+                                        the comma-separated version of the table shown in the "RESULT SEQUENCES" section,
                                         preserving user defined fields order.
                                     </p>
                                     <p>

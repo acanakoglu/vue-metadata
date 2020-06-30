@@ -8,17 +8,17 @@
                     <span class="font-weight-light">Surf</span>
                 </v-toolbar-title>
             </v-btn>
-<!--            <span style="font-size: 24px;">enabled by data from-->
-<!--                <a href="https://www.gisaid.org" target="_blank">-->
-<!--                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"-->
-<!--                         height="24px"/>-->
-<!--                </a>-->
-<!--            </span>-->
+            <!--            <span style="font-size: 24px;">enabled by data from-->
+            <!--                <a href="https://www.gisaid.org" target="_blank">-->
+            <!--                    <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"-->
+            <!--                         height="24px"/>-->
+            <!--                </a>-->
+            <!--            </span>-->
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-<!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
-<!--                <span class="font-weight-light">doc</span></span>-->
-<!--            </v-btn>-->
+            <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
+            <!--                <span class="font-weight-light">doc</span></span>-->
+            <!--            </v-btn>-->
             <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
                 <span class="mr-2">ViruSurf GISAID</span>
             </v-btn>
@@ -45,66 +45,66 @@
                             <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
                         </v-flex>  <!--clear all-->
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <v-dialog v-model="dialogShowQuery">-->
-<!--                                <v-btn flat class="small-btn" dark small-->
-<!--                                       slot="activator"-->
-<!--                                       color="info"-->
-<!--                                >Modify-->
-<!--                                </v-btn>-->
-<!--                                <v-card>-->
-<!--                                    <v-card-title-->
-<!--                                            class="headline blue lighten-4"-->
-<!--                                            primary-title-->
-<!--                                    >-->
-<!--                                        Copy, modify or paste query-->
-<!--                                    </v-card-title>-->
-<!--                                    <v-alert type="error" :value="true" v-if="!inputValid">-->
-<!--                                        Input is not valid-->
-<!--                                    </v-alert>-->
-<!--                                    <v-textarea class="mytextarea"-->
-<!--                                                v-model="queryInput"-->
-<!--                                    >-->
-<!--                                    </v-textarea>-->
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <v-dialog v-model="dialogShowQuery">-->
+                        <!--                                <v-btn flat class="small-btn" dark small-->
+                        <!--                                       slot="activator"-->
+                        <!--                                       color="info"-->
+                        <!--                                >Modify-->
+                        <!--                                </v-btn>-->
+                        <!--                                <v-card>-->
+                        <!--                                    <v-card-title-->
+                        <!--                                            class="headline blue lighten-4"-->
+                        <!--                                            primary-title-->
+                        <!--                                    >-->
+                        <!--                                        Copy, modify or paste query-->
+                        <!--                                    </v-card-title>-->
+                        <!--                                    <v-alert type="error" :value="true" v-if="!inputValid">-->
+                        <!--                                        Input is not valid-->
+                        <!--                                    </v-alert>-->
+                        <!--                                    <v-textarea class="mytextarea"-->
+                        <!--                                                v-model="queryInput"-->
+                        <!--                                    >-->
+                        <!--                                    </v-textarea>-->
 
-<!--                                    <v-divider></v-divider>-->
+                        <!--                                    <v-divider></v-divider>-->
 
-<!--                                    <v-card-actions>-->
-<!--                                        <v-btn-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="toClipboard()"-->
-<!--                                        >-->
-<!--                                            Copy to clipboard-->
-<!--                                        </v-btn>-->
-<!--                                        <v-spacer></v-spacer>-->
-<!--                                        <v-btn-->
-<!--                                                :disabled=!inputValid-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="setInputQuery"-->
-<!--                                        >-->
-<!--                                            Apply-->
-<!--                                        </v-btn>-->
-<!--                                        <v-btn-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="dialogShowQuery = false"-->
-<!--                                        >-->
-<!--                                            Close-->
-<!--                                        </v-btn>-->
-<!--                                    </v-card-actions>-->
-<!--                                </v-card>-->
-<!--                            </v-dialog>-->
-<!--                        </v-flex>  &lt;!&ndash;modify&ndash;&gt;-->
+                        <!--                                    <v-card-actions>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="toClipboard()"-->
+                        <!--                                        >-->
+                        <!--                                            Copy to clipboard-->
+                        <!--                                        </v-btn>-->
+                        <!--                                        <v-spacer></v-spacer>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                :disabled=!inputValid-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="setInputQuery"-->
+                        <!--                                        >-->
+                        <!--                                            Apply-->
+                        <!--                                        </v-btn>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="dialogShowQuery = false"-->
+                        <!--                                        >-->
+                        <!--                                            Close-->
+                        <!--                                        </v-btn>-->
+                        <!--                                    </v-card-actions>-->
+                        <!--                                </v-card>-->
+                        <!--                            </v-dialog>-->
+                        <!--                        </v-flex>  &lt;!&ndash;modify&ndash;&gt;-->
 
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <text-reader @load="queryString = $event"></text-reader>-->
-<!--                        </v-flex>  &lt;!&ndash;upload query&ndash;&gt;-->
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <text-reader @load="queryString = $event"></text-reader>-->
+                        <!--                        </v-flex>  &lt;!&ndash;upload query&ndash;&gt;-->
 
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>-->
-<!--                        </v-flex>  &lt;!&ndash;download query&ndash;&gt;-->
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>-->
+                        <!--                        </v-flex>  &lt;!&ndash;download query&ndash;&gt;-->
 
                         <v-spacer></v-spacer>
 
@@ -142,7 +142,7 @@
                 <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
-                            Result items
+                            Result sequences
                         </v-tab>
                         <v-tab-item>
                             <MetadataTable/>
@@ -156,10 +156,10 @@
                             xs6
                             class="bottom-info"
                             style="font-size:12px;">
-<!--                        <div>GISAID data provided on this website is subject to GISAID’s <a-->
-<!--                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms-->
-<!--                            and Conditions</a>.-->
-<!--                        </div>-->
+                        <!--                        <div>GISAID data provided on this website is subject to GISAID’s <a-->
+                        <!--                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms-->
+                        <!--                            and Conditions</a>.-->
+                        <!--                        </div>-->
                     </v-flex>
                     <v-flex
                             lighten-2
@@ -357,15 +357,19 @@
                         value: {
                             query: {
                                 "gcm": {
-                                     "collection_date": {"min_val": null, "max_val": "2020-03-31", "is_null": false}
+                                    "collection_date": {
+                                        "min_val": null,
+                                        "max_val": "2020-03-31",
+                                        "is_null": false
+                                    }
                                 },
                                 "type": "original",
                                 "kv": {
-                                    aa_0: {
+                                    "aa_0": {
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": [ "s" ],
+                                            "gene_name": ["s"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "aa_position": {"min_val": 614, "max_val": 614}
@@ -380,15 +384,19 @@
                         value: {
                             query: {
                                 "gcm": {
-                                     "collection_date": {"min_val": "2020-04-01", "max_val": null, "is_null": false}
+                                    "collection_date": {
+                                        "min_val": "2020-04-01",
+                                        "max_val": null,
+                                        "is_null": false
+                                    }
                                 },
                                 "type": "original",
                                 "kv": {
-                                    aa_0: {
+                                    "aa_0": {
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": [ "s" ],
+                                            "gene_name": ["s"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "aa_position": {"min_val": 614, "max_val": 614}
@@ -402,16 +410,14 @@
                         text: 'Example 6 - Pachetti et al. P4715L mutation in the RdRp',
                         value: {
                             query: {
-                                "gcm": {
-                                     "country": ["italy"]
-                                },
+                                "gcm": {"country": ["italy"]},
                                 "type": "original",
                                 "kv": {
-                                    aa_0: {
+                                    "aa_0": {
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": [ "orf1ab" ],
+                                            "gene_name": ["orf1ab"],
                                             "sequence_aa_original": ["p"],
                                             "sequence_aa_alternative": ["l"],
                                             "aa_position": {"min_val": 4715, "max_val": 4715}
@@ -426,17 +432,22 @@
                         value: {
                             query: {
                                 "gcm": {
-                                    "collection_date":{"min_val":null,"max_val":"2020-01-22","is_null":false}
-                                    },
-                                "type":"original",
-                                "kv":{
-                                    aa_0:{
-                                        "type_query":"aa",
-                                        "exact":false,
-                                        "query":[{
-                                            "gene_name":["orf3a"],
-                                            "sequence_aa_original":["g"],
-                                            "aa_position":{"min_val":251,"max_val":251}
+                                    "collection_date": {
+                                        "min_val": null,
+                                        "max_val": "2020-01-22",
+                                        "is_null": false
+                                    }
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["orf3a"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["v"],
+                                            "aa_position": {"min_val": 251, "max_val": 251}
                                         }]
                                     }
                                 }
