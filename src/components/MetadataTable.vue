@@ -541,6 +541,8 @@
                         row['source_page'] = "https://gisaid.org/";
                     else if(row['database_source'] === 'GenBank' || row['database_source'] === 'RefSeq')
                         row['source_page'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + row['accession_id'];
+                    else if(row['database_source'] == 'COG-UK')
+                        row['source_page'] = "https://www.cogconsortium.uk/data/";
                     //else do nothing
                 }
                 return input;
