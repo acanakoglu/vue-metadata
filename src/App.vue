@@ -258,7 +258,7 @@
                 selectedQuery: null,
                 queryItems: [
                     {
-                        text: 'Example 1 - Sequences from GenBank that are complete',
+                        text: 'Example 1 - Complete sequences from GenBank',
                         value: {
                             query: {
                                 "gcm": {
@@ -280,7 +280,23 @@
                         }
                     },
                     {
-                        text: 'Example 3 - Tang et al. Two major types (S and L) of SARS-CoV2',
+                        text: 'Example 3 - COG-UK sequences collected in May 2020',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "database_source": ["cog-uk"],
+                                    "collection_date": {
+                                        "min_val": "2020-05-01",
+                                        "max_val": "2020-05-31",
+                                        "is_null": false
+                                    }
+                                }, "type": "original", "kv": {}
+                            }
+
+                        }
+                    },
+                    {
+                        text: 'Example 4 - Tang et al. Two major types (S and L) of SARS-CoV2',
                         value: {
                             query: {
                                 "gcm": {},
@@ -309,7 +325,7 @@
                         }
                     },
                     {
-                        text: 'Example 4 - Gudbjartsson et al. Icelandic A3 clade of SARS-CoV2',
+                        text: 'Example 5 - Gudbjartsson et al. Icelandic A3 clade of SARS-CoV2',
                         value: {
                             query: {
                                 "gcm": {},
@@ -356,7 +372,7 @@
                         }
                     },
                     {
-                        text: 'Example 5a - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein before March (included)',
+                        text: 'Example 6a - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein before March (included)',
                         value: {
                             query: {
                                 "gcm": {
@@ -383,7 +399,7 @@
                         }
                     },
                     {
-                        text: 'Example 5b - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein after March',
+                        text: 'Example 6b - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein after March',
                         value: {
                             query: {
                                 "gcm": {
@@ -410,7 +426,7 @@
                         }
                     },
                     {
-                        text: 'Example 6 - Pachetti et al. P4715L mutation in the RdRp',
+                        text: 'Example 7 - Pachetti et al. P4715L mutation in the RdRp',
                         value: {
                             query: {
                                 "gcm": {"country": ["italy"]},
@@ -431,7 +447,7 @@
                         }
                     },
                     {
-                        text: 'Example 7 - Chaw et al. G251V in ORF3',
+                        text: 'Example 8 - Chaw et al. G251V in ORF3',
                         value: {
                             query: {
                                 "gcm": {
