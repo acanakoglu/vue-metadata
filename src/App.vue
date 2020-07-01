@@ -400,7 +400,8 @@
                                         "min_val": null,
                                         "max_val": "2020-03-31",
                                         "is_null": false
-                                    }
+                                    },
+                                    "database_source": ["genbank"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -427,7 +428,8 @@
                                         "min_val": "2020-04-01",
                                         "max_val": null,
                                         "is_null": false
-                                    }
+                                    },
+                                    "database_source": ["genbank"]
                                 },
                                 "type": "original",
                                 "kv": {
