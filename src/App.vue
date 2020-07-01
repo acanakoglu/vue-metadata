@@ -302,13 +302,14 @@
                                 "gcm": {},
                                 "type": "original",
                                 "kv": {
-                                    nuc_0: {
-                                        "type_query": "nuc",
+                                    "aa_0": {
+                                        "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c"],
-                                            "sequence_alternative": ["t"],
-                                            "var_position": {"min_val": 28144, "max_val": 28144}
+                                            "gene_name": ["orf8"],
+                                            "sequence_aa_original": ["l"],
+                                            "sequence_aa_alternative": ["s"],
+                                            "aa_position": {"min_val": 84, "max_val": 84}
                                         }]
                                     }
                                 }
@@ -326,7 +327,7 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c","t"],
+                                            "sequence_original": ["c", "t"],
                                             "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 8782, "max_val": 8782}
                                         }]
@@ -335,7 +336,7 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c","t"],
+                                            "sequence_original": ["c", "t"],
                                             "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 28144, "max_val": 28144}
                                         }]
@@ -400,8 +401,7 @@
                                         "min_val": null,
                                         "max_val": "2020-03-31",
                                         "is_null": false
-                                    },
-                                    "database_source": ["genbank"]
+                                    }
                                 },
                                 "type": "original",
                                 "kv": {
@@ -428,8 +428,7 @@
                                         "min_val": "2020-04-01",
                                         "max_val": null,
                                         "is_null": false
-                                    },
-                                    "database_source": ["genbank"]
+                                    }
                                 },
                                 "type": "original",
                                 "kv": {
@@ -448,28 +447,7 @@
                         }
                     },
                     {
-                        text: 'Example 7 - Pachetti et al. P4715L mutation in the RdRp',
-                        value: {
-                            query: {
-                                "gcm": {"country": ["italy"]},
-                                "type": "original",
-                                "kv": {
-                                    "aa_0": {
-                                        "type_query": "aa",
-                                        "exact": false,
-                                        "query": [{
-                                            "gene_name": ["orf1ab"],
-                                            "sequence_aa_original": ["p"],
-                                            "sequence_aa_alternative": ["l"],
-                                            "aa_position": {"min_val": 4715, "max_val": 4715}
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        text: 'Example 8 - Chaw et al. G251V in ORF3',
+                        text: 'Example 7 - Chaw et al. G251V in ORF3',
                         value: {
                             query: {
                                 "gcm": {
@@ -495,6 +473,38 @@
                             }
                         }
                     },
+                    {
+                        text: 'Example 8 - Pachetti et al. P4715L mutation in the RdRp',
+                        value: {
+                            query: {
+                                "gcm": {},
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["r"],
+                                            "sequence_aa_alternative": ["k"]
+                                        }, {
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["r"]
+                                        }]
+                                    },
+                                    "nuc_1": {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "n_gene_name": ["n"],
+                                            "var_position": {"min_val": 28881, "max_val": 28881}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    }
                 ],
                 selectedTab: 0,
                 queryString: '',
