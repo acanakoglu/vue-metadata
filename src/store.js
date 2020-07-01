@@ -122,6 +122,19 @@ export default new Vuex.Store({
             commit('reloadKv');
         },
         setKvFull: ({commit, state}, payload) => {
+            commit('resetKv');
+            let i=0;
+            Object.keys(payload).forEach(key => {
+                const val = payload[key];
+                let a = {
+                        'id': i,
+                        'query_text': val.type_query,
+                        'query_type': val.type_query,
+                        'exact': false
+                    };
+                i=i+1;
+                commit('pushKey', a)
+            });
             if (Object.keys(payload).length === 0)
                 commit('resetKv');
             else

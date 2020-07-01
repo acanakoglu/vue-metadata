@@ -347,6 +347,16 @@
 
         },
         watch: {
+            query:{
+                handler() {
+                    console.log(this.query);
+                    if(this.query) {
+                        this.precalculatedShowQuery = this.queryToShow2(this.query.query);
+                    }
+                }
+                ,
+                deep: true
+            },
             open: {
                 handler() {
                     if (!this.readOnly) {
