@@ -306,8 +306,8 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c"],
-                                            "sequence_alternative": ["t"],
+                                            "sequence_original": ["t"],
+                                            "sequence_alternative": ["c"],
                                             "var_position": {"min_val": 8782, "max_val": 8782}
                                         }]
                                     },
@@ -315,8 +315,8 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["t"],
-                                            "sequence_alternative": ["c"],
+                                            "sequence_original": ["c"],
+                                            "sequence_alternative": ["t"],
                                             "var_position": {"min_val": 28144, "max_val": 28144}
                                         }]
                                     }
