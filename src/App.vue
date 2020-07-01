@@ -296,10 +296,10 @@
                         }
                     },
                     {
-                        text: 'Example 4a - Tang et al. Two major types (S and L) of SARS-CoV2',
+                        text: 'Example 4a - Tang et al. S type (opposed to L type) of SARS-CoV2',
                         value: {
                             query: {
-                                "gcm": {},
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     "aa_0": {
@@ -320,14 +320,14 @@
                         text: 'Example 4b - Tang et al. Heteroplasmy of SARS-CoV-2 viruses in SARS-CoV2 patients',
                         value: {
                             query: {
-                                "gcm": {},
+                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     nuc_0: {
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c", "t"],
+                                            "sequence_original": ["c"],
                                             "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 8782, "max_val": 8782}
                                         }]
@@ -336,7 +336,7 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c", "t"],
+                                            "sequence_original": ["t"],
                                             "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 28144, "max_val": 28144}
                                         }]
@@ -346,10 +346,10 @@
                         }
                     },
                     {
-                        text: 'Example 5 - Gudbjartsson et al. Icelandic A3 clade of SARS-CoV2',
+                        text: 'Example 5 - Gudbjartsson et al. A3 clade of SARS-CoV2 from Icelandic study',
                         value: {
                             query: {
-                                "gcm": {},
+                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     nuc_0: {
@@ -393,7 +393,7 @@
                         }
                     },
                     {
-                        text: 'Example 6a - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein before March (included)',
+                        text: 'Example 6a - Zhang et al. D614G mutation in SARS-CoV-2 spike protein before March (included)',
                         value: {
                             query: {
                                 "gcm": {
@@ -401,7 +401,8 @@
                                         "min_val": null,
                                         "max_val": "2020-03-31",
                                         "is_null": false
-                                    }
+                                    },
+                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -420,7 +421,7 @@
                         }
                     },
                     {
-                        text: 'Example 6b - Zhang et al. D614G mutation in the SARS-CoV-2 spike protein after March',
+                        text: 'Example 6b - Zhang et al. D614G mutation in SARS-CoV-2 spike protein after March',
                         value: {
                             query: {
                                 "gcm": {
@@ -428,7 +429,8 @@
                                         "min_val": "2020-04-01",
                                         "max_val": null,
                                         "is_null": false
-                                    }
+                                    },
+                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -447,15 +449,16 @@
                         }
                     },
                     {
-                        text: 'Example 7 - Chaw et al. G251V in ORF3',
+                        text: 'Example 7 - Chaw et al. G251V in SARS-CoV2 ORF3 gene, linked to Wuhan lockdown',
                         value: {
                             query: {
                                 "gcm": {
                                     "collection_date": {
                                         "min_val": null,
-                                        "max_val": "2020-01-22",
+                                        "max_val": "2020-01-21",
                                         "is_null": false
-                                    }
+                                    },
+                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -474,10 +477,10 @@
                         }
                     },
                     {
-                        text: 'Example 8 - Pachetti et al. P4715L mutation in the RdRp',
+                        text: 'Example 8 - Pachetti et al. SARS-CoV2 gene N nucleotide mutation, related to double codon mutation',
                         value: {
                             query: {
-                                "gcm": {},
+                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     "aa_0": {
