@@ -1,5 +1,5 @@
 <template>
-    <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
+    <v-expansion-panel-content :readonly="readOnly" :value="open" hide-actions>
         <div slot="header">
             <span class="label">{{getFullQueryType()}} query: </span>
             <span style="font-family:monospace" v-html="queryToShow"></span>
@@ -92,7 +92,7 @@
                 list_of_conditions: [this.getEmptyElement()],
                 cancelButton: false,
                 readOnly: false,
-                open: [true],
+                open: false,
 
                 isLoading: false,
                 key: "",
@@ -117,6 +117,9 @@
                 this.resetPanelActive();
 
                 this.precalculatedShowQuery = this.queryToShow2(this.query.query)
+            }
+            else {
+                this.open = true;
             }
         },
         methods: {
@@ -253,9 +256,6 @@
                     ];
                 }
 
-            },
-            setOpen() {
-                this.open = [false];
             },
             cancel() {
                 this.deleteKey(this.id);
