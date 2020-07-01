@@ -296,7 +296,7 @@
                         }
                     },
                     {
-                        text: 'Example 4 - Tang et al. Two major types (S and L) of SARS-CoV2',
+                        text: 'Example 4a - Tang et al. Two major types (S and L) of SARS-CoV2',
                         value: {
                             query: {
                                 "gcm": {},
@@ -306,8 +306,28 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["t"],
-                                            "sequence_alternative": ["c"],
+                                            "sequence_original": ["c"],
+                                            "sequence_alternative": ["t"],
+                                            "var_position": {"min_val": 28144, "max_val": 28144}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 4b - Tang et al. Heteroplasmy of SARS-CoV-2 viruses in SARS-CoV2 patients',
+                        value: {
+                            query: {
+                                "gcm": {},
+                                "type": "original",
+                                "kv": {
+                                    nuc_0: {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "sequence_original": ["c","t"],
+                                            "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 8782, "max_val": 8782}
                                         }]
                                     },
@@ -315,8 +335,8 @@
                                         "type_query": "nuc",
                                         "exact": false,
                                         "query": [{
-                                            "sequence_original": ["c"],
-                                            "sequence_alternative": ["t"],
+                                            "sequence_original": ["c","t"],
+                                            "sequence_alternative": ["y"],
                                             "var_position": {"min_val": 28144, "max_val": 28144}
                                         }]
                                     }
