@@ -23,13 +23,13 @@
                 <!--<v-layout class="container view">-->
                 <v-layout>
                     <v-flex md4 class="age-comp">
-                        <v-text-field v-model="min" type="number" label="Min value">
-                            <!-- :min="minInt" :max="max" :hint="minString" persistent-hint -->
+                        <v-text-field v-model="min" type="number" label="Min value"
+                                      :min="minInt" :max="max" :hint="minString" persistent-hint>
                         </v-text-field>
                     </v-flex>
                     <v-flex md4 class="age-comp">
-                        <v-text-field v-model="max" type="number" label="Max value">
-                            <!-- :min="min" :max="maxInt" :hint="maxString" persistent-hint -->
+                        <v-text-field v-model="max" type="number" label="Max value"
+                                      :min="min" :max="maxInt" :hint="maxString" persistent-hint>
                         </v-text-field>
                     </v-flex>
                     <!--                    <v-flex md2 class="age-comp">-->
@@ -108,26 +108,26 @@
                 this.min = null;
                 this.max = null;
 
-                // // eslint-disable-next-line
-                // axios.post(url, this.compound_query)
-                //     .then((res) => {
-                //         return res.data
-                //     })
-                //     .then((res) => {
-                //         this.minAge = res['min_val'];
-                //
-                //         this.maxAge = res['max_val'];
-                //
-                //         if (this.ageItem) {
-                //             if (this.ageItem['min_val'] != null) {
-                //                 this.min = this.ageItem['min_val'] / this.unit;
-                //             }
-                //             this.isNull = this.ageItem['is_null'];
-                //             if (this.ageItem['max_val'] != null) {
-                //                 this.max = this.ageItem['max_val'] / this.unit;
-                //             }
-                //         }
-                //     });
+                // eslint-disable-next-line
+                axios.post(url, this.compound_query)
+                    .then((res) => {
+                        return res.data
+                    })
+                    .then((res) => {
+                        this.minAge = res['min_val'];
+
+                        this.maxAge = res['max_val'];
+
+                        if (this.ageItem) {
+                            if (this.ageItem['min_val'] != null) {
+                                this.min = this.ageItem['min_val'] / this.unit;
+                            }
+                            this.isNull = this.ageItem['is_null'];
+                            if (this.ageItem['max_val'] != null) {
+                                this.max = this.ageItem['max_val'] / this.unit;
+                            }
+                        }
+                    });
             },
             setAgeLocal() {
                 let c = 0;

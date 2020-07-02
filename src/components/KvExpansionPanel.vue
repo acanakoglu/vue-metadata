@@ -176,7 +176,7 @@
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
-                            field: 'aa_position',
+                            field: 'start_aa_original',
                             info: 'Position of amino acid variant in the gene coding sequence (CDS), e.g. 0-1000',
                             value: null,
                             description: 'Range of positions within the amino acid sequence of the gene, based on the reference sequence'
@@ -229,7 +229,7 @@
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
-                            field: 'var_position',
+                            field: 'start_original',
                             info: 'Position of nucleotide variant in the full sequence, e.g. 0-15000',
                             value: null,
                             description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'

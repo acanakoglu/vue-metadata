@@ -309,7 +309,7 @@
                                             "gene_name": ["orf8"],
                                             "sequence_aa_original": ["l"],
                                             "sequence_aa_alternative": ["s"],
-                                            "aa_position": {"min_val": 84, "max_val": 84}
+                                            "start_aa_original": {"min_val": 84, "max_val": 84}
                                         }]
                                     }
                                 }
@@ -329,7 +329,7 @@
                                         "query": [{
                                             "sequence_original": ["c"],
                                             "sequence_alternative": ["y"],
-                                            "var_position": {"min_val": 8782, "max_val": 8782}
+                                            "start_original": {"min_val": 8782, "max_val": 8782}
                                         }]
                                     },
                                     nuc_1: {
@@ -338,7 +338,7 @@
                                         "query": [{
                                             "sequence_original": ["t"],
                                             "sequence_alternative": ["y"],
-                                            "var_position": {"min_val": 28144, "max_val": 28144}
+                                            "start_original": {"min_val": 28144, "max_val": 28144}
                                         }]
                                     }
                                 }
@@ -358,7 +358,7 @@
                                         "query": [{
                                             "sequence_original": ["g"],
                                             "sequence_alternative": ["a"],
-                                            "var_position": {"min_val": 1397, "max_val": 1397}
+                                            "start_original": {"min_val": 1397, "max_val": 1397}
                                         }]
                                     },
                                     nuc_1: {
@@ -367,7 +367,7 @@
                                         "query": [{
                                             "sequence_original": ["g"],
                                             "sequence_alternative": ["t"],
-                                            "var_position": {"min_val": 11083, "max_val": 11083}
+                                            "start_original": {"min_val": 11083, "max_val": 11083}
                                         }]
                                     },
                                     nuc_2: {
@@ -376,7 +376,7 @@
                                         "query": [{
                                             "sequence_original": ["t"],
                                             "sequence_alternative": ["c"],
-                                            "var_position": {"min_val": 28688, "max_val": 28688}
+                                            "start_original": {"min_val": 28688, "max_val": 28688}
                                         }]
                                     },
                                     nuc_3: {
@@ -385,7 +385,7 @@
                                         "query": [{
                                             "sequence_original": ["g"],
                                             "sequence_alternative": ["t"],
-                                            "var_position": {"min_val": 29742, "max_val": 29742}
+                                            "start_original": {"min_val": 29742, "max_val": 29742}
                                         }]
                                     }
                                 }
@@ -413,7 +413,7 @@
                                             "gene_name": ["s"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
-                                            "aa_position": {"min_val": 614, "max_val": 614}
+                                            "start_aa_original": {"min_val": 614, "max_val": 614}
                                         }]
                                     }
                                 }
@@ -441,7 +441,7 @@
                                             "gene_name": ["s"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
-                                            "aa_position": {"min_val": 614, "max_val": 614}
+                                            "start_aa_original": {"min_val": 614, "max_val": 614}
                                         }]
                                     }
                                 }
@@ -469,7 +469,7 @@
                                             "gene_name": ["orf3a"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["v"],
-                                            "aa_position": {"min_val": 251, "max_val": 251}
+                                            "start_aa_original": {"min_val": 251, "max_val": 251}
                                         }]
                                     }
                                 }
@@ -501,7 +501,7 @@
                                         "exact": false,
                                         "query": [{
                                             "n_gene_name": ["n"],
-                                            "var_position": {"min_val": 28881, "max_val": 28881}
+                                            "start_original": {"min_val": 28881, "max_val": 28881}
                                         }]
                                     }
                                 }
