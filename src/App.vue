@@ -16,12 +16,12 @@
             </span>
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-<!--            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">-->
-<!--                <span class="mr-2">GenoSurf</span>-->
-<!--            </v-btn>-->
-<!--            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">-->
-<!--                <span class="mr-2">WIKI</span>-->
-<!--            </v-btn>-->
+            <!--            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">-->
+            <!--                <span class="mr-2">GenoSurf</span>-->
+            <!--            </v-btn>-->
+            <!--            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">-->
+            <!--                <span class="mr-2">WIKI</span>-->
+            <!--            </v-btn>-->
             <v-btn flat href="/virusurf_gisaid/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
@@ -37,67 +37,73 @@
                         <v-flex md1 sm2 class="no-horizontal-padding">
                             <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
                             </v-btn>
+
                         </v-flex>  <!--clear all-->
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <v-dialog v-model="dialogShowQuery">-->
-<!--                                <v-btn flat class="small-btn" dark small-->
-<!--                                       slot="activator"-->
-<!--                                       color="info"-->
-<!--                                >Modify-->
-<!--                                </v-btn>-->
-<!--                                <v-card>-->
-<!--                                    <v-card-title-->
-<!--                                            class="headline blue lighten-4"-->
-<!--                                            primary-title-->
-<!--                                    >-->
-<!--                                        Copy, modify or paste query-->
-<!--                                    </v-card-title>-->
-<!--                                    <v-alert type="error" :value="true" v-if="!inputValid">-->
-<!--                                        Input is not valid-->
-<!--                                    </v-alert>-->
-<!--                                    <v-textarea class="mytextarea"-->
-<!--                                                v-model="queryInput"-->
-<!--                                    >-->
-<!--                                    </v-textarea>-->
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="small-btn" small color='info' @click="applyButtonClick">
+                                Search
+                            </v-btn>
+                        </v-flex>
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <v-dialog v-model="dialogShowQuery">-->
+                        <!--                                <v-btn flat class="small-btn" dark small-->
+                        <!--                                       slot="activator"-->
+                        <!--                                       color="info"-->
+                        <!--                                >Modify-->
+                        <!--                                </v-btn>-->
+                        <!--                                <v-card>-->
+                        <!--                                    <v-card-title-->
+                        <!--                                            class="headline blue lighten-4"-->
+                        <!--                                            primary-title-->
+                        <!--                                    >-->
+                        <!--                                        Copy, modify or paste query-->
+                        <!--                                    </v-card-title>-->
+                        <!--                                    <v-alert type="error" :value="true" v-if="!inputValid">-->
+                        <!--                                        Input is not valid-->
+                        <!--                                    </v-alert>-->
+                        <!--                                    <v-textarea class="mytextarea"-->
+                        <!--                                                v-model="queryInput"-->
+                        <!--                                    >-->
+                        <!--                                    </v-textarea>-->
 
-<!--                                    <v-divider></v-divider>-->
+                        <!--                                    <v-divider></v-divider>-->
 
-<!--                                    <v-card-actions>-->
-<!--                                        <v-btn-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="toClipboard()"-->
-<!--                                        >-->
-<!--                                            Copy to clipboard-->
-<!--                                        </v-btn>-->
-<!--                                        <v-spacer></v-spacer>-->
-<!--                                        <v-btn-->
-<!--                                                :disabled=!inputValid-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="setInputQuery"-->
-<!--                                        >-->
-<!--                                            Apply-->
-<!--                                        </v-btn>-->
-<!--                                        <v-btn-->
-<!--                                                color="primary"-->
-<!--                                                flat-->
-<!--                                                @click="dialogShowQuery = false"-->
-<!--                                        >-->
-<!--                                            Close-->
-<!--                                        </v-btn>-->
-<!--                                    </v-card-actions>-->
-<!--                                </v-card>-->
-<!--                            </v-dialog>-->
-<!--                        </v-flex>  &lt;!&ndash;modify&ndash;&gt;-->
+                        <!--                                    <v-card-actions>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="toClipboard()"-->
+                        <!--                                        >-->
+                        <!--                                            Copy to clipboard-->
+                        <!--                                        </v-btn>-->
+                        <!--                                        <v-spacer></v-spacer>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                :disabled=!inputValid-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="setInputQuery"-->
+                        <!--                                        >-->
+                        <!--                                            Apply-->
+                        <!--                                        </v-btn>-->
+                        <!--                                        <v-btn-->
+                        <!--                                                color="primary"-->
+                        <!--                                                flat-->
+                        <!--                                                @click="dialogShowQuery = false"-->
+                        <!--                                        >-->
+                        <!--                                            Close-->
+                        <!--                                        </v-btn>-->
+                        <!--                                    </v-card-actions>-->
+                        <!--                                </v-card>-->
+                        <!--                            </v-dialog>-->
+                        <!--                        </v-flex>  &lt;!&ndash;modify&ndash;&gt;-->
 
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <text-reader @load="queryString = $event"></text-reader>-->
-<!--                        </v-flex>  &lt;!&ndash;upload query&ndash;&gt;-->
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <text-reader @load="queryString = $event"></text-reader>-->
+                        <!--                        </v-flex>  &lt;!&ndash;upload query&ndash;&gt;-->
 
-<!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
-<!--                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>-->
-<!--                        </v-flex>  &lt;!&ndash;download query&ndash;&gt;-->
+                        <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
+                        <!--                            <v-btn flat class="small-btn" small color='info' @click="downloadQuery">Download</v-btn>-->
+                        <!--                        </v-flex>  &lt;!&ndash;download query&ndash;&gt;-->
 
                         <v-spacer></v-spacer>
 
@@ -132,7 +138,10 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-                <div class="result-div">
+
+                <v-btn @click="applyButtonClick" color="info" v-if="!applied">Search</v-btn>
+
+                <div class="result-div" v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Result items
@@ -241,6 +250,7 @@
         },
         data() {
             return {
+                applied: false,
                 inputValid: true,
                 inputQuery: "",
                 dialogShowQuery: false,
@@ -264,7 +274,7 @@
                             query: {
                                 "gcm": {
                                     lineage: ["b.1.1"],
-                                    length:{"min_val":29850,"max_val":null,"is_null":false}
+                                    length: {"min_val": 29850, "max_val": null, "is_null": false}
                                 }, "type": "original", "kv": {}
                             }
                         }
@@ -299,6 +309,9 @@
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
+            applyButtonClick() {
+                this.applied = true;
+            },
             setInputQuery() {
                 this.queryString = this.inputQuery
                 this.dialogShowQuery = false
@@ -378,6 +391,9 @@
             }
         },
         watch: {
+            queryInput() {
+                this.applied = false;
+            },
             queryString() {
                 if (this.queryString !== '') {
                     const json = JSON.parse(this.queryString);

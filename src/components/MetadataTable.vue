@@ -294,10 +294,10 @@
                 pagination: {
                     descending: false,
                     page: 1,
-                    rowsPerPage: 10,
+                    rowsPerPage: 20,
                     sortBy: itemSourceIdName,
                     totalItems: 0,
-                    rowsPerPageItems: [10, 100, 1000] //mani che si alzano
+                    rowsPerPageItems: [20] //mani che si alzano
                 },
             }
         },
