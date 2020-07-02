@@ -359,15 +359,6 @@
                 ,
                 deep: true
             },
-            open: {
-                handler() {
-                    if (!this.readOnly) {
-                        this.open[this.open.length] = true
-                    }
-                }
-                ,
-                deep: true
-            },
         }
 
     }
