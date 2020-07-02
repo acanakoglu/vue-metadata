@@ -18,13 +18,15 @@
                     <AnnotDropDown v-if="element['type'] == 'dropdown'"
                                    :labelTitle="element['labelTitle']"
                                    :field="element['field']"
-                                   v-model="element['value']"/>
+                                   v-model="element['value']"
+                                   :groupCondition="getInnerQueryOfSingleCondition(cond)"/>
 
                     <AnnotMenu v-else
                                :labelTitle="element['labelTitle']"
                                :field="element['field']"
                                :info="element['info']"
-                               v-model="element['value']"/>
+                               v-model="element['value']"
+                               :groupCondition="getInnerQueryOfSingleCondition(cond)"/>
                     <v-dialog width="500">
                         <v-btn
                                 slot="activator"
@@ -301,6 +303,22 @@
 
                 return "<br/>" + outer_list.join("<br/><b>OR</b><br/>");
             },
+            getInnerQueryOfSingleCondition(cond) {
+                let res = {}
+                cond.forEach(element => {
+                    const value = element['value'];
+                    const field = element['field']
+                    if (value) {
+                        if (Array.isArray(value)) {
+                            if (value.length)
+                                res[field] = value;
+                        } else {
+                            res[field] = value;
+                        }
+                    }
+                });
+                return res;
+            }
         },
         computed: {
             ...mapState(["panelActive"]),
@@ -324,19 +342,7 @@
                 let res_list = []
                 this.list_of_conditions.forEach(cond => {
                     // console.log(cond);
-                    let res = {}
-                    cond.forEach(element => {
-                        const value = element['value'];
-                        const field = element['field']
-                        if (value) {
-                            if (Array.isArray(value)) {
-                                if (value.length)
-                                    res[field] = value;
-                            } else {
-                                res[field] = value;
-                            }
-                        }
-                    });
+                    let res = this.getInnerQueryOfSingleCondition(cond);
                     if (Object.keys(res).length > 0) {
                         res_list.push(res);
                     }

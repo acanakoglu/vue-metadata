@@ -73,6 +73,7 @@
             field: {type: String, required: true,},
             value: {},
             info: {},
+            groupCondition: {},
         },
         data() {
             return {
