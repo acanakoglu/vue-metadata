@@ -23,6 +23,7 @@
                     <AnnotMenu v-else
                                :labelTitle="element['labelTitle']"
                                :field="element['field']"
+                               :info="element['info']"
                                v-model="element['value']"/>
                     <v-dialog width="500">
                         <v-btn
@@ -117,8 +118,7 @@
                 this.resetPanelActive();
 
                 this.precalculatedShowQuery = this.queryToShow2(this.query.query)
-            }
-            else {
+            } else {
                 this.open = true;
             }
         },
@@ -177,6 +177,7 @@
                             type: 'min-max',
                             labelTitle: 'Position range',
                             field: 'aa_position',
+                            info: 'Position of amino acid variant in the gene coding sequence (CDS), e.g. 0-1000',
                             value: null,
                             description: 'Range of positions within the amino acid sequence of the gene, based on the reference sequence'
                         },
@@ -229,6 +230,7 @@
                             type: 'min-max',
                             labelTitle: 'Position range',
                             field: 'var_position',
+                            info: 'Position of nucleotide variant in the full sequence, e.g. 0-15000',
                             value: null,
                             description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'
                         },
@@ -347,10 +349,10 @@
 
         },
         watch: {
-            query:{
+            query: {
                 handler() {
                     console.log(this.query);
-                    if(this.query) {
+                    if (this.query) {
                         this.precalculatedShowQuery = this.queryToShow2(this.query.query);
                     }
                 }

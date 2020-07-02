@@ -19,6 +19,7 @@
                 <h4 class="headline mb-0">{{labelTitle}}</h4>
             </v-card-title>
             <v-container fluid grid-list-xl class="mylay2">
+                <v-layout style="padding-right: 50px">{{info}}</v-layout>
                 <!--<v-layout class="container view">-->
                 <v-layout>
                     <v-flex md4 class="age-comp">
@@ -31,12 +32,12 @@
                             <!-- :min="min" :max="maxInt" :hint="maxString" persistent-hint -->
                         </v-text-field>
                     </v-flex>
-<!--                    <v-flex md2 class="age-comp">-->
-<!--                        <v-checkbox v-model="isNull"-->
-<!--                                    label="N/D"-->
-<!--                                    input-value="true">-->
-<!--                        </v-checkbox>-->
-<!--                    </v-flex>-->
+                    <!--                    <v-flex md2 class="age-comp">-->
+                    <!--                        <v-checkbox v-model="isNull"-->
+                    <!--                                    label="N/D"-->
+                    <!--                                    input-value="true">-->
+                    <!--                        </v-checkbox>-->
+                    <!--                    </v-flex>-->
                 </v-layout>
             </v-container>
             <v-card-actions>
@@ -71,6 +72,7 @@
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
             value: {},
+            info: {},
         },
         data() {
             return {
@@ -156,14 +158,14 @@
 
                 let res = {};
 
-                if(this.isNull)
+                if (this.isNull)
                     res['is_null'] = true;
-                if(this.selectedMin!=null)
+                if (this.selectedMin != null)
                     res['min_val'] = this.selectedMin;
-                if(this.selectedMax!=null)
+                if (this.selectedMax != null)
                     res['max_val'] = this.selectedMax;
 
-                if(Object.keys(res).length > 0)
+                if (Object.keys(res).length > 0)
                     this.$emit('input', res)
                 else
                     this.deleteAgeLocal()
