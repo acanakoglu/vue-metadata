@@ -387,7 +387,7 @@
                         is_link: true
                     },
                     {text: 'Accession ID', value: itemSourceIdName, sortable: this.sortable, show: true},
-                    {text: 'Strain', value: 'strain_name', sortable: this.sortable, show: true},
+                    {text: 'Strain name', value: 'strain_name', sortable: this.sortable, show: true},
                     {text: 'Is reference', value: 'is_reference', sortable: this.sortable, show: true},
                     {text: 'Is complete', value: 'is_complete', sortable: this.sortable, show: true},
                     {text: 'Strand', value: 'strand', sortable: this.sortable, show: true},
@@ -415,9 +415,9 @@
                     {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
                     {text: 'Isolation source', value: 'isolation_source', sortable: this.sortable, show: true},
                     {text: 'Originating Lab', value: 'originating_lab', sortable: this.sortable, show: false},
+                    {text: 'Geo group', value: 'geo_group', sortable: this.sortable, show: false},
                     {text: 'Country', value: 'country', sortable: this.sortable, show: true},
                     {text: 'Region', value: 'region', sortable: this.sortable, show: true},
-                    {text: 'Geo group', value: 'geo_group', sortable: this.sortable, show: false},
                     //virus
                     {text: 'Virus taxon name', value: 'taxon_name', sortable: this.sortable, show: true},
                     {text: 'Virus taxon ID', value: 'taxon_id', sortable: this.sortable, show: true},
