@@ -16,6 +16,7 @@ export default new Vuex.Store({
         keys: [],
         panelActive: [],
         numerical: new Set(),
+        exampleQueryLoaded: null,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -28,6 +29,13 @@ export default new Vuex.Store({
         keysEmpty: (state) => state.keys.length === 0
     },
     mutations: {
+        setExampleQueryLoaded:(state)=>{
+            console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
+            console.log("snew Date().getTime()",new Date().getTime())
+            state.exampleQueryLoaded = new Date().getTime();
+            console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
+
+        },
         setPanelActive: (state, value) => {
             state.panelActive.push(value);
         },

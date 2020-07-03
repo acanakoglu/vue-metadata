@@ -51,26 +51,29 @@
                     </v-dialog>
                 </v-flex>
             </v-layout>
+
+
+            <div>
+                <v-btn color="info" @click="addNewCondition()">
+                    Add new condition
+                </v-btn>
+            </div>
+
+            <div v-if="isDev">
+                query_type: {{query_type}}
+                <br>
+                list_of_conditions: {{list_of_conditions}}
+                <br>
+                getInnerQuery: {{getInnerQuery}}
+            </div>
+
+            <div>
+                <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
+                <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
+            </div>
         </v-container>
 
-        <div>
-            <v-btn color="info" @click="addNewCondition()">
-                Add new condition
-            </v-btn>
-        </div>
 
-        <div v-if="isDev">
-            query_type: {{query_type}}
-            <br>
-            list_of_conditions: {{list_of_conditions}}
-            <br>
-            getInnerQuery: {{getInnerQuery}}
-        </div>
-
-        <div>
-            <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
-            <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
-        </div>
     </v-expansion-panel-content>
 </template>
 
@@ -123,6 +126,7 @@
                 this.precalculatedShowQuery = this.queryToShow2(this.query.query)
             } else {
                 this.open = true;
+
             }
         },
         methods: {
@@ -330,7 +334,7 @@
             }
         },
         computed: {
-            ...mapState(["panelActive"]),
+            ...mapState(["panelActive", 'exampleQueryLoaded']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
@@ -382,6 +386,20 @@
                 }
                 ,
                 deep: true
+            },
+            exampleQueryLoaded: {
+                handler() {
+                    console.log('exampleQueryLoaded', this.exampleQueryLoaded)
+                    this.readOnly = true;
+                    this.cancelButton = true;
+                    this.kvLocal = this.query;
+                    this.open = false;
+                    this.resetPanelActive();
+
+                    this.precalculatedShowQuery = this.queryToShow2(this.query.query)
+                }
+                ,
+                deep: false
             },
         }
 

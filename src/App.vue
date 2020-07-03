@@ -323,7 +323,7 @@
                         text: 'Example 4b - Tang et al. Heteroplasmy of SARS-CoV-2 viruses in SARS-CoV2 patients',
                         value: {
                             query: {
-                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     nuc_0: {
@@ -352,7 +352,7 @@
                         text: 'Example 5 - Gudbjartsson et al. A3 clade of SARS-CoV2 from Icelandic study',
                         value: {
                             query: {
-                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     nuc_0: {
@@ -405,7 +405,7 @@
                                         "max_val": "2020-03-31",
                                         "is_null": false
                                     },
-                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -433,7 +433,7 @@
                                         "max_val": null,
                                         "is_null": false
                                     },
-                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -461,7 +461,7 @@
                                         "max_val": "2020-01-21",
                                         "is_null": false
                                     },
-                                    "taxon_name":["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -483,7 +483,7 @@
                         text: 'Example 8 - Pachetti et al. SARS-CoV2 gene N nucleotide mutation, related to double codon mutation',
                         value: {
                             query: {
-                                "gcm": {"taxon_name":["severe acute respiratory syndrome coronavirus 2"]},
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
                                 "type": "original",
                                 "kv": {
                                     "aa_0": {
@@ -538,7 +538,7 @@
                 });
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded']),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             setInputQuery() {
                 this.queryString = this.inputQuery
@@ -551,6 +551,8 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
+                this.resetPanelActive();
+                this.setExampleQueryLoaded();
                 // console.log(item);
                 if (item) {
                     this.setQuery(item.query.gcm);
