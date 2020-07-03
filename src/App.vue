@@ -26,7 +26,10 @@
                 <span class="mr-2">GenoSurf</span>
             </v-btn>
             <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
-                <span class="mr-2">WIKI</span>
+                <span class="mr-2">Wiki</span>
+            </v-btn>
+            <v-btn flat href="https://youtu.be/Xr8TmUaOq-w" target="_blank">
+                <span class="mr-2">Video</span>
             </v-btn>
             <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
                 <span class="mr-2">Acknowledgements</span>
