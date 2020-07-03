@@ -104,13 +104,16 @@
                 this.menu = false;
             },
             loadMinMaxAge() {
+                let queryToRun = Object.assign({}, this.compound_query);
+                queryToRun['panel'] = this.groupCondition;
+
                 const url = `field/numerical/${this.field}`;
 
                 this.min = null;
                 this.max = null;
 
                 // eslint-disable-next-line
-                axios.post(url, this.compound_query)
+                axios.post(url, queryToRun)
                     .then((res) => {
                         return res.data
                     })
@@ -181,6 +184,9 @@
         },
         watch: {
             compound_query() {
+                this.loadMinMaxAge();
+            },
+            groupCondition(){
                 this.loadMinMaxAge();
             },
             ageItem() {
