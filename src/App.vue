@@ -5,7 +5,7 @@
             <v-btn flat @click="mainContent=true">
                 <v-toolbar-title class="headline" style="font-size: 32px;text-transform: none !important;">
                     <span>Viru</span>
-                    <span class="font-weight-light">Surf</span>
+                    <span class="font-weight-light">Surf GISAID</span>
                 </v-toolbar-title>
             </v-btn>
             <span style="font-size: 16px;">enabled by data from
