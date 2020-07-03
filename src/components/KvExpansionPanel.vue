@@ -1,5 +1,5 @@
 <template>
-    <v-expansion-panel-content :readonly="readOnly" :value="[open]" hide-actions>
+    <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="[open]" hide-actions>
         <div slot="header">
             <span class="label">{{getFullQueryType()}} query: </span>
             <span style="font-family:monospace" v-html="queryToShow"></span>
@@ -92,6 +92,7 @@
         },
         data() {
             return {
+                preInnerQueryOfSingleCondition: null,
                 list_of_conditions: [this.getEmptyElement()],
                 cancelButton: false,
                 readOnly: false,
@@ -320,7 +321,12 @@
                         }
                     }
                 });
-                return res;
+                if (JSON.stringify(this.preInnerQueryOfSingleCondition) === JSON.stringify(res)) {
+                    return this.preInnerQueryOfSingleCondition;
+                } else {
+                    this.preInnerQueryOfSingleCondition = res;
+                    return res;
+                }
             }
         },
         computed: {
