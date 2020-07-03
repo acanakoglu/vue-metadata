@@ -114,9 +114,9 @@
                         let vals = res.values
                         // console.log(res);
                         //to clean previously selected values
-                        if (this.selected) {
+                        if (this.value) {
                             // console.log(this.selected);
-                            let zero_elements = this.selected.filter(value => !res.values.map(v => v.value).includes(value))
+                            let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
                                 .sort().map(v => Object({
                                     value: v,
                                     count: 0
