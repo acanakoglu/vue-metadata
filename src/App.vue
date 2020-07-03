@@ -51,13 +51,14 @@
                         </v-flex>-->  <!--query utils-->
                         <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
                         <v-flex md2 sm2 class="no-horizontal-padding">
-                            <v-btn color='info' @click="afterQuerySelection()">Clear your query
+                            <v-btn color='info' @click="afterQuerySelection()">
+                                Clear your search
                             </v-btn>
 
                         </v-flex>  <!--clear all-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="applyButtonClick">
-                                Search
+                        <v-flex md2 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="info" @click="applyButtonClick">
+                                Apply your search
                             </v-btn>
                         </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
@@ -154,7 +155,7 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-                <v-btn @click="applyButtonClick" color="info" v-if="!applied">Search</v-btn>
+                <v-btn @click="applyButtonClick" flat class="info" v-if="!applied">Apply your search</v-btn>
 
                 <div class="result-div"  v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
