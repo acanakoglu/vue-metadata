@@ -124,6 +124,11 @@
                     this.max = null;
                     this.unit = 1;
                     this.isNull = false;
+                } else {
+                    this.min = this.ageItem.min_value;
+                    this.max = this.ageItem.max_value;
+                    this.unit = 1;
+                    this.isNull = this.ageItem.is_null;
                 }
             },
             // min(newVal) {
