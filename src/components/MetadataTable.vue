@@ -418,7 +418,7 @@
                     {text: 'Location (Country)', value: 'country', sortable: this.sortable, show: true},
                     {text: 'Location (Region)', value: 'region', sortable: this.sortable, show: true},
                     //virus
-                    {text: 'Virus name', value: 'taxon_name', sortable: this.sortable, show: true},
+                    {text: 'Virus taxon name', value: 'taxon_name', sortable: this.sortable, show: true},
                     {text: 'Virus taxon ID', value: 'taxon_id', sortable: this.sortable, show: true},
                     {text: 'Family', value: 'family', sortable: this.sortable, show: false},
                     {text: 'SubFamily', value: 'sub_family', sortable: this.sortable, show: false},
