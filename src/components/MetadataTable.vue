@@ -398,22 +398,22 @@
                     // {text: 'Clade', value: 'clade', sortable: this.sortable, show: true},
 
                     //experiment_type
-                    {text: 'Seq. Technology', value: 'sequencing_technology', sortable: this.sortable, show: true},
-                    {text: 'Assembly Method', value: 'assembly_method', sortable: this.sortable, show: true},
-                    {text: 'Coverage', value: 'coverage', sortable: this.sortable, show: true},
+                    {text: 'Seq. Technology', value: 'sequencing_technology', sortable: this.sortable, show: false},
+                    {text: 'Assembly Method', value: 'assembly_method', sortable: this.sortable, show: false},
+                    {text: 'Coverage', value: 'coverage', sortable: this.sortable, show: false},
                     //sequencing_project
-                    {text: 'Submitting Lab', value: 'sequencing_lab', sortable: this.sortable, show: false},
+                    {text: 'Submitting Lab', value: 'sequencing_lab', sortable: this.sortable, show: true},
                     {text: 'Submission date', value: 'submission_date', sortable: this.sortable, show: true},
-                    {text: 'BioProject', value: 'bioproject_id', sortable: this.sortable, show: true},
-                    {text: 'Database', value: 'database_source', sortable: this.sortable, show: true},
+                    {text: 'BioProject', value: 'bioproject_id', sortable: this.sortable, show: false},
+                    {text: 'Database', value: 'database_source', sortable: this.sortable, show: false},
                     //host_sample
-                    {text: 'Host (Host taxon name)', value: 'host_taxon_name', sortable: this.sortable, show: false},
-                    {text: 'Host taxon ID', value: 'host_taxon_id', sortable: this.sortable, show: false},
-                    {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: true},
-                    {text: 'Host Age', value: 'age', sortable: this.sortable, show: true},
+                    {text: 'Host (Host taxon name)', value: 'host_taxon_name', sortable: this.sortable, show: true},
+                    {text: 'Host taxon ID', value: 'host_taxon_id', sortable: this.sortable, show: true},
+                    {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: false},
+                    {text: 'Host Age', value: 'age', sortable: this.sortable, show: false},
                     {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
                     {text: 'Specimen Source (Isolation source)', value: 'isolation_source', sortable: this.sortable, show: true},
-                    {text: 'Originating Lab', value: 'originating_lab', sortable: this.sortable, show: false},
+                    {text: 'Originating Lab', value: 'originating_lab', sortable: this.sortable, show: true},
                     {text: 'Location (Geo group)', value: 'geo_group', sortable: this.sortable, show: true},
                     {text: 'Location (Country)', value: 'country', sortable: this.sortable, show: true},
                     {text: 'Location (Region)', value: 'region', sortable: this.sortable, show: true},
@@ -429,7 +429,7 @@
                     {text: 'Single stranded', value: 'is_single_stranded', sortable: this.sortable, show: false},
                     {text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
 
-                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: true},
+                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: false},
                 ];
             },
             resetHeadersOrder() {
