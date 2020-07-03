@@ -195,51 +195,6 @@
                 </v-footer>
 
             </v-content>
-            <v-content v-show="!mainContent">
-                <v-content>
-                    <v-container fluid>
-
-                        <v-list>
-                            <v-list-tile>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>Anna Bernasconi</v-list-tile-title>
-                                    <v-list-tile-sub-title>
-                                        <a href="mailto:anna.bernasconi@polimi.it">anna.bernasconi@polimi.it</a>
-                                    </v-list-tile-sub-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-
-                            <v-list-tile>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>Arif Canakoglu</v-list-tile-title>
-                                    <v-list-tile-sub-title>
-                                        <a href="mailto:arif.canakoglu@polimi.it">arif.canakoglu@polimi.it</a>
-                                    </v-list-tile-sub-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-
-                            <v-list-tile>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>Marco Masseroli</v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-
-                            <v-list-tile>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>Stefano Ceri</v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-                        </v-list>
-                        <p>GenoSurf is supported by the <a
-                                href="http://www.bioinformatics.deib.polimi.it/geco/" target="GeCo">Data-Driven
-                            Genomic Computing (GeCo)</a> project,
-                            funded by the <a href="https://erc.europa.eu/" target="GeCo">European Research Center
-                                (ERC)</a> (Advanced ERC Grant 693174).</p>
-
-                    </v-container>
-                </v-content>
-
-            </v-content>
         </v-content>
     </v-app>
 </template>
