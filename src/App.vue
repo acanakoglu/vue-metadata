@@ -16,12 +16,27 @@
             </span>
             <!--            <span style="font-size: 24px">and GenBank.</span>-->
             <v-spacer></v-spacer>
-            <!--            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">-->
-            <!--                <span class="mr-2">GenoSurf</span>-->
+            <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
+            <!--                <span class="font-weight-light">doc</span></span>-->
             <!--            </v-btn>-->
-            <!--            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">-->
-            <!--                <span class="mr-2">WIKI</span>-->
-            <!--            </v-btn>-->
+            <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
+                <span class="mr-2">ViruSurf</span>
+            </v-btn>
+            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+                <span class="mr-2">GenoSurf</span>
+            </v-btn>
+            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
+                <span class="mr-2">Wiki</span>
+            </v-btn>
+            <v-btn flat href="https://youtu.be/Xr8TmUaOq-w" target="_blank">
+                <span class="mr-2">Video</span>
+            </v-btn>
+            <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
+                <span class="mr-2">Survey</span>
+            </v-btn>
+            <v-btn flat href="/virusurf_gisaid/repo_static/acknowledgements.html" target="_blank">
+                <span class="mr-2">Acknowledgements</span>
+            </v-btn>
             <v-btn flat href="/virusurf_gisaid/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
             </v-btn>
@@ -31,19 +46,15 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
-                        <v-flex md2 sm2 d-flex class="no-horizontal-padding">
+                        <!--<v-flex md2 sm2 d-flex class="no-horizontal-padding">
                             <span class=label>Query:</span>
-                        </v-flex>  <!--query utils-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="afterQuerySelection()">Clear
+                        </v-flex>-->  <!--query utils-->
+                        <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
+                        <v-flex md2 sm2 class="no-horizontal-padding">
+                            <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
 
                         </v-flex>  <!--clear all-->
-                        <v-flex md1 sm2 class="no-horizontal-padding">
-                            <v-btn flat class="small-btn" small color='info' @click="applyButtonClick">
-                                Search
-                            </v-btn>
-                        </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
                         <!--                            <v-dialog v-model="dialogShowQuery">-->
                         <!--                                <v-btn flat class="small-btn" dark small-->
@@ -107,7 +118,7 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-flex md4 sm8 class=" no-horizontal-padding">
+                        <v-flex md8 sm8 class=" no-horizontal-padding">
                             <v-select solo
                                       dense
                                       :menu-props='{"maxHeight":1000}'
@@ -126,7 +137,7 @@
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                Selected query:
+                                Metadata search
                             </span>
                             <span style="font-family:monospace; font-size:120%;">
                                 {{ queryToShow }}
@@ -138,13 +149,10 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-
-                <v-btn @click="applyButtonClick" color="info" v-if="!applied">Search</v-btn>
-
-                <div class="result-div" v-if="applied">
+                <div class="result-div">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
-                            Result items
+                            Result sequences
                         </v-tab>
                         <v-tab-item>
                             <MetadataTable/>
@@ -171,7 +179,7 @@
 
 
                         <div v-if="count === null">Loading...</div>
-                        <div style="font-size:1.4em;" v-else-if="count>0">{{count}} item<span
+                        <div style="font-size:1.4em;" v-else-if="count>0">{{count}} sequence<span
                                 v-if="count>1">s</span> found
                         </div>
                         <div v-else>No result</div>
@@ -307,7 +315,7 @@
                 });
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery"]),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded']),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             applyButtonClick() {
                 this.applied = true;
@@ -323,7 +331,9 @@
                 this.infoDialog = true;
             },
             afterQuerySelection(item) {
-                console.log(item);
+                this.resetPanelActive();
+                this.setExampleQueryLoaded();
+                // console.log(item);
                 if (item) {
                     this.setQuery(item.query.gcm);
                     this.setKvFull(item.query.kv);
@@ -352,10 +362,10 @@
             toClipboard() {
                 this.$copyText(JSON.stringify(this.compound_query)).then(function (e) {
                     alert('Copied');
-                    console.log(e);
+                    // console.log(e);
                 }, function (e) {
                     alert('Can not copy');
-                    console.log(e);
+                    // console.log(e);
                 })
             },
             validateJson(input) {
@@ -427,18 +437,25 @@
             },
 
             queryToShow() {
-                let a = [];
-                for (let i in this.compound_query['gcm']) {
-                    if (this.numerical.has(i)) {
-                        a.push(i + ": {min_val: " + this.compound_query['gcm'][i]['min_val'] + ", max_val: " + this.compound_query['gcm'][i]['max_val'] + ", is_null: " + this.compound_query['gcm'][i]['is_null'] + "}")
+                let inner_list = [];
+                Object.keys(this.compound_query['gcm']).forEach(key => {
+                    const value2 = [];
+                    const value = this.compound_query['gcm'][key];
+                    if (Array.isArray(value)) {
+                        value.forEach(val => {
+                            if (val === null)
+                                value2.push("N/D");
+                            else
+                                value2.push(val);
+                        });
+                        inner_list.push(key + ': ' + JSON.stringify(value2));
                     } else {
-                        let b = i + ": ['" + this.compound_query['gcm'][i].join("', '") + "']";
-                        // b.replace("''","'N/D")
-                        a.push(b.replace("''", "null"))
+                        inner_list.push(key + ': ' + JSON.stringify(value));
                     }
 
-                }
-                return a.join(", ")
+
+                });
+                return inner_list.join(", ");
             },
             typeLocal: {
                 get() {
@@ -452,6 +469,9 @@
                     }
                 }
             },
+            isDev() {
+                return process.env.NODE_ENV === 'development';
+            }
         },
     }
 </script>

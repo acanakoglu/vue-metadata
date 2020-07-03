@@ -99,7 +99,7 @@
 
                 if (this.selectedMin) {
                     c = this.selectedMin;
-                    console.log("min not null")
+                    // console.log("min not null")
                 } else {
                     c = null
                     // console.log("min null")

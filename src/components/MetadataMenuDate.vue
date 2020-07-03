@@ -190,9 +190,9 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                let f = this.min ? this.min + ' < ' : '';
+                let f = this.min ? this.min + ' <= ' : '';
                 f += this.min || this.max ? 'date' : '';
-                f += this.max ? ' < ' + this.max : '';
+                f += this.max ? ' <= ' + this.max : '';
                 return f;
             },
             searchDisabled() {

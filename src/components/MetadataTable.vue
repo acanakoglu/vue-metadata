@@ -362,14 +362,14 @@
                         return res.data
                     })
                     .then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.mousehovermessage_authors = res.covv_authors;
                         this.mousehovermessage_originating = res.covv_orig_lab;
                         this.mousehovermessage_submitting = res.covv_subm_lab;
                     })
             },
             mouseLeave() {
-                console.log('mouseLeave')
+                // console.log('mouseLeave')
                 this.mousehovermessage_show = false;
                 this.mousehovermessage_originating = '...loading...';
                 this.mousehovermessage_submitting = '...loading...';
@@ -521,10 +521,10 @@
             toClipboard() {
                 this.$copyText(this.gmqlQuery).then(function (e) {
                     alert('Copied');
-                    console.log(e);
+                    // console.log(e);
                 }, function (e) {
                     alert('Can not copy');
-                    console.log(e);
+                    // console.log(e);
                 })
             },
             updateCellTextFormat(input) {
@@ -540,6 +540,8 @@
                         row['source_page'] = "https://gisaid.org/";
                     else if(row['database_source'] === 'GenBank' || row['database_source'] === 'RefSeq')
                         row['source_page'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + row['accession_id'];
+                    else if(row['database_source'] == 'COG-UK')
+                        row['source_page'] = "https://www.cogconsortium.uk/data/";
                     //else do nothing
                 }
                 return input;

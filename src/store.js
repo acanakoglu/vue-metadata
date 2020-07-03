@@ -16,6 +16,7 @@ export default new Vuex.Store({
         keys: [],
         panelActive: [],
         numerical: new Set(),
+        exampleQueryLoaded: null,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -28,6 +29,13 @@ export default new Vuex.Store({
         keysEmpty: (state) => state.keys.length === 0
     },
     mutations: {
+        setExampleQueryLoaded:(state)=>{
+            console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
+            console.log("snew Date().getTime()",new Date().getTime())
+            state.exampleQueryLoaded = new Date().getTime();
+            console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
+
+        },
         setPanelActive: (state, value) => {
             state.panelActive.push(value);
         },
@@ -122,6 +130,19 @@ export default new Vuex.Store({
             commit('reloadKv');
         },
         setKvFull: ({commit, state}, payload) => {
+            commit('resetKv');
+            let i=0;
+            Object.keys(payload).forEach(key => {
+                const val = payload[key];
+                let a = {
+                        'id': i,
+                        'query_text': val.type_query,
+                        'query_type': val.type_query,
+                        'exact': false
+                    };
+                i=i+1;
+                commit('pushKey', a)
+            });
             if (Object.keys(payload).length === 0)
                 commit('resetKv');
             else

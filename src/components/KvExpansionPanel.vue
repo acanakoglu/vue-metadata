@@ -1,13 +1,14 @@
 <template>
-    <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="open" hide-actions>
+    <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="[open]" hide-actions>
         <div slot="header">
-            <h3>Selected Query: </h3>
-            <p style="font-family:monospace;">{{ queryToShow }}</p>
+            <span class="label">{{getFullQueryType()}} query: </span>
+            <span style="font-family:monospace" v-html="queryToShow"></span>
+
         </div>
         <v-spacer></v-spacer>
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
                @click="deleteKvLocal()">
-            Delete Kv
+            Remove condition
         </v-btn>
 
 
@@ -17,12 +18,15 @@
                     <AnnotDropDown v-if="element['type'] == 'dropdown'"
                                    :labelTitle="element['labelTitle']"
                                    :field="element['field']"
-                                   v-model="element['value']"/>
+                                   v-model="element['value']"
+                                   :groupCondition="getInnerQueryOfSingleCondition(cond)"/>
 
                     <AnnotMenu v-else
                                :labelTitle="element['labelTitle']"
                                :field="element['field']"
-                               v-model="element['value']"/>
+                               :info="element['info']"
+                               v-model="element['value']"
+                               :groupCondition="getInnerQueryOfSingleCondition(cond)"/>
                     <v-dialog width="500">
                         <v-btn
                                 slot="activator"
@@ -47,26 +51,29 @@
                     </v-dialog>
                 </v-flex>
             </v-layout>
+
+
+            <div>
+                <v-btn color="info" @click="addNewCondition()">
+                    Add new condition
+                </v-btn>
+            </div>
+
+            <div v-if="isDev">
+                query_type: {{query_type}}
+                <br>
+                list_of_conditions: {{list_of_conditions}}
+                <br>
+                getInnerQuery: {{getInnerQuery}}
+            </div>
+
+            <div>
+                <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
+                <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
+            </div>
         </v-container>
 
-        <div>
-            <v-btn color="info" @click="addNewCondition()">
-                Add new condition
-            </v-btn>
-        </div>
 
-        <div v-if="isDev">
-            query_type: {{query_type}}
-            <br>
-            list_of_conditions: {{list_of_conditions}}
-            <br>
-            getInnerQuery: {{getInnerQuery}}
-        </div>
-
-        <div>
-            <v-btn color="info" @click="setKvLocal" :disabled="buttonDisabled">Apply</v-btn>
-            <v-btn color="error" @click="cancel(key)">Cancel</v-btn>
-        </div>
     </v-expansion-panel-content>
 </template>
 
@@ -88,10 +95,11 @@
         },
         data() {
             return {
+                preInnerQueryOfSingleCondition: null,
                 list_of_conditions: [this.getEmptyElement()],
                 cancelButton: false,
                 readOnly: false,
-                open: [true],
+                open: false,
 
                 isLoading: false,
                 key: "",
@@ -101,6 +109,7 @@
                     exact: this.exact_match,
                     query: {}
                 },
+                precalculatedShowQuery: null,
             }
         },
         mounted() {
@@ -113,6 +122,11 @@
                 this.kvLocal = this.query;
                 this.open = false;
                 this.resetPanelActive();
+
+                this.precalculatedShowQuery = this.queryToShow2(this.query.query)
+            } else {
+                this.open = true;
+
             }
         },
         methods: {
@@ -120,6 +134,13 @@
             ...mapActions(["setKv", "deleteKv"]),
             addNewCondition() {
                 this.list_of_conditions.push(this.getEmptyElement())
+            },
+            getFullQueryType() {
+                if (this.query_type === 'aa') {
+                    return 'Amino acid';
+                } else {
+                    return 'Nucleotide';
+                }
             },
             getEmptyElement() {
                 if (this.query_type === 'aa') {
@@ -162,9 +183,10 @@
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
-                            field: 'aa_position',
+                            field: 'start_aa_original',
+                            info: 'Position of amino acid variant in the gene coding sequence (CDS), e.g. 0-1000',
                             value: null,
-                            description: 'Range of positions within the aminoacid sequence of the gene'
+                            description: 'Range of positions within the amino acid sequence of the gene, based on the reference sequence'
                         },
                     ];
                 } else if (this.query_type === 'nuc') {
@@ -214,9 +236,10 @@
                         {
                             type: 'min-max',
                             labelTitle: 'Position range',
-                            field: 'var_position',
+                            field: 'start_original',
+                            info: 'Position of nucleotide variant in the full sequence, e.g. 0-15000',
                             value: null,
-                            description: 'Range of positions within the full nucleotide sequence'
+                            description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'
                         },
                         {
                             type: 'dropdown',
@@ -244,7 +267,7 @@
 
             },
             setOpen() {
-                this.open = [false];
+                this.open = false;
             },
             cancel() {
                 this.deleteKey(this.id);
@@ -267,14 +290,60 @@
                 this.open = false;
                 this.resetPanelActive()
             },
+            queryToShow2(input) {
+                // return JSON.stringify(this.getInnerQuery);
+                let el = {};
+                this.getEmptyElement().forEach(element => {
+                    el[element['field']] = element['labelTitle'];
+                });
+
+                let outer_list = [];
+                // console.log(this.getInnerQuery);
+                input.forEach(element => {
+                    // console.log(element);
+                    let inner_list = [];
+                    Object.keys(element).forEach(key => {
+                        const value = element[key];
+                        inner_list.push(key + ': ' + JSON.stringify(value));
+                    });
+                    outer_list.push(inner_list.join(", "))
+                });
+
+                return "<br/>" + outer_list.join("<br/><b>OR</b><br/>");
+            },
+            getInnerQueryOfSingleCondition(cond) {
+                let res = {}
+                cond.forEach(element => {
+                    const value = element['value'];
+                    const field = element['field']
+                    if (value) {
+                        if (Array.isArray(value)) {
+                            if (value.length)
+                                res[field] = value;
+                        } else {
+                            res[field] = value;
+                        }
+                    }
+                });
+                if (JSON.stringify(this.preInnerQueryOfSingleCondition) === JSON.stringify(res)) {
+                    return this.preInnerQueryOfSingleCondition;
+                } else {
+                    this.preInnerQueryOfSingleCondition = res;
+                    return res;
+                }
+            }
         },
         computed: {
-            ...mapState(["panelActive"]),
+            ...mapState(["panelActive", 'exampleQueryLoaded']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
             queryToShow() {
-                return JSON.stringify(this.kvLocal.query);
+                if (this.precalculatedShowQuery) {
+                    return this.precalculatedShowQuery;
+                } else {
+                    return this.queryToShow2(this.getInnerQuery);
+                }
             },
             buttonDisabled() {
                 return this.getInnerQuery.length == 0;
@@ -285,20 +354,8 @@
             getInnerQuery() {
                 let res_list = []
                 this.list_of_conditions.forEach(cond => {
-                    console.log(cond);
-                    let res = {}
-                    cond.forEach(element => {
-                        const value = element['value'];
-                        const field = element['field']
-                        if (value) {
-                            if (Array.isArray(value)) {
-                                if (value.length)
-                                    res[field] = value;
-                            } else {
-                                res[field] = value;
-                            }
-                        }
-                    });
+                    // console.log(cond);
+                    let res = this.getInnerQueryOfSingleCondition(cond);
                     if (Object.keys(res).length > 0) {
                         res_list.push(res);
                     }
@@ -311,14 +368,38 @@
 
         },
         watch: {
-            open: {
+            query: {
                 handler() {
-                    if (!this.readOnly) {
-                        this.open[this.open.length] = true
+                    console.log(this.query);
+                    if (this.query) {
+                        this.precalculatedShowQuery = this.queryToShow2(this.query.query);
                     }
                 }
                 ,
                 deep: true
+            },
+            open: {
+                handler() {
+                    if (!this.readOnly) {
+                        this.open = true
+                    }
+                }
+                ,
+                deep: true
+            },
+            exampleQueryLoaded: {
+                handler() {
+                    console.log('exampleQueryLoaded', this.exampleQueryLoaded)
+                    this.readOnly = true;
+                    this.cancelButton = true;
+                    this.kvLocal = this.query;
+                    this.open = false;
+                    this.resetPanelActive();
+
+                    this.precalculatedShowQuery = this.queryToShow2(this.query.query)
+                }
+                ,
+                deep: false
             },
         }
 
@@ -349,6 +430,11 @@
         .view
             margin: 15px
             outline: 1px solid black
+
+        .label
+            font-size: 1.3em
+            font-weight: bold
+            padding: 12px
 
 
 </style>

@@ -26,6 +26,7 @@
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
             value: {},
+            groupCondition: {},
         },
         data() {
             return {
@@ -40,7 +41,10 @@
             compound_query() {
                 // if(!this.synonym)
                 this.loadData();
-            }
+            },
+            groupCondition(){
+                this.loadData();
+            },
         },
         computed: {
             ...mapState([
@@ -95,11 +99,14 @@
             }
             ,
             loadData() {
+                let queryToRun = Object.assign({}, this.compound_query);
+                queryToRun['panel'] = this.groupCondition;
+
                 const url = `field/${this.field}`;
                 this.isLoading = true;
 
                 // eslint-disable-next-line
-                axios.post(url, this.compound_query)
+                axios.post(url, queryToRun)
                     .then((res) => {
                         return res.data
                     })
@@ -107,9 +114,9 @@
                         let vals = res.values
                         // console.log(res);
                         //to clean previously selected values
-                        if (this.selected) {
+                        if (this.value) {
                             // console.log(this.selected);
-                            let zero_elements = this.selected.filter(value => !res.values.map(v => v.value).includes(value))
+                            let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
                                 .sort().map(v => Object({
                                     value: v,
                                     count: 0
