@@ -408,7 +408,7 @@
                     {text: 'Database', value: 'database_source', sortable: this.sortable, show: true},
                     //host_sample
                     {text: 'Host (Host taxon name)', value: 'host_taxon_name', sortable: this.sortable, show: false},
-                    {text: 'Host Taxon ID', value: 'host_taxon_id', sortable: this.sortable, show: false},
+                    {text: 'Host taxon ID', value: 'host_taxon_id', sortable: this.sortable, show: false},
                     {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: true},
                     {text: 'Host Age', value: 'age', sortable: this.sortable, show: true},
                     {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
@@ -418,8 +418,8 @@
                     {text: 'Location (Country)', value: 'country', sortable: this.sortable, show: true},
                     {text: 'Location (Region)', value: 'region', sortable: this.sortable, show: true},
                     //virus
-                    {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true},
-                    {text: 'Virus Taxon ID', value: 'taxon_id', sortable: this.sortable, show: true},
+                    {text: 'Virus name', value: 'taxon_name', sortable: this.sortable, show: true},
+                    {text: 'Virus taxon ID', value: 'taxon_id', sortable: this.sortable, show: true},
                     {text: 'Family', value: 'family', sortable: this.sortable, show: false},
                     {text: 'SubFamily', value: 'sub_family', sortable: this.sortable, show: false},
                     {text: 'Type (Genus)', value: 'genus', sortable: this.sortable, show: false},
