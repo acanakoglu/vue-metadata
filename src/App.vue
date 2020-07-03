@@ -55,6 +55,11 @@
                             </v-btn>
 
                         </v-flex>  <!--clear all-->
+                        <v-flex md1 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="small-btn" small color='info' @click="applyButtonClick">
+                                Search
+                            </v-btn>
+                        </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
                         <!--                            <v-dialog v-model="dialogShowQuery">-->
                         <!--                                <v-btn flat class="small-btn" dark small-->
@@ -149,7 +154,9 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-                <div class="result-div">
+                <v-btn @click="applyButtonClick" color="info" v-if="!applied">Search</v-btn>
+
+                <div class="result-div"  v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Result sequences
