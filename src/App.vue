@@ -31,6 +31,9 @@
             <v-btn flat href="https://youtu.be/Xr8TmUaOq-w" target="_blank">
                 <span class="mr-2">Video</span>
             </v-btn>
+            <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
+                <span class="mr-2">Survey</span>
+            </v-btn>
             <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
                 <span class="mr-2">Acknowledgements</span>
             </v-btn>
