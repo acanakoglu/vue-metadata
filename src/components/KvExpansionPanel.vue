@@ -376,7 +376,6 @@
             },
             open: {
                 handler() {
-                    console.log("this.readOnly", this.readOnly)
                     if (!this.readOnly) {
                         this.open = true
                     }
