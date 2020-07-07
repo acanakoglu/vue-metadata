@@ -19,7 +19,7 @@
         <v-card-title>
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
-                    <v-flex m4 align-self-center>
+                    <v-flex sm2 align-self-center>
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
@@ -41,8 +41,8 @@
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "result.csv" file that contains
-                                        the comma-separated version of the table shown in the "RESULT SEQUENCES" section,
-                                        preserving user defined fields order.
+                                        the comma-separated version of the table shown in the "RESULT SEQUENCES"
+                                        section, preserving user defined fields order.
                                     </p>
                                     <p>
                                         Please check size of selection.
@@ -85,10 +85,8 @@
                                 <v-card-text>
                                     <p>
                                         Click the "Download" button below to download a "files.txt" file that contains
-                                        the
-                                        list
-                                        of
-                                        the URLs of the region data and metadata files related to the result items.
+                                        the list of the URLs of the region data and metadata files related to the result
+                                        items.
                                     </p>
                                     <p>
                                         The following command using cURL can be used to download all the files in the
@@ -121,7 +119,14 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
-                    <v-flex m4 shrink align-self-center>
+                    <v-flex sm3 align-self-center>
+                        <!--                        <MetadataDropDown-->
+                        <!--                                field="annotation_view_product"-->
+                        <!--                                labelTitle="Select product to extract its sequences"-->
+                        <!--                                :is_gcm="false"-->
+                        <!--                                v-model="selectedProduct"/>-->
+                    </v-flex>
+                    <v-flex sm2 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
                             <v-card>
                                 <v-card-title
@@ -262,16 +267,21 @@
 
     import {mapMutations, mapState, mapGetters} from 'vuex';
     import draggable from 'vuedraggable'
+    import MetadataDropDown from "./MetadataDropDown";
+    import {FULL_TEXT} from '../variables.js'
+
 
     const itemSourceIdName = 'accession_id';
 
     export default {
         name: "MetadataTable",
         components: {
+            MetadataDropDown,
             draggable
         },
         data() {
             return {
+                selectedProduct: FULL_TEXT,
                 mousehovermessage_originating: '...loading...',
                 mousehovermessage_submitting: '...loading...',
                 mousehovermessage_authors: '...loading...',
@@ -285,7 +295,7 @@
                 dialogDownloadTable: false,
                 dialogGmql: false,
                 gmqlQuery: "",
-                isLoading: false,
+                isLoading: true,
                 search: '',
                 result: [],
                 agg_mode: false,
@@ -304,17 +314,25 @@
         },
         watch: {
             compound_query() {
+                console.log("CALL: compound_query")
                 this.applyQuery();
             },
             synonym() {
+                console.log("CALL: synonym")
                 this.applyQuery();
             },
             agg_mode() {
+                console.log("CALL: agg_mode")
+                this.applyQuery();
+            },
+            selectedProduct() {
+                console.log("CALL: selectedProduct")
                 this.applyQuery();
             },
             pagination: {
-                handler() {
-                    this.applyQuery(false);
+                handler(val, oldVal) {
+                    if (JSON.stringify(val) !== JSON.stringify(oldVal))
+                        this.applyQuery(false);
                 },
                 deep: true
             },
@@ -377,6 +395,7 @@
                 this.mousehovermessage_authors = '...loading...';
             },
             getHeaders() {
+                console.log("HELOOOOO", this.sortable)
                 return [
                     //sequence
                     {
@@ -394,7 +413,7 @@
                     {text: 'Sequence Length', value: 'length', sortable: this.sortable, show: true},
                     {text: 'GC%', value: 'gc_percentage', sortable: this.sortable, show: true},
                     {text: 'N%', value: 'n_percentage', sortable: this.sortable, show: true},
-                    {text: 'Lineage (Clade)', value: 'lineage_clade', sortable: this.sortable, show: true},
+                    {text: 'Lineage (Clade)', value: 'lineage_clade', sortable: false, show: true},
                     // {text: 'Lineage', value: 'lineage', sortable: this.sortable, show: true},
                     // {text: 'Clade', value: 'clade', sortable: this.sortable, show: true},
 
@@ -430,11 +449,12 @@
                     {text: 'Single stranded', value: 'is_single_stranded', sortable: this.sortable, show: false},
                     {text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
 
-                    {text: 'Sequence', value: 'nucleotide_sequence', sortable: this.sortable, show: true},
+                    {text: 'Nucleotide sequence', value: 'nucleotide_sequence', sortable: false, show: true},
+                    {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: false},
                 ];
             },
             resetHeadersOrder() {
-                this.headers = this.getHeaders()
+                this.headers = this.getHeaders();
             },
             selectAllHeaders() {
                 if (this.sortCheckbox) {
@@ -453,37 +473,33 @@
             extraMetadataClicked(row) {
                 this.openExtraMetadataDialog(row[itemSourceIdName])
             },
-            applyQuery(changeCount = true) {
-                if (changeCount) {
-                    var count_url = `query/count?agg=${this.agg_mode}`;
-                    // eslint-disable-next-line
-                    axios.post(count_url, this.compound_query)
-                        .then((res) => {
-                            return res.data
-                        })
-                        .then((res) => {
-                            this.pagination.totalItems = res;
-                            this.setCount(res);
-                            this.pagination.page = 1;
-                        });
-                }
-                var orderDir = "";
+            callTableQuery() {
+                let orderDir = "";
 
                 if (this.pagination.descending)
                     orderDir = "DESC";
                 else
                     orderDir = "ASC";
 
-                const url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                if (this.selectedProduct !== FULL_TEXT) {
+                    url += `&annotation_type=${this.selectedProduct}`;
+                }
+
                 this.isLoading = true;
                 this.result = [];
+                console.log("CALL: query/table");
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
+                        console.log("GOT: query/table");
                         return res.data
                     })
                     .then((res) => {
                         return this.addLink(res);
+                    })
+                    .then((res) => {
+                        return this.firstCharacters(res);
                     })
                     .then((res) => {
                         return res.map((t) => {
@@ -500,9 +516,41 @@
                         this.isLoading = false;
                     });
             },
+            applyQuery(changeCount = true) {
+                if (changeCount) {
+                    this.setCount(null);
+                    this.isLoading = true;
+                    this.result = [];
+
+                    let count_url = `query/count?agg=${this.agg_mode}`;
+
+                    // TODO CHECK if each sequence has more than one annotation with different product,
+                    //  then we need to do below.
+                    // if (this.selectedProduct !== FULL_TEXT) {
+                    //     count_url += `&annotation_type=${this.selectedProduct}`;
+                    // }
+
+                    // eslint-disable-next-line
+                    axios.post(count_url, this.compound_query)
+                        .then((res) => {
+                            return res.data;
+                        })
+                        .then((res) => {
+                            this.pagination.totalItems = res;
+                            this.setCount(res);
+                            this.pagination.page = 1;
+                        });
+                }
+                this.callTableQuery();
+            },
             download() {
                 this.downloadProgress = true;
-                const urlDownload = `query/download?voc=${this.synonym}`;
+
+                let urlDownload = `query/download?voc=${this.synonym}`;
+                if (this.selectedProduct !== FULL_TEXT) {
+                    urlDownload += `&annotation_type=${this.selectedProduct}`;
+                }
+
 
                 // eslint-disable-next-line
                 axios.post(urlDownload, this.compound_query)
@@ -520,10 +568,10 @@
                     });
             },
             toClipboard() {
-                this.$copyText(this.gmqlQuery).then(function (e) {
+                this.$copyText(this.gmqlQuery).then(function () {
                     alert('Copied');
                     // console.log(e);
-                }, function (e) {
+                }, function () {
                     alert('Can not copy');
                     // console.log(e);
                 })
@@ -537,13 +585,32 @@
             },
             addLink(input) {
                 for (const row of input) {
-                    if(row['database_source'] == 'GISAID')
+                    if (row['database_source'] == 'GISAID')
                         row['source_page'] = "https://gisaid.org/";
-                    else if(row['database_source'] === 'GenBank' || row['database_source'] === 'RefSeq')
+                    else if (row['database_source'] === 'GenBank' || row['database_source'] === 'RefSeq')
                         row['source_page'] = 'https://www.ncbi.nlm.nih.gov/nuccore/' + row['accession_id'];
-                    else if(row['database_source'] == 'COG-UK')
+                    else if (row['database_source'] == 'COG-UK')
                         row['source_page'] = "https://www.cogconsortium.uk/data/";
                     //else do nothing
+                }
+                return input;
+            },
+            sub(input_str, cut_limit = 30, subst_len = 20) {
+                let res = input_str
+                let length = 0;
+
+                if (res) {
+                    length = res.length;
+                    if (length > cut_limit) {
+                        res = `${res.substring(0, subst_len)} ... (length: ${length})`
+                    }
+                }
+                return res;
+            },
+            firstCharacters(input) {
+                for (const row of input) {
+                    row['nucleotide_sequence'] = this.sub(row['nucleotide_sequence']);
+                    row['amino_acid_sequence'] = this.sub(row['amino_acid_sequence']);
                 }
                 return input;
             },
@@ -610,7 +677,7 @@
                 }
             },
             sortable() {
-                return this.result.length < 1000;
+                return true;//this.result.length < 1000;
             },
             sortCheckBoxLabel() {
                 if (this.sortCheckbox)

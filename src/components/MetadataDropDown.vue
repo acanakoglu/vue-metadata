@@ -6,7 +6,7 @@
             :item-text="rename"
             item-value="value"
             :label="labelTitle"
-            multiple
+            :multiple="is_gcm"
             :disabled="searchDisabled"
     >
         <template slot="item" slot-scope="data">
@@ -14,19 +14,12 @@
             <span class="item-count-span">{{data.item.count}}</span>
         </template>
     </v-autocomplete>
-
-    <!--<v-autocomplete-->
-    <!--:value="getValue()"-->
-    <!--@input="changedValue"-->
-    <!--:items="values"-->
-    <!--:item-text="rename"-->
-    <!--:label="labelTitle"-->
-    <!--multiple=""-->
-    <!--&gt;</v-autocomplete>-->
 </template>
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
+    import { FULL_TEXT } from '../variables.js'
+
 
 
     export default {
@@ -34,6 +27,8 @@
         props: {
             labelTitle: {type: String, required: true,},
             field: {type: String, required: true,},
+            is_gcm: {type: Boolean, default: true},
+            value: {},
         },
         data() {
             return {
@@ -61,11 +56,16 @@
             selected: {
                 get() {
                     // console.log("GET" + this.fullQuery[this.field]);
-                    return this.query[this.field];
+                    if (this.is_gcm)
+                        return this.query[this.field];
+                    else
+                        return this.value;
                 },
                 set(value) {
+                    this.$emit('input', value);
                     // console.log("SET" + value);
-                    this.setDropDownSelected({field: this.field, list: value})
+                    if (this.is_gcm)
+                        this.setDropDownSelected({field: this.field, list: value});
                 }
             },
             searchDisabled() {
@@ -100,7 +100,7 @@
                 if (inp.value !== null && inp.value !== undefined) {
                     if (this.field === 'dataset_name' && inp.value.length > 20) {
                         let i = this.nthIndex(inp.value, "_", 3);
-                        value = inp.value.slice(0, i+1) + "\n" + inp.value.slice(i+1);
+                        value = inp.value.slice(0, i + 1) + "\n" + inp.value.slice(i + 1);
                     } else {
                         value = inp.value;
                     }
@@ -113,8 +113,7 @@
                 else
                     res = value;
                 return res;
-            }
-            ,
+            },
             loadData() {
                 const url = `field/${this.field}`;
                 this.isLoading = true;
@@ -128,7 +127,7 @@
                         let vals = res.values
                         // console.log(res);
                         //to clean previously selected values
-                        if (this.selected) {
+                        if (this.selected && Array.isArray(this.selected)) {
                             // console.log(this.selected);
                             let zero_elements = this.selected.filter(value => !res.values.map(v => v.value).includes(value))
                                 .sort().map(v => Object({
@@ -138,6 +137,18 @@
                             // console.log(zero_elements);
                             vals = vals.concat(zero_elements);
                         }
+                        if (!this.is_gcm) {
+                            vals = vals.map(el => el.value).filter(el =>el).sort()
+                            vals.unshift(FULL_TEXT)
+                            if (!vals.includes(this.selected)) {
+                                this.selected = FULL_TEXT;
+                            }
+                            vals = vals.map(val => Object({
+                                value: val
+                            }));
+
+                        }
+
 
                         this.values = vals;
                         this.isLoading = false;
