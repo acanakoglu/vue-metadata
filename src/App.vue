@@ -19,9 +19,9 @@
             <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
             <!--                <span class="font-weight-light">doc</span></span>-->
             <!--            </v-btn>-->
-           <!-- <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
+           <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
                 <span class="mr-2">Data curation</span>
-            </v-btn>-->
+            </v-btn>
             <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
                 <span class="mr-2">ViruSurf GISAID</span>
             </v-btn>
