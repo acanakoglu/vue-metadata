@@ -602,7 +602,7 @@
                 if (res) {
                     length = res.length;
                     if (length > cut_limit) {
-                        res = `${res.substring(0, subst_len)} ... (length: ${length})`
+                        res = `${res.substring(0, subst_len)}... (length: ${length})`
                     }
                 }
                 return res;
