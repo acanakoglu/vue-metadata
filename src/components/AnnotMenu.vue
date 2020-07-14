@@ -226,10 +226,18 @@
                 return this.compound_query.gcm[this.field]
             },
             selectedMin() {
-                return this.min * this.unit
+                if (this.min != null && this.min !== '') {
+                    return this.min * this.unit;
+                } else {
+                    return null;
+                }
             },
             selectedMax() {
-                return this.max * this.unit
+                if (this.max != null && this.max !== '') {
+                    return this.max * this.unit;
+                } else {
+                    return null;
+                }
             },
             maxString() {
                 return Math.ceil((this.maxAge / this.unit)).toString();
