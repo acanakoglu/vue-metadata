@@ -156,6 +156,8 @@
 
                 c = this.selectedMin;
                 b = this.selectedMax;
+                console.log("ASD", this.selectedMin, this.selectedMax);
+
 
                 let a = {
                     'min_val': c,
@@ -215,11 +217,11 @@
             //here we will calculate the value of textbox
             textBoxValue() {
                 let a = [];
-                if(this.min !=null)
+                if (this.min != null)
                     a.push('min: ' + this.min);
-                if(this.max !=null)
+                if (this.max != null)
                     a.push('max: ' + this.max);
-                if(this.isNull)
+                if (this.isNull)
                     a.push('N/D');
                 return a.join('; ');
             },
@@ -230,13 +232,10 @@
                 return this.compound_query.gcm[this.field]
             },
             selectedMin() {
-
-                if (this.min)
-                    return this.min * this.unit
+                return this.min * this.unit
             },
             selectedMax() {
-                if (this.max)
-                    return this.max * this.unit
+                return this.max * this.unit
             },
             maxString() {
                 return Math.ceil((this.maxAge / this.unit)).toString();
