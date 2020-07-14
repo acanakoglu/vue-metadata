@@ -1,6 +1,6 @@
 <template>
     <v-menu
-            :close-on-click="true"
+            :close-on-click="false"
             :close-on-content-click="false"
             :nudge-width="200"
             v-model="menu"
@@ -109,8 +109,6 @@
 
                 const url = `field/numerical/${this.field}`;
 
-                this.min = null;
-                this.max = null;
 
                 // eslint-disable-next-line
                 axios.post(url, queryToRun)
@@ -137,17 +135,9 @@
                 let c = 0;
                 let b = 0;
 
-                if (this.selectedMin || true) {
-                    c = this.selectedMin;
-                } else {
-                    c = null;
-                }
+                c = this.selectedMin;
+                b = this.selectedMax;
 
-                if (this.selectedMax || true) {
-                    b = this.selectedMax;
-                } else {
-                    b = null;
-                }
                 let a = {
                     'min_val': c,
                     'max_val': b,
@@ -171,8 +161,8 @@
 
                 if (Object.keys(res).length > 0)
                     this.$emit('input', res)
-                else
-                    this.deleteAgeLocal()
+                // else
+                //     this.deleteAgeLocal()
 
 
                 this.menu = false;
@@ -186,7 +176,7 @@
             compound_query() {
                 this.loadMinMaxAge();
             },
-            groupCondition(){
+            groupCondition() {
                 this.loadMinMaxAge();
             },
             ageItem() {
@@ -220,12 +210,14 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                let f = this.min ? ' min: ' + this.min : '';
-                f += (this.min && this.max) || (this.min && this.isNull) ? '; ' : '';
-                f += this.max ? ' max: ' + this.max : '';
-                f += this.max && this.isNull ? '; ' : '';
-                f += this.isNull ? ' N/D ' : '';
-                return f;
+                let a = [];
+                if(this.min !=null)
+                    a.push('min: ' + this.min);
+                if(this.max !=null)
+                    a.push('max: ' + this.max);
+                if(this.isNull)
+                    a.push('N/D');
+                return a.join('; ');
             },
             searchDisabled() {
                 return this.panelActive.length !== 0
