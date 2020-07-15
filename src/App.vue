@@ -22,6 +22,9 @@
             <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
                 <span class="mr-2">ViruSurf</span>
             </v-btn>
+            <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
+                <span class="mr-2">Data curation</span>
+            </v-btn>
             <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
                 <span class="mr-2">GenoSurf</span>
             </v-btn>
@@ -51,10 +54,8 @@
                         </v-flex>-->  <!--query utils-->
                         <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
                         <v-flex md2 sm2 class="no-horizontal-padding">
-                            <v-btn color='info' @click="afterQuerySelection()">
-                                Clear your search
+                            <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
-
                         </v-flex>  <!--clear all-->
                         <v-flex md2 sm2 class="no-horizontal-padding">
                             <v-btn flat class="info" @click="applyButtonClick">
@@ -250,7 +251,6 @@
                             }
                         }
                     },
-
                 ],
                 selectedTab: 0,
                 queryString: '',
