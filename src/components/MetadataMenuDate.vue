@@ -1,6 +1,6 @@
 <template>
     <v-menu
-            :close-on-click="true"
+            :close-on-click="false"
             :close-on-content-click="false"
             :nudge-width="200"
             v-model="menu"
