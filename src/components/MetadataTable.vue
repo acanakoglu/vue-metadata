@@ -119,12 +119,48 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
+                    <v-flex sm2 d-flex align-self-center shrink>
+                        <v-switch style="flex-shrink: initial" v-model=is_control label="Show control"/>
+                        <v-dialog
+                                width="500"
+                        >
+                            <v-btn slot="activator"
+                                   class="info-button"
+                                   small
+                                   flat icon color="blue">
+                                <v-icon class="info-icon">info</v-icon>
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline grey lighten-2"
+                                        primary-title
+                                >
+                                    Show control
+                                </v-card-title>
+
+                                <v-card-text>
+                                    <p>
+                                        Change the result into the control group.
+                                    </p>
+                                    <p>
+                                        It keeps the <b>Metadata search</b> query,
+                                        but negate the <b>Variant search</b> query.
+                                    </p>
+
+
+                                </v-card-text>
+
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+
                     <v-flex sm3 align-self-center>
-                        <!--                        <MetadataDropDown-->
-                        <!--                                field="annotation_view_product"-->
-                        <!--                                labelTitle="Select product to extract its sequences"-->
-                        <!--                                :is_gcm="false"-->
-                        <!--                                v-model="selectedProduct"/>-->
+                        <MetadataDropDown
+                                field="annotation_view_product"
+                                labelTitle="Select product to extract its sequences"
+                                :is_gcm="false"
+                                v-model="selectedProduct"/>
                     </v-flex>
                     <v-flex sm2 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
@@ -299,6 +335,7 @@
                 search: '',
                 result: [],
                 agg_mode: false,
+                is_control: false,
                 download_table: '',
                 dialogOrder: false,
                 headers: this.getHeaders(),
@@ -321,9 +358,18 @@
                 console.log("CALL: synonym")
                 this.applyQuery();
             },
-            agg_mode() {
-                console.log("CALL: agg_mode")
-                this.applyQuery();
+            is_control() {
+                if (Object.keys(this.compound_query.kv).length) {
+                    console.log("CALL: is_control");
+                    this.applyQuery();
+                } else {
+                    if (this.is_control) {
+                        alert("To execute control query, please define variant search");
+                        setTimeout(() => {
+                            this.is_control = false;
+                        }, 200);
+                    }
+                }
             },
             selectedProduct() {
                 console.log("CALL: selectedProduct")
@@ -395,7 +441,7 @@
                 this.mousehovermessage_authors = '...loading...';
             },
             getHeaders() {
-                console.log("HELOOOOO", this.sortable)
+                // console.log("HELOOOOO", this.sortable)
                 return [
                     //sequence
                     {
@@ -481,7 +527,7 @@
                 else
                     orderDir = "ASC";
 
-                let url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `query/table?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     url += `&annotation_type=${this.selectedProduct}`;
                 }
@@ -522,7 +568,7 @@
                     this.isLoading = true;
                     this.result = [];
 
-                    let count_url = `query/count?agg=${this.agg_mode}`;
+                    let count_url = `query/count?is_control=${this.is_control}`;
 
                     // TODO CHECK if each sequence has more than one annotation with different product,
                     //  then we need to do below.
@@ -640,7 +686,7 @@
                 else
                     orderDir = "ASC";
 
-                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                const csv_url = `query/table?is_control=${this.is_control}&page=1&num_elems=${this.pagination.totalItems}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
@@ -705,6 +751,16 @@
 
     }
 </script>
+
+<style>
+    .v-input--selection-controls__input {
+        margin-left: 8px;
+    }
+
+    .v-input--selection-controls.v-input .v-label {
+        align-self: flex-end;
+    }
+</style>
 
 <style scoped>
 
