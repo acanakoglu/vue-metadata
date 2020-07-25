@@ -17,6 +17,7 @@ export default new Vuex.Store({
         panelActive: [],
         numerical: new Set(),
         exampleQueryLoaded: null,
+        gisaidOnly: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -35,6 +36,9 @@ export default new Vuex.Store({
             state.exampleQueryLoaded = new Date().getTime();
             console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
 
+        },
+        setGisaidOnly: (state, value) => {
+            state.gisaidOnly = value;
         },
         setPanelActive: (state, value) => {
             state.panelActive.push(value);

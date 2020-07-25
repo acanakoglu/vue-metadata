@@ -62,6 +62,11 @@
                                 Apply your search
                             </v-btn>
                         </v-flex>
+                        <v-flex md2 sm2 class="no-horizontal-padding">
+                            <v-btn flat class="info" @click="applyGisaidButtonClick">
+                                Apply GISAID specific
+                            </v-btn>
+                        </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
                         <!--                            <v-dialog v-model="dialogShowQuery">-->
                         <!--                                <v-btn flat class="small-btn" dark small-->
@@ -125,7 +130,7 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-flex md8 sm8 class=" no-horizontal-padding">
+                        <v-flex md6 sm6 class=" no-horizontal-padding">
                             <v-select solo
                                       dense
                                       :menu-props='{"maxHeight":1000}'
@@ -156,8 +161,14 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-                <v-btn @click="applyButtonClick" flat class="info" v-if="!applied">Apply your search</v-btn>
-
+                <div v-if="!applied">
+                    <v-btn flat class="info" @click="applyButtonClick">
+                        Apply your search
+                    </v-btn>
+                    <v-btn flat class="info" @click="applyGisaidButtonClick">
+                        Apply GISAID specific
+                    </v-btn>
+                </div>
                 <div class="result-div" v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
@@ -279,7 +290,7 @@
             this.setFooterCount();
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setCount']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setCount', 'setGisaidOnly',]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
             setFooterCount() {
                 this.setCount(null);
@@ -295,6 +306,11 @@
                     });
             },
             applyButtonClick() {
+                this.setGisaidOnly(false);
+                this.applied = true;
+            },
+            applyGisaidButtonClick() {
+                this.setGisaidOnly(true);
                 this.applied = true;
             },
             setInputQuery() {

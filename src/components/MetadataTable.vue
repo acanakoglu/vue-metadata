@@ -155,11 +155,11 @@
                     </v-flex>
 
                     <v-flex sm3 align-self-center>
-<!--                        <MetadataDropDown-->
-<!--                                field="annotation_view_product"-->
-<!--                                labelTitle="Select product to extract its sequences"-->
-<!--                                :is_gcm="false"-->
-<!--                                v-model="selectedProduct"/>-->
+                        <!--                        <MetadataDropDown-->
+                        <!--                                field="annotation_view_product"-->
+                        <!--                                labelTitle="Select product to extract its sequences"-->
+                        <!--                                :is_gcm="false"-->
+                        <!--                                v-model="selectedProduct"/>-->
                     </v-flex>
                     <v-flex sm2 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
@@ -370,6 +370,10 @@
                     }
                 }
             },
+            gisaidOnly() {
+                console.log("CALL: gisaidOnly");
+                this.applyQuery();
+            },
             selectedProduct() {
                 console.log("CALL: selectedProduct")
                 this.applyQuery();
@@ -477,7 +481,12 @@
                     {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: false},
                     {text: 'Host Age', value: 'age', sortable: this.sortable, show: false},
                     {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
-                    {text: 'Specimen Source (Isolation source)', value: 'isolation_source', sortable: this.sortable, show: true},
+                    {
+                        text: 'Specimen Source (Isolation source)',
+                        value: 'isolation_source',
+                        sortable: this.sortable,
+                        show: true
+                    },
                     {text: 'Originating Lab', value: 'originating_lab', sortable: this.sortable, show: true},
                     {text: 'Location (Geo group)', value: 'geo_group', sortable: this.sortable, show: true},
                     {text: 'Location (Country)', value: 'country', sortable: this.sortable, show: true},
@@ -526,7 +535,7 @@
                 else
                     orderDir = "ASC";
 
-                let url = `query/table?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `query/table?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     url += `&annotation_type=${this.selectedProduct}`;
                 }
@@ -567,7 +576,7 @@
                     this.isLoading = true;
                     this.result = [];
 
-                    let count_url = `query/count?is_control=${this.is_control}`;
+                    let count_url = `query/count?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}`;
 
                     // TODO CHECK if each sequence has more than one annotation with different product,
                     //  then we need to do below.
@@ -710,7 +719,7 @@
             }
         },
         computed: {
-            ...mapState(['synonym', 'count']),
+            ...mapState(['synonym', 'count', 'gisaidOnly']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
