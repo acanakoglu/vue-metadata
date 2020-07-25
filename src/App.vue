@@ -158,7 +158,7 @@
                 <PairQuery/>
                 <v-btn @click="applyButtonClick" flat class="info" v-if="!applied">Apply your search</v-btn>
 
-                <div class="result-div"  v-if="applied">
+                <div class="result-div" v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Result sequences
@@ -276,10 +276,24 @@
                         this.fields.push(res.fields[i].name)
                     }
                 });
+            this.setFooterCount();
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setCount']),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
+            setFooterCount() {
+                this.setCount(null);
+                let count_url = `query/count`;
+                // eslint-disable-next-line
+                console.log(this.queryInput)
+                axios.post(count_url, this.compound_query)
+                    .then((res) => {
+                        return res.data;
+                    })
+                    .then((res) => {
+                        this.setCount(res);
+                    });
+            },
             applyButtonClick() {
                 this.applied = true;
             },
@@ -366,6 +380,7 @@
         watch: {
             queryInput() {
                 this.applied = false;
+                this.setFooterCount();
             },
             queryString() {
                 if (this.queryString !== '') {
