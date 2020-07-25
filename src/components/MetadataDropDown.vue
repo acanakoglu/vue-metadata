@@ -18,8 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
-    import { FULL_TEXT } from '../variables.js'
-
+    import {FULL_TEXT, LOADING_TEXT} from '../variables.js'
 
 
     export default {
@@ -69,7 +68,7 @@
                 }
             },
             searchDisabled() {
-                return this.panelActive.length !== 0
+                return this.panelActive.length !== 0 || this.isLoading;
             },
         },
         methods: {
@@ -117,6 +116,8 @@
             loadData() {
                 const url = `field/${this.field}`;
                 this.isLoading = true;
+                this.values = [{value: LOADING_TEXT}];
+
 
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
@@ -128,8 +129,9 @@
                         // console.log(res);
                         //to clean previously selected values
                         if (this.selected && Array.isArray(this.selected)) {
-                            // console.log(this.selected);
-                            let zero_elements = this.selected.filter(value => !res.values.map(v => v.value).includes(value))
+                            // console.log("this.selected: ", this.selected);
+                            let zero_elements = this.selected
+                                .filter(value => !res.values.map(v => v.value).includes(value))
                                 .sort().map(v => Object({
                                     value: v,
                                     count: 0
@@ -138,7 +140,7 @@
                             vals = vals.concat(zero_elements);
                         }
                         if (!this.is_gcm) {
-                            vals = vals.map(el => el.value).filter(el =>el).sort()
+                            vals = vals.map(el => el.value).filter(el => el).sort()
                             vals.unshift(FULL_TEXT)
                             if (!vals.includes(this.selected)) {
                                 this.selected = FULL_TEXT;
@@ -149,7 +151,7 @@
 
                         }
 
-
+                        // console.log(vals);
                         this.values = vals;
                         this.isLoading = false;
                     });
