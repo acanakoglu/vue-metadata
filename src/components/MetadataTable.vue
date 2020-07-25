@@ -19,7 +19,7 @@
         <v-card-title>
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
-                    <v-flex sm2 align-self-center>
+                    <v-flex sm3 align-self-center>
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
@@ -72,11 +72,17 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="blue lighten-2">
+                                Download sequence
+                            </v-btn>
                             <v-card>
                                 <v-card-title
                                         class="headline blue lighten-4"
                                         primary-title>
-                                    Download files
+                                    Download sequence
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
                                                    :indeterminate="downloadProgress"></v-progress-linear>
@@ -84,15 +90,26 @@
 
                                 <v-card-text>
                                     <p>
-                                        Click the "Download" button below to download a "files.txt" file that contains
-                                        the list of the URLs of the region data and metadata files related to the result
-                                        items.
+                                        Click the "Download" button below to download a "sequences.fasta" or
+                                        "sequences.csv" file that contains the sequence in
+                                        <a href="https://en.wikipedia.org/wiki/FASTA_format" target="_blank">FASTA</a>
+                                        or
+                                        <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a>
+                                        file format, respectively.
                                     </p>
                                     <p>
-                                        The following command using cURL can be used to download all the files in the
-                                        list:
-                                        <br>
-                                        <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
+                                        Please select output file format:
+                                        <v-radio-group v-model="downloadFileFormat">
+                                            <v-radio label="FASTA" value="fasta"></v-radio>
+                                            <v-radio label="CSV" value="csv"></v-radio>
+                                        </v-radio-group>
+                                    </p>
+                                    <p v-if="selectedProduct !== FULL_TEXT">
+                                        Do you want to download nucleotide sequence of amoni acid sequence?
+                                        <v-radio-group v-model="downloadType">
+                                            <v-radio label="Nucleotide" value="nuc"></v-radio>
+                                            <v-radio label="Amino acid" value="aa"></v-radio>
+                                        </v-radio-group>
                                     </p>
 
 
@@ -317,6 +334,8 @@
         },
         data() {
             return {
+                downloadFileFormat: 'fasta',
+                downloadType: 'nuc',
                 selectedProduct: FULL_TEXT,
                 mousehovermessage_originating: '...loading...',
                 mousehovermessage_submitting: '...loading...',
@@ -590,28 +609,78 @@
                 this.callTableQuery();
             },
             download() {
-                this.downloadProgress = true;
+                let orderDir = "";
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
 
-                let urlDownload = `query/download?voc=${this.synonym}`;
+                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
-                    urlDownload += `&annotation_type=${this.selectedProduct}`;
+                    csv_url += `&annotation_type=${this.selectedProduct}`;
                 }
 
 
+                this.downloadProgress = true;
                 // eslint-disable-next-line
-                axios.post(urlDownload, this.compound_query)
+                axios.post(csv_url, this.compound_query)
                     .then((res) => {
-                        return res.data
+                        return res.data;
                     })
                     .then((res) => {
-                        const url = window.URL.createObjectURL(new Blob([res]));
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download', 'files.txt');
-                        document.body.appendChild(link);
-                        link.click();
+                        let sequence_type = 'nucleotide_sequence';
+                        if (this.selectedProduct !== FULL_TEXT && this.downloadType == 'aa')
+                            sequence_type = 'amino_acid_sequence';
+
+                        let result = res.map((el) => {
+                            return {
+                                title: el['accession_id'],
+                                sequence: el[sequence_type],
+                            }
+                        });
+                        return result
+                    })
+                    .then((res) => {
+                        if (this.downloadFileFormat == 'fasta') {
+                            return this.result2fasta(res);
+                        } else {
+                            return this.json2csv(res, [{value: 'title'}, {value: 'sequence'}]);
+                        }
+                    })
+                    .then((res) => {
+                        let text = res;
+                        let filename = "sequences.fasta";
+                        if (this.downloadFileFormat != 'fasta') {
+                            filename = "sequences.csv";
+                        }
+                        let element = document.createElement('a');
+                        element.setAttribute('download', filename);
+                        var data = new Blob([text]);
+                        element.href = URL.createObjectURL(data);
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
                         this.downloadProgress = false;
                     });
+            },
+            result2fasta(input) {
+                const all_row2fasta = input
+                    .filter((el) => el.sequence)
+                    .map((el) => {
+                        const rowFasta = this.row2fasta(el);
+                        // console.log('rowFasta', rowFasta);
+                        return rowFasta;
+                    });
+                const result = all_row2fasta.join("\n")
+                return result;
+            },
+            row2fasta(input) {
+                const title = ">" + input.title;
+                let sequence = input.sequence;
+                let result = sequence.match(/.{1,60}/g);
+                result.unshift(title)
+                result = result.join("\n");
+                return result;
             },
             toClipboard() {
                 this.$copyText(this.gmqlQuery).then(function () {
@@ -660,10 +729,10 @@
                 }
                 return input;
             },
-            json2csv(input) {
+            json2csv(input, selected_headers) {
                 var json = input;
                 var fields = [];
-                this.selected_headers.forEach(function (el) {
+                selected_headers.forEach(function (el) {
                     if (el.value != "extra")
                         fields.push(el.value)
                 });
@@ -686,7 +755,11 @@
                 else
                     orderDir = "ASC";
 
-                const csv_url = `query/table?is_control=${this.is_control}&page=1&num_elems=${this.pagination.totalItems}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                if (this.selectedProduct !== FULL_TEXT) {
+                    csv_url += `&annotation_type=${this.selectedProduct}`;
+                }
+
                 this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
@@ -697,7 +770,7 @@
                         return this.addLink(res);
                     })
                     .then((res) => {
-                        let text = this.json2csv(res);
+                        let text = this.json2csv(res, this.selected_headers);
                         let filename = "result.csv";
                         let element = document.createElement('a');
                         element.setAttribute('download', filename);
@@ -715,6 +788,9 @@
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            FULL_TEXT() {
+                return FULL_TEXT;
+            },
             mousehovermessageStyle() {
                 if (this.mousehovermessage_show) {
                     return `position:fixed;top: ${this.mousehovermessage_top - 30}px; left: ${this.mousehovermessage_left + 30}px;`;
