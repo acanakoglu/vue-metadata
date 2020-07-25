@@ -155,11 +155,11 @@
                     </v-flex>
 
                     <v-flex sm3 align-self-center>
-                        <MetadataDropDown
-                                field="annotation_view_product"
-                                labelTitle="Select product to extract its sequences"
-                                :is_gcm="false"
-                                v-model="selectedProduct"/>
+<!--                        <MetadataDropDown-->
+<!--                                field="annotation_view_product"-->
+<!--                                labelTitle="Select product to extract its sequences"-->
+<!--                                :is_gcm="false"-->
+<!--                                v-model="selectedProduct"/>-->
                     </v-flex>
                     <v-flex sm2 shrink align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
