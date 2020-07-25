@@ -198,7 +198,7 @@
                             class="bottom-info">
 
 
-                        <div v-if="count === null">Loading...</div>
+                        <div v-if="count === null" style="font-size:1.4em;">Loading...</div>
                         <div style="font-size:1.4em;" v-else-if="count>0">{{count}} sequence<span
                                 v-if="count>1">s</span> found
                         </div>
