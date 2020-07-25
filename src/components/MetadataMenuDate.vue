@@ -196,10 +196,14 @@
             }),
             //here we will calculate the value of textbox
             textBoxValue() {
-                let f = this.min ? this.min + ' <= ' : '';
-                f += this.min || this.max ? 'date' : '';
-                f += this.max ? ' <= ' + this.max : '';
-                return f;
+                let a = [];
+                if (this.min != null)
+                    a.push('min: ' + this.min);
+                if (this.max != null)
+                    a.push('max: ' + this.max);
+                if (this.isNull)
+                    a.push('N/D');
+                return a.join('; ');
             },
             searchDisabled() {
                 return this.panelActive.length !== 0
