@@ -62,10 +62,33 @@
                                 Apply your search
                             </v-btn>
                         </v-flex>
-                        <v-flex md2 sm2 class="no-horizontal-padding">
+                        <v-flex md2 sm2 class="no-horizontal-padding d-flex">
                             <v-btn flat class="info" @click="applyGisaidButtonClick">
                                 Apply GISAID specific
                             </v-btn>
+                            <v-dialog width="500">
+                                <v-btn slot="activator"
+                                       class="info-button"
+                                       small
+                                       flat icon color="blue"
+                                       style="margin-left: 0px;margin-right: 0px;">
+                                    <v-icon class="info-icon">info</v-icon>
+                                </v-btn>
+                                <v-card>
+                                    <v-card-title
+                                            class="headline grey lighten-2"
+                                            primary-title
+                                    >
+                                        Apply GISAID specific
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <p>
+                                            Removes from the database all sequences which are also in GenBank,
+                                            COG-UK and NMDC.
+                                        </p>
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
                         </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
                         <!--                            <v-dialog v-model="dialogShowQuery">-->
@@ -529,6 +552,14 @@
 
     .mytextarea {
         padding: 16px;
+    }
+
+    .info-icon {
+        font-size: 15px !important;
+    }
+
+    .info-button {
+        width: 10px !important;
     }
 
 
