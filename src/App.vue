@@ -62,6 +62,34 @@
                                 Apply your search
                             </v-btn>
                         </v-flex>
+                        <v-flex md2 sm2 class="no-horizontal-padding d-flex">
+                            <v-btn flat class="info" @click="applyGisaidButtonClick">
+                                Apply GISAID specific
+                            </v-btn>
+                            <v-dialog width="500">
+                                <v-btn slot="activator"
+                                       class="info-button"
+                                       small
+                                       flat icon color="blue"
+                                       style="margin-left: 0px;margin-right: 0px;">
+                                    <v-icon class="info-icon">info</v-icon>
+                                </v-btn>
+                                <v-card>
+                                    <v-card-title
+                                            class="headline grey lighten-2"
+                                            primary-title
+                                    >
+                                        Apply GISAID specific
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <p>
+                                            Removes from the database all sequences which are also in GenBank,
+                                            COG-UK and NMDC.
+                                        </p>
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
+                        </v-flex>
                         <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
                         <!--                            <v-dialog v-model="dialogShowQuery">-->
                         <!--                                <v-btn flat class="small-btn" dark small-->
@@ -125,7 +153,7 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-flex md8 sm8 class=" no-horizontal-padding">
+                        <v-flex md6 sm6 class=" no-horizontal-padding">
                             <v-select solo
                                       dense
                                       :menu-props='{"maxHeight":1000}'
@@ -156,9 +184,15 @@
 
                 <FullScreenViewer/>
                 <PairQuery/>
-                <v-btn @click="applyButtonClick" flat class="info" v-if="!applied">Apply your search</v-btn>
-
-                <div class="result-div"  v-if="applied">
+                <div v-if="!applied">
+                    <v-btn flat class="info" @click="applyButtonClick">
+                        Apply your search
+                    </v-btn>
+                    <v-btn flat class="info" @click="applyGisaidButtonClick">
+                        Apply GISAID specific
+                    </v-btn>
+                </div>
+                <div class="result-div" v-if="applied">
                     <v-tabs dark color="blue darken-1" v-model="selectedTab">
                         <v-tab>
                             Result sequences
@@ -187,7 +221,7 @@
                             class="bottom-info">
 
 
-                        <div v-if="count === null">Loading...</div>
+                        <div v-if="count === null" style="font-size:1.4em;">Loading...</div>
                         <div style="font-size:1.4em;" v-else-if="count>0">{{count}} sequence<span
                                 v-if="count>1">s</span> found
                         </div>
@@ -276,11 +310,30 @@
                         this.fields.push(res.fields[i].name)
                     }
                 });
+            this.setFooterCount();
         },
         methods: {
-            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded']),
+            ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setCount', 'setGisaidOnly',]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
+            setFooterCount() {
+                this.setCount(null);
+                let count_url = `query/count`;
+                // eslint-disable-next-line
+                console.log(this.queryInput)
+                axios.post(count_url, this.compound_query)
+                    .then((res) => {
+                        return res.data;
+                    })
+                    .then((res) => {
+                        this.setCount(res);
+                    });
+            },
             applyButtonClick() {
+                this.setGisaidOnly(false);
+                this.applied = true;
+            },
+            applyGisaidButtonClick() {
+                this.setGisaidOnly(true);
                 this.applied = true;
             },
             setInputQuery() {
@@ -366,6 +419,7 @@
         watch: {
             queryInput() {
                 this.applied = false;
+                this.setFooterCount();
             },
             queryString() {
                 if (this.queryString !== '') {
@@ -498,6 +552,14 @@
 
     .mytextarea {
         padding: 16px;
+    }
+
+    .info-icon {
+        font-size: 15px !important;
+    }
+
+    .info-button {
+        width: 10px !important;
     }
 
 

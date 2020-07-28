@@ -19,7 +19,7 @@
         <v-card-title>
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
-                    <v-flex sm2 align-self-center>
+                    <v-flex sm3 align-self-center>
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
@@ -71,11 +71,17 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
+                            <!--                            <v-btn dark-->
+                            <!--                                   slot="activator"-->
+                            <!--                                   small-->
+                            <!--                                   color="blue lighten-2">-->
+                            <!--                                Download sequence-->
+                            <!--                            </v-btn>-->
                             <v-card>
                                 <v-card-title
                                         class="headline blue lighten-4"
                                         primary-title>
-                                    Download files
+                                    Download sequence
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
                                                    :indeterminate="downloadProgress"></v-progress-linear>
@@ -83,15 +89,26 @@
 
                                 <v-card-text>
                                     <p>
-                                        Click the "Download" button below to download a "files.txt" file that contains
-                                        the list of the URLs of the region data and metadata files related to the result
-                                        items.
+                                        Click the "Download" button below to download a "sequences.fasta" or
+                                        "sequences.csv" file that contains the sequence in
+                                        <a href="https://en.wikipedia.org/wiki/FASTA_format" target="_blank">FASTA</a>
+                                        or
+                                        <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a>
+                                        file format, respectively.
                                     </p>
                                     <p>
-                                        The following command using cURL can be used to download all the files in the
-                                        list:
-                                        <br>
-                                        <code>xargs -L 1 curl -J -O -L &lt; files.txt</code>
+                                        Please select output file format:
+                                        <v-radio-group v-model="downloadFileFormat">
+                                            <v-radio label="FASTA" value="fasta"></v-radio>
+                                            <v-radio label="CSV" value="csv"></v-radio>
+                                        </v-radio-group>
+                                    </p>
+                                    <p v-if="selectedProduct !== FULL_TEXT">
+                                        Do you want to download nucleotide sequence of amoni acid sequence?
+                                        <v-radio-group v-model="downloadType">
+                                            <v-radio label="Nucleotide" value="nuc"></v-radio>
+                                            <v-radio label="Amino acid" value="aa"></v-radio>
+                                        </v-radio-group>
                                     </p>
 
 
@@ -118,6 +135,42 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
+                    <v-flex sm2 d-flex align-self-center shrink>
+                        <v-switch style="flex-shrink: initial" v-model=is_control label="Show control"/>
+                        <v-dialog
+                                width="500"
+                        >
+                            <v-btn slot="activator"
+                                   class="info-button"
+                                   small
+                                   flat icon color="blue">
+                                <v-icon class="info-icon">info</v-icon>
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline grey lighten-2"
+                                        primary-title
+                                >
+                                    Show control
+                                </v-card-title>
+
+                                <v-card-text>
+                                    <p>
+                                        Change the result into the control group.
+                                    </p>
+                                    <p>
+                                        It keeps the <b>Metadata search</b> query,
+                                        but negate the <b>Variant search</b> query.
+                                    </p>
+
+
+                                </v-card-text>
+
+                            </v-card>
+                        </v-dialog>
+                    </v-flex>
+
                     <v-flex sm3 align-self-center>
                         <!--                        <MetadataDropDown-->
                         <!--                                field="annotation_view_product"-->
@@ -280,6 +333,8 @@
         },
         data() {
             return {
+                downloadFileFormat: 'fasta',
+                downloadType: 'nuc',
                 selectedProduct: FULL_TEXT,
                 mousehovermessage_originating: '...loading...',
                 mousehovermessage_submitting: '...loading...',
@@ -298,6 +353,7 @@
                 search: '',
                 result: [],
                 agg_mode: false,
+                is_control: false,
                 download_table: '',
                 dialogOrder: false,
                 headers: this.getHeaders(),
@@ -320,8 +376,21 @@
                 console.log("CALL: synonym")
                 this.applyQuery();
             },
-            agg_mode() {
-                console.log("CALL: agg_mode")
+            is_control() {
+                if (Object.keys(this.compound_query.kv).length) {
+                    console.log("CALL: is_control");
+                    this.applyQuery();
+                } else {
+                    if (this.is_control) {
+                        alert("To execute control query, please define variant search");
+                        setTimeout(() => {
+                            this.is_control = false;
+                        }, 200);
+                    }
+                }
+            },
+            gisaidOnly() {
+                console.log("CALL: gisaidOnly");
                 this.applyQuery();
             },
             selectedProduct() {
@@ -394,7 +463,7 @@
                 this.mousehovermessage_authors = '...loading...';
             },
             getHeaders() {
-                console.log("HELOOOOO", this.sortable)
+                // console.log("HELOOOOO", this.sortable)
                 return [
                     //sequence
                     {
@@ -431,7 +500,12 @@
                     {text: 'Host Gender', value: 'gender', sortable: this.sortable, show: false},
                     {text: 'Host Age', value: 'age', sortable: this.sortable, show: false},
                     {text: 'Collection date', value: 'collection_date', sortable: this.sortable, show: true},
-                    {text: 'Specimen Source (Isolation source)', value: 'isolation_source', sortable: this.sortable, show: true},
+                    {
+                        text: 'Specimen Source (Isolation source)',
+                        value: 'isolation_source',
+                        sortable: this.sortable,
+                        show: true
+                    },
                     {text: 'Originating Lab', value: 'originating_lab', sortable: this.sortable, show: true},
                     {text: 'Location (Geo group)', value: 'geo_group', sortable: this.sortable, show: true},
                     {text: 'Location (Country)', value: 'country', sortable: this.sortable, show: true},
@@ -480,7 +554,7 @@
                 else
                     orderDir = "ASC";
 
-                let url = `query/table?agg=${this.agg_mode}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `query/table?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     url += `&annotation_type=${this.selectedProduct}`;
                 }
@@ -521,7 +595,7 @@
                     this.isLoading = true;
                     this.result = [];
 
-                    let count_url = `query/count?agg=${this.agg_mode}`;
+                    let count_url = `query/count?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}`;
 
                     // TODO CHECK if each sequence has more than one annotation with different product,
                     //  then we need to do below.
@@ -543,28 +617,78 @@
                 this.callTableQuery();
             },
             download() {
-                this.downloadProgress = true;
+                let orderDir = "";
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
 
-                let urlDownload = `query/download?voc=${this.synonym}`;
+                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
-                    urlDownload += `&annotation_type=${this.selectedProduct}`;
+                    csv_url += `&annotation_type=${this.selectedProduct}`;
                 }
 
 
+                this.downloadProgress = true;
                 // eslint-disable-next-line
-                axios.post(urlDownload, this.compound_query)
+                axios.post(csv_url, this.compound_query)
                     .then((res) => {
-                        return res.data
+                        return res.data;
                     })
                     .then((res) => {
-                        const url = window.URL.createObjectURL(new Blob([res]));
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download', 'files.txt');
-                        document.body.appendChild(link);
-                        link.click();
+                        let sequence_type = 'nucleotide_sequence';
+                        if (this.selectedProduct !== FULL_TEXT && this.downloadType == 'aa')
+                            sequence_type = 'amino_acid_sequence';
+
+                        let result = res.map((el) => {
+                            return {
+                                title: el['accession_id'],
+                                sequence: el[sequence_type],
+                            }
+                        });
+                        return result
+                    })
+                    .then((res) => {
+                        if (this.downloadFileFormat == 'fasta') {
+                            return this.result2fasta(res);
+                        } else {
+                            return this.json2csv(res, [{value: 'title'}, {value: 'sequence'}]);
+                        }
+                    })
+                    .then((res) => {
+                        let text = res;
+                        let filename = "sequences.fasta";
+                        if (this.downloadFileFormat != 'fasta') {
+                            filename = "sequences.csv";
+                        }
+                        let element = document.createElement('a');
+                        element.setAttribute('download', filename);
+                        var data = new Blob([text]);
+                        element.href = URL.createObjectURL(data);
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
                         this.downloadProgress = false;
                     });
+            },
+            result2fasta(input) {
+                const all_row2fasta = input
+                    .filter((el) => el.sequence)
+                    .map((el) => {
+                        const rowFasta = this.row2fasta(el);
+                        // console.log('rowFasta', rowFasta);
+                        return rowFasta;
+                    });
+                const result = all_row2fasta.join("\n")
+                return result;
+            },
+            row2fasta(input) {
+                const title = ">" + input.title;
+                let sequence = input.sequence;
+                let result = sequence.match(/.{1,60}/g);
+                result.unshift(title)
+                result = result.join("\n");
+                return result;
             },
             toClipboard() {
                 this.$copyText(this.gmqlQuery).then(function () {
@@ -613,13 +737,14 @@
                 }
                 return input;
             },
-            json2csv(input) {
+            json2csv(input, selected_headers) {
                 var json = input;
-                var fields = ['accession_id'];
-                // this.selected_headers.forEach(function (el) {
-                //     if (el.value != "extra")
-                //         fields.push(el.value)
-                // });
+                var fields = [];
+                selected_headers.forEach(function (el) {
+                    if (el.value != "extra")
+                        fields.push(el.value)
+                });
+                fields = ['accession_id'];
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };
@@ -639,7 +764,11 @@
                 else
                     orderDir = "ASC";
 
-                const csv_url = `query/table?agg=${this.agg_mode}&page=1&num_elems=${this.pagination.totalItems}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                if (this.selectedProduct !== FULL_TEXT) {
+                    csv_url += `&annotation_type=${this.selectedProduct}`;
+                }
+
                 this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
@@ -650,7 +779,7 @@
                         return this.addLink(res);
                     })
                     .then((res) => {
-                        let text = this.json2csv(res);
+                        let text = this.json2csv(res, this.selected_headers);
                         let filename = "result.csv";
                         let element = document.createElement('a');
                         element.setAttribute('download', filename);
@@ -664,10 +793,13 @@
             }
         },
         computed: {
-            ...mapState(['synonym', 'count']),
+            ...mapState(['synonym', 'count', 'gisaidOnly']),
             ...mapGetters({
                 compound_query: 'build_query'
             }),
+            FULL_TEXT() {
+                return FULL_TEXT;
+            },
             mousehovermessageStyle() {
                 if (this.mousehovermessage_show) {
                     return `position:fixed;top: ${this.mousehovermessage_top - 30}px; left: ${this.mousehovermessage_left + 30}px;`;
@@ -704,6 +836,16 @@
 
     }
 </script>
+
+<style>
+    .v-input--selection-controls__input {
+        margin-left: 8px;
+    }
+
+    .v-input--selection-controls.v-input .v-label {
+        align-self: flex-end;
+    }
+</style>
 
 <style scoped>
 
