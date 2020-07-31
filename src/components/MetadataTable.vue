@@ -105,7 +105,7 @@
                                         </v-radio-group>
                                     </p>
                                     <p v-if="selectedProduct !== FULL_TEXT">
-                                        Do you want to download nucleotide sequence of amoni acid sequence?
+                                        Please select if you wish to download nucleotide sequence or amino acid sequence:
                                         <v-radio-group v-model="downloadType">
                                             <v-radio label="Nucleotide" value="nuc"></v-radio>
                                             <v-radio label="Amino acid" value="aa"></v-radio>
