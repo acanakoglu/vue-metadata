@@ -285,6 +285,111 @@
                             }
                         }
                     },
+                    {
+                        text: 'Example 4a - Tang et al. S type (opposed to L type) of SARS-CoV2',
+                        value: {
+                            query: {
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["ns8"],
+                                            "sequence_aa_original": ["l"],
+                                            "sequence_aa_alternative": ["s"],
+                                            "start_aa_original": {"min_val": 84, "max_val": 84}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 6a - Zhang et al. D614G mutation in SARS-CoV-2 spike protein before March (included)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "collection_date": {
+                                        "min_val": null,
+                                        "max_val": "2020-03-31",
+                                        "is_null": false
+                                    },
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike"],
+                                            "sequence_aa_original": ["d"],
+                                            "sequence_aa_alternative": ["g"],
+                                            "start_aa_original": {"min_val": 614, "max_val": 614}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 6b - Zhang et al. D614G mutation in SARS-CoV-2 spike protein after March',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "collection_date": {
+                                        "min_val": "2020-04-01",
+                                        "max_val": null,
+                                        "is_null": false
+                                    },
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike"],
+                                            "sequence_aa_original": ["d"],
+                                            "sequence_aa_alternative": ["g"],
+                                            "start_aa_original": {"min_val": 614, "max_val": 614}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 7 - Chaw et al. G251V in SARS-CoV2 ORF3 gene, linked to Wuhan lockdown',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "collection_date": {
+                                        "min_val": null,
+                                        "max_val": "2020-01-21",
+                                        "is_null": false
+                                    },
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["ns3"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["v"],
+                                            "start_aa_original": {"min_val": 251, "max_val": 251}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
                 ],
                 selectedTab: 0,
                 queryString: '',
