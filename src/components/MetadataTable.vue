@@ -158,14 +158,17 @@
 
                                 <v-card-text>
                                     <p>
-                                        Change the result into the control group.
+                                        Change the visualized result sequences into their control group
                                     </p>
                                     <p>
-                                        It keeps the <b>Metadata search</b> query,
-                                        but negate the <b>Variant search</b> query.
+                                        The <b>Metadata search</b> filters are fixed,
+                                        while the conditions set in the <b>Variant search</b> are negated.
                                     </p>
-
-
+                                    <p> This allows to answer questions such as
+                                    "In the user-defined population of virus sequences extracted from SARS-CoV-2 in
+                                    Wuhan from 01-Jan-2020 till 31-Mar-2020,
+                                    how many did have the variants V1 and V2 and how many had neither V1 nor V2?"
+                                    </p>
                                 </v-card-text>
 
                             </v-card>
@@ -175,7 +178,7 @@
                     <v-flex sm3 align-self-center>
                         <MetadataDropDown
                                 field="annotation_view_product"
-                                labelTitle="Select product to extract its sequences"
+                                labelTitle="Choose protein name to extract its sequence"
                                 :is_gcm="false"
                                 v-model="selectedProduct"/>
                     </v-flex>
@@ -515,7 +518,7 @@
                     {text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
 
                     {text: 'Nucleotide sequence', value: 'nucleotide_sequence', sortable: false, show: true},
-                    {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: false},
+                    {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: true},
                 ];
             },
             resetHeadersOrder() {
