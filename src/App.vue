@@ -270,7 +270,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf8"],
+                                            "product": ["NS8 (ORF8 protein)"],
                                             "sequence_aa_original": ["l"],
                                             "sequence_aa_alternative": ["s"],
                                             "start_aa_original": {"min_val": 84, "max_val": 84}
