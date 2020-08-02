@@ -324,7 +324,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "product": ["spike"],
+                                            "product": ["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -352,7 +352,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "product": ["spike"],
+                                            "product": ["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -380,7 +380,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "product": ["ns3"],
+                                            "product": ["ns3 (orf3a protein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["v"],
                                             "start_aa_original": {"min_val": 251, "max_val": 251}
