@@ -233,12 +233,12 @@
                         }
                     },
                     {
-                        text: 'Example 2 - Sequences from Illumina with 100X coverage',
+                        text: 'Example 2 - Sequences from Illumina with coverage equal to 100',
                         value: {
                             query: {
                                 "gcm": {
                                     sequencing_technology: ["illumina"],
-                                    coverage: ["100x"]
+                                    coverage: ["100"]
                                 }, "type": "original", "kv": {}
                             }
                         }
@@ -374,7 +374,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["s"],
+                                            "product": ["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -402,7 +402,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["s"],
+                                            "product": ["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -430,7 +430,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf3a"],
+                                            "product": ["ns3 (orf3a protein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["v"],
                                             "start_aa_original": {"min_val": 251, "max_val": 251}
