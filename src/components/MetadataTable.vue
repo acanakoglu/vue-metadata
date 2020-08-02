@@ -104,7 +104,7 @@
                                         </v-radio-group>
                                     </p>
                                     <p v-if="selectedProduct !== FULL_TEXT">
-                                        Do you want to download nucleotide sequence of amoni acid sequence?
+                                        Please select if you wish to download nucleotide sequence or amino acid sequence:
                                         <v-radio-group v-model="downloadType">
                                             <v-radio label="Nucleotide" value="nuc"></v-radio>
                                             <v-radio label="Amino acid" value="aa"></v-radio>
@@ -157,14 +157,17 @@
 
                                 <v-card-text>
                                     <p>
-                                        Change the result into the control group.
+                                        Change the visualized result sequences into their control group
                                     </p>
                                     <p>
-                                        It keeps the <b>Metadata search</b> query,
-                                        but negate the <b>Variant search</b> query.
+                                        The <b>Metadata search</b> filters are fixed,
+                                        while the conditions set in the <b>Variant search</b> are negated.
                                     </p>
-
-
+                                    <p> This allows to answer questions such as
+                                    "In the user-defined population of virus sequences extracted from SARS-CoV-2 in
+                                    Wuhan from 01-Jan-2020 till 31-Mar-2020,
+                                    how many did have the variants V1 and V2 and how many had neither V1 nor V2?"
+                                    </p>
                                 </v-card-text>
 
                             </v-card>
