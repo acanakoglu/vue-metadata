@@ -238,7 +238,7 @@
                             query: {
                                 "gcm": {
                                     sequencing_technology: ["illumina"],
-                                    coverage: ["100"]
+                                    coverage: [100]
                                 }, "type": "original", "kv": {}
                             }
                         }
