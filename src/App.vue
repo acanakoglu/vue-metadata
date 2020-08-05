@@ -289,7 +289,8 @@
                         text: 'Example 4a - Tang et al. S type (opposed to L type) of SARS-CoV2',
                         value: {
                             query: {
-                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]},
                                 "type": "original",
                                 "kv": {
                                     "aa_0": {
@@ -316,7 +317,8 @@
                                         "max_val": "2020-03-31",
                                         "is_null": false
                                     },
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -344,7 +346,8 @@
                                         "max_val": null,
                                         "is_null": false
                                     },
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
                                 },
                                 "type": "original",
                                 "kv": {
@@ -372,7 +375,8 @@
                                         "max_val": "2020-01-21",
                                         "is_null": false
                                     },
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
                                 },
                                 "type": "original",
                                 "kv": {
