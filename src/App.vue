@@ -31,7 +31,7 @@
             <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
                 <span class="mr-2">Wiki</span>
             </v-btn>
-            <v-btn flat href="https://youtu.be/Xr8TmUaOq-w" target="_blank">
+            <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF" target="_blank">
                 <span class="mr-2">Video</span>
             </v-btn>
             <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
