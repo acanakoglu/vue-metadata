@@ -233,12 +233,16 @@
                         }
                     },
                     {
-                        text: 'Example 2 - Sequences from Illumina with coverage equal to 100',
+                        text: 'Example 2 - Sequences from Illumina with coverage greater than 1000',
                         value: {
                             query: {
                                 "gcm": {
                                     sequencing_technology: ["illumina"],
-                                    coverage: [100]
+                                    coverage: {
+                                        "min_val": 1000,
+                                        "max_val": null,
+                                        "is_null": false
+                                    }
                                 }, "type": "original", "kv": {}
                             }
                         }
