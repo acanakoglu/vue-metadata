@@ -97,6 +97,10 @@
                                         file format, respectively.
                                     </p>
                                     <p>
+                                        Please check size of selection.
+                                        Beware that downloading tables with many files may result in long waiting time.
+                                    </p>
+                                    <p>
                                         Please select output file format:
                                         <v-radio-group v-model="downloadFileFormat">
                                             <v-radio label="FASTA" value="fasta"></v-radio>
