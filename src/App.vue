@@ -8,7 +8,7 @@
                     <span class="font-weight-light">Surf GISAID</span>
                 </v-toolbar-title>
             </v-btn>
-            <span style="font-size: 16px;">enabled by data from
+            <span style="font-size: 16px; white-space: nowrap;">enabled by data from
                 <a href="https://www.gisaid.org" target="_blank">
                     <img style="vertical-align: middle;" :src="require('./assets/gisaid.png')" alt="gisaid-logo"
                          height="24px"/>
