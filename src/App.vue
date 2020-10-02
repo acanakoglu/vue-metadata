@@ -395,87 +395,6 @@
                         }
                     },
                     {
-                        text: 'Example 8 - Pachetti et al. SARS-CoV2 gene N nucleotide mutation, related to double codon mutation',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    is_complete: [true]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    "aa_0": {
-                                        "type_query": "aa",
-                                        "exact": false,
-                                        "query": [{
-                                            "gene_name": ["n"],
-                                            "sequence_aa_original": ["r"],
-                                            "sequence_aa_alternative": ["k"]
-                                        }, {
-                                            "gene_name": ["n"],
-                                            "sequence_aa_original": ["g"],
-                                            "sequence_aa_alternative": ["r"]
-                                        }]
-                                    },
-                                    "nuc_1": {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "n_gene_name": ["n"],
-                                            "start_original": {"min_val": 28881, "max_val": 28881}
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        text: 'Impact Example S_del_15/30bp - Attenuated pathogenicity, attenuated replication',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    is_complete: [true]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    "nuc_0": {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "n_gene_name": ["s"],
-                                            "variant_type": ["del"],
-                                            "start_original": {"min_val": 23598, "max_val": 23627}
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        text: 'Impact Example ORF8_del_382 - Attenuated severity (phenotype)',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    is_complete: [true]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    "nuc_0": {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "n_gene_name": ["orf8"],
-                                            "variant_type": ["del"],
-                                            "start_original": {"min_val": 27848, "max_val": 28229}
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
                         text: 'Impact Example NSP6_L37F - Lower disease severity, lower transmission',
                         value: {
                             query: {
@@ -513,7 +432,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["s"],
+                                            "product":["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -537,7 +456,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf3a"],
+                                            "product": [ "ns3 (orf3a protein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["v"],
                                             "start_aa_original": {"min_val": 251, "max_val": 251}
@@ -561,7 +480,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                             "product": [ "n (nucleocapsid phosphoprotein)" ],
                                             "sequence_aa_original": ["r"],
                                             "sequence_aa_alternative": ["k"],
                                             "start_aa_original": {"min_val": 203, "max_val": 203}
@@ -619,7 +538,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf3a"],
+                                            "product": ["ns3 (orf3a protein)"],
                                             "sequence_aa_original": ["q"],
                                             "sequence_aa_alternative": ["h"],
                                             "start_aa_original": {"min_val": 57, "max_val": 57}
@@ -630,7 +549,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example N_P13L (gene) - Lower severity fatality rate, lower transmission',
+                        text: 'Impact Example N_P13L - Lower severity fatality rate, lower transmission',
                         value: {
                             query: {
                                 "gcm": {
@@ -643,7 +562,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": [ "n (nucleocapsid phosphoprotein)" ],
                                             "sequence_aa_original": ["p"],
                                             "sequence_aa_alternative": ["l"],
                                             "start_aa_original": {"min_val": 13, "max_val": 13}
