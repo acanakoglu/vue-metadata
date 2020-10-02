@@ -394,6 +394,289 @@
                             }
                         }
                     },
+                    {
+                        text: 'Example 8 - Pachetti et al. SARS-CoV2 gene N nucleotide mutation, related to double codon mutation',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["r"],
+                                            "sequence_aa_alternative": ["k"]
+                                        }, {
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["r"]
+                                        }]
+                                    },
+                                    "nuc_1": {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "n_gene_name": ["n"],
+                                            "start_original": {"min_val": 28881, "max_val": 28881}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example S_del_15/30bp - Attenuated pathogenicity, attenuated replication',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "nuc_0": {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "n_gene_name": ["s"],
+                                            "variant_type": ["del"],
+                                            "start_original": {"min_val": 23598, "max_val": 23627}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example ORF8_del_382 - Attenuated severity (phenotype)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "nuc_0": {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "n_gene_name": ["orf8"],
+                                            "variant_type": ["del"],
+                                            "start_original": {"min_val": 27848, "max_val": 28229}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example NSP6_L37F - Lower disease severity, lower transmission',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["nsp6"],
+                                            "sequence_aa_original": ["l"],
+                                            "sequence_aa_alternative": ["f"],
+                                            "start_aa_original": {"min_val": 37, "max_val": 37}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example Spike_D614G - Higher disease severity',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["s"],
+                                            "sequence_aa_original": ["d"],
+                                            "sequence_aa_alternative": ["g"],
+                                            "start_aa_original": {"min_val": 614, "max_val": 614}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example ORF3a_G251V - Marker variant of the V clade (GISAID)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["orf3a"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["v"],
+                                            "start_aa_original": {"min_val": 251, "max_val": 251}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example R203K and G204R - Modifying RNA binding properties',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "is_complete": [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["r"],
+                                            "sequence_aa_alternative": ["k"],
+                                            "start_aa_original": {"min_val": 203, "max_val": 203}
+                                        }]
+                                    },
+                                    "aa_1": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["g"],
+                                            "sequence_aa_alternative": ["r"],
+                                            "start_aa_original": {"min_val": 204, "max_val": 204}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example NSP12_P323L (= ORF1ab_P4715L) - Higher disease severity',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["nsp12 (rna-dependent rna polymerase)"],
+                                            "sequence_aa_original": ["p"],
+                                            "sequence_aa_alternative": ["l"],
+                                            "start_aa_original": {"min_val": 323, "max_val": 323}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example ORF3a_Q57H - Lower fatality rate, higher transmission',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["orf3a"],
+                                            "sequence_aa_original": ["q"],
+                                            "sequence_aa_alternative": ["h"],
+                                            "start_aa_original": {"min_val": 57, "max_val": 57}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example N_P13L (gene) - Lower severity fatality rate, lower transmission',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["n"],
+                                            "sequence_aa_original": ["p"],
+                                            "sequence_aa_alternative": ["l"],
+                                            "start_aa_original": {"min_val": 13, "max_val": 13}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Impact Example ORF1ab_T265I - Marker variant of the V clade (GISAID)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    is_complete: [true]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "gene_name": ["orf1ab"],
+                                            "sequence_aa_original": ["t"],
+                                            "sequence_aa_alternative": ["i"],
+                                            "start_aa_original": {"min_val": 265, "max_val": 265}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
                 ],
                 selectedTab: 0,
                 queryString: '',
