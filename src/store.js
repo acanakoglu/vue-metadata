@@ -26,7 +26,8 @@ export default new Vuex.Store({
             Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
             return res
         },
-        keysEmpty: (state) => state.keys.length === 0
+        keysEmpty: (state) => state.keys.length === 0,
+        panels: state => Object.keys(state.kv),
     },
     mutations: {
         setExampleQueryLoaded:(state)=>{

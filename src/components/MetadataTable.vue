@@ -466,9 +466,36 @@
                 this.mousehovermessage_submitting = '...loading...';
                 this.mousehovermessage_authors = '...loading...';
             },
+            updateHeaders(){
+              const valueSuffix = '_count';
+
+              let currentHeaders = this.headers;
+              const currentHeadersValues = currentHeaders.map(el=> el.value);
+
+              console.log(this.panels)
+              let panels = this.panels
+                  .map(v => Object({
+                    text: "# vars in " + v,
+                    value: v + valueSuffix,
+                    sortable: false,
+                    show: true,
+                    is_link: false,
+                  }));
+
+              let newPanels = panels.filter(el=> !currentHeadersValues.includes(el.value))
+
+              const panelsValues = panels.map(el=> el.value);
+              currentHeaders = currentHeaders.filter(el => !el.value.endsWith(valueSuffix) || panelsValues.includes(el.value))
+              console.log('currentHeaders',currentHeaders)
+
+              currentHeaders = currentHeaders.concat(newPanels)
+              console.log('currentHeaders',currentHeaders)
+
+              this.headers = currentHeaders
+            },
             getHeaders() {
                 // console.log("HELOOOOO", this.sortable)
-                return [
+              const predefinedHeaders = [
                     //sequence
                     {
                         text: 'Source Page',
@@ -524,9 +551,11 @@
                     {text: 'Nucleotide sequence', value: 'nucleotide_sequence', sortable: false, show: true},
                     {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: true},
                 ];
+              return predefinedHeaders;
             },
             resetHeadersOrder() {
                 this.headers = this.getHeaders();
+                this.updateHeaders();
             },
             selectAllHeaders() {
                 if (this.sortCheckbox) {
@@ -546,6 +575,7 @@
                 this.openExtraMetadataDialog(row[itemSourceIdName])
             },
             callTableQuery() {
+              this.updateHeaders();
                 let orderDir = "";
 
                 if (this.pagination.descending)
@@ -793,7 +823,8 @@
         computed: {
             ...mapState(['synonym', 'count']),
             ...mapGetters({
-                compound_query: 'build_query'
+                compound_query: 'build_query',
+                panels:'panels'
             }),
             FULL_TEXT() {
                 return FULL_TEXT;
