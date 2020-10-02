@@ -1,15 +1,18 @@
 <template>
     <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="[open]" hide-actions>
+
         <div slot="header">
             <span class="label">{{ getFullQueryType() }} query: </span>
             <span style="font-family:monospace" v-html="queryToShow"></span>
 
         </div>
         <v-spacer></v-spacer>
+
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
                @click="deleteKvLocal()">
             Remove condition
         </v-btn>
+      <span slot="header" style="max-width: 30px !important">({{query_type}}_{{id}})</span>
 
 
         <v-container v-if="open" v-for="cond in list_of_conditions" fluid grid-list-xl>
