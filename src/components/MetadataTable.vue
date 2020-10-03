@@ -472,24 +472,30 @@
               let currentHeaders = this.headers;
               const currentHeadersValues = currentHeaders.map(el=> el.value);
 
-              console.log(this.panels)
-              let panels = this.panels
-                  .map(v => Object({
-                    text: "# vars in " + v,
-                    value: v + valueSuffix,
-                    sortable: false,
-                    show: true,
-                    is_link: false,
-                  }));
+              // console.log(this.panels)
+              let panels;
+              if(this.is_control) {
+                panels = [];
+              }
+              else {
+                panels = this.panels
+                    .map(v => Object({
+                      text: "# vars in " + v,
+                      value: v + valueSuffix,
+                      sortable: false,
+                      show: true,
+                      is_link: false,
+                    }));
+              }
 
               let newPanels = panels.filter(el=> !currentHeadersValues.includes(el.value))
 
               const panelsValues = panels.map(el=> el.value);
               currentHeaders = currentHeaders.filter(el => !el.value.endsWith(valueSuffix) || panelsValues.includes(el.value))
-              console.log('currentHeaders',currentHeaders)
+              // console.log('currentHeaders',currentHeaders)
 
               currentHeaders = currentHeaders.concat(newPanels)
-              console.log('currentHeaders',currentHeaders)
+              // console.log('currentHeaders',currentHeaders)
 
               this.headers = currentHeaders
             },
