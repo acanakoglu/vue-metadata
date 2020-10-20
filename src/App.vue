@@ -38,12 +38,15 @@
             <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
                 <span class="mr-2">Survey</span>
             </v-btn>
-            <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
+  <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
                 <span class="mr-2">Acknowledgements</span>
             </v-btn>
             <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">Contacts</span>
-            </v-btn>
+            </v-btn>-->
+            <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
+                <span class="mr-2">About</span>
+                 </v-btn>
         </v-toolbar>
         <v-content class="main-content">
             <v-content v-show="mainContent">
@@ -173,6 +176,9 @@
                         <!--                                href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms-->
                         <!--                            and Conditions</a>.-->
                         <!--                        </div>-->
+                        <div>Our manuscript on ViruSurf has been published on Nucleic Acids Research <a
+                                href="https://doi.org/10.1093/nar/gkaa846" target="_blank">Check it out!</a>.
+                        </div>
                     </v-flex>
                     <v-flex
                             lighten-2
