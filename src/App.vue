@@ -215,7 +215,8 @@
                         <div>GISAID data provided on this website is subject to GISAID’s <a
                                 href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms
                             and Conditions</a>.
-                            Our manuscript published on Nucleic Acids Research.<a
+                            <br>
+                            Our manuscript on ViruSurf has been published on Nucleic Acids Research. <a
                                 href="https://doi.org/10.1093/nar/gkaa846" target="_blank">Check it out!</a>
                         </div>
                     </v-flex>
