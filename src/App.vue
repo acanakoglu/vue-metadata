@@ -637,7 +637,6 @@
                     }
                 });
             this.setFooterCount();
-        },
 
             const url_info = `db_info`;
               // eslint-disable-next-line
