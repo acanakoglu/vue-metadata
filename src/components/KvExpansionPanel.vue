@@ -141,13 +141,13 @@ export default {
     getEmptyElement() {
       if (this.query_type === 'aa') {
         return [
-          {
-            type: 'dropdown',
-            labelTitle: 'Gene name',
-            field: 'gene_name',
-            value: [],
-            description: 'Gene within which the amino acid change occurs'
-          },
+          // {
+          //   type: 'dropdown',
+          //   labelTitle: 'Gene name',
+          //   field: 'gene_name',
+          //   value: [],
+          //   description: 'Gene within which the amino acid change occurs'
+          // },
           {
             type: 'dropdown',
             labelTitle: 'Product protein',
