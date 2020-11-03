@@ -52,10 +52,13 @@
                 <!--<v-layout column class="fab-container"> -->
                 <v-container fluid grid-list-xl style="background:#f1f3f4">
                     <v-layout wrap align-center test>
+                        <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
+                        <v-flex md12 sm12 class=" no-horizontal-padding" v-if="lastUpdate" style="text-align: right;">
+                          Last update date: {{ lastUpdate }}
+                        </v-flex>
                         <!--<v-flex md2 sm2 d-flex class="no-horizontal-padding">
                             <span class=label>Query:</span>
                         </v-flex>-->  <!--query utils-->
-                        <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
                         <v-flex md2 sm2 class="no-horizontal-padding">
                             <v-btn color='info' @click="afterQuerySelection()">Clear your query
                             </v-btn>
@@ -168,6 +171,7 @@
                                       single-line
                             ></v-select>
                         </v-flex> <!--predefined queries-->
+
                     </v-layout>
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
@@ -604,11 +608,16 @@
                     },
                 ],
                 selectedTab: 0,
-                queryString: '',
-                infoDialog: false,
-                fields: []
+                queryString:
+                    '',
+                infoDialog:
+                    false,
+                fields:
+                    [],
+                lastUpdate: null
             }
-        },
+        }
+        ,
         mounted() {
             const url = `field`;
 
@@ -629,6 +638,18 @@
                 });
             this.setFooterCount();
         },
+
+            const url_info = `db_info`;
+              // eslint-disable-next-line
+              axios.get(url_info)
+                  .then((res) => {
+                      return res.data
+                  })
+                  .then((res) => {
+                      this.lastUpdate = res.sources.map(x => x.update_date).sort().reverse()[0];
+                  });
+        }
+        ,
         methods: {
             ...mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setCount', 'setGisaidOnly',]),
             ...mapActions(["setKv", "setKvFull", "deleteAge"]),
