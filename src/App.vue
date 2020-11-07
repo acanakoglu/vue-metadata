@@ -38,15 +38,15 @@
             <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
                 <span class="mr-2">Survey</span>
             </v-btn>
-  <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
-                <span class="mr-2">Acknowledgements</span>
-            </v-btn>
-            <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
-                <span class="mr-2">Contacts</span>
-            </v-btn>-->
+            <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
+                          <span class="mr-2">Acknowledgements</span>
+                      </v-btn>
+                      <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                          <span class="mr-2">Contacts</span>
+                      </v-btn>-->
             <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
                 <span class="mr-2">About</span>
-                 </v-btn>
+            </v-btn>
         </v-toolbar>
         <v-content class="main-content">
             <v-content v-show="mainContent">
@@ -55,7 +55,7 @@
                     <v-layout wrap align-center test>
                         <v-flex sm12 class="no-horizontal-padding" v-if="isDev">{{queryInput}}</v-flex>
                         <v-flex md12 sm12 class=" no-horizontal-padding" v-if="lastUpdate" style="text-align: right;">
-                          Last update date: {{ lastUpdate }}
+                            Last update date: {{ lastUpdate }}
                         </v-flex>
                         <!--<v-flex md2 sm2 d-flex class="no-horizontal-padding">
                             <span class=label>Query:</span>
@@ -481,11 +481,11 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
                                             "sequence_aa_original": ["r"],
                                             "sequence_aa_alternative": ["k"]
                                         }, {
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["r"]
                                         }]
@@ -503,7 +503,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example S_del_15/30bp - Attenuated pathogenicity, attenuated replication',
+                        text: 'Impact Example Spike_del_15/30bp - Attenuated pathogenicity, attenuated replication',
                         value: {
                             query: {
                                 "gcm": {
@@ -526,7 +526,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF8_del_382 - Attenuated severity (phenotype)',
+                        text: 'Impact Example NS8_del_382 - Attenuated severity (phenotype)',
                         value: {
                             query: {
                                 "gcm": {
@@ -586,7 +586,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["s"],
+                                            "product": ["spike (surface glycoprotein)"],
                                             "sequence_aa_original": ["d"],
                                             "sequence_aa_alternative": ["g"],
                                             "start_aa_original": {"min_val": 614, "max_val": 614}
@@ -597,7 +597,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF3a_G251V - Marker variant of the V clade (GISAID)',
+                        text: 'Impact Example NS3_G251V - Marker variant of the V clade (GISAID)',
                         value: {
                             query: {
                                 "gcm": {
@@ -610,7 +610,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf3a"],
+                                            "product": ["ns3 (orf3a protein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["v"],
                                             "start_aa_original": {"min_val": 251, "max_val": 251}
@@ -621,7 +621,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example R203K and G204R - Modifying RNA binding properties',
+                        text: 'Impact Example N_R203K/N_G204R - Modifying RNA binding properties',
                         value: {
                             query: {
                                 "gcm": {
@@ -634,7 +634,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
                                             "sequence_aa_original": ["r"],
                                             "sequence_aa_alternative": ["k"],
                                             "start_aa_original": {"min_val": 203, "max_val": 203}
@@ -644,7 +644,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["r"],
                                             "start_aa_original": {"min_val": 204, "max_val": 204}
@@ -679,7 +679,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF3a_Q57H - Lower fatality rate, higher transmission',
+                        text: 'Impact Example NS3_Q57H - Lower fatality rate, higher transmission',
                         value: {
                             query: {
                                 "gcm": {
@@ -692,7 +692,8 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf3a"],
+                                            "product": ["ns3 (orf3a protein)"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["q"],
                                             "sequence_aa_alternative": ["h"],
                                             "start_aa_original": {"min_val": 57, "max_val": 57}
@@ -716,7 +717,8 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["p"],
                                             "sequence_aa_alternative": ["l"],
                                             "start_aa_original": {"min_val": 13, "max_val": 13}
@@ -727,7 +729,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF1ab_T265I - Marker variant of the V clade (GISAID)',
+                        text: 'Impact Example NSP2_T85I (= ORF1ab_T265I) - Marker variant of the V clade (GISAID)',
                         value: {
                             query: {
                                 "gcm": {
@@ -740,10 +742,11 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf1ab"],
+                                            "product": ["nsp2"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["t"],
                                             "sequence_aa_alternative": ["i"],
-                                            "start_aa_original": {"min_val": 265, "max_val": 265}
+                                            "start_aa_original": {"min_val": 85, "max_val": 85}
                                         }]
                                     }
                                 }
@@ -782,14 +785,14 @@
                 });
 
             const url_info = `db_info`;
-              // eslint-disable-next-line
-              axios.get(url_info)
-                  .then((res) => {
-                      return res.data
-                  })
-                  .then((res) => {
-                      this.lastUpdate = res.sources.map(x => x.update_date).sort().reverse()[0];
-                  });
+            // eslint-disable-next-line
+            axios.get(url_info)
+                .then((res) => {
+                    return res.data
+                })
+                .then((res) => {
+                    this.lastUpdate = res.sources.map(x => x.update_date).sort().reverse()[0];
+                });
         }
         ,
         methods: {
