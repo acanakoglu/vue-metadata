@@ -296,6 +296,22 @@
                         }
                     },
                     {
+                        text: 'Example 3 - COG-UK sequences collected in May 2020',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "database_source": ["cog-uk"],
+                                    "collection_date": {
+                                        "min_val": "2020-05-01",
+                                        "max_val": "2020-05-31",
+                                        "is_null": false
+                                    }
+                                }, "type": "original", "kv": {}
+                            }
+
+                        }
+                    },
+                    {
                         text: 'Example 4a - Tang et al. S type (opposed to L type) of SARS-CoV2',
                         value: {
                             query: {
@@ -453,7 +469,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF3a_G251V - Marker variant of the V clade (GISAID)',
+                        text: 'Impact Example NS3_G251V - Marker variant of the V clade (GISAID)',
                         value: {
                             query: {
                                 "gcm": {
@@ -477,7 +493,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example R203K and G204R - Modifying RNA binding properties',
+                        text: 'Impact Example N_R203K/N_G204R - Modifying RNA binding properties',
                         value: {
                             query: {
                                 "gcm": {
@@ -500,7 +516,7 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["n"],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
                                             "sequence_aa_original": ["g"],
                                             "sequence_aa_alternative": ["r"],
                                             "start_aa_original": {"min_val": 204, "max_val": 204}
@@ -535,7 +551,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF3a_Q57H - Lower fatality rate, higher transmission',
+                        text: 'Impact Example NS3_Q57H - Lower fatality rate, higher transmission',
                         value: {
                             query: {
                                 "gcm": {
@@ -549,6 +565,7 @@
                                         "exact": false,
                                         "query": [{
                                             "product": ["ns3 (orf3a protein)"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["q"],
                                             "sequence_aa_alternative": ["h"],
                                             "start_aa_original": {"min_val": 57, "max_val": 57}
@@ -559,7 +576,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example N_P13L - Lower severity fatality rate, lower transmission',
+                        text: 'Impact Example N_P13L (gene) - Lower severity fatality rate, lower transmission',
                         value: {
                             query: {
                                 "gcm": {
@@ -572,7 +589,8 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "product": [ "n (nucleocapsid phosphoprotein)" ],
+                                            "product": ["n (nucleocapsid phosphoprotein)"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["p"],
                                             "sequence_aa_alternative": ["l"],
                                             "start_aa_original": {"min_val": 13, "max_val": 13}
@@ -583,7 +601,7 @@
                         }
                     },
                     {
-                        text: 'Impact Example ORF1ab_T265I - Marker variant of the V clade (GISAID)',
+                        text: 'Impact Example NSP2_T85I (= ORF1ab_T265I) - Marker variant of the V clade (GISAID)',
                         value: {
                             query: {
                                 "gcm": {
@@ -596,10 +614,11 @@
                                         "type_query": "aa",
                                         "exact": false,
                                         "query": [{
-                                            "gene_name": ["orf1ab"],
+                                            "product": ["nsp2"],
+                                            "variant_aa_type": ["sub"],
                                             "sequence_aa_original": ["t"],
                                             "sequence_aa_alternative": ["i"],
-                                            "start_aa_original": {"min_val": 265, "max_val": 265}
+                                            "start_aa_original": {"min_val": 85, "max_val": 85}
                                         }]
                                     }
                                 }
@@ -639,14 +658,14 @@
             this.setFooterCount();
 
             const url_info = `db_info`;
-              // eslint-disable-next-line
-              axios.get(url_info)
-                  .then((res) => {
-                      return res.data
-                  })
-                  .then((res) => {
-                      this.lastUpdate = res.sources.map(x => x.update_date).sort().reverse()[0];
-                  });
+            // eslint-disable-next-line
+            axios.get(url_info)
+                .then((res) => {
+                    return res.data
+                })
+                .then((res) => {
+                    this.lastUpdate = res.sources.map(x => x.update_date).sort().reverse()[0];
+                });
         }
         ,
         methods: {
