@@ -18,6 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
+        import {FULL_TEXT, LOADING_TEXT, poll} from '../variables.js'
 
 
     export default {
@@ -111,23 +112,61 @@
                         return res.data
                     })
                     .then((res) => {
-                        let vals = res.values
-                        // console.log(res);
-                        //to clean previously selected values
-                        if (this.value) {
-                            // console.log(this.selected);
-                            let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
-                                .sort().map(v => Object({
-                                    value: v,
-                                    count: 0
-                                }));
-                            // console.log(zero_elements);
-                            vals = vals.concat(zero_elements);
-                        }
+                      poll(res.result,(res)=>{
+                          let vals = res.values
+                          // console.log(res);
+                          //to clean previously selected values
+                          if (this.value) {
+                              // console.log(this.selected);
+                              let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
+                                  .sort().map(v => Object({
+                                      value: v,
+                                      count: 0
+                                  }));
+                              // console.log(zero_elements);
+                              vals = vals.concat(zero_elements);
+                          }
 
-                        this.values = vals;
-                        this.isLoading = false;
-                    });
+                          this.values = vals;
+                          this.isLoading = false;
+                        });
+                    })
+
+
+
+
+
+//                 // eslint-disable-next-line
+//               axios({
+//   method: "post",
+//   url: url,
+//   timeout: 1000 * 500, // Wait for 5 seconds
+//   headers: {
+//     "Content-Type": "application/json"
+//   },
+//   data: queryToRun
+// } )
+//                     .then((res) => {
+//                         return res.data
+//                     })
+//                     .then((res) => {
+//                         let vals = res.values
+//                         // console.log(res);
+//                         //to clean previously selected values
+//                         if (this.value) {
+//                             // console.log(this.selected);
+//                             let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
+//                                 .sort().map(v => Object({
+//                                     value: v,
+//                                     count: 0
+//                                 }));
+//                             // console.log(zero_elements);
+//                             vals = vals.concat(zero_elements);
+//                         }
+//
+//                         this.values = vals;
+//                         this.isLoading = false;
+//                     });
             }
             ,
         },
