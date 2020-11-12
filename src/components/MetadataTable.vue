@@ -328,7 +328,7 @@
     import {mapMutations, mapState, mapGetters} from 'vuex';
     import draggable from 'vuedraggable'
     import MetadataDropDown from "./MetadataDropDown";
-    import {FULL_TEXT} from '../variables.js'
+    import {FULL_TEXT} from '../utils.js'
 
 
     const itemSourceIdName = 'accession_id';

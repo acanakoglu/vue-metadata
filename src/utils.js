@@ -4,7 +4,7 @@ export const LOADING_TEXT = 'Loading...'
 export const poll = (id, callback) => {
     let myInterval;
     myInterval = setInterval(()=> {
-        $.get(`api/query/poll/${id}`, (data) => {
+        $.get(`api/poll/${id}`, (data) => {
             if (data.ready) {
                 clearInterval(myInterval);
                 callback(data.result);

@@ -18,7 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
-    import {FULL_TEXT, LOADING_TEXT, poll} from '../variables.js'
+    import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
 
 
     export default {
