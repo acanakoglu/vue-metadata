@@ -237,27 +237,27 @@ export default {
             value: null,
             description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'
           },
-          {
-            type: 'dropdown',
-            labelTitle: 'Effect',
-            field: 'effect',
-            value: [],
-            description: 'Effect of the variant, annotated using the Sequence Ontology terms (http://www.sequenceontology.org/), predicted by SnpEff (http://snpeff.sourceforge.net/)'
-          },
-          {
-            type: 'dropdown',
-            labelTitle: 'Putative impact',
-            field: 'putative_impact',
-            value: [],
-            description: 'A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}, predicted by SnpEff (http://snpeff.sourceforge.net/)'
-          },
-          {
-            type: 'dropdown',
-            labelTitle: 'Impacted gene',
-            field: 'impact_gene_name',
-            value: [],
-            description: 'Common gene name (HGNC, https://www.genenames.org/). Optional: use closest gene when the variant is intergenic, predicted by SnpEff (http://snpeff.sourceforge.net/),'
-          },
+          // {
+          //   type: 'dropdown',
+          //   labelTitle: 'Effect',
+          //   field: 'effect',
+          //   value: [],
+          //   description: 'Effect of the variant, annotated using the Sequence Ontology terms (http://www.sequenceontology.org/), predicted by SnpEff (http://snpeff.sourceforge.net/)'
+          // },
+          // {
+          //   type: 'dropdown',
+          //   labelTitle: 'Putative impact',
+          //   field: 'putative_impact',
+          //   value: [],
+          //   description: 'A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}, predicted by SnpEff (http://snpeff.sourceforge.net/)'
+          // },
+          // {
+          //   type: 'dropdown',
+          //   labelTitle: 'Impacted gene',
+          //   field: 'impact_gene_name',
+          //   value: [],
+          //   description: 'Common gene name (HGNC, https://www.genenames.org/). Optional: use closest gene when the variant is intergenic, predicted by SnpEff (http://snpeff.sourceforge.net/),'
+          // },
         ];
       }
 
