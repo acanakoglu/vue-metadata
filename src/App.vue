@@ -335,7 +335,7 @@
                         }
                     },
                     {
-                        text: 'Example 5 - Gudbjartsson et al. A3 clade of SARS-CoV2 from Icelandic study',
+                        text: 'Example 5 - Gudbjartsson et al. A8 clade of SARS-CoV2',
                         value: {
                             query: {
                                 "gcm": {
@@ -350,7 +350,7 @@
                                         "query": [{
                                             "sequence_original": ["g"],
                                             "sequence_alternative": ["a"],
-                                            "start_original": {"min_val": 1397, "max_val": 1397}
+                                            "start_original": {"min_val": 1440, "max_val": 1440}
                                         }]
                                     },
                                     nuc_1: {
@@ -358,26 +358,8 @@
                                         "exact": false,
                                         "query": [{
                                             "sequence_original": ["g"],
-                                            "sequence_alternative": ["t"],
-                                            "start_original": {"min_val": 11083, "max_val": 11083}
-                                        }]
-                                    },
-                                    nuc_2: {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "sequence_original": ["t"],
-                                            "sequence_alternative": ["c"],
-                                            "start_original": {"min_val": 28688, "max_val": 28688}
-                                        }]
-                                    },
-                                    nuc_3: {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "sequence_original": ["g"],
-                                            "sequence_alternative": ["t"],
-                                            "start_original": {"min_val": 29742, "max_val": 29742}
+                                            "sequence_alternative": ["a"],
+                                            "start_original": {"min_val": 2891, "max_val": 2891}
                                         }]
                                     }
                                 }
@@ -506,7 +488,7 @@
                             }
                         }
                     },
-                    {
+                /*  {
                         text: 'Impact Example Spike_del_15/30bp - Attenuated pathogenicity, attenuated replication',
                         value: {
                             query: {
@@ -528,8 +510,8 @@
                                 }
                             }
                         }
-                    },
-                    {
+                    },*/
+                    /*   {
                         text: 'Impact Example NS8_del_382 - Attenuated severity (phenotype)',
                         value: {
                             query: {
@@ -551,7 +533,7 @@
                                 }
                             }
                         }
-                    },
+                    },*/
                     {
                         text: 'Impact Example NSP6_L37F - Lower disease severity, lower transmission',
                         value: {
@@ -624,7 +606,7 @@
                             }
                         }
                     },
-                    {
+                /*  {
                         text: 'Impact Example N_R203K/N_G204R - Modifying RNA binding properties',
                         value: {
                             query: {
@@ -657,7 +639,7 @@
                                 }
                             }
                         }
-                    },
+                    },*/
                     {
                         text: 'Impact Example NSP12_P323L (= ORF1ab_P4715L) - Higher disease severity',
                         value: {
