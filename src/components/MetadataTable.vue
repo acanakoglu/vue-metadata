@@ -1,5 +1,25 @@
 <template>
     <v-card>
+      <v-dialog max-width="500" @keydown.esc="alertDialog = false" v-model="alertDialog"  >
+        <v-card>
+        <v-card-text>
+          Please disable the pop-up blocker for this page, to open the VirusViz directly nextime.
+          <br>
+          In order to open the VirusViz this time, please <a :href='alertLink' target="_blank">click me</a>.
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="alertDialog = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
         <span id="mousehovermessage" class="mousehovermessageClass" :style="mousehovermessageStyle">
             <table style="background-color:#000000; color:#FFF;text-align:left;">
               <tr>
@@ -346,6 +366,8 @@
         },
         data() {
             return {
+              alertLink: null,
+               alertDialog: false,
                 downloadFileFormat: 'fasta',
                 downloadType: 'nuc',
                 selectedProduct: FULL_TEXT,
@@ -477,7 +499,12 @@
                       virusVizUrl += `appName=${appName}&`;
                       virusVizUrl += `appURL=${appUrl}&`;
                       virusVizUrl += `dataURL=${virusVizPollUrl}&`;
-                      window.open(virusVizUrl);
+                      const newWindow = window.open(virusVizUrl);
+                      if(!newWindow){
+                        this.alertDialog = true;
+                        this.alertLink = virusVizUrl
+                      }
+
                     }).catch(function (error) {
                       // handle error
                       console.log(error.response);
