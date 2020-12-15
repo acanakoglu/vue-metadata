@@ -477,7 +477,7 @@
                 else
                     orderDir = "ASC";
 
-                let url = `viz/submit?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `viz/submit?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     url += `&annotation_type=${this.selectedProduct}`;
                 }
