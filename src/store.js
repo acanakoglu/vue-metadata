@@ -6,7 +6,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         query: {
-            taxon_name: ["severe acute respiratory syndrome coronavirus 2"]
         },
         synonym: false,
         kv: {},
