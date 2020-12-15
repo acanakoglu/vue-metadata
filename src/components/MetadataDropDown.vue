@@ -18,7 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
-    import {FULL_TEXT, LOADING_TEXT} from '../variables.js'
+    import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
 
 
     export default {
@@ -125,35 +125,42 @@
                         return res.data
                     })
                     .then((res) => {
-                        let vals = res.values
-                        // console.log(res);
-                        //to clean previously selected values
-                        if (this.selected && Array.isArray(this.selected)) {
-                            // console.log("this.selected: ", this.selected);
-                            let zero_elements = this.selected
-                                .filter(value => !res.values.map(v => v.value).includes(value))
-                                .sort().map(v => Object({
-                                    value: v,
-                                    count: 0
-                                }));
-                            // console.log(zero_elements);
-                            vals = vals.concat(zero_elements);
-                        }
-                        if (!this.is_gcm) {
-                            vals = vals.map(el => el.value).filter(el => el).sort()
-                            vals.unshift(FULL_TEXT)
-                            if (!vals.includes(this.selected)) {
-                                this.selected = FULL_TEXT;
-                            }
-                            vals = vals.map(val => Object({
-                                value: val
-                            }));
+                        console.log(res.result)
 
-                        }
+                        poll(res.result,(res)=>{
+                          let vals = res.values
+                          console.log(res);
+                          //to clean previously selected values
+                          if (this.selected && Array.isArray(this.selected)) {
+                              // console.log("this.selected: ", this.selected);
+                              let zero_elements = this.selected
+                                  .filter(value => !res.values.map(v => v.value).includes(value))
+                                  .sort().map(v => Object({
+                                      value: v,
+                                      count: 0
+                                  }));
+                              // console.log(zero_elements);
+                              vals = vals.concat(zero_elements);
+                          }
+                          if (!this.is_gcm) {
+                              vals = vals.map(el => el.value).filter(el => el).sort()
+                              vals.unshift(FULL_TEXT)
+                              if (!vals.includes(this.selected)) {
+                                  this.selected = FULL_TEXT;
+                              }
+                              vals = vals.map(val => Object({
+                                  value: val
+                              }));
 
-                        // console.log(vals);
-                        this.values = vals;
-                        this.isLoading = false;
+                          }
+
+                          // console.log(vals);
+                          this.values = vals;
+                          this.isLoading = false;
+                        })
+
+
+
                     });
 
                 // console.log(this.selected.get().filter(v => this.values.indexOf(v) > -1));

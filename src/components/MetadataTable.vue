@@ -1,5 +1,25 @@
 <template>
     <v-card>
+      <v-dialog max-width="500" @keydown.esc="alertDialog = false" v-model="alertDialog"  >
+        <v-card>
+        <v-card-text>
+          Please disable the pop-up blocker for this page, to open the VirusViz directly nextime.
+          <br>
+          In order to open the VirusViz this time, please <a :href='alertLink' target="_blank">click me</a>.
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="alertDialog = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
         <span id="mousehovermessage" class="mousehovermessageClass" :style="mousehovermessageStyle">
             <table style="background-color:#000000; color:#FFF;text-align:left;">
               <tr>
@@ -139,7 +159,7 @@
                             </v-card>
                         </v-dialog>
                     </v-flex>
-                    <v-flex sm2 d-flex align-self-center shrink>
+                    <v-flex sm2 d-flex align-self-center>
                         <v-switch style="flex-shrink: initial" v-model=is_control label="Show control"/>
                         <v-dialog
                                 width="500"
@@ -185,7 +205,7 @@
                         <!--                                :is_gcm="false"-->
                         <!--                                v-model="selectedProduct"/>-->
                     </v-flex>
-                    <v-flex sm2 shrink align-self-center>
+                    <v-flex sm3 align-self-center>
                         <v-dialog width="500" v-model="dialogOrder">
                             <v-card>
                                 <v-card-title
@@ -230,6 +250,11 @@
                                 Select/Sort fields
                             </v-btn>
                         </v-dialog>
+                        <v-btn style="text-transform: none" dark small color="blue lighten-2"
+                               @click="virusVizClicked()">
+                          <v-img src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                          VirusViz
+                        </v-btn>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -327,7 +352,7 @@
     import {mapMutations, mapState, mapGetters} from 'vuex';
     import draggable from 'vuedraggable'
     import MetadataDropDown from "./MetadataDropDown";
-    import {FULL_TEXT} from '../variables.js'
+    import {FULL_TEXT} from '../utils.js'
 
 
     const itemSourceIdName = 'accession_id';
@@ -340,6 +365,8 @@
         },
         data() {
             return {
+              alertLink: null,
+               alertDialog: false,
                 downloadFileFormat: 'fasta',
                 downloadType: 'nuc',
                 selectedProduct: FULL_TEXT,
@@ -441,6 +468,53 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
+            virusVizClicked(){
+              console.log("VirusViz clicked");
+              let orderDir = "";
+
+                if (this.pagination.descending)
+                    orderDir = "DESC";
+                else
+                    orderDir = "ASC";
+
+                let url = `viz/submit?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                if (this.selectedProduct !== FULL_TEXT) {
+                    url += `&annotation_type=${this.selectedProduct}`;
+                }
+
+                console.log("CALL: viz/submit");
+                // eslint-disable-next-line
+                axios.post(url, this.compound_query)
+                    .then((res) => {
+                        console.log("GOT: query/table");
+                        return res.data
+                    })
+                    .then((res) => {
+                      console.log("res: ", res)
+                      let appUrl = window.location.origin + window.location.pathname
+                      let virusVizPollUrl = appUrl;
+                      virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
+                      virusVizPollUrl += "/api/poll/";
+                      virusVizPollUrl += res.result;
+                      console.log("virusVizPollUrl: " + virusVizPollUrl);
+                      let virusVizUrl = "http://genomic.deib.polimi.it/virusviz/static/#!/home?";
+                      const appName = "ViruSurf";
+                      virusVizUrl += `appName=${appName}&`;
+                      virusVizUrl += `appURL=${appUrl}&`;
+                      virusVizUrl += `dataURL=${virusVizPollUrl}&`;
+                      const newWindow = window.open(virusVizUrl);
+                      if(!newWindow){
+                        this.alertDialog = true;
+                        this.alertLink = virusVizUrl
+                      }
+
+                    }).catch(function (error) {
+                      // handle error
+                      console.log(error.response);
+                      alert(error.response.data.message);
+                    });
+
+            },
             mouseOver(accessionId, e) {
                 this.mousehovermessage_left = e.clientX;
                 this.mousehovermessage_top = e.clientY;
