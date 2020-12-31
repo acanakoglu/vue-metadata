@@ -125,11 +125,11 @@
                         return res.data
                     })
                     .then((res) => {
-                        console.log(res.result)
+                        // console.log(res.result)
 
                         poll(res.result,(res)=>{
                           let vals = res.values
-                          console.log(res);
+                          // console.log(res);
                           //to clean previously selected values
                           if (this.selected && Array.isArray(this.selected)) {
                               // console.log("this.selected: ", this.selected);
