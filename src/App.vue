@@ -144,10 +144,12 @@
                 </v-container>
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
                     <v-layout wrap align-center test style="background:#FFFFFF">
-                       <v-flex xs12 justify-center >
-                         <div  style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>Severe acute respiratory syndrome coronavirus 2</strong> sequences are preselected.
-                           If you are interested in other virus(es), please change it from the dropdown menu below:</div>
-                       </v-flex>
+                        <v-flex xs12 justify-center>
+                            <div style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>Severe
+                                acute respiratory syndrome coronavirus 2</strong> sequences are preselected.
+                                If you are interested in other virus(es), please change it from the dropdown menu below:
+                            </div>
+                        </v-flex>
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
@@ -488,29 +490,29 @@
                             }
                         }
                     },
-                /*  {
-                        text: 'Impact Example Spike_del_15/30bp - Attenuated pathogenicity, attenuated replication',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    is_complete: [true]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    "nuc_0": {
-                                        "type_query": "nuc",
-                                        "exact": false,
-                                        "query": [{
-                                            "n_gene_name": ["s"],
-                                            "variant_type": ["del"],
-                                            "start_original": {"min_val": 23598, "max_val": 23627}
-                                        }]
+                    /*  {
+                            text: 'Impact Example Spike_del_15/30bp - Attenuated pathogenicity, attenuated replication',
+                            value: {
+                                query: {
+                                    "gcm": {
+                                        "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                        is_complete: [true]
+                                    },
+                                    "type": "original",
+                                    "kv": {
+                                        "nuc_0": {
+                                            "type_query": "nuc",
+                                            "exact": false,
+                                            "query": [{
+                                                "n_gene_name": ["s"],
+                                                "variant_type": ["del"],
+                                                "start_original": {"min_val": 23598, "max_val": 23627}
+                                            }]
+                                        }
                                     }
                                 }
                             }
-                        }
-                    },*/
+                        },*/
                     /*   {
                         text: 'Impact Example NS8_del_382 - Attenuated severity (phenotype)',
                         value: {
@@ -558,7 +560,7 @@
                             }
                         }
                     },
-                    {
+                    /*{
                         text: 'Impact Example Spike_D614G - Higher disease severity',
                         value: {
                             query: {
@@ -581,32 +583,32 @@
                                 }
                             }
                         }
-                    },
+                    },*/
+                    /* {
+                         text: 'Impact Example NS3_G251V - Marker variant of the V clade (GISAID)',
+                         value: {
+                             query: {
+                                 "gcm": {
+                                     "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                     is_complete: [true]
+                                 },
+                                 "type": "original",
+                                 "kv": {
+                                     "aa_0": {
+                                         "type_query": "aa",
+                                         "exact": false,
+                                         "query": [{
+                                             "product": ["ns3 (orf3a protein)"],
+                                             "sequence_aa_original": ["g"],
+                                             "sequence_aa_alternative": ["v"],
+                                             "start_aa_original": {"min_val": 251, "max_val": 251}
+                                         }]
+                                     }
+                                 }
+                             }
+                         }
+                     },*/
                     {
-                        text: 'Impact Example NS3_G251V - Marker variant of the V clade (GISAID)',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    is_complete: [true]
-                                },
-                                "type": "original",
-                                "kv": {
-                                    "aa_0": {
-                                        "type_query": "aa",
-                                        "exact": false,
-                                        "query": [{
-                                            "product": ["ns3 (orf3a protein)"],
-                                            "sequence_aa_original": ["g"],
-                                            "sequence_aa_alternative": ["v"],
-                                            "start_aa_original": {"min_val": 251, "max_val": 251}
-                                        }]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                /*  {
                         text: 'Impact Example N_R203K/N_G204R - Modifying RNA binding properties',
                         value: {
                             query: {
@@ -639,7 +641,7 @@
                                 }
                             }
                         }
-                    },*/
+                    },
                     {
                         text: 'Impact Example NSP12_P323L (= ORF1ab_P4715L) - Higher disease severity',
                         value: {
@@ -739,6 +741,96 @@
                             }
                         }
                     },
+                    {
+                        text: 'Example three Spike mutations from new UK strain',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "database_source": ["cog-uk"],
+                                    "is_complete": [true],
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike (surface glycoprotein)"],
+                                            "sequence_aa_original": ["n"],
+                                            "sequence_aa_alternative": ["y"],
+                                            "start_aa_original": {"min_val": 501, "max_val": 501}
+                                        }]
+                                    },
+                                    "aa_1": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike (surface glycoprotein)"],
+                                            "variant_aa_type": ["del"],
+                                            "sequence_aa_original": ["h"],
+                                            "start_aa_original": {"min_val": 69, "max_val": 69}
+                                        }]
+                                    },
+                                    "aa_2": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike (surface glycoprotein)"],
+                                            "variant_aa_type": ["del"],
+                                            "sequence_aa_original": ["v"],
+                                            "start_aa_original": {"min_val": 70, "max_val": 70}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example Spike mutation from Spain (A222V)',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "is_complete": [true],
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"]
+                                },
+                                "type": "original",
+                                "kv": {
+                                    "aa_0": {
+                                        "type_query": "aa",
+                                        "exact": false,
+                                        "query": [{
+                                            "product": ["spike (surface glycoprotein)"],
+                                            "sequence_aa_original": ["a"],
+                                            "sequence_aa_alternative": ["v"],
+                                            "start_aa_original": {"min_val": 222, "max_val": 222}
+                                        }]
+                                    },
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Example 382-nucleotide deletion',
+                        value: {
+                            query: {
+                                "gcm": {"taxon_name": ["severe acute respiratory syndrome coronavirus 2"]},
+                                "type": "original",
+                                "kv": {
+                                    "nuc_0": {
+                                        "type_query": "nuc",
+                                        "exact": false,
+                                        "query": [{
+                                            "n_gene_name": ["orf8"],
+                                            "variant_type": ["del"],
+                                            "variant_length": {"min_val": 382}
+                                        }]
+                                    }
+                                }
+                            }
+                        }
+                    },
+
                 ],
                 selectedTab: 0,
                 queryString:
@@ -747,7 +839,8 @@
                     false,
                 fields:
                     [],
-                lastUpdate: null
+                lastUpdate:
+                    null
             }
         }
         ,
@@ -953,9 +1046,11 @@
             ,
             isDev() {
                 return process.env.NODE_ENV === 'development';
-            },
+            }
+            ,
 
-        },
+        }
+        ,
     }
 </script>
 <style>

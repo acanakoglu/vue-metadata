@@ -311,15 +311,15 @@ export default {
           let res = this.getInnerQueryOfSingleCondition(cond);
           if (Object.keys(res).length > 0) {
             if (productValues.length == 0)
-              problematicPanels.push(`- Panel ${i + 1} does not have any product protein`);
+              problematicPanels.push(`[Panel ${i + 1} does not have any product protein]`);
             else if (productValues.length > 1)
-              problematicPanels.push(`- Panel ${i + 1} has multiple product proteins`);
+              problematicPanels.push(`[Panel ${i + 1} has multiple product proteins]`);
           }
         }
       }
       if (problematicPanels.length) {
         problematicPanels = problematicPanels.join("\n")
-        if (confirm('Are you sure to have the condition without any product protein or multiple product proteins? \n' + problematicPanels)) {
+        if (confirm('Conditions without any product protein or with multiple product proteins should not be used. Please select one! \n' + problematicPanels)) {
           savePanel = true;
         } else {
           savePanel = false;
