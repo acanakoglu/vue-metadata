@@ -15,15 +15,14 @@
     <span slot="header" style="max-width: 30px !important">({{ query_type }}_{{ id }})</span>
 
 
-    <v-container v-if="open" v-for="cond in list_of_conditions" fluid grid-list-xl>
+    <v-container v-if="open" v-for="(cond, index) in list_of_conditions" fluid grid-list-xl>
+      <v-radio-group row v-if="query_type !== 'aa'" value="del" @change="variantRadioChanged($event, cond)" column>
+        <v-radio checked="1" label="Deletion" value="del"></v-radio>
+        <v-radio label="Insertion" value="ins"></v-radio>
+        <v-radio label="Substitution" value="sub"></v-radio>
+      </v-radio-group>
       <v-layout wrap align-center>
-        <v-flex v-if="query_type !== 'aa'" class="no-horizontal-padding xs12 sm6 md2 d-flex">
-          <v-radio-group value="del" @change="variantRadioChanged($event, cond)" column>
-            <v-radio checked="1" label="Deletion" value="del"></v-radio>
-            <v-radio label="Insertion" value="ins"></v-radio>
-            <v-radio label="Substitution" value="sub"></v-radio>
-          </v-radio-group>
-        </v-flex>
+
         <v-flex v-for="element in cond" class="no-horizontal-padding xs12 sm6 md2 d-flex" v-if="!element['hidden']">
           <AnnotDropDown v-if="element['type'] == 'dropdown'"
                          :labelTitle="element['labelTitle']"
@@ -61,6 +60,7 @@
           </v-dialog>
         </v-flex>
       </v-layout>
+      <hr v-if="index != list_of_conditions.length - 1">
     </v-container>
 
     <div v-if="open">
@@ -261,27 +261,27 @@ export default {
             value: null,
             description: 'Range of positions within the full nucleotide sequence, based on the reference sequence'
           },
-          // {
-          //   type: 'dropdown',
-          //   labelTitle: 'Effect',
-          //   field: 'effect',
-          //   value: [],
-          //   description: 'Effect of the variant, annotated using the Sequence Ontology terms (http://www.sequenceontology.org/), predicted by SnpEff (http://snpeff.sourceforge.net/)'
-          // },
-          // {
-          //   type: 'dropdown',
-          //   labelTitle: 'Putative impact',
-          //   field: 'putative_impact',
-          //   value: [],
-          //   description: 'A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}, predicted by SnpEff (http://snpeff.sourceforge.net/)'
-          // },
-          // {
-          //   type: 'dropdown',
-          //   labelTitle: 'Impacted gene',
-          //   field: 'impact_gene_name',
-          //   value: [],
-          //   description: 'Common gene name (HGNC, https://www.genenames.org/). Optional: use closest gene when the variant is intergenic, predicted by SnpEff (http://snpeff.sourceforge.net/),'
-          // },
+          {
+            type: 'dropdown',
+            labelTitle: 'Effect',
+            field: 'effect',
+            value: [],
+            description: 'Effect of the variant, annotated using the Sequence Ontology terms (http://www.sequenceontology.org/), predicted by SnpEff (http://snpeff.sourceforge.net/)'
+          },
+          {
+            type: 'dropdown',
+            labelTitle: 'Putative impact',
+            field: 'putative_impact',
+            value: [],
+            description: 'A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}, predicted by SnpEff (http://snpeff.sourceforge.net/)'
+          },
+          {
+            type: 'dropdown',
+            labelTitle: 'Impacted gene',
+            field: 'impact_gene_name',
+            value: [],
+            description: 'Common gene name (HGNC, https://www.genenames.org/). Optional: use closest gene when the variant is intergenic, predicted by SnpEff (http://snpeff.sourceforge.net/),'
+          },
         ];
       }
 
@@ -309,7 +309,7 @@ export default {
           const productValues = cond.filter(el => el['field'] == 'product')[0]['value'];
           console.log("productValues", productValues);
           let res = this.getInnerQueryOfSingleCondition(cond);
-          if(Object.keys(res).length > 0) {
+          if (Object.keys(res).length > 0) {
             if (productValues.length == 0)
               problematicPanels.push(`- Panel ${i + 1} does not have any product protein`);
             else if (productValues.length > 1)
@@ -317,7 +317,7 @@ export default {
           }
         }
       }
-      if (problematicPanels) {
+      if (problematicPanels.length) {
         problematicPanels = problematicPanels.join("\n")
         if (confirm('Are you sure to have the condition without any product protein or multiple product proteins? \n' + problematicPanels)) {
           savePanel = true;
