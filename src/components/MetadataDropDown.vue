@@ -126,8 +126,9 @@
                     })
                     .then((res) => {
                         // console.log(res.result)
-
+                        // console.log(this.field, res.result)
                         poll(res.result,(res)=>{
+                          // console.log(this.field)
                           let vals = res.values
                           // console.log(res);
                           //to clean previously selected values

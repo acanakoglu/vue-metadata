@@ -12,12 +12,19 @@
            @click="deleteKvLocal()">
       Remove condition
     </v-btn>
-      <span slot="header" style="max-width: 30px !important">({{query_type}}_{{id}})</span>
+    <span slot="header" style="max-width: 30px !important">({{ query_type }}_{{ id }})</span>
 
 
     <v-container v-if="open" v-for="cond in list_of_conditions" fluid grid-list-xl>
       <v-layout wrap align-center>
-        <v-flex v-for="element in cond" class="no-horizontal-padding xs12 sm6 md2 d-flex">
+        <v-flex v-if="query_type !== 'aa'" class="no-horizontal-padding xs12 sm6 md2 d-flex">
+          <v-radio-group value="del" @change="variantRadioChanged($event, cond)" column>
+            <v-radio checked="1" label="Deletion" value="del"></v-radio>
+            <v-radio label="Insertion" value="ins"></v-radio>
+            <v-radio label="Substitution" value="sub"></v-radio>
+          </v-radio-group>
+        </v-flex>
+        <v-flex v-for="element in cond" class="no-horizontal-padding xs12 sm6 md2 d-flex" v-if="!element['hidden']">
           <AnnotDropDown v-if="element['type'] == 'dropdown'"
                          :labelTitle="element['labelTitle']"
                          :field="element['field']"
@@ -92,6 +99,7 @@ export default {
   },
   data() {
     return {
+      radioVariantType: 'del',
       list_of_conditions: [this.getEmptyElement()],
       cancelButton: false,
       readOnly: false,
@@ -128,6 +136,32 @@ export default {
   methods: {
     ...mapMutations(["deleteKey", "setPanelActive", "resetPanelActive", "deleteKvField"]),
     ...mapActions(["setKv", "deleteKv"]),
+    variantRadioChanged(newValue, cond) {
+      console.log(cond);
+      const oldValue = cond.filter(el => el['field'] == 'variant_type')[0]['value'][0];
+      console.log(newValue, oldValue)
+      cond.filter(el => el['field'] == 'variant_type')[0]['value'] = [newValue]
+
+      const isSub = newValue == 'sub'
+      const wasSub = oldValue == 'sub'
+
+      cond.filter(el => el['field'] == 'sequence_original')[0]['hidden'] = !isSub;
+      cond.filter(el => el['field'] == 'sequence_alternative')[0]['hidden'] = !isSub;
+      cond.filter(el => el['field'] == 'variant_length')[0]['hidden'] = isSub;
+
+
+      if (isSub) {
+        if (!wasSub) {
+          cond.filter(el => el['field'] == 'variant_length')[0]['value'] = null;
+        }
+      } else {
+        if (wasSub) {
+          cond.filter(el => el['field'] == 'sequence_original')[0]['value'] = [];
+          cond.filter(el => el['field'] == 'sequence_alternative')[0]['value'] = [];
+        }
+      }
+
+    },
     addNewCondition() {
       this.list_of_conditions.push(this.getEmptyElement())
     },
@@ -141,13 +175,6 @@ export default {
     getEmptyElement() {
       if (this.query_type === 'aa') {
         return [
-          // {
-          //   type: 'dropdown',
-          //   labelTitle: 'Gene name',
-          //   field: 'gene_name',
-          //   value: [],
-          //   description: 'Gene within which the amino acid change occurs'
-          // },
           {
             type: 'dropdown',
             labelTitle: 'Product protein',
@@ -189,13 +216,6 @@ export default {
         return [
           {
             type: 'dropdown',
-            labelTitle: 'Annotation type',
-            field: 'n_feature_type',
-            value: [],
-            description: 'Characterization of sub-sequence'
-          },
-          {
-            type: 'dropdown',
             labelTitle: 'Gene name',
             field: 'n_gene_name',
             value: [],
@@ -203,31 +223,35 @@ export default {
           },
           {
             type: 'dropdown',
-            labelTitle: 'Product protein',
-            field: 'n_product',
-            value: [],
-            description: 'Protein encoded by the sequence of aminoacids'
-          },
-          {
-            type: 'dropdown',
             labelTitle: 'Variant type',
             field: 'variant_type',
-            value: [],
-            description: 'Type of amino acid change (SUB = substitution, INS = insertion, DEL = deletion)'
+            value: ['del'],
+            description: 'Type of amino acid change (SUB = substitution, INS = insertion, DEL = deletion)',
+            hidden: true
           },
           {
             type: 'dropdown',
             labelTitle: 'Original sequence',
             field: 'sequence_original',
             value: [],
-            description: 'Affected nucleotide sequence from the corresponding reference sequence of the chosen Virus'
+            description: 'Affected nucleotide sequence from the corresponding reference sequence of the chosen Virus',
+            hidden: true
           },
           {
             type: 'dropdown',
             labelTitle: 'Alternative sequence',
             field: 'sequence_alternative',
             value: [],
-            description: 'Changed nucleotide sequence (in the target sequence) with respect to the reference one'
+            description: 'Changed nucleotide sequence (in the target sequence) with respect to the reference one',
+            hidden: true
+          },
+          {
+            type: 'min-max',
+            labelTitle: 'Variant length',
+            field: 'variant_length',
+            info: 'Length of the deletion or insertion',
+            value: null,
+            description: 'Length of the deletion or insertion',
           },
           {
             type: 'min-max',
@@ -275,16 +299,46 @@ export default {
       this.deleteKey(this.id);
     },
     setKvLocal() {
-      this.kvLocal.query = this.getInnerQuery;
-      this.setKv({
-        kv: this.kvLocal,
-        search_text: this.key + "_" + this.id
-      });
+      let savePanel = true;
+      let problematicPanels = []
 
-      this.readOnly = true;
-      this.cancelButton = true;
-      this.open = false;
-      this.resetPanelActive()
+
+      if (this.query_type == "aa") {
+        for (let i = 0; i < this.list_of_conditions.length; i++) {
+          const cond = this.list_of_conditions[i];
+          const productValues = cond.filter(el => el['field'] == 'product')[0]['value'];
+          console.log("productValues", productValues);
+          let res = this.getInnerQueryOfSingleCondition(cond);
+          if(Object.keys(res).length > 0) {
+            if (productValues.length == 0)
+              problematicPanels.push(`- Panel ${i + 1} does not have any product protein`);
+            else if (productValues.length > 1)
+              problematicPanels.push(`- Panel ${i + 1} has multiple product proteins`);
+          }
+        }
+      }
+      if (problematicPanels) {
+        problematicPanels = problematicPanels.join("\n")
+        if (confirm('Are you sure to have the condition without any product protein or multiple product proteins? \n' + problematicPanels)) {
+          savePanel = true;
+        } else {
+          savePanel = false;
+        }
+      }
+
+
+      if (savePanel) {
+        this.kvLocal.query = this.getInnerQuery;
+        this.setKv({
+          kv: this.kvLocal,
+          search_text: this.key + "_" + this.id
+        });
+
+        this.readOnly = true;
+        this.cancelButton = true;
+        this.open = false;
+        this.resetPanelActive()
+      }
     },
     queryToShow2(input) {
       // return JSON.stringify(this.getInnerQuery);
