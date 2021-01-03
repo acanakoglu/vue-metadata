@@ -1,4 +1,4 @@
-export const FULL_TEXT = 'FULL'
+export const FULL_TEXT = 'FULL NUCLEOTIDE SEQUENCE'
 export const LOADING_TEXT = 'Loading...'
 
 export const poll = (id, callback) => {

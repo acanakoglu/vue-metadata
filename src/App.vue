@@ -633,7 +633,8 @@
                     false,
                 fields:
                     [],
-                lastUpdate: null
+                lastUpdate:
+                    null
             }
         }
         ,

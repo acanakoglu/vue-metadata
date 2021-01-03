@@ -108,6 +108,13 @@
 
 
                                 <v-card-text>
+                                    <v-flex align-self-center>
+                                        <MetadataDropDown
+                                                field="annotation_view_product"
+                                                labelTitle="Choose protein name to extract its sequence"
+                                                :is_gcm="false"
+                                                v-model="selectedProduct"/>
+                                    </v-flex>
                                     <p>
                                         Click the "Download" button below to download a "sequences.fasta" or
                                         "sequences.csv" file that contains the sequence in
@@ -636,8 +643,8 @@
                     {text: 'Single stranded', value: 'is_single_stranded', sortable: this.sortable, show: false},
                     {text: 'Positive stranded', value: 'is_positive_stranded', sortable: this.sortable, show: false},
 
-                    {text: 'Nucleotide sequence', value: 'nucleotide_sequence', sortable: false, show: false},
-                    {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: false},
+                    // {text: 'Nucleotide sequence', value: 'nucleotide_sequence', sortable: false, show: true},
+                    // {text: 'Amino acid sequence', value: 'amino_acid_sequence', sortable: false, show: true},
                 ];
               return predefinedHeaders;
             },
@@ -672,17 +679,17 @@
                     orderDir = "ASC";
 
                 let url = `query/table?gisaid_only=${this.gisaidOnly}&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
-                if (this.selectedProduct !== FULL_TEXT) {
-                    url += `&annotation_type=${this.selectedProduct}`;
-                }
+                // if (this.selectedProduct !== FULL_TEXT) {
+                //     url += `&annotation_type=${this.selectedProduct}`;
+                // }
 
                 this.isLoading = true;
                 this.result = [];
-                console.log("CALL: query/table");
+                // console.log("CALL: query/table");
                 // eslint-disable-next-line
                 axios.post(url, this.compound_query)
                     .then((res) => {
-                        console.log("GOT: query/table");
+                        // console.log("GOT: query/table");
                         return res.data
                     })
                     .then((res) => {
@@ -740,37 +747,17 @@
                 else
                     orderDir = "ASC";
 
-                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let csv_url = `query/download?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}&download_file_format=${this.downloadFileFormat}&download_type=${this.downloadType}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     csv_url += `&annotation_type=${this.selectedProduct}`;
                 }
 
-
+                // console.log(csv_url);
                 this.downloadProgress = true;
                 // eslint-disable-next-line
                 axios.post(csv_url, this.compound_query)
                     .then((res) => {
                         return res.data;
-                    })
-                    .then((res) => {
-                        let sequence_type = 'nucleotide_sequence';
-                        if (this.selectedProduct !== FULL_TEXT && this.downloadType == 'aa')
-                            sequence_type = 'amino_acid_sequence';
-
-                        let result = res.map((el) => {
-                            return {
-                                title: el['accession_id'],
-                                sequence: el[sequence_type],
-                            }
-                        });
-                        return result
-                    })
-                    .then((res) => {
-                        if (this.downloadFileFormat == 'fasta') {
-                            return this.result2fasta(res);
-                        } else {
-                            return this.json2csv(res, [{value: 'title'}, {value: 'sequence'}]);
-                        }
                     })
                     .then((res) => {
                         let text = res;
@@ -817,10 +804,12 @@
                 })
             },
             updateCellTextFormat(input) {
-                var temp = input;
+                let temp = input;
                 if (temp === null)
                     temp = 'N/D';
-                temp = temp.replace(/\|/g, "|<br/>")
+                if(temp.replace) {
+                  temp = temp.replace(/\|/g, "|<br/>")
+                }
                 return temp
             },
             addLink(input) {
