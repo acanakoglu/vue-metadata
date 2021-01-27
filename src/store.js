@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         query: {
-            taxon_name: ["severe acute respiratory syndrome coronavirus 2"]
+            taxon_name: ["severe acute respiratory syndrome coronavirus 2"],
+            host_taxon_name: ["homo sapiens"]
         },
         synonym: false,
         kv: {},
@@ -19,6 +20,13 @@ export default new Vuex.Store({
         panelActive: [],
         numerical: new Set(),
         exampleQueryLoaded: null,
+        epiQuerySel: {},
+        aminoacidConditions: {},
+        countSeq: null,
+        countEpi: null,
+        showSequenceEpiTable: false,
+        chosenEpitope: null,
+        showAminoacidVariantEpi: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -30,6 +38,13 @@ export default new Vuex.Store({
         },
         keysEmpty: (state) => state.keys.length === 0,
         panels: state => Object.keys(state.kv),
+        epiSearchDisabled: state => {
+            let res = true;
+            if(state.query['taxon_name'] && state.query['host_taxon_name'] ){
+                res = false;
+            }
+            return res;
+        },
     },
     mutations: {
         setExampleQueryLoaded:(state)=>{
@@ -94,13 +109,31 @@ export default new Vuex.Store({
         reloadQuery: (state) => {
             state.query = Object.assign({}, state.query);
         },
+        reloadEpiQuery: (state) => {
+            state.epiQuerySel = Object.assign({}, state.epiQuerySel);
+        },
+        reloadAminoacidConditions: (state) => {
+            state.aminoacidConditions = Object.assign({}, state.aminoacidConditions);
+        },
         setQueryField: (state, payload) => {
             state.query[payload.field] = payload.fieldQuery;
             // Vue.set(state.query, payload.field, payload.list);
         },
+        setEpiQueryField: (state, payload) => {
+            state.epiQuerySel[payload.field] = payload.fieldQuery;
+        },
+        setAminoacidConditions: (state, payload) => {
+            state.aminoacidConditions[payload.field] = payload.fieldQuery;
+        },
         resetQueryField: (state, field) => {
             delete state.query[field];
             // Vue.delete(state.query, field);
+        },
+        resetEpiQueryField: (state, field) => {
+            delete state.epiQuerySel[field];
+        },
+        resetAminoacidConditions: (state, field) => {
+            delete state.aminoacidConditions[field];
         },
         resetQuery: (state) => {
             state.query = {}
@@ -122,6 +155,24 @@ export default new Vuex.Store({
         setQueryGraph: (state, input) => {
             state.showGraphQuery = input;
         },
+        setCountSeq: (state, count) => {
+            state.countSeq = count;
+        },
+        setCountEpi: (state, count) => {
+            state.countEpi = count;
+        },
+        showSeqEpiTable: (state) => {
+            state.showSequenceEpiTable = !state.showSequenceEpiTable;
+        },
+        setChosenEpitope: (state, item) => {
+            state.chosenEpitope = item;
+        },
+        setTrueShowAminoacidVariantEpi: (state) => {
+            state.showAminoacidVariantEpi = true;
+        },
+        setFalseShowAminoacidVariantEpi: (state) => {
+            state.showAminoacidVariantEpi = false;
+        }
     },
     actions: {
         deleteKv({commit}, field) {
@@ -204,6 +255,47 @@ export default new Vuex.Store({
                 } else
                     commit('resetQueryField', field);
                 commit('reloadQuery');
+            }
+        },
+        setEpiDropDownSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.epiQuerySel[field];
+            if (!previousList)
+                previousList = [];
+
+            //update if they are not equal
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setEpiQueryField', newPayload);
+                } else
+                    commit('resetEpiQueryField', field);
+                commit('reloadEpiQuery');
+            }
+        },
+        setAminoacidConditionsSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.aminoacidConditions[field];
+            if (!previousList)
+                previousList = [];
+
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setAminoacidConditions', newPayload);
+                } else
+                    commit('resetAminoacidConditions', field);
+                commit('reloadAminoacidConditions');
             }
         },
     },
