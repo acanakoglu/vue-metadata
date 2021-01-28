@@ -50,6 +50,11 @@
                 </v-dialog>
         </v-flex>
       </v-layout>
+      <v-layout wrap  style="margin-top: 20px">
+        <v-spacer></v-spacer>
+       <v-btn :disabled="disableSelectorEpitopePart || epiSearchDis"
+           @click="resetEpiQuery" color="error">CLEAR EPITOPE QUERY</v-btn>
+    </v-layout>
     </v-container>
 
     <EpitopeTable></EpitopeTable>
@@ -59,7 +64,7 @@
 
 <script>
 import axios from "axios";
-import {mapGetters, mapState} from "vuex";
+import {mapGetters, mapMutations, mapState} from "vuex";
 import EpitopeSelectorText from "./EpitopeSelectorText"
 import EpitopeSelectorNum from "./EpitopeSelectorNum"
 import EpitopeSelectorPercentage from "./EpitopeSelectorPercentage"
@@ -87,12 +92,14 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-    ]),
+    ...mapState(['disableSelectorEpitopePart']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
     }),
   },
+   methods: {
+     ...mapMutations(['resetEpiQuery']),
+   },
   watch:{
 
   },

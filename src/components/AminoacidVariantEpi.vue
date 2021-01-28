@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
-    <v-layout justify-center>
+    <v-layout wrap align-center>
       <v-flex class="no-horizontal-padding xs12 sm6 md6 lg3 d-flex EpitopeSelectors"
                   v-for="fieldEpi in epitopeAminoacidFields" v-bind:key="fieldEpi.text">
                   <EpitopeSelectorText
@@ -36,7 +36,7 @@
 
       </v-flex>
     </v-layout>
-    <v-layout justify-center style="margin-top: 20px">
+    <v-layout wrap justify-center style="margin-top: 20px">
        <v-btn @click="applyAminoacidConditions()" color="green">APPLY</v-btn>
        <v-btn @click="clearAminoEpiMenu()" color="orange">CLEAR</v-btn>
        <v-btn @click="closeAminoEpiMenu()"
@@ -118,4 +118,8 @@ export default {
     margin-top: 20px;
     margin-bottom: 20px;
     }
+
+  .EpitopeSelectors{
+    margin-bottom: 10px;
+  }
 </style>

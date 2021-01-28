@@ -142,6 +142,9 @@ export default new Vuex.Store({
         resetQuery: (state) => {
             state.query = {}
         },
+        resetEpiQuery: (state) => {
+            state.epiQuerySel = {}
+        },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;
         },
