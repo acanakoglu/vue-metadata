@@ -210,23 +210,23 @@ export default {
         }
     },
     loadExtremes(){
-      this.isLoading = true;
-      //console.log("RELOAD extremes");
-      let to_send = this.toSend();
-      const url = `epitope/epiExtremes/${this.field}`;
-      axios.post(url, to_send)
-          .then((res) => {
+      if(!this.epiSearchDis) {
+        this.isLoading = true;
+        //console.log("RELOAD extremes");
+        let to_send = this.toSend();
+        const url = `epitope/epiExtremes/${this.field}`;
+        axios.post(url, to_send)
+            .then((res) => {
               return res.data
-          })
-          .then((res) => {
-              poll(res.result,(res)=>{
+            })
+            .then((res) => {
+              poll(res.result, (res) => {
                 let vals = res.values;
                 this.results = vals[0];
-                if(this.results['start'] === null || this.results['stop'] === null){
+                if (this.results['start'] === null || this.results['stop'] === null) {
                   this.disableNumSel = true;
                   this.deleteExtremesLocal();
-                }
-                else {
+                } else {
                   this.minExt = this.results['start'];
                   this.min_min = this.minExt;
                   this.maxExt = this.results['stop'];
@@ -235,8 +235,8 @@ export default {
                 }
                 this.isLoading = false;
               })
-          })
-
+            })
+      }
     },
     toSend(){
       let res = {};

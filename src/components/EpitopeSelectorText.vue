@@ -91,35 +91,36 @@ export default {
     ...mapMutations([]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
     loadData(){
-      //console.log("RELOAD ", this.value);
-      this.isLoading = true;
-      this.results = [{value: LOADING_TEXT}];
-      let to_send = this.toSend();
+      if(!this.epiSearchDis) {
+        //console.log("RELOAD ", this.value);
+        this.isLoading = true;
+        this.results = [{value: LOADING_TEXT}];
+        let to_send = this.toSend();
 
-      const url = `epitope/epiSel/${this.field}`;
-      axios.post(url, to_send)
-        .then((res) => {
-            return res.data
-        })
-        .then((res) => {
-          //console.log("ID ", res.result)
+        const url = `epitope/epiSel/${this.field}`;
+        axios.post(url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+              //console.log("ID ", res.result)
 
-          poll(res.result,(res)=>{
-            let vals = res.values;
+              poll(res.result, (res) => {
+                let vals = res.values;
 
-            //console.log("RES: ", vals, "SEL: ", this.selected , "ARR: ", Array.isArray(this.selected));
-            if (this.selected && Array.isArray(this.selected)) {
-                // console.log("this.selected: ", this.selected);
-                let zero_elements = this.selected
-                    .filter(value => !res.values.map(v => v.value).includes(value))
-                    .sort().map(v => Object({
+                //console.log("RES: ", vals, "SEL: ", this.selected , "ARR: ", Array.isArray(this.selected));
+                if (this.selected && Array.isArray(this.selected)) {
+                  // console.log("this.selected: ", this.selected);
+                  let zero_elements = this.selected
+                      .filter(value => !res.values.map(v => v.value).includes(value))
+                      .sort().map(v => Object({
                         value: v,
                         count: 0
-                    }));
-                //console.log("QUI: ", vals, zero_elements);
-                vals = vals.concat(zero_elements);
-            }
-            /*if (!this.is_gcm) {
+                      }));
+                  //console.log("QUI: ", vals, zero_elements);
+                  vals = vals.concat(zero_elements);
+                }
+                /*if (!this.is_gcm) {
                 vals = vals.map(el => el.value).filter(el => el).sort()
                 vals.unshift(FULL_TEXT)
                 if (!vals.includes(this.selected)) {
@@ -130,19 +131,19 @@ export default {
                 }));
 
             }*/
-            this.results = vals;
+                this.results = vals;
 
-            if(this.results.length === 0){
-              this.disableTxtSel = true;
-            }
-            else{
-              this.disableTxtSel = false;
-            }
+                if (this.results.length === 0) {
+                  this.disableTxtSel = true;
+                } else {
+                  this.disableTxtSel = false;
+                }
 
-            this.isLoading = false;
+                this.isLoading = false;
 
-          })
-      })
+              })
+            })
+      }
     },
     rename(inp) {
         let value_in;

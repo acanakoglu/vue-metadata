@@ -192,41 +192,41 @@ export default {
         }
     },
     loadExtremes(){
-      this.isLoading = true;
-      const url = `epitope/epiFreqExtremes`;
-      let to_send = this.toSend();
-      axios.post(url, to_send)
-        .then((res) => {
-            return res.data
-        })
-        .then((res) => {
-            poll(res.result,(res)=>{
-              let vals = res.values;
-              this.results = vals[0];
-              //console.log("RES PERC: ", this.results);
-              if (this.results['count'] == 0){
-                this.deleteExtremesLocal();
-                this.disablePercSel = true;
-              }
-              else {
-                if (this.results['startFreq'] === null || this.results['stopFreq'] === null) {
-                  this.isNull = true;
-                  this.forceNull = true;
-                  this.disablePercSel = false;
-                } else {
-                  this.minFreqExt = Math.floor(this.results['startFreq'] * 100);
-                  this.minFreqExtString = "Min: " + this.minFreqExt;
-                  this.maxFreqExt = Math.ceil(this.results['stopFreq'] * 100);
-                  this.maxFreqExtString = "Max: " + this.maxFreqExt;
-                  this.range = this.rangeUpdate;
-                  this.forceNull = false;
-                  this.disablePercSel = false;
-                }
-              }
-              this.isLoading = false;
+      if(!this.epiSearchDis) {
+        this.isLoading = true;
+        const url = `epitope/epiFreqExtremes`;
+        let to_send = this.toSend();
+        axios.post(url, to_send)
+            .then((res) => {
+              return res.data
             })
-        })
-
+            .then((res) => {
+              poll(res.result, (res) => {
+                let vals = res.values;
+                this.results = vals[0];
+                //console.log("RES PERC: ", this.results);
+                if (this.results['count'] == 0) {
+                  this.deleteExtremesLocal();
+                  this.disablePercSel = true;
+                } else {
+                  if (this.results['startFreq'] === null || this.results['stopFreq'] === null) {
+                    this.isNull = true;
+                    this.forceNull = true;
+                    this.disablePercSel = false;
+                  } else {
+                    this.minFreqExt = Math.floor(this.results['startFreq'] * 100);
+                    this.minFreqExtString = "Min: " + this.minFreqExt;
+                    this.maxFreqExt = Math.ceil(this.results['stopFreq'] * 100);
+                    this.maxFreqExtString = "Max: " + this.maxFreqExt;
+                    this.range = this.rangeUpdate;
+                    this.forceNull = false;
+                    this.disablePercSel = false;
+                  }
+                }
+                this.isLoading = false;
+              })
+            })
+      }
     },
     toSend(){
       let res = {};

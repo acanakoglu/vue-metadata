@@ -218,20 +218,21 @@ export default {
       return res;
     },
     loadTable(){
-      this.result = [];
-      this.isLoading = true;
-      //console.log("RELOAD table");
-      let to_send = this.toSend();
-      const url = `epitope/epiTableRes`
-      axios.post(url, to_send)
-          .then((res) => {
+      if(!this.epiSearchDis) {
+        this.result = [];
+        this.isLoading = true;
+        //console.log("RELOAD table");
+        let to_send = this.toSend();
+        const url = `epitope/epiTableRes`
+        axios.post(url, to_send)
+            .then((res) => {
               return res.data
-          })
-          .then((res) => {
-              poll(res.result,(res)=>{
+            })
+            .then((res) => {
+              poll(res.result, (res) => {
                 let vals = res.values;
                 vals.forEach(item => {
-                  for(let k in item) {
+                  for (let k in item) {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
@@ -262,8 +263,7 @@ export default {
                           }
                           item[k] = to_replace;
                         }
-                      }
-                      else if (key === 'epi_fragment_sequence') {
+                      } else if (key === 'epi_fragment_sequence') {
 
                         let position = "";
                         let sequence = "";
@@ -277,8 +277,8 @@ export default {
 
                         let len = array_sequence.length;
                         let i = 0;
-                        while(i<len){
-                          if(i===0){
+                        while (i < len) {
+                          if (i === 0) {
                             item['position_range'] = array_start[i];
                           }
                           position += array_start[i];
@@ -286,7 +286,7 @@ export default {
                           position += array_stop[i];
                           sequence += array_sequence[i];
                           i++;
-                          if(i!==len){
+                          if (i !== len) {
                             position += ",\n";
                             sequence += ",\n";
                           }
@@ -296,28 +296,27 @@ export default {
                       }
                     }
                   }
-                  item['mutated_freq'] = item['num_var']/item['num_seq'];
+                  item['mutated_freq'] = item['num_var'] / item['num_seq'];
                   item['mutated_freq'] = item['mutated_freq'].toPrecision(this.precision_float_table);
-                  item['mutated_seq_ratio'] = (item['num_seq']/this.countSeq)*100;
-                  if(item['mutated_seq_ratio'] >= 10) {
+                  item['mutated_seq_ratio'] = (item['num_seq'] / this.countSeq) * 100;
+                  if (item['mutated_seq_ratio'] >= 10) {
                     item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
-                  }
-                  else{
+                  } else {
                     item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table);
                   }
                   item['mutated_seq_ratio'] += ' %';
 
                 })
-                if(this.received_count_seq) {
+                if (this.received_count_seq) {
                   this.result = vals;
                   this.isLoading = false;
-                }
-                else {
+                } else {
                   this.result = [];
                   this.isLoading = true;
                 }
               })
-          })
+            })
+      }
     },
     getArrayFromTupleTable(str){
       let arr_final = [];
@@ -362,21 +361,26 @@ export default {
           });
     },
     loadCountEpi() {
-      let to_send = this.toSend();
-      this.setCountEpi(null);
-      let count_url = 'epitope/count';
+      if(!this.epiSearchDis) {
+        let to_send = this.toSend();
+        this.setCountEpi(null);
+        let count_url = 'epitope/count';
 
-      axios.post(count_url, to_send)
-        .then((res) => {
-          return res.data
-        })
-        .then((res) => {
-          poll(res.result, (res) => {
-            if(res != null) {
-              this.setCountEpi(res[0].count);
-            }
-          })
-        })
+        axios.post(count_url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+              poll(res.result, (res) => {
+                if (res != null) {
+                  this.setCountEpi(res[0].count);
+                }
+              })
+            })
+      }
+      else{
+        this.setCountEpi(0);
+      }
     },
     loadEveything(){
       this.loadCountSeq();
