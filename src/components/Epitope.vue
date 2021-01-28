@@ -8,7 +8,7 @@
         </v-flex>
 
         <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-          <h5 v-if="epiSearchDis">{{requirement}}</h5>
+          <h3 style="color:red"  v-if="epiSearchDis">{{requirement}}</h3>
         </v-flex>
 
         <v-flex class="no-horizontal-padding xs12 sm6 md4 lg2 d-flex EpitopeSelectors"

@@ -4,7 +4,9 @@
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
             <v-btn @click="openShowAminoacidVariantEpi()"
-                       color="info">Add condition on amino acids</v-btn>
+                       color="info"
+                      :disabled="epiSearchDis">
+              Add condition on amino acids</v-btn>
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
           <v-flex sm3 align-self-center></v-flex>
@@ -66,7 +68,7 @@
 
 
     <v-card>
-      <h5 v-if="epiSearchDis">{{requirement}}</h5>
+      <h3 style="color:red" v-if="epiSearchDis">{{requirement}}</h3>
       <v-layout wrap align-center >
         <v-data-table
                 :headers="selected_headers"
@@ -84,6 +86,8 @@
                     <span v-if="header.value === 'num_seq'">
                         <a @click="sendDataToSeqEpiTable(props.item['epitope_id'])" target="_blank">{{props.item[header.value]}}</a>
                     </span>
+
+                    <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
                     <span v-else>{{props.item[header.value]}}</span>
 
@@ -188,7 +192,7 @@ export default {
           {text: 'Alternative Aminoacid Sequence', value: 'sequence_aa_alternative', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},*/
           {text: 'Epitope Start', value: 'epi_frag_annotation_start', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Epitope Stop', value: 'epi_frag_annotation_stop', sortable: false, show: false, to_send: true, can_be_shown: false},
-          {text: 'Position Range', value: 'position_range', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -272,6 +276,9 @@ export default {
                         let len = array_sequence.length;
                         let i = 0;
                         while(i<len){
+                          if(i===0){
+                            item['position_range'] = array_start[i];
+                          }
                           position += array_start[i];
                           position += "-";
                           position += array_stop[i];
@@ -282,7 +289,7 @@ export default {
                             sequence += ",\n";
                           }
                         }
-                        item['position_range'] = position;
+                        item['position_range_to_show'] = position;
                         item[k] = sequence;
                       }
                     }
