@@ -132,6 +132,7 @@ export default {
             this.setEpiDropDownSelected({field: 'stopExt', list: []});
           }
           else if (this.field === 'variant_position_range'){
+            this.clearEpiQueryFromAmino();
             //this.setEpiDropDownSelected({field: 'startExtVariant', list: []});                FOR APPLY
             this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
             //this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});                 FOR APPLY

@@ -190,6 +190,8 @@ export default {
           {text: 'Variant Length', value: 'variant_aa_length', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Original Aminoacid Sequence', value: 'sequence_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Alternative Aminoacid Sequence', value: 'sequence_aa_alternative', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},*/
+          {text: 'Epitope Start', value: 'epi_annotation_start', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Epitope Stop', value: 'epi_annotation_stop', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Epitope Start', value: 'epi_frag_annotation_start', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Epitope Stop', value: 'epi_frag_annotation_stop', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
