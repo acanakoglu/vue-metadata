@@ -13,6 +13,26 @@
                       :text="fieldEpi.text"
                       :field="fieldEpi.field">
                   </EpitopeSelectorNum>
+                  <v-dialog width="500">
+                    <v-btn
+                            slot="activator"
+                            class="info-button"
+                            small
+                            flat icon color="blue">
+                        <v-icon class="info-icon">info</v-icon>
+                    </v-btn>
+                    <v-card>
+                        <v-card-title
+                                class="headline grey lighten-2"
+                                primary-title
+                        >
+                            {{fieldEpi.text}}
+                        </v-card-title>
+                        <v-card-text>
+                            {{fieldEpi.description}}
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
 
       </v-flex>
     </v-layout>
