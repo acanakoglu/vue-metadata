@@ -43,7 +43,9 @@ export default new Vuex.Store({
         epiSearchDisabled: state => {
             let res = true;
             if(state.query['taxon_name'] && state.query['host_taxon_name'] ){
-                res = false;
+                if(state.query['taxon_name'].length === 1 && state.query['host_taxon_name'].length === 1 ) {
+                    res = false;
+                }
             }
             return res;
         },

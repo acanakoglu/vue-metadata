@@ -127,7 +127,7 @@ export default {
     return {
       isLoading : true,
       result: [],
-      requirement: 'Required Host and Virus',
+      requirement: 'A single Host and a single Virus are required',
       is_control : false,
       precision_float_table: 5,
       sortCheckbox: false,

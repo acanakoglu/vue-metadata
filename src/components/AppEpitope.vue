@@ -145,8 +145,8 @@
         <v-container fluid grid-list-xl style="background:#FFFFFF">
           <v-layout wrap align-center test style="background:#FFFFFF">
             <v-flex xs12 justify-center>
-              <div style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>Severe
-                acute respiratory syndrome coronavirus 2</strong> sequences from <strong>Homo Sapiens</strong>
+              <div style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>"Severe
+                acute respiratory syndrome coronavirus 2"</strong> sequences from <strong>"Homo sapiens"</strong>
                 as host are preselected.
                 If you are interested in other virus(es), please change it from the dropdown menu below:
               </div>

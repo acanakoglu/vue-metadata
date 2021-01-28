@@ -83,7 +83,7 @@ export default {
                       {text:'Position Range', field:'position_range', is_numerical: true , is_percentage: false, description: 'f'},
       ],*/
       epitopeFields: [],
-      requirement: 'Required Host and Virus',
+      requirement: 'A single Host and a single Virus are required',
     }
   },
   computed: {
