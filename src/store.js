@@ -27,6 +27,8 @@ export default new Vuex.Store({
         showSequenceEpiTable: false,
         chosenEpitope: null,
         showAminoacidVariantEpi: false,
+        epitopeAminoacidFields: [],
+        disableSelectorEpitopePart: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -172,7 +174,16 @@ export default new Vuex.Store({
         },
         setFalseShowAminoacidVariantEpi: (state) => {
             state.showAminoacidVariantEpi = false;
-        }
+        },
+        setEpitopeAminoacidFields: (state, item) => {
+            state.epitopeAminoacidFields = item;
+        },
+        setTrueDisableSelectorEpitopePart: (state) => {
+            state.disableSelectorEpitopePart = true;
+        },
+        setFalseDisableSelectorEpitopePart: (state) => {
+            state.disableSelectorEpitopePart = false;
+        },
     },
     actions: {
         deleteKv({commit}, field) {

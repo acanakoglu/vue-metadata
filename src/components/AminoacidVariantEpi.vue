@@ -17,9 +17,10 @@
       </v-flex>
     </v-layout>
     <v-layout justify-center style="margin-top: 20px">
-       <v-btn @click="clearAminoEpiMenu()" color="error">CLEAR</v-btn>
+       <v-btn @click="applyAminoacidConditions()" color="green">APPLY</v-btn>
+       <v-btn @click="clearAminoEpiMenu()" color="orange">CLEAR</v-btn>
        <v-btn @click="closeAminoEpiMenu()"
-                       color="error">CLEAR & CLOSE</v-btn>
+                       color="red">CLEAR & CLOSE</v-btn>
     </v-layout>
   </v-container>
 </template>
@@ -35,44 +36,54 @@ export default {
   components: {EpitopeSelectorNum, EpitopeSelectorText},
   data() {
     return {
-      epitopeAminoacidFields: [],
     }
   },
   computed: {
     ...mapState([
-      'showAminoacidVariantEpi', 'epiQuerySel', 'query'
+      'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields', 'aminoacidConditions'
     ]),
   },
   methods:{
     ...mapMutations([
-        'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'set'
+        'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setEpitopeAminoacidFields', 'setFalseDisableSelectorEpitopePart'
     ]),
-    ...mapActions(['setEpiDropDownSelected']),
+    ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
     closeAminoEpiMenu(){
       this.setFalseShowAminoacidVariantEpi();
       this.clearAminoEpiMenu();
+      this.setFalseDisableSelectorEpitopePart();
     },
     clearAminoEpiMenu(){
-      this.setEpiDropDownSelected({field: 'variant_aa_type', list: []});
-      this.setEpiDropDownSelected({field: 'sequence_aa_original', list: []});
-      this.setEpiDropDownSelected({field: 'sequence_aa_alternative', list: []});
+      this.epitopeAminoacidFields.forEach(elem => {
+            this.setEpiDropDownSelected({field: elem.field, list: []});
+            this.setAminoacidConditionsSelected({field: elem.field, list: []});
+          }
+      )
       this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
       this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
-    }
+      this.setAminoacidConditionsSelected({field: 'stopExtVariant', list: []});
+    },
+    applyAminoacidConditions(){
+      Object.entries(this.aminoacidConditions).forEach(item =>{
+        this.setEpiDropDownSelected({field: item[0], list:item[1]});
+      })
+    },
   },
   watch: {
   },
   created() {
     const url = `epitope/fieldAminoEpi `;
 
-    this.epitopeAminoacidFields = [];
+    this.setEpitopeAminoacidFields([]);
 
     axios.get(url)
       .then((res) => {
           return res.data;
       })
       .then((res) => {
-          this.epitopeAminoacidFields = res.fields;
+          let vals = res.fields;
+          this.setEpitopeAminoacidFields(vals);
       });
   }
 }

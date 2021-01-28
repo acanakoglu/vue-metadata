@@ -8,7 +8,7 @@
       item-value="value"
       :label="text"
       :multiple="is_multiple"
-      :disabled="epiSearchDis || disableTxtSel || disableTxtAmino"
+      :disabled="epiSearchDis || disableTxtSel || disableTxtAmino || disabledEpi_AminoacidMenuOpened"
     >
       <template slot="item" slot-scope="data">
           <span class="item-value-span"> {{rename(data.item)}}</span>
@@ -34,14 +34,30 @@ export default {
         this.loadData();
     },
     epiQuerySel() {
-      this.disableTxtAmino = this.getDisableTxtAmino();
       this.loadData();
+    },
+    aminoacidConditions(){
+      if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
+        this.disableTxtAmino = this.getDisableTxtAmino();
+        this.loadData();
+      }
+    },
+    disableSelectorEpitopePart(){
+      if((!this.epitopeAminoacidFields.some(item => item.field === this.field)) && this.disableSelectorEpitopePart){
+          this.disabledEpi_AminoacidMenuOpened = true;
+      }
+      else{
+        this.disabledEpi_AminoacidMenuOpened = false;
+      }
     }
   },
   computed: {
     ...mapState([
       'epiQuerySel',
       'aminoacidConditions',
+      'epitopeAminoacidFields',
+      'aminoacidConditions',
+      'disableSelectorEpitopePart',
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -52,11 +68,22 @@ export default {
     },*/
     selected: {
       get() {
-        return this.epiQuerySel[this.field];
+        if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
+          return this.aminoacidConditions[this.field];
+        }else {
+          return this.epiQuerySel[this.field];
+        }
       },
       set(value){
-        this.setEpiDropDownSelected({field: this.field, list: value});
-        this.setAminoacidConditionsSelected({field: this.field, list: value});
+        //this.setEpiDropDownSelected({field: this.field, list: value});  FOR APPLY
+
+        if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
+          this.setAminoacidConditionsSelected({field: this.field, list: value});
+          this.clearEpiQueryFromAmino();
+        }
+        else{
+          this.setEpiDropDownSelected({field: this.field, list: value}); //FOR APPLY
+        }
       }
     },
   },
@@ -127,25 +154,41 @@ export default {
     },
     toSend(){
       let res = {};
-      Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": this.epiQuerySel});
+      let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));              //  FOR APPLY ALL IF AND ELSE
+      let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+      let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);
+      if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
+        Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": epitope_and_aminoacid_conditions});
+      }
+      else {
+        Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": epitope_conditions});
+      }
       return res;
     },
     getDisableTxtAmino(){
       let bool = false;
       if(this.field === 'sequence_aa_original'){
-        let query = this.epiQuerySel['variant_aa_type'];
+        let query = this.aminoacidConditions['variant_aa_type'];
         if(!query || (query.includes("INS") &&  !query.includes("DEL") &&  !query.includes("SUB"))){
           bool = true;
         }
       }
       else if (this.field === 'sequence_aa_alternative'){
-        let query = this.epiQuerySel['variant_aa_type'];
+        let query = this.aminoacidConditions['variant_aa_type'];
         if(!query || (query.includes("DEL") &&  !query.includes("INS") &&  !query.includes("SUB"))){
           bool = true;
         }
       }
       return bool;
-    }
+    },
+    clearEpiQueryFromAmino(){
+      this.epitopeAminoacidFields.forEach(elem => {
+            this.setEpiDropDownSelected({field: elem.field, list: []});
+          }
+      )
+      this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+    },
   },
   data(){
     return {
@@ -154,6 +197,7 @@ export default {
       disableTxtSel: false,
       disableTxtAmino: true,
       is_multiple: true,
+      disabledEpi_AminoacidMenuOpened: false,
     }
   },
   mounted() {

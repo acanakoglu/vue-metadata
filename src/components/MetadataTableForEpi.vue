@@ -417,7 +417,7 @@
 
                 let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
                   epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
                 }
@@ -604,7 +604,7 @@
 
                 let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
                   epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
                 }
@@ -652,7 +652,7 @@
 
                     let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-                    let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+                    let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                     if(this.chosenEpitope != null) {
                       epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
                     }
@@ -687,7 +687,7 @@
                 this.downloadProgress = true;
                 let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
                   epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
                 }
@@ -813,7 +813,7 @@
                 this.downloadProgress = true;
                 let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
                   epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
                 }
@@ -843,7 +843,7 @@
             }
         },
         computed: {
-            ...mapState(['synonym', 'count', 'showSequenceEpiTable', 'chosenEpitope', 'aminoacidConditions']),
+            ...mapState(['synonym', 'count', 'showSequenceEpiTable', 'chosenEpitope', 'aminoacidConditions', 'epiQuerySel']),
             ...mapGetters({
                 compound_query: 'build_query',
                 panels:'panels'

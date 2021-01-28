@@ -6,14 +6,14 @@
             :loading = "isLoading"
             v-model="menu"
             offset-y
-            :disabled="epiSearchDis || isLoading || disablePercSel"
+            :disabled="epiSearchDis || isLoading || disablePercSel || disabledEpi_AminoacidMenuOpened"
     >
         <v-text-field slot="activator"
                       name="input-1"
                       :label="text"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="epiSearchDis || isLoading || disablePercSel || menu"
+                      :disabled="epiSearchDis || isLoading || disablePercSel || menu || disabledEpi_AminoacidMenuOpened"
                       :loading = "isLoading"
         ></v-text-field>
 
@@ -123,11 +123,12 @@ export default {
       isNull: false,
       forceNull: false,
       disablePercSel: false,
+      disabledEpi_AminoacidMenuOpened: false,
     }
   },
   computed: {
     ...mapState([
-      'epiQuerySel'
+      'epiQuerySel', 'disableSelectorEpitopePart'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -240,6 +241,13 @@ export default {
     epiQuerySel(){
       this.loadExtremes();
     },
+    disableSelectorEpitopePart() {
+      if (this.disableSelectorEpitopePart) {
+        this.disabledEpi_AminoacidMenuOpened = true;
+      } else {
+        this.disabledEpi_AminoacidMenuOpened = false;
+      }
+    }
   },
   created() {
     this.loadExtremes();

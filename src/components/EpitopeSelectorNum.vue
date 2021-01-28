@@ -6,14 +6,14 @@
             :loading = "isLoading"
             v-model="menu"
             offset-y
-            :disabled="epiSearchDis || isLoading || disableNumSel"
+            :disabled="epiSearchDis || isLoading || disableNumSel || disabledEpi_AminoacidMenuOpened"
     >
         <v-text-field slot="activator"
                       name="input-1"
                       :label="text"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="epiSearchDis || isLoading || disableNumSel || menu"
+                      :disabled="epiSearchDis || isLoading || disableNumSel || menu || disabledEpi_AminoacidMenuOpened"
                       :loading = "isLoading"
         ></v-text-field>
 
@@ -87,11 +87,12 @@ export default {
       menu: false,
       shown_value: null,
       disableNumSel: false,
+      disabledEpi_AminoacidMenuOpened: false,
     }
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'aminoacidConditions'
+      'epiQuerySel', 'aminoacidConditions', 'disableSelectorEpitopePart', 'epitopeAminoacidFields'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -131,9 +132,9 @@ export default {
             this.setEpiDropDownSelected({field: 'stopExt', list: []});
           }
           else if (this.field === 'variant_position_range'){
-            this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+            //this.setEpiDropDownSelected({field: 'startExtVariant', list: []});                FOR APPLY
             this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
-            this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+            //this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});                 FOR APPLY
             this.setAminoacidConditionsSelected({field: 'stopExtVariant', list: []});
           }
           this.min = null;
@@ -159,6 +160,10 @@ export default {
           this.errorExt = '';
           this.menu = false;
 
+          if(this.field === 'variant_position_range'){
+            this.clearEpiQueryFromAmino();
+          }
+
           if(this.min !== null && this.min !== undefined) {
             let sendStart;
             if (this.field === 'position_range') {
@@ -167,7 +172,7 @@ export default {
             }
             else if(this.field === 'variant_position_range') {
               sendStart = {field: 'startExtVariant', list: [this.min]};
-              this.setEpiDropDownSelected(sendStart);
+              //this.setEpiDropDownSelected(sendStart);                 FOR APPLY
               this.setAminoacidConditionsSelected(sendStart);
             }
           }else{
@@ -175,7 +180,7 @@ export default {
               this.setEpiDropDownSelected({field: 'startExt', list: []});
             }
             else if (this.field === 'variant_position_range'){
-              this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+              //this.setEpiDropDownSelected({field: 'startExtVariant', list: []});            FOR APPLY
               this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
             }
           }
@@ -188,7 +193,7 @@ export default {
             }
             else if(this.field === 'variant_position_range') {
               sendStop = {field: 'stopExtVariant', list: [this.max]};
-              this.setEpiDropDownSelected(sendStop);
+              //this.setEpiDropDownSelected(sendStop);              FOR APPLY
               this.setAminoacidConditionsSelected(sendStop);
             }
           }
@@ -197,13 +202,10 @@ export default {
               this.setEpiDropDownSelected({field: 'stopExt', list: []});
             }
             else if (this.field === 'variant_position_range'){
-              this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+              //this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});               FOR APPLY
               this.setAminoacidConditionsSelected({field: 'stopExtVariant', list: []});
             }
           }
-
-          //console.log("SET: " , this.epiQuerySel);
-
         }
     },
     loadExtremes(){
@@ -237,8 +239,24 @@ export default {
     },
     toSend(){
       let res = {};
-      Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": this.epiQuerySel});
+      let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));              //  FOR APPLY ALL IF AND ELSE
+      let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+      let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);
+      if(this.field === 'variant_position_range'){
+         Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": epitope_and_aminoacid_conditions});
+      }
+      else {
+         Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": epitope_conditions});
+      }
       return res;
+    },
+    clearEpiQueryFromAmino(){
+      this.epitopeAminoacidFields.forEach(elem => {
+            this.setEpiDropDownSelected({field: elem.field, list: []});
+          }
+      )
+      this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
     },
   },
   watch:{
@@ -247,6 +265,14 @@ export default {
     },
     epiQuerySel(){
       this.loadExtremes();
+    },
+    aminoacidConditions(){
+      if (this.field === 'variant_position_range' && !this.aminoacidConditions['startExtVariant'] && !this.aminoacidConditions['stopExtVariant']) {
+        this.deleteExtremesLocal();
+      }
+      if(this.field === 'variant_position_range'){
+        this.loadExtremes();
+      }
     },
     min() {
       if(this.min === '' || this.min === undefined){
@@ -272,6 +298,14 @@ export default {
       }
       //console.log(this.max, this.maxInt, this.max_max);
     },
+    disableSelectorEpitopePart(){
+      if(this.field === "position_range" && this.disableSelectorEpitopePart){
+          this.disabledEpi_AminoacidMenuOpened = true;
+      }
+      else{
+        this.disabledEpi_AminoacidMenuOpened = false;
+      }
+    }
   },
   created() {
     this.loadExtremes();

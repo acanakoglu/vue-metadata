@@ -3,7 +3,7 @@
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
-            <v-btn @click="setTrueShowAminoacidVariantEpi"
+            <v-btn @click="openShowAminoacidVariantEpi()"
                        color="info">Add condition on amino acids</v-btn>
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
@@ -131,7 +131,7 @@ export default {
       dialogOrder: false,
       sortable: true,
       headers_can_be_shown: this.getShownHeaders(),
-      a: false,
+      received_count_seq: true,
     }
   },
   computed: {
@@ -168,7 +168,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-        'setCountEpi', 'setCountSeq', 'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi'
+        'setCountEpi', 'setCountSeq', 'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
     getHeaders() {
       const predefinedHeaders = [
@@ -178,6 +178,7 @@ export default {
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Epitope Seq.', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           /*{text: 'Variant Position', value: 'start_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -193,7 +194,7 @@ export default {
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Seq Ratio', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Histogram', value: 'histogram', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Histogram', value: 'histogram', sortable: this.sortable, show: false, to_send: false, can_be_shown: true},
       ];
       return predefinedHeaders;
     },
@@ -298,8 +299,14 @@ export default {
                   item['mutated_seq_ratio'] += ' %';
 
                 })
-                this.result = vals;
-                this.isLoading = false;
+                if(this.received_count_seq) {
+                  this.result = vals;
+                  this.isLoading = false;
+                }
+                else {
+                  this.result = [];
+                  this.isLoading = true;
+                }
               })
           })
     },
@@ -318,18 +325,23 @@ export default {
       return arr_final;
     },
     loadCountSeq(){
+      this.received_count_seq = false;
       this.setCountSeq(null);
 
       let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-      let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+      let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+
+      //let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions)); // FOR APPLY
       if(this.chosenEpitope != null) {
-        epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
-      }
-      if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-        to_send['epitope'] = epitope_and_aminoacid_conditions;
+        epitope_conditions['epitope_id'] = this.chosenEpitope;
       }
 
+      //let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);   FOR APPLY
+
+      if(!jQuery.isEmptyObject(epitope_conditions)) {     //FOR APPLY instead epitope_and_aminoacid_conditions
+        to_send['epitope'] = epitope_conditions;
+      }
         let count_url = `query/count?is_control=${this.is_control}`;
         axios.post(count_url, to_send)
           .then((res) => {
@@ -337,6 +349,7 @@ export default {
           })
           .then((res) => {
               this.setCountSeq(res);
+              this.received_count_seq = true;
           });
     },
     loadCountEpi() {
@@ -390,6 +403,10 @@ export default {
         }
         return res;
     },
+    openShowAminoacidVariantEpi(){
+      this.setTrueShowAminoacidVariantEpi();
+      this.setTrueDisableSelectorEpitopePart();
+    }
   },
   mounted() {
     this.loadEveything();
