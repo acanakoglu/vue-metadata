@@ -239,6 +239,9 @@ export default {
       this.loadExtremes();
     },
     epiQuerySel(){
+      if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
+        this.deleteExtremesLocal();
+      }
       this.loadExtremes();
     },
     disableSelectorEpitopePart() {

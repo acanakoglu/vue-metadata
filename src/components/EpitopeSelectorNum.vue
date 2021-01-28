@@ -265,6 +265,9 @@ export default {
       this.loadExtremes();
     },
     epiQuerySel(){
+      if (this.field === 'position_range' && !this.epiQuerySel['startExt'] && !this.epiQuerySel['stopExt']) {
+        this.deleteExtremesLocal();
+      }
       this.loadExtremes();
     },
     aminoacidConditions(){
