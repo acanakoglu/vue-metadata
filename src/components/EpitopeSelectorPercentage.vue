@@ -192,7 +192,7 @@ export default {
         }
     },
     loadExtremes(){
-      if(!this.epiSearchDis) {
+      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
         this.isLoading = true;
         const url = `epitope/epiFreqExtremes`;
         let to_send = this.toSend();
@@ -206,8 +206,10 @@ export default {
                 this.results = vals[0];
                 //console.log("RES PERC: ", this.results);
                 if (this.results['count'] == 0) {
-                  this.deleteExtremesLocal();
-                  this.disablePercSel = true;
+                  //this.deleteExtremesLocal();
+                  if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
+                    this.disablePercSel = true;
+                  }
                 } else {
                   if (this.results['startFreq'] === null || this.results['stopFreq'] === null) {
                     this.isNull = true;

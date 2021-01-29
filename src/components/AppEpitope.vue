@@ -199,7 +199,9 @@
 
 
             <div v-if="countSeq === null || countEpi=== null" style="font-size:1.4em;">Loading...</div>
-            <div style="font-size:1.4em;" v-else-if="countSeq>0">{{ countSeq }} sequence<span
+            <div style="font-size:1.4em;" v-else-if="countSeq>0 && countEpi>0">
+              <span v-if="countSeq>0">{{ countSeq }} sequence</span>
+              <span
                 v-if="countSeq>1">s</span><span v-if="countEpi>0 && countSeq>0"> and </span>
               <span v-if="countEpi>0">{{ countEpi }} epitope</span><span
                 v-if="countEpi>1">s</span> found

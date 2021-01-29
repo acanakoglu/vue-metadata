@@ -91,7 +91,7 @@ export default {
     ...mapMutations([]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
     loadData(){
-      if(!this.epiSearchDis) {
+      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
         //console.log("RELOAD ", this.value);
         this.isLoading = true;
         this.results = [{value: LOADING_TEXT}];

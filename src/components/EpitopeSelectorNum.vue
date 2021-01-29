@@ -210,7 +210,7 @@ export default {
         }
     },
     loadExtremes(){
-      if(!this.epiSearchDis) {
+      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened){
         this.isLoading = true;
         //console.log("RELOAD extremes");
         let to_send = this.toSend();
@@ -224,8 +224,12 @@ export default {
                 let vals = res.values;
                 this.results = vals[0];
                 if (this.results['start'] === null || this.results['stop'] === null) {
-                  this.disableNumSel = true;
-                  this.deleteExtremesLocal();
+                  if (this.field === 'position_range' && !this.epiQuerySel['startExt'] && !this.epiQuerySel['stopExt']) {
+                    this.disableNumSel = true;
+                  }else if (this.field === 'variant_position_range' && !this.aminoacidConditions['startExtVariant'] && !this.aminoacidConditions['stopExtVariant']) {
+                    this.disableNumSel = true;
+                  }
+                  //this.deleteExtremesLocal();
                 } else {
                   this.minExt = this.results['start'];
                   this.min_min = this.minExt;
