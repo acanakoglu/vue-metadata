@@ -396,11 +396,11 @@ export default {
       this.received_count_seq = false;
       this.setCountSeq2(null);
 
-      let to_send = {};
-      Object.assign(to_send,{"compound_query": this.compound_query});
-     // to_send['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
+      //let to_send = {};
+      //Object.assign(to_send,{"compound_query": this.compound_query});
+     let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-      /*let count_url = `query/count?is_control=${this.is_control}`;
+      let count_url = `query/count?is_control=${this.is_control}`;
       axios.post(count_url, to_send)
         .then((res) => {
             return res.data;
@@ -408,9 +408,9 @@ export default {
         .then((res) => {
             this.setCountSeq2(res);
             this.received_count_seq = true;
-        });*/
+        });
 
-      let count_url = 'epitope/countSeq';
+      /*let count_url = 'epitope/countSeq';
 
         axios.post(count_url, to_send)
             .then((res) => {
@@ -423,7 +423,7 @@ export default {
                   this.received_count_seq = true;
                 }
               })
-            })
+            })*/
     },
     /*loadCountSeq3(){            //meta+amino
       this.received_count_seq = false;
