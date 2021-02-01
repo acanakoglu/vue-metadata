@@ -37,10 +37,10 @@
       </v-flex>
     </v-layout>
     <v-layout wrap justify-center style="margin-top: 20px">
-       <v-btn @click="applyAminoacidConditions()" color="green">APPLY</v-btn>
-       <v-btn @click="clearAminoEpiMenu()" color="orange">CLEAR</v-btn>
+       <v-btn @click="applyAminoacidConditions()" class="white--text" color="green">APPLY</v-btn>
+       <v-btn @click="clearAminoEpiMenu()" class="white--text" color="orange">CLEAR</v-btn>
        <v-btn @click="closeAminoEpiMenu()"
-                       color="red">CLEAR & CLOSE</v-btn>
+                       class="white--text" color="red">CLEAR & CLOSE</v-btn>
     </v-layout>
   </v-container>
 </template>
@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields', 'aminoacidConditions'
+      'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields', 'aminoacidConditions', 'epitopeAminoacidFields'
     ]),
   },
   methods:{
@@ -71,23 +71,45 @@ export default {
     closeAminoEpiMenu(){
       this.setFalseShowAminoacidVariantEpi();
       this.clearAminoEpiMenu();
+      this.clearEpiQueryFromAmino();
       this.setFalseDisableSelectorEpitopePart();
     },
     clearAminoEpiMenu(){
       this.epitopeAminoacidFields.forEach(elem => {
-            this.setEpiDropDownSelected({field: elem.field, list: []});
+            //this.setEpiDropDownSelected({field: elem.field, list: []});
             this.setAminoacidConditionsSelected({field: elem.field, list: []});
           }
       )
-      this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      //this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
       this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
-      this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+      //this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
       this.setAminoacidConditionsSelected({field: 'stopExtVariant', list: []});
     },
+    clearEpiQueryFromAmino(){
+      this.epitopeAminoacidFields.forEach(elem => {
+            this.setEpiDropDownSelected({field: elem.field, list: []});
+          }
+      )
+      this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+    },
     applyAminoacidConditions(){
-      Object.entries(this.aminoacidConditions).forEach(item =>{
-        this.setEpiDropDownSelected({field: item[0], list:item[1]});
-      })
+      Object.entries(this.aminoacidConditions).forEach(item => {
+          this.setEpiDropDownSelected({field: item[0], list:item[1]});
+      });
+      this.epitopeAminoacidFields.forEach(elem => {
+        if(Object.entries(this.aminoacidConditions).some(item => item[0] === elem.field)){
+        }
+        else{
+          this.setEpiDropDownSelected({field: elem.field, list: []});
+        }
+      });
+      if(!this.aminoacidConditions['startExtVariant']){
+        this.setEpiDropDownSelected({field: 'startExtVariant', list: []});
+      }
+      if(!this.aminoacidConditions['stopExtVariant']){
+        this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
+      }
     },
   },
   watch: {

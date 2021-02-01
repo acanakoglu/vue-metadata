@@ -22,7 +22,10 @@ export default new Vuex.Store({
         exampleQueryLoaded: null,
         epiQuerySel: {},
         aminoacidConditions: {},
-        countSeq: null,
+        countSeq: null,          // metadata + epitope + aminoacid
+        countSeq2: null,         //only metadata
+        countSeq3: null,         //metadata + aminoacid
+        countSeq4: null,         //metadata + epitope
         countEpi: null,
         showSequenceEpiTable: false,
         chosenEpitope: null,
@@ -164,6 +167,15 @@ export default new Vuex.Store({
         },
         setCountSeq: (state, count) => {
             state.countSeq = count;
+        },
+        setCountSeq2: (state, count) => {
+            state.countSeq2 = count;
+        },
+        setCountSeq3: (state, count) => {
+            state.countSeq3 = count;
+        },
+        setCountSeq4: (state, count) => {
+            state.countSeq4 = count;
         },
         setCountEpi: (state, count) => {
             state.countEpi = count;

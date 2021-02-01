@@ -19,6 +19,9 @@
       <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
       <!--                <span class="font-weight-light">doc</span></span>-->
       <!--            </v-btn>-->
+      <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
+        <span class="mr-2">ViruSurf</span>
+      </v-btn>
       <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
         <span class="mr-2">ViruSurf GISAID</span>
       </v-btn>
@@ -198,11 +201,11 @@
               class="bottom-info">
 
 
-            <div v-if="countSeq === null || countEpi=== null" style="font-size:1.4em;">Loading...</div>
-            <div style="font-size:1.4em;" v-else-if="countSeq>0 && countEpi>0">
-              <span v-if="countSeq>0">{{ countSeq }} sequence</span>
+            <div v-if="countSeq2 === null || countEpi=== null" style="font-size:1.4em;">Loading...</div>
+            <div style="font-size:1.4em;" v-else-if="countSeq2>0 && countEpi>0">
+              <span v-if="countSeq2>0">{{ countSeq2 }} sequence</span>
               <span
-                v-if="countSeq>1">s</span><span v-if="countEpi>0 && countSeq>0"> and </span>
+                v-if="countSeq2>1">s</span><span v-if="countEpi>0 && countSeq2>0"> and </span>
               <span v-if="countEpi>0">{{ countEpi }} epitope</span><span
                 v-if="countEpi>1">s</span> found
             </div>
@@ -1013,7 +1016,8 @@ export default {
   ,
   computed: {
     ...
-        mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi"]),
+        mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
+        'countSeq2', 'countSeq3', 'countSeq4']),
     ...
         mapGetters({
           compound_query: 'build_query',

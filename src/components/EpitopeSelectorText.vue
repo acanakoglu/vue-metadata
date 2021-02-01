@@ -79,7 +79,7 @@ export default {
 
         if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
           this.setAminoacidConditionsSelected({field: this.field, list: value});
-          this.clearEpiQueryFromAmino();
+          //this.clearEpiQueryFromAmino();
         }
         else{
           this.setEpiDropDownSelected({field: this.field, list: value}); //FOR APPLY
@@ -156,6 +156,12 @@ export default {
     toSend(){
       let res = {};
       let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));              //  FOR APPLY ALL IF AND ELSE
+      this.epitopeAminoacidFields.forEach(elem => {
+            delete epitope_conditions[elem.field];
+          }
+      )
+      delete epitope_conditions['startExtVariant'];
+      delete epitope_conditions['stopExtVariant'];
       let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
       let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);
       if(this.epitopeAminoacidFields.some(item => item.field === this.field)){

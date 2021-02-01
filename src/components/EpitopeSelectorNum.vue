@@ -132,7 +132,7 @@ export default {
             this.setEpiDropDownSelected({field: 'stopExt', list: []});
           }
           else if (this.field === 'variant_position_range'){
-            this.clearEpiQueryFromAmino();
+            //this.clearEpiQueryFromAmino();
             //this.setEpiDropDownSelected({field: 'startExtVariant', list: []});                FOR APPLY
             this.setAminoacidConditionsSelected({field: 'startExtVariant', list: []});
             //this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});                 FOR APPLY
@@ -161,9 +161,9 @@ export default {
           this.errorExt = '';
           this.menu = false;
 
-          if(this.field === 'variant_position_range'){
-            this.clearEpiQueryFromAmino();
-          }
+          //if(this.field === 'variant_position_range'){
+            //this.clearEpiQueryFromAmino();
+          //}
 
           if(this.min !== null && this.min !== undefined) {
             let sendStart;
@@ -245,6 +245,12 @@ export default {
     toSend(){
       let res = {};
       let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));              //  FOR APPLY ALL IF AND ELSE
+      this.epitopeAminoacidFields.forEach(elem => {
+            delete epitope_conditions[elem.field];
+          }
+      )
+      delete epitope_conditions['startExtVariant'];
+      delete epitope_conditions['stopExtVariant'];
       let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
       let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);
       if(this.field === 'variant_position_range'){

@@ -16,7 +16,13 @@
 
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
-          <v-flex sm3 align-self-center></v-flex>
+          <v-flex sm3 align-self-center>
+            <v-btn @click="downloadTable()"
+                   class="white--text"
+                       small color="blue lighten-2"
+                      :disabled="epiSearchDis || isLoading">
+              Download Table</v-btn>
+          </v-flex>
           <v-flex sm2 align-self-center></v-flex>
           <v-flex sm3 align-self-center>
               <v-dialog width="500" v-model="dialogOrder">
@@ -140,7 +146,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'countSeq' ,'countEpi', 'showSequenceEpiTable', 'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions'
+      'epiQuerySel', 'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpi', 'showSequenceEpiTable',
+      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -172,7 +179,9 @@ export default {
   },
   methods: {
     ...mapMutations([
-        'setCountEpi', 'setCountSeq', 'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
+        'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
+      'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
+      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
     getHeaders() {
       const predefinedHeaders = [
@@ -199,8 +208,10 @@ export default {
           {text: 'Num Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Mutated Seq Ratio', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Histogram', value: 'histogram', sortable: this.sortable, show: false, to_send: false, can_be_shown: true},
+          {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio2', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          //{text: 'Mutated Seq Ratio meta+epi', value: 'mutated_seq_ratio4', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          //{text: 'Mutated Seq Ratio meta+amino', value: 'mutated_seq_ratio3', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          //{text: 'Mutated Seq Ratio meta+epi+amino', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
       ];
       return predefinedHeaders;
     },
@@ -298,13 +309,34 @@ export default {
                   }
                   item['mutated_freq'] = item['num_var'] / item['num_seq'];
                   item['mutated_freq'] = item['mutated_freq'].toPrecision(this.precision_float_table);
-                  item['mutated_seq_ratio'] = (item['num_seq'] / this.countSeq) * 100;
-                  if (item['mutated_seq_ratio'] >= 10) {
+                  //item['mutated_seq_ratio'] = (item['num_seq'] / this.countSeq) * 100;
+                  item['mutated_seq_ratio2'] = (item['num_seq'] / this.countSeq2) * 100;
+                  //item['mutated_seq_ratio3'] = (item['num_seq'] / this.countSeq3) * 100;
+                  //item['mutated_seq_ratio4'] = (item['num_seq'] / this.countSeq4) * 100;
+                  /*if (item['mutated_seq_ratio'] >= 10) {
                     item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
                   } else {
                     item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table);
                   }
-                  item['mutated_seq_ratio'] += ' %';
+                  item['mutated_seq_ratio'] += ' %';*/
+                  if (item['mutated_seq_ratio2'] >= 10) {
+                    item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio2'] += ' %';
+                  /*if (item['mutated_seq_ratio3'] >= 10) {
+                    item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio3'] += ' %';
+                  if (item['mutated_seq_ratio4'] >= 10) {
+                    item['mutated_seq_ratio4'] = item['mutated_seq_ratio4'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio4'] = item['mutated_seq_ratio4'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio4'] += ' %';*/
 
                 })
                 if (this.received_count_seq) {
@@ -332,7 +364,7 @@ export default {
       })
       return arr_final;
     },
-    loadCountSeq(){
+    /*loadCountSeq(){       //meta+epi+amino
       this.received_count_seq = false;
       this.setCountSeq(null);
 
@@ -359,7 +391,92 @@ export default {
               this.setCountSeq(res);
               this.received_count_seq = true;
           });
+    },*/
+    loadCountSeq2(){        //only meta
+      this.received_count_seq = false;
+      this.setCountSeq2(null);
+
+      let to_send = {};
+      Object.assign(to_send,{"compound_query": this.compound_query});
+     // to_send['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
+
+      /*let count_url = `query/count?is_control=${this.is_control}`;
+      axios.post(count_url, to_send)
+        .then((res) => {
+            return res.data;
+        })
+        .then((res) => {
+            this.setCountSeq2(res);
+            this.received_count_seq = true;
+        });*/
+
+      let count_url = 'epitope/countSeq';
+
+        axios.post(count_url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+              poll(res.result, (res) => {
+                if (res != null) {
+                  this.setCountSeq2(res[0].count);
+                  this.received_count_seq = true;
+                }
+              })
+            })
     },
+    /*loadCountSeq3(){            //meta+amino
+      this.received_count_seq = false;
+      this.setCountSeq3(null);
+
+      let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+      let epitope_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
+
+      if(!jQuery.isEmptyObject(epitope_conditions)) {     //FOR APPLY instead epitope_and_aminoacid_conditions
+        to_send['epitope'] = epitope_conditions;
+      }
+        let count_url = `query/count?is_control=${this.is_control}`;
+        axios.post(count_url, to_send)
+          .then((res) => {
+              return res.data;
+          })
+          .then((res) => {
+              this.setCountSeq3(res);
+              this.received_count_seq = true;
+          });
+    },
+    loadCountSeq4(){            //meta+epi
+      this.received_count_seq = false;
+      this.setCountSeq4(null);
+
+      let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+      let epitope_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+
+      for(var k in epitope_conditions) {
+        if(this.epitopeAminoacidFields.some(elem => elem.field === k) || k==='startExtVariant' || k==='stopExtVariant'){
+          delete epitope_conditions[k];
+        }
+      }
+
+      if(this.chosenEpitope != null) {
+        epitope_conditions['epitope_id'] = this.chosenEpitope;
+      }
+
+      if(!jQuery.isEmptyObject(epitope_conditions)) {     //FOR APPLY instead epitope_and_aminoacid_conditions
+        to_send['epitope'] = epitope_conditions;
+      }
+        let count_url = `query/count?is_control=${this.is_control}`;
+        axios.post(count_url, to_send)
+          .then((res) => {
+              return res.data;
+          })
+          .then((res) => {
+              this.setCountSeq4(res);
+              this.received_count_seq = true;
+          });
+    },*/
     loadCountEpi() {
       if(!this.epiSearchDis) {
         let to_send = this.toSend();
@@ -383,7 +500,10 @@ export default {
       }
     },
     loadEveything(){
-      this.loadCountSeq();
+      //this.loadCountSeq();
+      this.loadCountSeq2();
+      //this.loadCountSeq3();
+      //this.loadCountSeq4();
       this.loadCountEpi();
       this.loadTable();
     },
@@ -419,6 +539,48 @@ export default {
     openShowAminoacidVariantEpi(){
       this.setTrueShowAminoacidVariantEpi();
       this.setTrueDisableSelectorEpitopePart();
+    },
+    json2csv(input, selected_headers) {
+        var json = input;
+        var fields = [];
+        var fields2 = [];
+        if(!selected_headers.some(item => item.value === 'epitope_id')){
+              fields.push('Epitope ID');
+              fields2.push('epitope_id');
+        }
+        selected_headers.forEach(function (el) {
+                fields.push(el.text);
+        });
+        selected_headers.forEach(function (el) {
+                fields2.push(el.value);
+        });
+        var csv = json.map(function (row) {
+            return fields2.map(function (fieldName) {
+                let string_val ;
+                if(fieldName !== 'position_range') {
+                  string_val = String(row[fieldName]);
+                }
+                else {
+                  string_val = String(row['position_range_to_show']);
+                }
+                string_val = string_val.replaceAll("\n", " ");
+                return JSON.stringify(string_val);
+            }).join(',')
+        });
+        csv.unshift(fields.join(','));
+
+        return csv.join('\r\n')
+    },
+    downloadTable(){
+      let text = this.json2csv(this.result, this.selected_headers);
+      let filename = "result.csv";
+      let element = document.createElement('a');
+      element.setAttribute('download', filename);
+      var data = new Blob([text]);
+      element.href = URL.createObjectURL(data);
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     }
   },
   mounted() {
@@ -431,11 +593,26 @@ export default {
     compound_query() {
       this.loadEveything();
     },
-    countSeq(){
+    /*countSeq(){
       if(this.countSeq !== null) {
         this.loadTable();
       }
+    },*/
+    countSeq2(){
+      if(this.countSeq2 !== null) {
+        this.loadTable();
+      }
     },
+    /*countSeq3(){
+      if(this.countSeq3 !== null) {
+        this.loadTable();
+      }
+    },
+    countSeq4(){
+      if(this.countSeq4 !== null) {
+        this.loadTable();
+      }
+    },*/
   }
 }
 </script>
