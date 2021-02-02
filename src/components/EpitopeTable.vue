@@ -123,6 +123,8 @@ import {poll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
 
+const itemSourceIdName = 'epitope_id';
+
 export default {
   name: "EpitopeTable",
   components: {
@@ -142,6 +144,14 @@ export default {
       sortable: true,
       headers_can_be_shown: this.getShownHeaders(),
       received_count_seq: true,
+      pagination: {
+          descending: false,
+          page: 1,
+          rowsPerPage: 10,
+          sortBy: itemSourceIdName,
+          totalItems: 0,
+          rowsPerPageItems: [10, 100, 1000] //mani che si alzano
+      },
     }
   },
   computed: {
@@ -203,6 +213,7 @@ export default {
           {text: 'Epitope Stop', value: 'epi_annotation_stop', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Epitope Start', value: 'epi_frag_annotation_start', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Epitope Stop', value: 'epi_frag_annotation_stop', sortable: false, show: false, to_send: true, can_be_shown: false},
+          //{text: 'All Epitope Fragments', value: 'all_fragment_position', sortable: false, show: false, to_send: true, can_be_shown: false}, //ONLY FOR VERSION 2 TABLE
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -230,11 +241,19 @@ export default {
     },
     loadTable(){
       if(!this.epiSearchDis) {
+
+        let orderDir = "";
+        if (this.pagination.descending)
+            orderDir = "DESC";
+        else
+            orderDir = "ASC";
+
         this.result = [];
         this.isLoading = true;
         //console.log("RELOAD table");
         let to_send = this.toSend();
-        const url = `epitope/epiTableRes`
+        const url2 = `epitope/epiTableResLimit?page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`
+        const url = `epitope/epiTableRes1`
         axios.post(url, to_send)
             .then((res) => {
               return res.data
@@ -304,6 +323,135 @@ export default {
                         }
                         item['position_range_to_show'] = position;
                         item[k] = sequence;
+                      }
+                    }
+                  }
+                  item['mutated_freq'] = item['num_var'] / item['num_seq'];
+                  item['mutated_freq'] = item['mutated_freq'].toPrecision(this.precision_float_table);
+                  //item['mutated_seq_ratio'] = (item['num_seq'] / this.countSeq) * 100;
+                  item['mutated_seq_ratio2'] = (item['num_seq'] / this.countSeq2) * 100;
+                  //item['mutated_seq_ratio3'] = (item['num_seq'] / this.countSeq3) * 100;
+                  //item['mutated_seq_ratio4'] = (item['num_seq'] / this.countSeq4) * 100;
+                  /*if (item['mutated_seq_ratio'] >= 10) {
+                    item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio'] = item['mutated_seq_ratio'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio'] += ' %';*/
+                  if (item['mutated_seq_ratio2'] >= 10) {
+                    item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio2'] += ' %';
+                  /*if (item['mutated_seq_ratio3'] >= 10) {
+                    item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio3'] += ' %';
+                  if (item['mutated_seq_ratio4'] >= 10) {
+                    item['mutated_seq_ratio4'] = item['mutated_seq_ratio4'].toPrecision(this.precision_float_table + 1);
+                  } else {
+                    item['mutated_seq_ratio4'] = item['mutated_seq_ratio4'].toPrecision(this.precision_float_table);
+                  }
+                  item['mutated_seq_ratio4'] += ' %';*/
+
+                })
+                if (this.received_count_seq) {
+                  this.result = vals;
+                  this.isLoading = false;
+                } else {
+                  this.result = [];
+                  this.isLoading = true;
+                }
+              })
+            })
+      }
+    },
+    loadTable2(){
+      if(!this.epiSearchDis) {
+
+        let orderDir = "";
+        if (this.pagination.descending)
+            orderDir = "DESC";
+        else
+            orderDir = "ASC";
+
+        this.result = [];
+        this.isLoading = true;
+        //console.log("RELOAD table");
+        let to_send = this.toSend();
+        const url = `epitope/epiTableRes2`
+        axios.post(url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+              poll(res.result, (res) => {
+                let vals = res.values;
+                vals.forEach(item => {
+                  for (let k in item) {
+                    if (item.hasOwnProperty(k)) {
+                      let key = k;
+                      let values = item[k];
+                      if (values.length !== undefined && key !== 'epi_frag_annotation_start' && key !== 'epi_frag_annotation_stop' && key !== 'epi_fragment_sequence' && key !== 'all_fragment_position') {
+                        if (values.length === 1) {
+                          if (item[k][0] != null) {
+                            if (key === "mhc_allele") {
+                              let str = item[k][0];
+                              let regex = /[,]/g;
+                              let subst = "$&\n";
+                              let result_str = str.replace(regex, subst);
+                              item[k] = result_str;
+                            } else {
+                              item[k] = item[k][0];
+                            }
+                          } else {
+                            item[k] = "N/D";
+                          }
+                        } else {
+                          let to_replace = "";
+                          let i = 0;
+                          while (i < values.length) {
+                            to_replace += item[k][i];
+                            i++;
+                            if (i !== values.length) {
+                              to_replace += ",\n";
+                            }
+                          }
+                          item[k] = to_replace;
+                        }
+                      } else if (key === 'all_fragment_position') {
+                        let position = "";
+                        let sequence = "";
+                        let array_all = item[key][0];
+                        let array_len = array_all.length;
+                        let array_sequence = [];
+                        let array_start = [];
+                        let array_stop = [];
+                        array_all.forEach(item => {
+                          let len = item.length;
+                          item = item.substring(1,len-1);
+                          let arr = item.split(',');
+                          array_sequence.push(arr[1])
+                          array_start.push(arr[2])
+                          array_stop.push(arr[3])
+                        })
+                        let i = 0;
+                        while(i < array_len){
+                          sequence += array_sequence[i];
+                          position += array_start[i];
+                          position += "-";
+                          position += array_stop[i];
+                          i++;
+                          if(i !== array_len){
+                            position += ",\n";
+                            sequence += ",\n";
+                          }
+                        }
+                        item['position_range_to_show'] = position;
+                        item['epi_fragment_sequence'] = sequence;
                       }
                     }
                   }
@@ -490,6 +638,8 @@ export default {
             .then((res) => {
               poll(res.result, (res) => {
                 if (res != null) {
+                  this.pagination.totalItems = res[0].count;
+                  this.pagination.page = 1;
                   this.setCountEpi(res[0].count);
                 }
               })
@@ -506,6 +656,7 @@ export default {
       //this.loadCountSeq4();
       this.loadCountEpi();
       this.loadTable();
+      //this.loadTable2();
     },
     sendDataToSeqEpiTable(item){
       this.showSeqEpiTable();
@@ -601,6 +752,7 @@ export default {
     countSeq2(){
       if(this.countSeq2 !== null) {
         this.loadTable();
+        //this.loadTable2();
       }
     },
     /*countSeq3(){
@@ -613,6 +765,14 @@ export default {
         this.loadTable();
       }
     },*/
+    pagination: {
+        handler(val, oldVal) {
+            if (JSON.stringify(val) !== JSON.stringify(oldVal))
+              this.loadTable();
+              //this.loadTable2();
+        },
+        deep: true
+    },
   }
 }
 </script>
