@@ -95,6 +95,11 @@
 
                     <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
+                    <span v-else-if="header.value === 'epitope_iri'">
+                        <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                        <span v-else>N/D</span>
+                    </span>
+
                     <span v-else>{{props.item[header.value]}}</span>
 
                 </td>
@@ -196,6 +201,8 @@ export default {
     getHeaders() {
       const predefinedHeaders = [
           {text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -266,7 +273,7 @@ export default {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
-                      if (values.length !== undefined && key !== 'epi_frag_annotation_start' && key !== 'epi_frag_annotation_stop' && key !== 'epi_fragment_sequence') {
+                      if (values.length !== undefined && key !== 'epi_fragment_all_information') {
                         if (values.length === 1) {
                           if (item[k][0] != null) {
                             if (key === "mhc_allele") {
@@ -293,36 +300,46 @@ export default {
                           }
                           item[k] = to_replace;
                         }
-                      } else if (key === 'epi_fragment_sequence') {
+                      } else if (key === 'epi_fragment_all_information') {
 
                         let position = "";
                         let sequence = "";
                         let str_sequence = item[k];
-                        let str_start_epi = item['epi_frag_annotation_start'];
-                        let str_stop_epi = item['epi_frag_annotation_stop'];
 
-                        let array_sequence = this.getArrayFromTupleTable(str_sequence);
-                        let array_start = this.getArrayFromTupleTable(str_start_epi);
-                        let array_stop = this.getArrayFromTupleTable(str_stop_epi);
+                        let arr_seq = [];
+                        let arr_start= [];
+                        let arr_stop = [];
+                        let len = str_sequence.length;
+                        str_sequence = str_sequence.substring(2, len-2);
+                        let arr = str_sequence.split('","')
 
-                        let len = array_sequence.length;
+                        arr.forEach(item => {
+                          let len2 = item.length;
+                          item = item.substring(1,len2-1);
+                          let arr2 = item.split(',');
+                          arr_start.push(arr2[0]);
+                          arr_stop.push(arr2[1]);
+                          arr_seq.push(arr2[2]);
+                        })
+
+                        let length = arr_start.length;
                         let i = 0;
-                        while (i < len) {
+                        while (i < length) {
                           if (i === 0) {
-                            item['position_range'] = array_start[i];
+                            item['position_range'] = arr_start[i];
                           }
-                          position += array_start[i];
+                          position += arr_start[i];
                           position += "-";
-                          position += array_stop[i];
-                          sequence += array_sequence[i];
+                          position += arr_stop[i];
+                          sequence += arr_seq[i];
                           i++;
-                          if (i !== len) {
+                          if (i !== length) {
                             position += ",\n";
                             sequence += ",\n";
                           }
                         }
                         item['position_range_to_show'] = position;
-                        item[k] = sequence;
+                        item['epi_fragment_sequence'] = sequence;
                       }
                     }
                   }
@@ -440,6 +457,9 @@ export default {
                         })
                         let i = 0;
                         while(i < array_len){
+                          if (i === 0) {
+                            item['position_range'] = array_start[i];
+                          }
                           sequence += array_sequence[i];
                           position += array_start[i];
                           position += "-";
@@ -497,20 +517,6 @@ export default {
               })
             })
       }
-    },
-    getArrayFromTupleTable(str){
-      let arr_final = [];
-      let len = str.length;
-      str = str.substring(2, len-2);
-      let arr = str.split('","')
-
-      arr.forEach(item => {
-        let len2 = item.length;
-        item = item.substring(1,len2-1);
-        let arr2 = item.split(',');
-        arr_final.push(arr2[1]);
-      })
-      return arr_final;
     },
     /*loadCountSeq(){       //meta+epi+amino
       this.received_count_seq = false;
