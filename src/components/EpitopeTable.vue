@@ -223,7 +223,6 @@ export default {
           let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
           let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-          console.log("EPI", epitope_and_aminoacid_conditions)
           epitope_and_aminoacid_conditions[this.epitopeId] = epitope_id;
           to_send['epitope'] = epitope_and_aminoacid_conditions;
 
@@ -415,7 +414,12 @@ export default {
                       }
                     }
                   }
-                  item['mutated_freq'] = item['num_var'] / item['num_seq'];
+                  if(item['num_seq'] === 0){
+                    item['mutated_freq'] = 0;
+                  }
+                  else {
+                    item['mutated_freq'] = item['num_var'] / item['num_seq'];
+                  }
                   item['mutated_freq'] = item['mutated_freq'].toPrecision(this.precision_float_table);
                   //item['mutated_seq_ratio'] = (item['num_seq'] / this.countSeq) * 100;
                   item['mutated_seq_ratio2'] = (item['num_seq'] / this.countSeq2) * 100;
