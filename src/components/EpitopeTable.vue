@@ -90,7 +90,7 @@
                     :key="header.value" v-show="header.show"  v-if="!epiSearchDis">
 
                     <span v-if="header.value === 'num_seq'">
-                        <a @click="sendDataToSeqEpiTable(props.item['epitope_id'])" target="_blank">{{props.item[header.value]}}</a>
+                        <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
                     </span>
 
                     <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
@@ -138,6 +138,7 @@ export default {
     draggable},
   data() {
     return {
+      epitopeId : 'iedb_epitope_id',
       isLoading : true,
       result: [],
       requirement: 'A single Host and a single Virus are required',
@@ -200,7 +201,7 @@ export default {
     ]),
     getHeaders() {
       const predefinedHeaders = [
-          {text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          //{text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -292,7 +293,20 @@ export default {
                           let to_replace = "";
                           let i = 0;
                           while (i < values.length) {
-                            to_replace += item[k][i];
+                            if (item[k][i] != null) {
+                              if (key === "mhc_allele") {
+                                let str = item[k][i];
+                                let regex = /[,]/g;
+                                let subst = "$&\n";
+                                let result_str = str.replace(regex, subst);
+                                to_replace += result_str;
+                              } else {
+                                to_replace += item[k][i];
+                              }
+                            } else {
+                              to_replace += "N/D";
+                            }
+                            //to_replace += item[k][i];
                             i++;
                             if (i !== values.length) {
                               to_replace += ",\n";
@@ -701,9 +715,9 @@ export default {
         var json = input;
         var fields = [];
         var fields2 = [];
-        if(!selected_headers.some(item => item.value === 'epitope_id')){
+        if(!selected_headers.some(item => item.value === this.epitopeId)){
               fields.push('Epitope ID');
-              fields2.push('epitope_id');
+              fields2.push(this.epitopeId);
         }
         selected_headers.forEach(function (el) {
                 fields.push(el.text);

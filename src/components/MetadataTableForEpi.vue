@@ -329,6 +329,7 @@
         },
         data() {
             return {
+              epitopeId : 'iedb_epitope_id',
               alertLink: null,
                alertDialog: false,
                 downloadFileFormat: 'fasta',
@@ -419,7 +420,7 @@
 
                 let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
+                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
                 }
                 if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
                   to_send['epitope'] = epitope_and_aminoacid_conditions;
@@ -606,7 +607,7 @@
 
                 let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
+                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
                 }
                 if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
                   to_send['epitope'] = epitope_and_aminoacid_conditions;
@@ -654,7 +655,7 @@
 
                     let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                     if(this.chosenEpitope != null) {
-                      epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
+                      epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
                     }
                     if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
                       to_send['epitope'] = epitope_and_aminoacid_conditions;
@@ -689,7 +690,7 @@
 
                 let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
+                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
                 }
                 if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
                   to_send['epitope'] = epitope_and_aminoacid_conditions;
@@ -815,7 +816,7 @@
 
                 let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
                 if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions['epitope_id'] = this.chosenEpitope;
+                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
                 }
                 if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
                   to_send['epitope'] = epitope_and_aminoacid_conditions;
