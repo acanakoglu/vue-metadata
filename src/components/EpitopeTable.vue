@@ -100,6 +100,14 @@
                         <span v-else>N/D</span>
                     </span>
 
+                    <span v-else-if="header.value === 'virusViz_button'">
+                        <v-btn style="text-transform: none" dark small color="#009688"
+                                 @click="virusVizClicked(props.item[epitopeId])">
+                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                            VirusViz
+                        </v-btn>
+                    </span>
+
                     <span v-else>{{props.item[header.value]}}</span>
 
                 </td>
@@ -124,11 +132,11 @@
 import axios from "axios";
 import {mapGetters, mapMutations, mapState} from "vuex";
 import draggable from 'vuedraggable'
-import {poll} from "../utils";
+import {FULL_TEXT, poll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
 
-const itemSourceIdName = 'epitope_id';
+const itemSourceIdName = 'iedb_epitope_id';
 
 export default {
   name: "EpitopeTable",
@@ -199,6 +207,55 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
+    virusVizClicked(epitope_id){
+        let orderDir = "";
+
+          if (this.pagination.descending)
+              orderDir = "DESC";
+          else
+              orderDir = "ASC";
+
+          let url = `viz/submit?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+          if (this.selectedProduct !== FULL_TEXT) {
+              url += `&annotation_type=${this.selectedProduct}`;
+          }
+
+          let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+          let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+          console.log("EPI", epitope_and_aminoacid_conditions)
+          epitope_and_aminoacid_conditions[this.epitopeId] = epitope_id;
+          to_send['epitope'] = epitope_and_aminoacid_conditions;
+
+
+          axios.post(url, to_send)
+              .then((res) => {
+                  return res.data
+              })
+              .then((res) => {
+                console.log("res: ", res)
+                let appUrl = window.location.origin + window.location.pathname
+                let virusVizPollUrl = appUrl;
+                virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
+                virusVizPollUrl += "/api/poll/";
+                virusVizPollUrl += res.result;
+                console.log("virusVizPollUrl: " + virusVizPollUrl);
+                let virusVizUrl = "http://genomic.deib.polimi.it/virusviz/static/#!/home?";
+                const appName = "ViruSurf";
+                virusVizUrl += `appName=${appName}&`;
+                virusVizUrl += `appURL=${appUrl}&`;
+                virusVizUrl += `dataURL=${virusVizPollUrl}&`;
+                const newWindow = window.open(virusVizUrl);
+                if(!newWindow){
+                  this.alertDialog = true;
+                  this.alertLink = virusVizUrl
+                }
+
+              }).catch(function (error) {
+                alert(error.response.data.message);
+              });
+
+    },
     getHeaders() {
       const predefinedHeaders = [
           //{text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -228,6 +285,7 @@ export default {
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio2', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+epi', value: 'mutated_seq_ratio4', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+amino', value: 'mutated_seq_ratio3', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+epi+amino', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
@@ -716,13 +774,15 @@ export default {
         var fields = [];
         var fields2 = [];
         if(!selected_headers.some(item => item.value === this.epitopeId)){
-              fields.push('Epitope ID');
+              fields.push('Epitope IEDB ID');
               fields2.push(this.epitopeId);
         }
         selected_headers.forEach(function (el) {
+          if(el.value !== 'virusViz_button')
                 fields.push(el.text);
         });
         selected_headers.forEach(function (el) {
+          if(el.value !== 'virusViz_button')
                 fields2.push(el.value);
         });
         var csv = json.map(function (row) {
