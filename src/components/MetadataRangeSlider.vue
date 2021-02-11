@@ -38,13 +38,13 @@
                     <v-layout row>
                         <v-checkbox
                                 v-model="isNull"
-                                :disabled="searchDisabled"
+                                :disabled="searchDisabled ||  disableSelectorEpitopePart"
                                 label="N/D"
                                 @change="setAgeLocal"
                                 input-value="true">
                         </v-checkbox>
                         <!--  <v-btn @click="setAgeLocal" :disabled="searchDisabled" color="info" flat>Apply</v-btn> -->
-                          <v-btn @click="deleteAgeLocal" :disabled="searchDisabled" color="error" flat>Clear</v-btn>
+                          <v-btn @click="deleteAgeLocal" :disabled="searchDisabled ||  disableSelectorEpitopePart" color="error" flat>Clear</v-btn>
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -154,7 +154,7 @@
             }
         },
         computed: {
-            ...mapState(["panelActive"]),
+            ...mapState(["panelActive", 'disableSelectorEpitopePart']),
             ...mapGetters({
                 compound_query: 'build_query',
             }),

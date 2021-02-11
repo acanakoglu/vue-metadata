@@ -6,8 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         query: {
-            taxon_name: ["severe acute respiratory syndrome coronavirus 2"],
-            host_taxon_name: ["homo sapiens"]
+            taxon_name: ["severe acute respiratory syndrome coronavirus 2"]
         },
         synonym: false,
         kv: {},
@@ -54,6 +53,12 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        setQueryStartEpi:(state)=>{
+            state.query = {
+                taxon_name: ["severe acute respiratory syndrome coronavirus 2"],
+                host_taxon_name: ["homo sapiens"]
+            }
+        },
         setExampleQueryLoaded:(state)=>{
             console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
             console.log("snew Date().getTime()",new Date().getTime())

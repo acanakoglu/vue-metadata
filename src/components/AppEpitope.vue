@@ -875,6 +875,7 @@ export default {
   }
   ,
   mounted() {
+    this.setQueryStartEpi();
     const url = `field`;
 
     window.addEventListener('beforeunload', null)
@@ -906,7 +907,7 @@ export default {
   ,
   methods: {
     ...
-        mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded']),
+        mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setQueryStartEpi']),
     ...
         mapActions(["setKv", "setKvFull", "deleteAge"]),
     setInputQuery() {

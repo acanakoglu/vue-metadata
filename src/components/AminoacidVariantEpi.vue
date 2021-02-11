@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {mapActions, mapMutations, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
 import EpitopeSelectorText from "./EpitopeSelectorText";
 import EpitopeSelectorNum from "./EpitopeSelectorNum";
@@ -62,6 +62,9 @@ export default {
     ...mapState([
       'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields', 'aminoacidConditions', 'epitopeAminoacidFields'
     ]),
+    ...mapGetters({
+        compound_query: 'build_query',
+    }),
   },
   methods:{
     ...mapMutations([
@@ -113,6 +116,9 @@ export default {
     },
   },
   watch: {
+    compound_query(){
+      this.closeAminoEpiMenu();
+    }
   },
   created() {
     const url = `epitope/fieldAminoEpi `;
