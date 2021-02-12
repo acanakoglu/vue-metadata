@@ -257,9 +257,9 @@
                                 Select/Sort fields
                             </v-btn>
                         </v-dialog>
-                        <v-btn style="text-transform: none" dark small color="blue lighten-2"
+                        <v-btn style="text-transform: none" dark small color="#009688"
                                @click="virusVizClicked()">
-                          <v-img src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                          <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                           VirusViz
                         </v-btn>
                     </v-flex>
