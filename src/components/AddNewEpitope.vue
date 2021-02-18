@@ -492,6 +492,7 @@ export default {
        if(this.epitopeToAdd['num_var'] === 'N/D'){
          this.epitopeToAdd['mutated_freq'] = 'N/D';
          this.epitopeToAdd['mutated_seq_ratio'] = 'N/D';
+         this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
        }
        else {
          if (this.epitopeToAdd['num_seq'] === 0) {
