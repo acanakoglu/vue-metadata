@@ -214,7 +214,8 @@ export default {
   computed: {
     ...mapState(['epitopeAdded', 'newSingleEpitope', 'newEpitopeLoading', 'showMoreInfoEpitopeUser',
       'countSeq2', 'showAminoacidVariantUserNewEpi',
-      'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser', 'epitopeAminoacidConditionsArrayUserNew']),
+      'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
+      'epitopeAminoacidConditionsArrayUserNew']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query',
@@ -300,7 +301,7 @@ export default {
      'setFalseNewEpitopeLoading', 'setTrueNewEpitopeLoading', 'showMoreInfo', 'setUserEpitopeSelected',
      'setTrueShowAminoacidVariantUserNewEpi', 'setTrueDisableSelectorUserNewEpitopePart',
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
-     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope']),
+     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
      openShowAminoacidVariantUserNewEpi(){
        this.setNewSingleAminoAcidConditionUserAction({field: 'product', list: ''});
@@ -372,6 +373,8 @@ export default {
      },
      deleteEpitope(index){
         this.removeNewEpitopeFromList(index);
+        let epitopeArr = (JSON.stringify(this.epitopeAdded));
+        localStorage.setItem('epitopeArr', epitopeArr);
      },
      deleteAminoConditions(index){
        this.removeEpitopeAminoacidConditionsArrayUserNew(index);
@@ -549,6 +552,9 @@ export default {
 
         this.addFrequencies();
         this.addNewEpitopeToList(this.epitopeToAdd);
+        let epitopeArr = (JSON.stringify(this.epitopeAdded));
+        localStorage.setItem('epitopeArr', epitopeArr);
+        console.log(localStorage);
         this.setFalseNewEpitopeLoading();
         this.epitopeToAdd = null;
       }
@@ -558,8 +564,21 @@ export default {
 
         this.addFrequencies();
         this.addNewEpitopeToList(this.epitopeToAdd);
+        let epitopeArr = (JSON.stringify(this.epitopeAdded));
+        localStorage.setItem('epitopeArr', epitopeArr);
+        console.log(localStorage);
         this.setFalseNewEpitopeLoading();
         this.epitopeToAdd = null;
+      }
+    }
+  },
+  mounted() {
+    if(localStorage.getItem('epitopeArr')) {
+      try {
+        let epitopeArr = JSON.parse(localStorage.getItem('epitopeArr'));
+        this.resetNewEpitopeFromLocalStorage(epitopeArr);
+      } catch (e) {
+        localStorage.removeItem('epitopeArr');
       }
     }
   }

@@ -282,6 +282,9 @@ export default new Vuex.Store({
         removeNewEpitopeFromList: (state, index) => {
             state.epitopeAdded.splice(index, 1);
         },
+        resetNewEpitopeFromLocalStorage: (state, epitopeArr) => {
+            state.epitopeAdded = epitopeArr;
+        },
         removePositionFromNewEpitope: (state, index) => {
             state.newSingleEpitope['position_range'].splice(index, 1);
         },
