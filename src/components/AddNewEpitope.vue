@@ -151,6 +151,8 @@
           <div class="separator"></div>
         </v-layout>
 
+        <DownloadAndLoadEpitopes></DownloadAndLoadEpitopes>
+
         <v-progress-linear v-if="newEpitopeLoading"
           indeterminate
           color="blue"
@@ -192,10 +194,12 @@ import ProteinSelectorNewEpitope from "./ProteinSelectorNewEpitope";
 import PositionSelectorNewEpitope from "./PositionSelectorNewEpitope";
 import MoreInfoEpitopeUser from "./MoreInfoEpitopeUser";
 import AminoacidVariantNewUserEpitope from "./AminoacidVariantNewUserEpitope";
+import DownloadAndLoadEpitopes from "./DownloadAndLoadEpitopes";
 
 export default {
   name: "AddNewEpitope",
   components: {
+    DownloadAndLoadEpitopes,
     AminoacidVariantNewUserEpitope,
     MoreInfoEpitopeUser, PositionSelectorNewEpitope, ProteinSelectorNewEpitope, EpitopeTableUserAdd},
   data() {
@@ -554,7 +558,6 @@ export default {
         this.addNewEpitopeToList(this.epitopeToAdd);
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
-        console.log(localStorage);
         this.setFalseNewEpitopeLoading();
         this.epitopeToAdd = null;
       }
@@ -566,7 +569,6 @@ export default {
         this.addNewEpitopeToList(this.epitopeToAdd);
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
-        console.log(localStorage);
         this.setFalseNewEpitopeLoading();
         this.epitopeToAdd = null;
       }
@@ -624,7 +626,7 @@ export default {
     height: 8px;
     background-color: #696969;
     border-radius: 100%;
-    margin: 40px;
+    margin-top: 40px;
   }
 
 </style>
