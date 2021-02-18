@@ -95,15 +95,19 @@
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
                </v-flex>
                <v-flex sm6>
-                 <span v-if="aminoConditions.length>0" v-for="(condition, index2) in aminoConditions" style="display: block;" >
-                   <span v-if="index2 !== 0" style="display: block;" > <b> OR </b> </span>
-                   <span v-for="(value2, key2) in condition" style="display: block;">
-                      <b>- {{key2}} :</b> {{value2}}
+                 <div v-if="aminoConditions.length>0">
+                   <span v-for="(condition, index2) in aminoConditions" style="display: block;" >
+                     <span v-if="index2 !== 0" style="display: block;" > <b> OR </b> </span>
+                     <span v-for="(value2, key2) in condition" style="display: block;">
+                        <b>- {{key2}} :</b> {{value2}}
+                     </span>
                    </span>
-                 </span>
-                 <span v-else v-for="(value, key) in aminoConditions" style="display: block;">
-                   <b>- {{key}} :</b> {{value}}
-                 </span>
+                 </div>
+                 <div v-else>
+                   <span v-for="(value, key) in aminoConditions" style="display: block;">
+                     <b>- {{key}} :</b> {{value}}
+                   </span>
+                 </div>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="deleteAminoConditions(index)" class="white--text" color="red">DELETE CONDITION</v-btn>
