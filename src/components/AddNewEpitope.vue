@@ -57,7 +57,11 @@
             </v-dialog>
           </v-flex>
 
-          <h4 v-if="newSingleEpitope['position_range']" style="width: 100%"> Positions: </h4>
+          <v-layout wrap justify-center style="margin: 20px" v-if="!epiSearchDis">
+            <span><b> NEW EPITOPE:</b> {{this.newSingleEpitope}} </span>
+          </v-layout>
+
+          <h4 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 10px"> Positions: </h4>
 
           <div v-for="(pos, index) in newSingleEpitope['position_range']"v-if="!epiSearchDis">
                <v-layout align-center style="margin: 0px">
@@ -108,12 +112,7 @@
           </v-card>
         </div>
 
-
-        <v-layout wrap justify-center style="margin-top: 20px" v-if="!epiSearchDis">
-          <span> NEW EPITOPE: {{this.newSingleEpitope}} </span>
-        </v-layout>
-
-        <v-layout wrap justify-center style="margin-top: 20px">
+        <v-layout wrap justify-center style="margin-top: 40px">
          <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="green">ADD EPITOPE</v-btn>
          <v-btn :disabled="epiSearchDis" @click="clearEpitope()" class="white--text" color="orange">CLEAR EPITOPE</v-btn>
         </v-layout>
@@ -146,10 +145,15 @@
           </v-card>
         </v-dialog>
 
+        <v-layout wrap align-center justify-center v-if="epitopeAdded.length>0">
+          <div class="separator"></div>
+        </v-layout>
+
         <v-progress-linear v-if="newEpitopeLoading"
           indeterminate
           color="blue"
         ></v-progress-linear>
+
         <h2 v-if="epitopeAdded.length>0"> Epitopes: </h2>
         <div v-for="(epitope, index) in epitopeAddedReview">
           <v-card style="background-color:  #857164">
@@ -587,13 +591,20 @@ export default {
 
   .singlePosition{
     background-color:  #857164;
-    border: black solid 1px;
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: 5px;
-    border-radius: 20%;
+    border-radius: 5%;
+  }
+
+  .separator{
+    width: 90%;
+    height: 8px;
+    background-color: brown;
+    border-radius: 100%;
+    margin: 40px;
   }
 
 </style>

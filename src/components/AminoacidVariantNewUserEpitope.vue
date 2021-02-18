@@ -1,6 +1,7 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
-    <v-layout wrap align-center justify-space-around>
+    <h2 style="margin-bottom: 10px">Add Amino Acid Conditions</h2>
+    <v-layout wrap align-center justify-space-around style="margin-bottom: 10px">
       <v-flex class="no-horizontal-padding xs12 sm6 md2 lg2 d-flex EpitopeSelectors"
                   v-for="fieldEpi in aminoAcidFields" v-bind:key="fieldEpi.text">
 
@@ -18,9 +19,9 @@
       </v-flex>
     </v-layout>
 
-    <span><b>NEW COND: </b>{{newSingleAminoAcidConditionUser}}</span>
+    <span><b>NEW CONDITION: </b>{{newSingleAminoAcidConditionUser}}</span>
 
-    <span style="display: block" v-if="epitopeAminoacidConditionsArrayUserNewInOR.length>0"> <b>IN OR:</b>
+    <span style="display: block" v-if="epitopeAminoacidConditionsArrayUserNewInOR.length>0"> <b>CONDITIONS IN OR:</b>
       <span v-for="(condition, index) in epitopeAminoacidConditionsArrayUserNewInOR">
         <span v-if="index > 0"> OR </span> {{condition}}
       </span>
