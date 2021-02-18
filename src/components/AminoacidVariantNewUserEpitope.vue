@@ -1,20 +1,38 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
-    <h2 style="margin-bottom: 10px">Add Amino Acid Conditions</h2>
+    <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
     <v-layout wrap align-center justify-space-around style="margin-bottom: 10px">
-      <v-flex class="no-horizontal-padding xs12 sm6 md2 lg2 d-flex EpitopeSelectors"
+      <v-flex class="no-horizontal-padding xs12 sm6 md4 lg2 d-flex EpitopeSelectors"
                   v-for="fieldEpi in aminoAcidFields" v-bind:key="fieldEpi.text">
 
-        <div v-if="fieldEpi.field==='position_range'">
-          <PositionSelectorAminoAcidNewEpitope
+        <PositionSelectorAminoAcidNewEpitope
+            v-if="fieldEpi.field==='position_range'"
+          :text="fieldEpi.text"
+          :field="fieldEpi.field"></PositionSelectorAminoAcidNewEpitope>
+        <TextSelectorAminoAcidNewEpitope
+            v-else
             :text="fieldEpi.text"
-            :field="fieldEpi.field"></PositionSelectorAminoAcidNewEpitope>
-        </div>
-        <div v-else>
-          <TextSelectorAminoAcidNewEpitope
-              :text="fieldEpi.text"
-            :field="fieldEpi.field"></TextSelectorAminoAcidNewEpitope>
-        </div>
+          :field="fieldEpi.field"></TextSelectorAminoAcidNewEpitope>
+        <v-dialog width="500">
+            <v-btn
+                    slot="activator"
+                    class="info-button"
+                    small
+                    flat icon color="#696969">
+                <v-icon class="info-icon">info</v-icon>
+            </v-btn>
+            <v-card>
+                <v-card-title
+                        class="headline grey lighten-2"
+                        primary-title
+                >
+                    {{fieldEpi.text}}
+                </v-card-title>
+                <v-card-text>
+                    {{fieldEpi.description}}
+                </v-card-text>
+            </v-card>
+        </v-dialog>
 
       </v-flex>
     </v-layout>
@@ -29,11 +47,11 @@
 
 
     <v-layout wrap justify-center style="margin-top: 20px">
+        <v-btn @click="applyAminoacidConditions()" class="white--text" color="green">ADD</v-btn>
         <v-btn @click="clearAminoEpiMenu()" class="white--text" color="orange">CLEAR</v-btn>
         <v-btn @click="closeAminoEpiMenu()"
                        class="white--text" color="red">CLEAR & CLOSE</v-btn>
-        <v-btn @click="addAminoacidConditionsInOR()" class="white--text" color="light-green">ADD IN OR</v-btn>
-        <v-btn @click="applyAminoacidConditions()" class="white--text" color="green">ADD</v-btn>
+        <!--<v-btn @click="addAminoacidConditionsInOR()" class="white--text" color="light-green">ADD IN OR</v-btn>-->
     </v-layout>
 
   </v-container>
@@ -148,7 +166,7 @@ export default {
 <style scoped>
   .EpitopeMenu{
     border : 1px solid black;
-    background-color:  #857164 !important;
+    background-color:	#C0C0C0 !important;
     max-width: 70%;
     border-radius: 15px !important;
     margin-top: 20px;

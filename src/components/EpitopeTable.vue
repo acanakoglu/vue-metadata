@@ -25,7 +25,7 @@
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
             <v-btn @click="openShowAminoacidVariantEpi()"
-                       color="#D2691E"
+                       color="rgb(201, 53, 53) "
                    style="color:white;"
                       :disabled="epiSearchDis">
               Add condition on amino acids</v-btn>
@@ -42,8 +42,7 @@
             <v-btn @click="downloadTable()"
                    class="white--text"
                        small
-                   color="#D2691E"
-                   style="opacity:0.6;"
+                   color="rgb(122, 139, 157)"
                       :disabled="epiSearchDis || isLoading">
               Download Table</v-btn>
           </v-flex>
@@ -53,20 +52,20 @@
                   <v-card>
                       <v-card-title
                               class="headline"
-                              style="background-color:#800000; color: white"
+                              style="background-color:rgb(201, 53, 53) ; color: white"
                       >
                           Field order
                           <v-spacer></v-spacer>
                           <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
-                                      :label="sortCheckBoxLabel" color=#D2691E class="brown-label"></v-checkbox>
+                                      :label="sortCheckBoxLabel" color="white"></v-checkbox>
                           <v-btn
-                                  color="#D2691E"
+                                  color="white"
                                   flat
                                   @click="dialogOrder = false"
                           >
                               Close
                           </v-btn>
-                          <v-btn color="#D2691E"
+                          <v-btn color="white"
                                  flat
                                  @click="resetHeadersOrder()"
                           >
@@ -79,7 +78,7 @@
                               Press APPLY to go back to the result window.</p>
                           <draggable v-model="headers_can_be_shown" @start="drag=true" @end="drag=false">
                               <v-list v-for="element in headers_can_be_shown" :key="element.value">
-                                  <v-checkbox :label=element.text v-model=element.show color=#D2691E></v-checkbox>
+                                  <v-checkbox :label=element.text v-model=element.show color="rgb(201, 53, 53)"></v-checkbox>
                               </v-list>
                           </draggable>
                       </v-card-text>
@@ -88,8 +87,7 @@
                   <v-btn dark
                          slot="activator"
                          small
-                         color="#D2691E"
-                         style="opacity:0.6;"
+                         color="rgb(122, 139, 157)"
                   >
                       Select/Sort fields
                   </v-btn>
@@ -127,7 +125,7 @@
                     </span>
 
                     <span v-else-if="header.value === 'virusViz_button'">
-                        <v-btn style="text-transform: none; color: white" small color="#009688"
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
                                  @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
                             <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                             VirusViz
@@ -141,7 +139,7 @@
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                   Sorry, nothing to display here :(
               </v-alert>
-              <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="#D2691E" icon="info" v-else>
+              <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
                   Loading
               </v-alert>
         </v-data-table>
@@ -894,10 +892,6 @@ export default {
 
   .data-table{
     width: 100%;
-  }
-
-  .brown-label label {
-        color: #D2691E !important;
   }
 
 </style>

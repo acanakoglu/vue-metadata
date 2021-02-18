@@ -42,6 +42,7 @@ export default new Vuex.Store({
         epitopeAminoacidConditionsArrayUserNewInOR: [],
         disableSelectorUserNewEpitopePart: false,
         newSingleAminoAcidConditionUser: {},
+        isEpitopeSurf: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -288,6 +289,12 @@ export default new Vuex.Store({
         },
         setFalseNewEpitopeLoading: (state) => {
             state.newEpitopeLoading = false;
+        },
+        setTrueIsEpitopeSurf: (state) => {
+            state.isEpitopeSurf = true;
+        },
+        setFalseIsEpitopeSurf: (state) => {
+            state.isEpitopeSurf = false;
         },
     },
     actions: {

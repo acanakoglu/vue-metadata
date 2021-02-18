@@ -1,8 +1,8 @@
 <template>
   <v-card class="EpitopeCard">
 
-      <v-tabs dark color="#800000" v-model="selectedTab">
-        <v-tabs-slider color=#D2691E style="height: 5px"></v-tabs-slider>
+      <v-tabs color="#ebebeb" v-model="selectedTab">
+        <v-tabs-slider color="rgb(201, 53, 53)"  style="height: 5px"></v-tabs-slider>
           <v-tab>
               Use IEDB epitopes
           </v-tab>
@@ -44,7 +44,7 @@
                                           slot="activator"
                                           class="info-button"
                                           small
-                                          flat icon color="blue">
+                                          flat icon color="grey">
                                       <v-icon class="info-icon">info</v-icon>
                                   </v-btn>
                                   <v-card>
@@ -64,7 +64,8 @@
                     <v-layout wrap  style="margin-top: 20px">
                       <v-spacer></v-spacer>
                      <v-btn :disabled="disableSelectorEpitopePart || epiSearchDis"
-                         @click="resetEpiQuery" color="error">CLEAR EPITOPE QUERY</v-btn>
+                         @click="resetEpiQuery"
+                            color="rgb(122, 139, 157)" style="color: white">CLEAR EPITOPE QUERY</v-btn>
                   </v-layout>
                   </v-container>
 
@@ -196,7 +197,7 @@ export default {
 
   .EpitopeMenu{
     border : 1px solid black;
-    background-color: #B7A595;
+    background-color: #ebebeb;
     max-width: 80%;
     margin-bottom: 50px;
     border-radius: 15px !important;

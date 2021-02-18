@@ -43,10 +43,10 @@
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
-                            <v-btn style="color: white; opacity:0.6;"
+                            <v-btn style="color: white;"
                                    slot="activator"
                                    small
-                                   color="#D2691E"
+                                   color="rgb(122, 139, 157)"
                                    :disabled="this.result.length === 0">
                                 Download Table
                             </v-btn>
@@ -54,7 +54,7 @@
                             <v-card>
                                 <v-card-title
                                         class="headline"
-                                        style="background-color:#800000; color: white">
+                                        style="background-color:rgb(201, 53, 53) ; color: white">
                                     Download metadata table
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
@@ -74,14 +74,14 @@
 
                                 <v-card-actions>
                                     <v-btn
-                                            color="#D2691E"
+                                            color="rgb(201, 53, 53) "
                                             flat
                                             @click="downloadTable">
                                         Download
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn
-                                            color="#D2691E"
+                                            color="rgb(201, 53, 53) "
                                             flat
                                             @click="dialogDownloadTable = false"
                                     >
@@ -93,17 +93,17 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
-                            <v-btn style="color: white; opacity:0.6;"
+                            <v-btn style="color: white;"
                                    slot="activator"
                                    small
-                                   color="#D2691E"
+                                   color="rgb(122, 139, 157)"
                                    :disabled="this.result.length === 0">
                                 Download sequence
                             </v-btn>
                             <v-card>
                                 <v-card-title
                                         class="headline"
-                                        style="background-color:#800000; color: white">
+                                        style="background-color:rgb(201, 53, 53) ; color: white">
                                     Download sequence
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
@@ -133,8 +133,8 @@
                                     <p>
                                         Please select output file format:
                                         <v-radio-group v-model="downloadFileFormat">
-                                            <v-radio label="FASTA" value="fasta" color="#D2691E" style="opacity:0.6;"></v-radio>
-                                            <v-radio label="CSV" value="csv" color="#D2691E" style="opacity:0.6;"></v-radio>
+                                            <v-radio label="FASTA" value="fasta" color="rgb(201, 53, 53)"></v-radio>
+                                            <v-radio label="CSV" value="csv" color="rgb(201, 53, 53)"></v-radio>
                                         </v-radio-group>
                                     </p>
                                     <p v-if="selectedProduct !== FULL_TEXT">
@@ -152,14 +152,14 @@
 
                                 <v-card-actions>
                                     <v-btn
-                                            color="#D2691E"
+                                            color="rgb(201, 53, 53) "
                                             flat
                                             @click="download()">
                                         Download
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn
-                                            color="#D2691E"
+                                            color="rgb(201, 53, 53) "
                                             flat
                                             @click="dialogDownload = false"
                                     >
@@ -175,20 +175,20 @@
                             <v-card>
                                 <v-card-title
                                         class="headline"
-                                        style="background-color:#800000; color: white"
+                                        style="background-color:rgb(201, 53, 53) ; color: white"
                                 >
                                     Field order
                                     <v-spacer></v-spacer>
                                     <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
-                                                :label="sortCheckBoxLabel" color=#D2691E class="brown-label"></v-checkbox>
+                                                :label="sortCheckBoxLabel" color="white"></v-checkbox>
                                     <v-btn
-                                            color="#D2691E"
+                                            color="white"
                                             flat
                                             @click="dialogOrder = false"
                                     >
                                         Close
                                     </v-btn>
-                                    <v-btn color="#D2691E"
+                                    <v-btn color="white"
                                            flat
                                            @click="resetHeadersOrder()"
                                     >
@@ -201,23 +201,23 @@
                                         Press APPLY to go back to the result window.</p>
                                     <draggable v-model="headers" @start="drag=true" @end="drag=false">
                                         <v-list v-for="element in headers" :key="element.value">
-                                            <v-checkbox :label=element.text v-model=element.show color=#D2691E></v-checkbox>
+                                            <v-checkbox :label=element.text v-model=element.show color="rgb(201, 53, 53)"></v-checkbox>
                                         </v-list>
                                     </draggable>
                                 </v-card-text>
                                 <v-divider></v-divider>
 
                             </v-card>
-                            <v-btn style="color: white; opacity:0.6;"
+                            <v-btn style="color: white;"
                                    slot="activator"
                                    small
-                                   color="#D2691E"
+                                   color="rgb(122, 139, 157)"
                                    :disabled="this.result.length === 0"
                             >
                                 Select/Sort fields
                             </v-btn>
                         </v-dialog>
-                        <v-btn style="text-transform: none ; color: white" small color="#009688"
+                        <v-btn style="text-transform: none ; color: white" small color="rgb(79, 131, 164)"
                                @click="virusVizClicked()" :disabled="this.result.length === 0">
                           <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                           VirusViz
@@ -302,7 +302,7 @@
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
-            <v-alert slot="no-results" :value="true" style="opacity:0.6;" color="#D2691E" icon="info" v-else>
+            <v-alert slot="no-results" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
                 Loading
             </v-alert>
             <template slot="actions">

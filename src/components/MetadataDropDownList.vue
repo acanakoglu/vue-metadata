@@ -27,6 +27,14 @@
                     ></MetadataDropDown>
                     <v-dialog width="500">
                         <v-btn
+                              v-if="isEpitopeSurf"
+                                slot="activator"
+                                class="info-button"
+                                small
+                                flat icon color="grey">
+                            <v-icon class="info-icon">info</v-icon>
+                        </v-btn>
+                        <v-btn v-else
                                 slot="activator"
                                 class="info-button"
                                 small
@@ -58,6 +66,7 @@
     import MetadataDropDown from "./MetadataDropDown";
     import MetadataMenu from "./MetadataMenu";
     import MetadataMenuDate from "./MetadataMenuDate";
+    import {mapState} from "vuex";
 
     export default {
         name: "MetadataDropDownList",
@@ -87,6 +96,10 @@
                     {text: 'Organization', value: 'organizational', color: '#FFBF5B'},
                 ],
             }
+        },
+        computed: {
+          ...
+              mapState(['isEpitopeSurf']),
         },
         methods: {
             // getGroupFields(groupValue) {

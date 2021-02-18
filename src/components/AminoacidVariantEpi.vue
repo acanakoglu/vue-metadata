@@ -18,7 +18,7 @@
                             slot="activator"
                             class="info-button"
                             small
-                            flat icon color="blue">
+                            flat icon color="grey">
                         <v-icon class="info-icon">info</v-icon>
                     </v-btn>
                     <v-card>
@@ -140,7 +140,7 @@ export default {
 <style scoped>
   .EpitopeMenu{
     border : 1px solid black;
-    background-color: #B7A595;
+    background-color: #ebebeb;
     max-width: 70%;
     border-radius: 15px !important;
     margin-top: 20px;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar dark color="#800000" app>
+    <v-toolbar dark color="rgb(201, 53, 53) " app>
       <v-img :src="require('../assets/virusurf_logo.png')" contain max-width="39px" max-height="39px"></v-img>
       <v-btn flat @click="mainContent=true">
         <v-toolbar-title class="headline" style="font-size: 32px;text-transform: none !important;">
@@ -64,7 +64,7 @@
                 <span class=label>Query:</span>
             </v-flex>-->  <!--query utils-->
             <v-flex md2 sm2 class="no-horizontal-padding">
-              <v-btn color='#D2691E' style="color: white" @click="afterQuerySelection()">Clear your query
+              <v-btn color='rgb(122, 139, 157)' style="color: white" @click="afterQuerySelection()">Clear your query
               </v-btn>
             </v-flex>  <!--clear all-->
             <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
@@ -148,7 +148,7 @@
         <v-container fluid grid-list-xl style="background:#FFFFFF">
           <v-layout wrap align-center test style="background:#FFFFFF">
             <v-flex xs12 justify-center>
-              <div style="font-size: 1.3em;color: #D2691E;justify-content: center;">Novel <strong>"Severe
+              <div style="font-size: 1.3em;color: rgb(62, 60, 122);justify-content: center;">Novel <strong>"Severe
                 acute respiratory syndrome coronavirus 2"</strong> sequences from <strong>"Homo sapiens"</strong>
                 as host are preselected.
                 If you are interested in other virus(es), please change it from the dropdown menu below:
@@ -876,6 +876,7 @@ export default {
   created() {
     document.title = 'EpiSurf'
      this.setQueryStartEpi();
+    this.setTrueIsEpitopeSurf();
   },
   mounted() {
     const url = `field`;
@@ -909,7 +910,9 @@ export default {
   ,
   methods: {
     ...
-        mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv", "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setQueryStartEpi']),
+        mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv",
+          "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setQueryStartEpi',
+        'setTrueIsEpitopeSurf']),
     ...
         mapActions(["setKv", "setKvFull", "deleteAge"]),
     setInputQuery() {

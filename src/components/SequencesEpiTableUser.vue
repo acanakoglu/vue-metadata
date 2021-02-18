@@ -7,11 +7,12 @@
       width="1000"
     >
       <v-card>
-        <v-card-title class="headline grey lighten-2">
+        <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">
           Sequence Table
           <v-spacer></v-spacer>
           <v-btn
-            color="error"
+            color="rgb(122, 139, 157)"
+            style="color: white"
             text
             @click="exit()"
           >

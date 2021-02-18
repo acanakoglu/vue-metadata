@@ -3,59 +3,56 @@
   <div>
 
       <v-container fluid grid-list-xl class="EpitopeMenu">
-        <v-layout wrap align-center >
+        <v-layout wrap align-center>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
             <h2>Try New Epitope</h2>
           </v-flex>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-            <h3 style="color:red"  v-if="epiSearchDis">{{requirement}}</h3>
+            <h3 style="color:red;"  v-if="epiSearchDis">{{requirement}}</h3>
           </v-flex>
+          <v-layout wrap align-center justify-space-around >
+            <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex EpitopeSelectors"
+                                v-for="fieldEpi in newEpitopeFields" v-bind:key="fieldEpi.text">
+            <v-card v-if="fieldEpi.field ==='epitope_name'">
+              <v-text-field
+                v-model="epitope_name"
+                label= "Epitope Name"
+                :disabled="epiSearchDis"
+              ></v-text-field>
+            </v-card>
+              <ProteinSelectorNewEpitope
+                  v-else-if="fieldEpi.field==='product'"
+              :text="fieldEpi.text"
+              :field="fieldEpi.field"></ProteinSelectorNewEpitope>
+              <PositionSelectorNewEpitope
+                  v-else-if="fieldEpi.field==='position_range'"
+              :text="fieldEpi.text"
+              :field="fieldEpi.field"></PositionSelectorNewEpitope>
 
-          <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex EpitopeSelectors"
-                              v-for="fieldEpi in newEpitopeFields" v-bind:key="fieldEpi.text">
-            <div v-if="fieldEpi.field ==='epitope_name'">
-              <v-card>
-                <v-text-field
-                  v-model="epitope_name"
-                  label= "Epitope Name"
-                  :disabled="epiSearchDis"
-                ></v-text-field>
-              </v-card>
-            </div>
-            <div v-else-if="fieldEpi.field==='product'">
-                <ProteinSelectorNewEpitope
-                :text="fieldEpi.text"
-                :field="fieldEpi.field"></ProteinSelectorNewEpitope>
-            </div>
-            <div v-else-if="fieldEpi.field==='position_range'">
-                <PositionSelectorNewEpitope
-                :text="fieldEpi.text"
-                :field="fieldEpi.field"></PositionSelectorNewEpitope>
-            </div>
-
-            <v-dialog width="500">
-                <v-btn
-                        slot="activator"
-                        class="info-button"
-                        small
-                        flat icon color="blue">
-                    <v-icon class="info-icon">info</v-icon>
-                </v-btn>
-                <v-card>
-                    <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title
-                    >
-                      {{fieldEpi.text}}
-                    </v-card-title>
-                    <v-card-text>
-                      {{fieldEpi.description}}
-                    </v-card-text>
-                </v-card>
-            </v-dialog>
-          </v-flex>
+              <v-dialog width="500">
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="grey">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-card>
+                      <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                      >
+                        {{fieldEpi.text}}
+                      </v-card-title>
+                      <v-card-text>
+                        {{fieldEpi.description}}
+                      </v-card-text>
+                  </v-card>
+              </v-dialog>
+            </v-flex>
+          </v-layout>
 
           <v-layout wrap justify-center style="margin: 20px" v-if="!epiSearchDis">
             <span><b> NEW EPITOPE:</b> {{this.newSingleEpitope}} </span>
@@ -80,19 +77,20 @@
 
         <v-layout wrap justify-center style="margin-top: 20px">
               <v-btn @click="openShowAminoacidVariantUserNewEpi()"
-                         color="#D2691E"
+                         color="rgb(201, 53, 53) "
                      style="color:white;"
-                        :disabled="epiSearchDis || disableSelectorUserNewEpitopePart">
-                Add conditions on amino acids (optional)</v-btn>
-          <AminoacidVariantNewUserEpitope v-if="showAminoacidVariantUserNewEpi"></AminoacidVariantNewUserEpitope>
+                        :disabled="epiSearchDis || disableSelectorUserNewEpitopePart || this.epitopeAminoacidConditionsArrayUserNew.length>0">
+                <!--change condition to make in and-->
+                Add condition on amino acids (optional)</v-btn>
         </v-layout>
+        <AminoacidVariantNewUserEpitope v-if="showAminoacidVariantUserNewEpi"></AminoacidVariantNewUserEpitope>
 
-        <h3 v-if="epitopeAminoacidConditionsArrayUserNew.length>0"> Amino acid conditions: </h3>
+        <h3 v-if="epitopeAminoacidConditionsArrayUserNew.length>0"> Amino acid condition: </h3>
         <div v-for="(aminoConditions, index) in epitopeAminoacidConditionsArrayUserNewToShow">
-          <v-card style="background-color:  #857164">
+          <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
-                 <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
+                 <!--<span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>-->
                </v-flex>
                <v-flex sm6>
                  <div v-if="aminoConditions.length>0">
@@ -110,15 +108,15 @@
                  </div>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
-                 <v-btn @click="deleteAminoConditions(index)" class="white--text" color="red">DELETE CONDITION</v-btn>
+                 <v-btn @click="deleteAminoConditions(index)" class="white--text" color="#696969">DELETE CONDITION</v-btn>
                </v-flex>
              </v-layout>
           </v-card>
         </div>
 
         <v-layout wrap justify-center style="margin-top: 40px">
-         <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="green">ADD EPITOPE</v-btn>
          <v-btn :disabled="epiSearchDis" @click="clearEpitope()" class="white--text" color="orange">CLEAR EPITOPE</v-btn>
+          <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="green">ADD EPITOPE</v-btn>
         </v-layout>
 
         <v-dialog
@@ -127,11 +125,11 @@
           width="300"
         >
           <v-card>
-            <v-card-title class="headline" style="background-color:#800000; color: white">
+            <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">
               Missing Fields
               <v-spacer></v-spacer>
               <v-btn
-                  style="background-color: red"
+                  style="background-color: rgb(122, 139, 157)"
                   slot="activator"
                   flat icon
                   small
@@ -160,7 +158,7 @@
 
         <h2 v-if="epitopeAdded.length>0"> Epitopes: </h2>
         <div v-for="(epitope, index) in epitopeAddedReview">
-          <v-card style="background-color:  #857164">
+          <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
@@ -169,8 +167,8 @@
                  <span v-for="(value, key) in epitope" style="display: block;"> <b>- {{key}} :</b> {{value}} </span>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
-                 <v-btn @click="moreInfo(index)" class="white--text" color="blue" style="width: 60%">MORE INFO</v-btn>
-                 <v-btn @click="deleteEpitope(index)" class="white--text" color="red" style="width: 60%">DELETE EPITOPE</v-btn>
+                 <v-btn @click="moreInfo(index)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
+                 <v-btn @click="deleteEpitope(index)" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
           </v-card>
@@ -461,13 +459,6 @@ export default {
       this.finish_count_var = false;
       this.setTrueNewEpitopeLoading();
 
-      if(to_send['kv']['aa_1']){
-         val['num_var'] = 0;
-        this.epitopeToAdd['num_var'] = 'N/D';
-        this.finish_count_var = true;
-       }
-       else {
-
         let count_url = `epitope/countVariantsEpitopeUser`;
 
         axios.post(count_url, to_send)
@@ -486,7 +477,6 @@ export default {
               //this.addNewEpitopeToList(val);
               //this.setFalseNewEpitopeLoading();
             });
-      }
      },
      addFrequencies(){
        if(this.epitopeToAdd['num_var'] === 'N/D'){
@@ -579,7 +569,7 @@ export default {
 
   .EpitopeMenu{
     border : 1px solid black;
-    background-color: #B7A595;
+    background-color: #ebebeb;
     max-width: 80%;
     margin-bottom: 50px;
     border-radius: 15px !important;
@@ -589,7 +579,7 @@ export default {
 
     .EpitopeSelectors{
     margin-bottom: 10px;
-  }
+    }
 
    .info-icon {
      font-size: 15px
@@ -600,7 +590,7 @@ export default {
   }
 
   .singlePosition{
-    background-color:  #857164;
+    background-color: #C0C0C0;
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 5px;
@@ -612,7 +602,7 @@ export default {
   .separator{
     width: 90%;
     height: 8px;
-    background-color: brown;
+    background-color: #696969;
     border-radius: 100%;
     margin: 40px;
   }
