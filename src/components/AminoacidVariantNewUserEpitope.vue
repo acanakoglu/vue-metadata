@@ -80,7 +80,8 @@ export default {
   },
   computed: {
     ...mapState([
-        'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser', 'epitopeAminoacidConditionsArrayUserNewInOR'
+        'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
+      'epitopeAminoacidConditionsArrayUserNewInOR', 'addingEpitope'
     ]),
     ...mapGetters({
         compound_query: 'build_query',
@@ -91,7 +92,8 @@ export default {
        'setFalseDisableSelectorUserNewEpitopePart',
       'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart',
         'addEpitopeAminoacidConditionsArrayUserNew', 'addEpitopeAminoacidConditionsArrayUserNewInOR',
-        'resetEpitopeAminoacidConditionsArrayUserNewInOR', 'resetNewSingleAminoAcidConditionUser'
+        'resetEpitopeAminoacidConditionsArrayUserNewInOR', 'resetNewSingleAminoAcidConditionUser',
+        'changeAddingEpitope'
     ]),
     ...mapActions(['setNewSingleAminoAcidConditionUserAction']),
     closeAminoEpiMenu(){
@@ -144,6 +146,12 @@ export default {
     disableSelectorUserNewEpitopePart(){
       if(this.disableSelectorUserNewEpitopePart){
         this.singleCondition = [];
+      }
+    },
+    addingEpitope(){
+      if(this.addingEpitope){
+        this.closeAminoEpiMenu();
+        this.changeAddingEpitope();
       }
     }
 

@@ -300,7 +300,7 @@ export default {
      'setFalseNewEpitopeLoading', 'setTrueNewEpitopeLoading', 'showMoreInfo', 'setUserEpitopeSelected',
      'setTrueShowAminoacidVariantUserNewEpi', 'setTrueDisableSelectorUserNewEpitopePart',
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
-     'resetEpitopeAminoacidConditionsArrayUserNew']),
+     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
      openShowAminoacidVariantUserNewEpi(){
        this.setNewSingleAminoAcidConditionUserAction({field: 'product', list: ''});
@@ -314,6 +314,7 @@ export default {
     },
      addEpitope(){
        if(this.allFieldsCompiled()) {
+         this.changeAddingEpitope();
          this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
          this.setNewSingleEpitopeSelected({field: 'host_taxon_name', list: this.compound_query['gcm'].host_taxon_name[0]})
          let val = JSON.parse(JSON.stringify(this.newSingleEpitope));
