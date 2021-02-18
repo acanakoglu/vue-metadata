@@ -3,11 +3,11 @@
     <v-dialog
         persistent
         scrollable
-      v-model="dialog"
+      v-model="dialog2"
       width="1000"
     >
       <v-card>
-        <v-card-title class="headline" style="background-color:#800000; color: white">
+        <v-card-title class="headline grey lighten-2">
           Sequence Table
           <v-spacer></v-spacer>
           <v-btn
@@ -35,19 +35,19 @@ import {poll} from "../utils";
 import MetadataTableForEpi from "./MetadataTableForEpi";
 
 export default {
-  name: "SequencesEpiTable",
+  name: "SequencesEpiTableUser",
   components: {MetadataTableForEpi},
   props: {
   },
   data(){
     return{
-      dialog: false,
+      dialog2: false,
       sequences: [],
     }
   },
   computed: {
     ...mapState([
-      'showSequenceEpiTable', 'chosenEpitope', 'query', 'epiQuerySel'
+      'showSequenceEpiTableUser', 'chosenEpitope', 'query', 'epiQuerySel'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -55,16 +55,16 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'showSeqEpiTable', 'setChosenEpitope'
+      'showSeqEpiTableUser', 'setChosenEpitope'
     ]),
     exit(){
-      this.showSeqEpiTable();
+      this.showSeqEpiTableUser();
       this.setChosenEpitope(null);
     }
   },
   watch: {
-    showSequenceEpiTable() {
-      this.dialog = this.showSequenceEpiTable;
+    showSequenceEpiTableUser() {
+      this.dialog2 = this.showSequenceEpiTableUser;
     },
   },
 }

@@ -1,10 +1,32 @@
 <template>
   <div>
+    <v-dialog max-width="500" @keydown.esc="alertDialog = false" v-model="alertDialog"  >
+        <v-card>
+        <v-card-text>
+          Please disable the pop-up blocker for this page, to open the VirusViz directly nextime.
+          <br>
+          In order to open the VirusViz this time, please <a :href='alertLink' target="_blank">click me</a>.
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="alertDialog = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
             <v-btn @click="openShowAminoacidVariantEpi()"
-                       color="info"
+                       color="#D2691E"
+                   style="color:white;"
                       :disabled="epiSearchDis">
               Add condition on amino acids</v-btn>
           </v-flex>
@@ -19,7 +41,9 @@
           <v-flex sm3 align-self-center>
             <v-btn @click="downloadTable()"
                    class="white--text"
-                       small color="blue lighten-2"
+                       small
+                   color="#D2691E"
+                   style="opacity:0.6;"
                       :disabled="epiSearchDis || isLoading">
               Download Table</v-btn>
           </v-flex>
@@ -28,21 +52,21 @@
               <v-dialog width="500" v-model="dialogOrder">
                   <v-card>
                       <v-card-title
-                              class="headline blue lighten-4"
-                              primary-title
+                              class="headline"
+                              style="background-color:#800000; color: white"
                       >
                           Field order
                           <v-spacer></v-spacer>
                           <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
-                                      :label="sortCheckBoxLabel"></v-checkbox>
+                                      :label="sortCheckBoxLabel" color=#D2691E class="brown-label"></v-checkbox>
                           <v-btn
-                                  color="primary"
+                                  color="#D2691E"
                                   flat
                                   @click="dialogOrder = false"
                           >
                               Close
                           </v-btn>
-                          <v-btn color="primary"
+                          <v-btn color="#D2691E"
                                  flat
                                  @click="resetHeadersOrder()"
                           >
@@ -55,7 +79,7 @@
                               Press APPLY to go back to the result window.</p>
                           <draggable v-model="headers_can_be_shown" @start="drag=true" @end="drag=false">
                               <v-list v-for="element in headers_can_be_shown" :key="element.value">
-                                  <v-checkbox :label=element.text v-model=element.show></v-checkbox>
+                                  <v-checkbox :label=element.text v-model=element.show color=#D2691E></v-checkbox>
                               </v-list>
                           </draggable>
                       </v-card-text>
@@ -63,7 +87,9 @@
                   </v-card>
                   <v-btn dark
                          slot="activator"
-                         small color="blue lighten-2"
+                         small
+                         color="#D2691E"
+                         style="opacity:0.6;"
                   >
                       Select/Sort fields
                   </v-btn>
@@ -101,8 +127,8 @@
                     </span>
 
                     <span v-else-if="header.value === 'virusViz_button'">
-                        <v-btn style="text-transform: none" dark small color="#009688"
-                                 @click="virusVizClicked(props.item[epitopeId])">
+                        <v-btn style="text-transform: none; color: white" small color="#009688"
+                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
                             <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                             VirusViz
                         </v-btn>
@@ -115,7 +141,7 @@
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                   Sorry, nothing to display here :(
               </v-alert>
-              <v-alert slot="no-data" :value="true" color="info" icon="info" v-else>
+              <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="#D2691E" icon="info" v-else>
                   Loading
               </v-alert>
         </v-data-table>
@@ -146,6 +172,8 @@ export default {
     draggable},
   data() {
     return {
+      alertLink: null,
+      alertDialog: false,
       epitopeId : 'iedb_epitope_id',
       isLoading : true,
       result: [],
@@ -208,6 +236,7 @@ export default {
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
     virusVizClicked(epitope_id){
+      console.log("QUI1");
         let orderDir = "";
 
           if (this.pagination.descending)
@@ -266,7 +295,7 @@ export default {
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          //{text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Epitope Seq.', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           /*{text: 'Variant Position', value: 'start_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -274,10 +303,10 @@ export default {
           {text: 'Variant Length', value: 'variant_aa_length', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Original Aminoacid Sequence', value: 'sequence_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Alternative Aminoacid Sequence', value: 'sequence_aa_alternative', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},*/
-          {text: 'Epitope Start', value: 'epi_annotation_start', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
-          {text: 'Epitope Stop', value: 'epi_annotation_stop', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
-          {text: 'Epitope Start', value: 'epi_frag_annotation_start', sortable: false, show: false, to_send: true, can_be_shown: false},
-          {text: 'Epitope Stop', value: 'epi_frag_annotation_stop', sortable: false, show: false, to_send: true, can_be_shown: false},
+          //{text: 'Epitope Start', value: 'epi_annotation_start', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          //{text: 'Epitope Stop', value: 'epi_annotation_stop', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          //{text: 'Epitope Start', value: 'epi_frag_annotation_start', sortable: false, show: false, to_send: true, can_be_shown: false},
+          //{text: 'Epitope Stop', value: 'epi_frag_annotation_stop', sortable: false, show: false, to_send: true, can_be_shown: false},
           //{text: 'All Epitope Fragments', value: 'all_fragment_position', sortable: false, show: false, to_send: true, can_be_shown: false}, //ONLY FOR VERSION 2 TABLE
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -865,6 +894,10 @@ export default {
 
   .data-table{
     width: 100%;
+  }
+
+  .brown-label label {
+        color: #D2691E !important;
   }
 
 </style>

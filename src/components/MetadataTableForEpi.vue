@@ -43,17 +43,18 @@
                         <v-dialog
                                 v-model="dialogDownloadTable"
                                 width="500">
-                            <v-btn dark
+                            <v-btn style="color: white; opacity:0.6;"
                                    slot="activator"
                                    small
-                                   color="blue lighten-2">
+                                   color="#D2691E"
+                                   :disabled="this.result.length === 0">
                                 Download Table
                             </v-btn>
 
                             <v-card>
                                 <v-card-title
-                                        class="headline blue lighten-4"
-                                        primary-title>
+                                        class="headline"
+                                        style="background-color:#800000; color: white">
                                     Download metadata table
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
@@ -73,14 +74,14 @@
 
                                 <v-card-actions>
                                     <v-btn
-                                            color="primary"
+                                            color="#D2691E"
                                             flat
                                             @click="downloadTable">
                                         Download
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn
-                                            color="primary"
+                                            color="#D2691E"
                                             flat
                                             @click="dialogDownloadTable = false"
                                     >
@@ -92,16 +93,17 @@
                         <v-dialog
                                 v-model="dialogDownload"
                                 width="500">
-                            <v-btn dark
+                            <v-btn style="color: white; opacity:0.6;"
                                    slot="activator"
                                    small
-                                   color="blue lighten-2">
+                                   color="#D2691E"
+                                   :disabled="this.result.length === 0">
                                 Download sequence
                             </v-btn>
                             <v-card>
                                 <v-card-title
-                                        class="headline blue lighten-4"
-                                        primary-title>
+                                        class="headline"
+                                        style="background-color:#800000; color: white">
                                     Download sequence
                                 </v-card-title>
                                 <v-progress-linear height="2" class="progress"
@@ -131,8 +133,8 @@
                                     <p>
                                         Please select output file format:
                                         <v-radio-group v-model="downloadFileFormat">
-                                            <v-radio label="FASTA" value="fasta"></v-radio>
-                                            <v-radio label="CSV" value="csv"></v-radio>
+                                            <v-radio label="FASTA" value="fasta" color="#D2691E" style="opacity:0.6;"></v-radio>
+                                            <v-radio label="CSV" value="csv" color="#D2691E" style="opacity:0.6;"></v-radio>
                                         </v-radio-group>
                                     </p>
                                     <p v-if="selectedProduct !== FULL_TEXT">
@@ -150,14 +152,14 @@
 
                                 <v-card-actions>
                                     <v-btn
-                                            color="primary"
+                                            color="#D2691E"
                                             flat
                                             @click="download()">
                                         Download
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn
-                                            color="primary"
+                                            color="#D2691E"
                                             flat
                                             @click="dialogDownload = false"
                                     >
@@ -172,21 +174,21 @@
                         <v-dialog width="500" v-model="dialogOrder">
                             <v-card>
                                 <v-card-title
-                                        class="headline blue lighten-4"
-                                        primary-title
+                                        class="headline"
+                                        style="background-color:#800000; color: white"
                                 >
                                     Field order
                                     <v-spacer></v-spacer>
                                     <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
-                                                :label="sortCheckBoxLabel"></v-checkbox>
+                                                :label="sortCheckBoxLabel" color=#D2691E class="brown-label"></v-checkbox>
                                     <v-btn
-                                            color="primary"
+                                            color="#D2691E"
                                             flat
                                             @click="dialogOrder = false"
                                     >
                                         Close
                                     </v-btn>
-                                    <v-btn color="primary"
+                                    <v-btn color="#D2691E"
                                            flat
                                            @click="resetHeadersOrder()"
                                     >
@@ -199,22 +201,24 @@
                                         Press APPLY to go back to the result window.</p>
                                     <draggable v-model="headers" @start="drag=true" @end="drag=false">
                                         <v-list v-for="element in headers" :key="element.value">
-                                            <v-checkbox :label=element.text v-model=element.show></v-checkbox>
+                                            <v-checkbox :label=element.text v-model=element.show color=#D2691E></v-checkbox>
                                         </v-list>
                                     </draggable>
                                 </v-card-text>
                                 <v-divider></v-divider>
 
                             </v-card>
-                            <v-btn dark
+                            <v-btn style="color: white; opacity:0.6;"
                                    slot="activator"
-                                   small color="blue lighten-2"
+                                   small
+                                   color="#D2691E"
+                                   :disabled="this.result.length === 0"
                             >
                                 Select/Sort fields
                             </v-btn>
                         </v-dialog>
-                        <v-btn style="text-transform: none" dark small color="#009688"
-                               @click="virusVizClicked()">
+                        <v-btn style="text-transform: none ; color: white" small color="#009688"
+                               @click="virusVizClicked()" :disabled="this.result.length === 0">
                           <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                           VirusViz
                         </v-btn>
@@ -298,7 +302,7 @@
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                 Sorry, nothing to display here :(
             </v-alert>
-            <v-alert slot="no-results" :value="true" color="info" icon="info" v-else>
+            <v-alert slot="no-results" :value="true" style="opacity:0.6;" color="#D2691E" icon="info" v-else>
                 Loading
             </v-alert>
             <template slot="actions">
@@ -416,14 +420,28 @@
                     url += `&annotation_type=${this.selectedProduct}`;
                 }
 
-                let to_send = JSON.parse(JSON.stringify(this.compound_query));
+                let to_send;
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-                if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+                  to_send = this.chosenEpitope['compound_query'];
+                  let epitope_info = {};
+                  epitope_info['epitope_name'] = this.chosenEpitope['epitope_name'];
+                  epitope_info['position_range'] = this.chosenEpitope['position_range_to_show'];
+                  epitope_info['protein'] = this.chosenEpitope['product'];
+                  epitope_info['link'] = '';
+
+                  to_send['userEpitope'] = epitope_info;
                 }
-                if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-                  to_send['epitope'] = epitope_and_aminoacid_conditions;
+                else {
+                  to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+                  let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+                  if (this.chosenEpitope != null) {
+                    epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                  }
+                  if (!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
+                    to_send['epitope'] = epitope_and_aminoacid_conditions;
+                  }
                 }
 
 
@@ -602,15 +620,28 @@
 
                 this.isLoading = true;
                 this.result = [];
+                let to_send;
 
-                let to_send = JSON.parse(JSON.stringify(this.compound_query));
+                if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+                  to_send = this.chosenEpitope['compound_query'];
+                  let epitope_info = {};
+                  epitope_info['epitope_name'] = this.chosenEpitope['epitope_name'];
+                  epitope_info['position_range'] = this.chosenEpitope['position_range_to_show'];
+                  epitope_info['protein'] = this.chosenEpitope['product'];
+                  epitope_info['link'] = '';
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-                if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                  to_send['userEpitope'] = epitope_info;
                 }
-                if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-                  to_send['epitope'] = epitope_and_aminoacid_conditions;
+                else {
+                  to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+                  let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+                  if (this.chosenEpitope != null) {
+                    epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                  }
+                  if (!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
+                    to_send['epitope'] = epitope_and_aminoacid_conditions;
+                  }
                 }
 
                 axios.post(url, to_send)
@@ -651,14 +682,28 @@
                     //     count_url += `&annotation_type=${this.selectedProduct}`;
                     // }
 
-                    let to_send = JSON.parse(JSON.stringify(this.compound_query));
+                    let to_send;
 
-                    let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-                    if(this.chosenEpitope != null) {
-                      epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                    if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+                      to_send = this.chosenEpitope['compound_query'];
+                      let epitope_info = {};
+                      epitope_info['epitope_name'] = this.chosenEpitope['epitope_name'];
+                      epitope_info['position_range'] = this.chosenEpitope['position_range_to_show'];
+                      epitope_info['protein'] = this.chosenEpitope['product'];
+                      epitope_info['link'] = '';
+
+                      to_send['userEpitope'] = epitope_info;
                     }
-                    if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-                      to_send['epitope'] = epitope_and_aminoacid_conditions;
+                    else {
+                      to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+                      let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+                      if (this.chosenEpitope != null) {
+                        epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                      }
+                      if (!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
+                        to_send['epitope'] = epitope_and_aminoacid_conditions;
+                      }
                     }
 
                     axios.post(count_url, to_send)
@@ -686,14 +731,28 @@
                 }
 
                 this.downloadProgress = true;
-                let to_send = JSON.parse(JSON.stringify(this.compound_query));
+                let to_send;
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-                if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+                  to_send = this.chosenEpitope['compound_query'];
+                  let epitope_info = {};
+                  epitope_info['epitope_name'] = this.chosenEpitope['epitope_name'];
+                  epitope_info['position_range'] = this.chosenEpitope['position_range_to_show'];
+                  epitope_info['protein'] = this.chosenEpitope['product'];
+                  epitope_info['link'] = '';
+
+                  to_send['userEpitope'] = epitope_info;
                 }
-                if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-                  to_send['epitope'] = epitope_and_aminoacid_conditions;
+                else {
+                  to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+                  let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+                  if (this.chosenEpitope != null) {
+                    epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                  }
+                  if (!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
+                    to_send['epitope'] = epitope_and_aminoacid_conditions;
+                  }
                 }
 
                 axios.post(csv_url, to_send)
@@ -812,14 +871,28 @@
                 }
 
                 this.downloadProgress = true;
-                let to_send = JSON.parse(JSON.stringify(this.compound_query));
+                let to_send;
 
-                let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
-                if(this.chosenEpitope != null) {
-                  epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+                  to_send = this.chosenEpitope['compound_query'];
+                  let epitope_info = {};
+                  epitope_info['epitope_name'] = this.chosenEpitope['epitope_name'];
+                  epitope_info['position_range'] = this.chosenEpitope['position_range_to_show'];
+                  epitope_info['protein'] = this.chosenEpitope['product'];
+                  epitope_info['link'] = '';
+
+                  to_send['userEpitope'] = epitope_info;
                 }
-                if(!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
-                  to_send['epitope'] = epitope_and_aminoacid_conditions;
+                else {
+                  to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+                  let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
+                  if (this.chosenEpitope != null) {
+                    epitope_and_aminoacid_conditions[this.epitopeId] = this.chosenEpitope;
+                  }
+                  if (!jQuery.isEmptyObject(epitope_and_aminoacid_conditions)) {
+                    to_send['epitope'] = epitope_and_aminoacid_conditions;
+                  }
                 }
 
                 axios.post(csv_url, to_send)
@@ -893,6 +966,10 @@
 
     .v-input--selection-controls.v-input .v-label {
         align-self: flex-end;
+    }
+
+    .brown-label label {
+        color: #D2691E !important;
     }
 
 </style>

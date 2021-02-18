@@ -140,7 +140,7 @@ export default {
 <style scoped>
   .EpitopeMenu{
     border : 1px solid black;
-    background-color: #d5dbe0;
+    background-color: #B7A595;
     max-width: 70%;
     border-radius: 15px !important;
     margin-top: 20px;

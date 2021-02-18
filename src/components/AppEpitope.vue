@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-toolbar dark color="primary" app>
+    <v-toolbar dark color="#800000" app>
       <v-img :src="require('../assets/virusurf_logo.png')" contain max-width="39px" max-height="39px"></v-img>
       <v-btn flat @click="mainContent=true">
         <v-toolbar-title class="headline" style="font-size: 32px;text-transform: none !important;">
-          <span>Viru</span>
+          <span>Epi</span>
           <span class="font-weight-light">Surf</span>
         </v-toolbar-title>
       </v-btn>
@@ -64,7 +64,7 @@
                 <span class=label>Query:</span>
             </v-flex>-->  <!--query utils-->
             <v-flex md2 sm2 class="no-horizontal-padding">
-              <v-btn color='info' @click="afterQuerySelection()">Clear your query
+              <v-btn color='#D2691E' style="color: white" @click="afterQuerySelection()">Clear your query
               </v-btn>
             </v-flex>  <!--clear all-->
             <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
@@ -148,7 +148,7 @@
         <v-container fluid grid-list-xl style="background:#FFFFFF">
           <v-layout wrap align-center test style="background:#FFFFFF">
             <v-flex xs12 justify-center>
-              <div style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>"Severe
+              <div style="font-size: 1.3em;color: #D2691E;justify-content: center;">Novel <strong>"Severe
                 acute respiratory syndrome coronavirus 2"</strong> sequences from <strong>"Homo sapiens"</strong>
                 as host are preselected.
                 If you are interested in other virus(es), please change it from the dropdown menu below:
@@ -202,7 +202,7 @@
 
 
             <div v-if="countSeq2 === null || countEpi=== null" style="font-size:1.4em;">Loading...</div>
-            <div style="font-size:1.4em;" v-else-if="countSeq2>0 && countEpi>0">
+            <div style="font-size:1.4em;" v-else-if="countSeq2>0 || countEpi>0">
               <span v-if="countSeq2>0">{{ countSeq2 }} sequence</span>
               <span
                 v-if="countSeq2>1">s</span><span v-if="countEpi>0 && countSeq2>0"> and </span>
@@ -872,10 +872,12 @@ export default {
       lastUpdate:
           null
     }
-  }
-  ,
+  },
+  created() {
+    document.title = 'EpiSurf'
+     this.setQueryStartEpi();
+  },
   mounted() {
-    this.setQueryStartEpi();
     const url = `field`;
 
     window.addEventListener('beforeunload', null)
