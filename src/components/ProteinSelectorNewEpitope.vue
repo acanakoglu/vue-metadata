@@ -76,8 +76,9 @@ export default {
         .then((res) => {
           poll(res.result,(res)=>{
               let vals = res.values
-              if (this.value) {
-                  let zero_elements = this.value.filter(value => !res.values.map(v => v.value).includes(value))
+              if (this.selected) {
+                let arraySelected = [this.selected];
+                  let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
                       .sort().map(v => Object({
                           value: v,
                           count: 0

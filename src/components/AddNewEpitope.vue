@@ -489,21 +489,26 @@ export default {
       }
      },
      addFrequencies(){
-       if(this.epitopeToAdd['num_seq'] === 0){
-          this.epitopeToAdd['mutated_freq'] = 0;
-        }
-        else {
-          this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
-        }
-        this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
-        this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
-        if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
-          this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
-        } else {
-          this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
-        }
-        this.epitopeToAdd['mutated_seq_ratio'] += ' %';
-        this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+       if(this.epitopeToAdd['num_var'] === 'N/D'){
+         this.epitopeToAdd['mutated_freq'] = 'N/D';
+         this.epitopeToAdd['mutated_seq_ratio'] = 'N/D';
+       }
+       else {
+         if (this.epitopeToAdd['num_seq'] === 0) {
+           this.epitopeToAdd['mutated_freq'] = 0;
+         } else {
+           this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
+         }
+         this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
+         this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
+         if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
+           this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
+         } else {
+           this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
+         }
+         this.epitopeToAdd['mutated_seq_ratio'] += ' %';
+         this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+       }
      },
    },
   created() {
