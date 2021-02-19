@@ -23,12 +23,26 @@
         <v-card-text>
           <div v-if="Object.keys(epitope_infos).length > 0">
             <h2 style="display: block; margin-bottom: 5px;">Epitope Info:</h2>
-            <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} :</b> {{value}} </span>
+            <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} : </b>
+              <span class="capitalize">{{value}} </span>
+            </span>
           </div>
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
             <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Epitope Metadata Info:</h2>
-            <span v-for="(value, key) in epitope_metadata_infos" style="display: block;"> <b>- {{key}} :</b> {{value}} </span>
+            <span v-for="(value, key) in epitope_metadata_infos" style="display: block;"> <b class="text-capitalize">- {{key}} : </b>
+              <div v-if="value.length !== undefined && value.length !== null" style="display: inline">
+                <span v-for="(val, index) in value">
+                  <span v-if="index!=0"> , </span>
+                  <span class="capitalize">{{val}} </span>
+                </span>
+              </div>
+              <div v-else style="display: inline">
+                <span>
+                  {{value}}
+                </span>
+              </div>
+            </span>
           </div>
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
@@ -38,7 +52,8 @@
               <div v-for="(conditionsOR, index) in conditionsAND">
                 <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
                 <span v-for="(value, key) in conditionsOR" style="display: block;">
-                  <b>- {{key}} :</b> {{value}}
+                  <b>- {{key}} : </b>
+                  <span class="capitalize">{{value}} </span>
                 </span>
               </div>
             </div>
@@ -85,14 +100,14 @@ export default {
     },
     createEpitopeInfos(epitope){
       let infos = {};
-      infos['epitope_name'] = epitope.epitope_name;
-      infos['product'] = epitope.product;
-      infos['position_range'] = epitope.position_range_to_show;
-      infos['taxon_name'] = epitope.taxon_name;
-      infos['host_taxon_name'] = epitope.host_taxon_name;
-      infos['num_seq'] = epitope.num_seq;
-      infos['num_var'] = epitope.num_var;
-      infos['tot_num_seq_metadata'] = epitope.total_num_of_seq_metadata;
+      infos['Epitope name'] = epitope.epitope_name;
+      infos['Protein'] = epitope.product;
+      infos['Position range'] = epitope.position_range_to_show;
+      infos['Virus taxon name'] = epitope.taxon_name;
+      infos['Host taxon name'] = epitope.host_taxon_name;
+      infos['Number of sequences'] = epitope.num_seq;
+      infos['Number of variants'] = epitope.num_var;
+      infos['Total number of sequences (metadata)'] = epitope.total_num_of_seq_metadata;
       return infos;
     },
     createMetadataInfos(epitope){
@@ -122,16 +137,16 @@ export default {
             let single = query[i];
             Object.keys(single).forEach(function(key) {
               if (key === 'product') {
-                line['protein'] = single[key][0];
+                line['Protein'] = single[key][0];
               } else if (key === 'variant_aa_type') {
-                line['variant_type'] = single[key][0];
+                line['Variant type'] = single[key][0];
               } else if (key === 'sequence_aa_original') {
-                line['original_amino_acid'] = single[key][0];
+                line['Original amino acid'] = single[key][0];
               } else if (key === 'sequence_aa_alternative') {
-                line['new_amino_acid'] = single[key][0];
+                line['New amino acid'] = single[key][0];
               } else if (key === 'start_aa_original') {
                 let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
-                line['position_range'] = pos;
+                line['Position range'] = pos;
               }
             })
             arrayToShowInOR.push(line);
@@ -161,4 +176,12 @@ export default {
 
 <style scoped>
 
+.capitalize {
+  text-transform: lowercase;
+  display: inline-block;
+}
+
+.capitalize:first-letter {
+  text-transform: uppercase
+}
 </style>

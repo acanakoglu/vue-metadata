@@ -100,13 +100,15 @@
                    <span v-for="(condition, index2) in aminoConditions" style="display: block;" >
                      <span v-if="index2 !== 0" style="display: block;" > <b> OR </b> </span>
                      <span v-for="(value2, key2) in condition" style="display: block;">
-                        <b>- {{key2}} :</b> {{value2}}
+                        <b>- {{key2}} : </b>
+                       <span class="capitalize">{{value2}} </span>
                      </span>
                    </span>
                  </div>
                  <div v-else>
                    <span v-for="(value, key) in aminoConditions" style="display: block;">
-                     <b>- {{key}} :</b> {{value}}
+                     <b>- {{key}} : </b>
+                     <span class="capitalize">{{value}} </span>
                    </span>
                  </div>
                </v-flex>
@@ -169,7 +171,10 @@
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
                </v-flex>
                <v-flex sm6>
-                 <span v-for="(value, key) in epitope" style="display: block;"> <b>- {{key}} :</b> {{value}} </span>
+                 <span v-for="(value, key) in epitope" style="display: block;"><b>- {{key}} : </b>
+                   <span v-if="key === 'Epitope name'" class="capitalize"> <u>{{value}}</u></span>
+                   <span v-else class="capitalize">{{value}} </span>
+                 </span>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="moreInfo(index)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
@@ -239,16 +244,16 @@ export default {
         if (single.length === undefined || single.length === null) {
           Object.keys(single).forEach(function (key) {
             if (key === 'product') {
-              line['protein'] = single[key][0];
+              line['Protein'] = single[key][0];
             } else if (key === 'variant_aa_type') {
-              line['variant_type'] = single[key][0];
+              line['Variant type'] = single[key][0];
             } else if (key === 'sequence_aa_original') {
-              line['original_amino_acid'] = single[key][0];
+              line['Original amino acid'] = single[key][0];
             } else if (key === 'sequence_aa_alternative') {
-              line['new_amino_acid'] = single[key][0];
+              line['New amino acid'] = single[key][0];
             } else if (key === 'start_aa_original') {
               let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
-              line['position_range'] = pos;
+              line['Position range'] = pos;
             }
           })
           arrayToShow.push(line);
@@ -290,13 +295,13 @@ export default {
       let i=0;
       while(i<len){
         let line = {};
-        line['epitope_name'] = val[i].epitope_name;
-        line['product'] = val[i].product;
-        line['position_range'] = val[i].position_range_to_show;
-        line['taxon_name'] = val[i].taxon_name;
-        line['host_taxon_name'] = val[i].host_taxon_name;
-        line['num_seq'] = val[i].num_seq;
-        line['num_var'] = val[i].num_var;
+        line['Epitope name'] = val[i].epitope_name;
+        line['Protein'] = val[i].product;
+        line['Position range'] = val[i].position_range_to_show;
+        line['Virus taxon name'] = val[i].taxon_name;
+        line['Host taxon name'] = val[i].host_taxon_name;
+        line['Number of sequences'] = val[i].num_seq;
+        line['Number of variants'] = val[i].num_var;
         arrayToReturn.push(line);
         i++;
       }
@@ -630,6 +635,15 @@ export default {
     background-color: #696969;
     border-radius: 100%;
     margin-top: 40px;
+  }
+
+  .capitalize {
+  text-transform: lowercase;
+  display: inline-block;
+}
+
+  .capitalize:first-letter {
+    text-transform: uppercase
   }
 
 </style>
