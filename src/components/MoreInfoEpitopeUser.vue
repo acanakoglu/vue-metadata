@@ -32,9 +32,9 @@
           </div>
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
-            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Amino Acid Conditions:</h2>
+            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Amino Acid Condition:</h2>
             <div v-for="(conditionsAND, index) in amino_acid_conditions">
-              <h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition : </h3> <!-- {{index + 1}}-->
+              <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
               <div v-for="(conditionsOR, index) in conditionsAND">
                 <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
                 <span v-for="(value, key) in conditionsOR" style="display: block;">
