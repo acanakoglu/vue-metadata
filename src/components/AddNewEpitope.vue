@@ -192,7 +192,7 @@
         ></v-progress-linear>
 
         <v-layout wrap align-center justify-center v-if="epitopeAdded.length>0">
-          <h2> Epitopes: </h2>
+          <h2 style="margin-left: 10px"> Epitopes: </h2>
           <v-spacer></v-spacer>
           <h4>Search epitope by name:</h4>
           <v-flex class="sm2">
@@ -202,29 +202,48 @@
             @click:append="resetSearchedName"
           ></v-text-field>
           </v-flex>
+          <v-flex class="sm1">
+            <span> ({{epitopeAddedReview.length}}) </span>
+          </v-flex>
         </v-layout>
 
-        <div v-for="(epitope, index) in epitopeAddedReview">
-          <v-card style="background-color: #C0C0C0" v-if="epitope['Epitope name'].includes(searchedName)">
+        <div v-for="(epitope, index) in epitopeAddedReview" v-if="index >= pageEpitopeList*5 && index < Math.min((pageEpitopeList+1)*5, epitopeAddedReview.length)">
+          <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
-                 <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
+                 <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{epitope.index}}</b></span>
                </v-flex>
                <v-flex sm6>
-                 <span v-for="(value, key) in epitope" style="display: block;"><b v-if="key !== 'file_name'">- {{key}} : </b>
+                 <span v-for="(value, key) in epitope" style="display: block;">
+                   <b v-if="key !== 'file_name' && key !== 'index'">- {{key}} : </b>
                    <span v-if="key === 'Epitope name'" class="capitalize"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
-                   <span v-else-if="key !== 'file_name'" class="capitalize">{{value}} </span>
+                   <span v-else-if="key !== 'file_name' && key !== 'index'" class="capitalize">{{value}} </span>
                  </span>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
-                 <v-btn @click="moreInfo(index)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
-                 <v-btn @click="deleteEpitope(index)" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
+                 <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
+                 <v-btn @click="deleteEpitope(epitope.index - 1)" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
           </v-card>
         </div>
+
+        <v-layout wrap align-center justify-center style="margin-top: 40px" v-if="epitopeAddedReview.length>0">
+          <v-spacer></v-spacer>
+          <span>{{pageEpitopeList*5 + 1}} - {{Math.min((pageEpitopeList+1)*5, epitopeAddedReview.length)}} of {{epitopeAddedReview.length}}</span>
+          <v-btn @click="pageLeft()" class="white--text arrowButton"
+                 color="rgb(122, 139, 157)" icon medium
+                  :disabled="pageEpitopeList === 0">
+           <v-icon>arrow_back</v-icon>
+         </v-btn>
+         <v-btn @click="pageRight()" class="white--text arrowButton"
+                color="rgb(122, 139, 157)" icon medium
+                :disabled="pageEpitopeList === maxPage">
+           <v-icon>arrow_forward</v-icon>
+         </v-btn>
+        </v-layout>
 
         <v-layout wrap justify-center style="margin-top: 40px" v-if="epitopeAdded.length>0">
           <v-spacer></v-spacer>
@@ -270,6 +289,8 @@ export default {
       precision_float_table: 5,
       nameAlreadyExisting: false,
       searchedName: '',
+      pageEpitopeList: 0,
+      maxPage: 0,
     }
   },
   computed: {
@@ -354,10 +375,13 @@ export default {
         if(val[i].file_name) {
           line['file_name'] = val[i].file_name;
         }
+        line['index'] = i + 1;
         arrayToReturn.push(line);
         i++;
       }
-      return arrayToReturn;
+      let arrayFiltered = arrayToReturn.filter(item => item['Epitope name'].includes(this.searchedName));
+      this.maxPage = Math.max(Math.ceil(arrayFiltered.length/5) - 1, 0);
+      return arrayFiltered;
     }
   },
    methods: {
@@ -445,10 +469,15 @@ export default {
      },
      deleteEpitope(index){
         this.removeNewEpitopeFromList(index);
+        if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
+          this.pageEpitopeList = Math.max(this.pageEpitopeList - 1, 0);
+        }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
      },
      deleteAllEpitopes(){
+       this.pageEpitopeList = 0;
+       this.maxPage = 0;
        let arr = [];
        this.resetNewEpitopeFromLocalStorage(arr);
        let epitopeArr = (JSON.stringify(this.epitopeAdded));
@@ -588,6 +617,12 @@ export default {
      },
      resetSearchedName(){
        this.searchedName = '';
+     },
+     pageLeft(){
+       this.pageEpitopeList = this.pageEpitopeList - 1;
+     },
+     pageRight(){
+       this.pageEpitopeList = this.pageEpitopeList + 1;
      }
    },
   created() {
@@ -615,6 +650,12 @@ export default {
   watch:{
     searchedName(){
       this.searchedName = this.searchedName.charAt(0).toUpperCase() + this.searchedName.slice(1);
+      if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
+          this.pageEpitopeList = Math.max(Math.ceil(this.epitopeAddedReview.length/5) - 1, 0);
+      }
+      if (this.pageEpitopeList < 0){
+        this.pageEpitopeList = 0;
+      }
     },
     epitope_name(){
       this.epitope_name = this.epitope_name.charAt(0).toUpperCase() + this.epitope_name.slice(1);
@@ -633,6 +674,9 @@ export default {
     },
     epitopeAdded(){
       this.setCountEpi(this.epitopeAdded.length);
+      if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
+          this.pageEpitopeList = 0;
+        }
     },
     finish_count_seq(){
       if(this.finish_count_seq === true && this.finish_count_var === true){
@@ -655,7 +699,15 @@ export default {
         this.setFalseNewEpitopeLoading();
         this.epitopeToAdd = null;
       }
-    }
+    },
+    pageEpitopeList(){
+      if(this.pageEpitopeList < 0){
+        this.pageEpitopeList = 0;
+      }
+      else if (this.pageEpitopeList > this.maxPage){
+        this.pageEpitopeList = this.maxPage;
+      }
+    },
   },
   mounted() {
     if(localStorage.getItem('epitopeArr')) {
@@ -719,6 +771,10 @@ export default {
 
   .capitalize:first-letter {
     text-transform: uppercase
+  }
+
+  .arrowButton:disabled{
+    opacity: 0.5 !important;
   }
 
 </style>
