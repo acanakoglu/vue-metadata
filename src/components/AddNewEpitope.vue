@@ -449,6 +449,8 @@ export default {
      deleteAllEpitopes(){
        let arr = [];
        this.resetNewEpitopeFromLocalStorage(arr);
+       let epitopeArr = (JSON.stringify(this.epitopeAdded));
+       localStorage.setItem('epitopeArr', epitopeArr);
      },
      deleteAminoConditions(index){
        this.removeEpitopeAminoacidConditionsArrayUserNew(index);
