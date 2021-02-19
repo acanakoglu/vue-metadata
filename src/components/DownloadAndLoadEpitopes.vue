@@ -113,12 +113,28 @@ export default {
       let len = epitopeArr.length;
       let i = 0;
       while(i<len){
+        epitopeArr[i] = this.controlExistingName(epitopeArr[i]);
         this.addNewEpitopeToList(epitopeArr[i]);
         i++;
       }
       let epitopeArrNew = (JSON.stringify(this.epitopeAdded));
       localStorage.setItem('epitopeArr', epitopeArrNew);
       this.dialogMergeEpitope = false;
+    },
+    controlExistingName(epitope){
+      if(this.epitopeAdded.some(item => item.epitope_name === epitope.epitope_name)) {
+        let i = 1;
+        while (i){
+          let name = epitope.epitope_name + ' (' + i +')';
+          if(!this.epitopeAdded.some(item => item.epitope_name === name)) {
+              epitope.epitope_name = name;
+              return epitope;
+          }
+          else{
+            i++;
+          }
+        }
+      }
     },
     deleteEpitopes(){
       this.resetNewEpitopeFromLocalStorage(this.epitopeArr);

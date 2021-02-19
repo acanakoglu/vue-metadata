@@ -152,6 +152,34 @@
           </v-card>
         </v-dialog>
 
+        <v-dialog
+            persistent
+          v-model="nameAlreadyExisting"
+          width="300"
+        >
+          <v-card>
+            <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">
+              Name not available
+              <v-spacer></v-spacer>
+              <v-btn
+                  style="background-color: rgb(122, 139, 157)"
+                  slot="activator"
+                  flat icon
+                  small
+                color="white"
+                @click="exitNameAlreadExisting()"
+              >
+                <v-icon>close</v-icon>
+              </v-btn>
+            </v-card-title>
+
+            <v-card-text class="text-xs-center">
+              Name not available, please choose another one.
+            </v-card-text>
+
+          </v-card>
+        </v-dialog>
+
         <v-layout wrap align-center justify-center>
           <div class="separator"></div>
         </v-layout>
@@ -183,6 +211,11 @@
              </v-layout>
           </v-card>
         </div>
+
+        <v-layout wrap justify-center style="margin-top: 40px" v-if="epitopeAdded.length>0">
+          <v-spacer></v-spacer>
+         <v-btn @click="deleteAllEpitopes()" class="white--text" color="#696969">DELETE ALL EPITOPES</v-btn>
+        </v-layout>
 
       </v-container>
 
@@ -221,6 +254,7 @@ export default {
       finish_count_var: false,
       epitopeToAdd: null,
       precision_float_table: 5,
+      nameAlreadyExisting: false,
     }
   },
   computed: {
@@ -327,39 +361,47 @@ export default {
     },
      addEpitope(){
        if(this.allFieldsCompiled()) {
-         this.changeAddingEpitope();
-         this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
-         this.setNewSingleEpitopeSelected({field: 'host_taxon_name', list: this.compound_query['gcm'].host_taxon_name[0]})
-         let val = JSON.parse(JSON.stringify(this.newSingleEpitope));
-
-         val['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
-
-         val['compound_query']['kv'] = this.addKvPart(val);
-
-         let listPosition = val['position_range'];
-         let len = listPosition.length;
-         let i = 0;
-         let newListPositionString = '';
-         while(i<len){
-           if(i===0) {
-             val['position_range'] = listPosition[i][0];
-           }
-           let min = listPosition[i][0];
-           let max = listPosition[i][1];
-           newListPositionString += min + "-" + max;
-           i++;
-           if(i<len){
-             newListPositionString += ", \n"
-           }
+         if(this.epitopeAdded.some(item => item.epitope_name === this.newSingleEpitope.epitope_name)){
+            this.nameAlreadyExisting = true;
          }
-         val['position_range_to_show'] = newListPositionString;
+         else {
+           this.changeAddingEpitope();
+           this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
+           this.setNewSingleEpitopeSelected({
+             field: 'host_taxon_name',
+             list: this.compound_query['gcm'].host_taxon_name[0]
+           })
+           let val = JSON.parse(JSON.stringify(this.newSingleEpitope));
 
-         this.epitopeToAdd = val;
-         this.countNumSeq(val);
-         this.countNumVar(val);
-         this.resetEpitopeAminoacidConditionsArrayUserNew();
+           val['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
 
-         this.clearEpitope();
+           val['compound_query']['kv'] = this.addKvPart(val);
+
+           let listPosition = val['position_range'];
+           let len = listPosition.length;
+           let i = 0;
+           let newListPositionString = '';
+           while (i < len) {
+             if (i === 0) {
+               val['position_range'] = listPosition[i][0];
+             }
+             let min = listPosition[i][0];
+             let max = listPosition[i][1];
+             newListPositionString += min + "-" + max;
+             i++;
+             if (i < len) {
+               newListPositionString += ", \n"
+             }
+           }
+           val['position_range_to_show'] = newListPositionString;
+
+           this.epitopeToAdd = val;
+           this.countNumSeq(val);
+           this.countNumVar(val);
+           this.resetEpitopeAminoacidConditionsArrayUserNew();
+
+           this.clearEpitope();
+         }
        }
        else{
          this.missingFields = true;
@@ -388,6 +430,10 @@ export default {
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
      },
+     deleteAllEpitopes(){
+       let arr = [];
+       this.resetNewEpitopeFromLocalStorage(arr);
+     },
      deleteAminoConditions(index){
        this.removeEpitopeAminoacidConditionsArrayUserNew(index);
      },
@@ -403,6 +449,9 @@ export default {
      },
      exitMissingFields(){
        this.missingFields = false;
+     },
+     exitNameAlreadExisting(){
+       this.nameAlreadyExisting = false;
      },
      addKvPart(val){
        let kv = {};
