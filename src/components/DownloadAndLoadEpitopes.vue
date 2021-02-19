@@ -18,6 +18,43 @@
               Load Epitopes From JSON
           </v-btn>
       </v-layout>
+      <v-dialog
+          persistent
+          scrollable
+            v-model="dialogMergeEpitope"
+            width="500">
+        <v-card>
+            <v-card-title
+                    class="headline"
+                    style="background-color:rgb(201, 53, 53) ; color: white">
+                Warning
+            </v-card-title>
+            <v-card-text>
+                <p>
+                  Other epitopes are already present in the interface.
+                  Choose whether to keep them or not.
+                </p>
+            </v-card-text>
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="keepEpitopes()">
+                    Keep
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="deleteEpitopes()"
+                >
+                    Delete
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -32,6 +69,7 @@ export default {
   data(){
     return{
       epitopeArr: [],
+      dialogMergeEpitope: false,
     }
   },
   computed: {
@@ -44,7 +82,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'resetNewEpitopeFromLocalStorage'
+      'resetNewEpitopeFromLocalStorage', 'addNewEpitopeToList'
     ]),
     downloadEpitopes(){
       let text = JSON.stringify(this.epitopeAdded);
@@ -66,16 +104,40 @@ export default {
         let epitopeArray = reader.result;
         let obj = JSON.parse(epitopeArray);
         that.epitopeArr = obj;
+        that.saveNewEpitopes();
       }
       reader.readAsText(selectedFile);
-    }
-  },
-  watch: {
-    epitopeArr(){
+    },
+    keepEpitopes(){
+      let epitopeArr = JSON.parse(JSON.stringify(this.epitopeArr));
+      let len = epitopeArr.length;
+      let i = 0;
+      while(i<len){
+        this.addNewEpitopeToList(epitopeArr[i]);
+        i++;
+      }
+      let epitopeArrNew = (JSON.stringify(this.epitopeAdded));
+      localStorage.setItem('epitopeArr', epitopeArrNew);
+      this.dialogMergeEpitope = false;
+    },
+    deleteEpitopes(){
       this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
       let epitopeArr = (JSON.stringify(this.epitopeAdded));
       localStorage.setItem('epitopeArr', epitopeArr);
+      this.dialogMergeEpitope = false;
+    },
+    saveNewEpitopes(){
+      if(this.epitopeAdded.length>0){
+        this.dialogMergeEpitope = true;
+      }
+      else {
+        this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
+        let epitopeArr = (JSON.stringify(this.epitopeAdded));
+        localStorage.setItem('epitopeArr', epitopeArr);
+      }
     }
+  },
+  watch: {
   },
 }
 </script>
