@@ -4,10 +4,10 @@
       <v-tabs color="#ebebeb" v-model="selectedTab">
         <v-tabs-slider color="rgb(201, 53, 53)"  style="height: 5px"></v-tabs-slider>
           <v-tab>
-              Use IEDB epitopes
+              Use IEDB Epitopes
           </v-tab>
           <v-tab>
-               Try new epitope
+               Custom Epitopes
           </v-tab>
 
           <v-tab-item>

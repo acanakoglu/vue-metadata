@@ -3,16 +3,17 @@
   <div>
 
       <v-container fluid grid-list-xl class="EpitopeMenu">
-        <v-layout wrap align-center>
+        <v-layout wrap align-center justify-center>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-            <h2>Try New Epitope</h2>
+            <h2>Custom Epitopes</h2>
           </v-flex>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
             <h3 style="color:red;"  v-if="epiSearchDis">{{requirement}}</h3>
           </v-flex>
-          <v-layout wrap align-center justify-space-around >
+          <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
+          <v-layout wrap align-center justify-space-around>
             <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex EpitopeSelectors"
                                 v-for="fieldEpi in newEpitopeFields" v-bind:key="fieldEpi.text">
             <v-card v-if="fieldEpi.field ==='epitope_name'">
@@ -53,13 +54,14 @@
               </v-dialog>
             </v-flex>
           </v-layout>
+          </v-flex>
 
           <v-layout wrap justify-center style="margin: 20px" v-if="!epiSearchDis">
-            <span><b> NEW EPITOPE:</b> {{this.newSingleEpitope}} </span>
+            <!--<span><b> NEW EPITOPE:</b> {{this.newSingleEpitope}} </span>-->
           </v-layout>
 
-          <h4 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 10px"> Positions: </h4>
-
+          <h3 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 10px; margin-left: 10px"> Positions: </h3>
+          <v-layout wrap justify-left style="margin-left: 10px">
           <div v-for="(pos, index) in newSingleEpitope['position_range']"v-if="!epiSearchDis">
                <v-layout align-center style="margin: 0px">
                  <div class="singlePosition">
@@ -72,6 +74,7 @@
                  </div>
                </v-layout>
           </div>
+          </v-layout>
 
         </v-layout>
 
@@ -115,8 +118,8 @@
         </div>
 
         <v-layout wrap justify-center style="margin-top: 40px">
-         <v-btn :disabled="epiSearchDis" @click="clearEpitope()" class="white--text" color="orange">CLEAR EPITOPE</v-btn>
-          <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="green">ADD EPITOPE</v-btn>
+         <v-btn :disabled="epiSearchDis" @click="clearEpitope()" class="white--text" color="rgb(122, 139, 157)">CLEAR EPITOPE</v-btn>
+          <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="#00008B">ADD EPITOPE</v-btn>
         </v-layout>
 
         <v-dialog
@@ -147,7 +150,7 @@
           </v-card>
         </v-dialog>
 
-        <v-layout wrap align-center justify-center v-if="epitopeAdded.length>0">
+        <v-layout wrap align-center justify-center>
           <div class="separator"></div>
         </v-layout>
 

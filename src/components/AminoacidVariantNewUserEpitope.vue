@@ -37,7 +37,7 @@
       </v-flex>
     </v-layout>
 
-    <span><b>NEW CONDITION: </b>{{newSingleAminoAcidConditionUser}}</span>
+    <!--<span><b>NEW CONDITION: </b>{{newSingleAminoAcidConditionUser}}</span>-->
 
     <span style="display: block" v-if="epitopeAminoacidConditionsArrayUserNewInOR.length>0"> <b>CONDITIONS IN OR:</b>
       <span v-for="(condition, index) in epitopeAminoacidConditionsArrayUserNewInOR">
@@ -47,10 +47,10 @@
 
 
     <v-layout wrap justify-center style="margin-top: 20px">
-        <v-btn @click="applyAminoacidConditions()" class="white--text" color="green">ADD</v-btn>
-        <v-btn @click="clearAminoEpiMenu()" class="white--text" color="orange">CLEAR</v-btn>
-        <v-btn @click="closeAminoEpiMenu()"
-                       class="white--text" color="red">CLEAR & CLOSE</v-btn>
+      <v-btn @click="closeAminoEpiMenu()"
+                       class="white--text" color="#696969">CLEAR & CLOSE</v-btn>
+        <v-btn @click="clearAminoEpiMenu()" class="white--text" color="rgb(122, 139, 157)">CLEAR</v-btn>
+        <v-btn @click="applyAminoacidConditions()" class="white--text" color="#00008B">ADD</v-btn>
         <!--<v-btn @click="addAminoacidConditionsInOR()" class="white--text" color="light-green">ADD IN OR</v-btn>-->
     </v-layout>
 

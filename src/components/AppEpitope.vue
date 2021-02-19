@@ -217,7 +217,7 @@
       </v-content>
     </v-content>
 
-    <v-snackbar multi-line dark color="#009688" v-model="snackbar"  bottom :timeout="120000">
+    <v-snackbar multi-line dark color="rgb(79, 131, 164)" v-model="snackbar"  bottom :timeout="120000">
       <v-flex>
 <!--      <strong>News:</strong><br>-->
         Did you use our new tool <strong>VirusViz</strong>?

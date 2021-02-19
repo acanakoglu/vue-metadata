@@ -6,16 +6,16 @@
                small
                color="rgb(122, 139, 157)"
               :disabled="epitopeAdded.length === 0">
-          Download Epitope JSON</v-btn>
+          Download Epitopes (JSON)</v-btn>
         <v-spacer></v-spacer>
-        <input id="fileInput" type="file" style="display:none" v-on:change="loadEpitopes()"/>
+        <input id="fileInput" type="file" style="display:none" v-on:change="loadEpitopes()" accept="application/JSON"/>
         <v-btn
                  onclick="document.getElementById('fileInput').click()"
                  class="white--text"
                  small
                  color="rgb(122, 139, 157)"
           >
-              Load Epitopes From JSON
+              Load Epitopes (JSON)
           </v-btn>
       </v-layout>
       <v-dialog

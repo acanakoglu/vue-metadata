@@ -1,5 +1,6 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
+    <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
     <v-layout wrap align-center>
       <v-flex class="no-horizontal-padding xs12 sm6 md6 lg3 d-flex EpitopeSelectors"
                   v-for="fieldEpi in epitopeAminoacidFields" v-bind:key="fieldEpi.text">
@@ -37,10 +38,10 @@
       </v-flex>
     </v-layout>
     <v-layout wrap justify-center style="margin-top: 20px">
-       <v-btn @click="applyAminoacidConditions()" class="white--text" color="green">APPLY</v-btn>
-       <v-btn @click="clearAminoEpiMenu()" class="white--text" color="orange">CLEAR</v-btn>
-       <v-btn @click="closeAminoEpiMenu()"
-                       class="white--text" color="red">CLEAR & CLOSE</v-btn>
+      <v-btn @click="closeAminoEpiMenu()"
+                       class="white--text" color="#696969">CLEAR & CLOSE</v-btn>
+       <v-btn @click="clearAminoEpiMenu()" class="white--text" color="rgb(122, 139, 157)">CLEAR</v-btn>
+      <v-btn @click="applyAminoacidConditions()" class="white--text" color="#00008B">APPLY</v-btn>
     </v-layout>
   </v-container>
 </template>
