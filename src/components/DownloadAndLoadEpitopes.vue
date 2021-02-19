@@ -135,6 +135,9 @@ export default {
           }
         }
       }
+      else{
+        return epitope;
+      }
     },
     deleteEpitopes(){
       this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
