@@ -211,7 +211,7 @@
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
                </v-flex>
                <v-flex sm6>
-                 <span v-for="(value, key) in epitope" style="display: block;"><b>- {{key}} : </b>
+                 <span v-for="(value, key) in epitope" style="display: block;"><b v-if="key !== 'file_name'">- {{key}} : </b>
                    <span v-if="key === 'Epitope name'" class="capitalize"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
@@ -351,7 +351,9 @@ export default {
         line['Host taxon name'] = val[i].host_taxon_name;
         line['Number of sequences'] = val[i].num_seq;
         line['Number of variants'] = val[i].num_var;
-        line['file_name'] = val[i].file_name;
+        if(val[i].file_name) {
+          line['file_name'] = val[i].file_name;
+        }
         arrayToReturn.push(line);
         i++;
       }
