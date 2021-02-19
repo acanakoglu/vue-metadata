@@ -191,9 +191,21 @@
           color="blue"
         ></v-progress-linear>
 
-        <h2 v-if="epitopeAdded.length>0"> Epitopes: </h2>
+        <v-layout wrap align-center justify-center v-if="epitopeAdded.length>0">
+          <h2> Epitopes: </h2>
+          <v-spacer></v-spacer>
+          <h4>Search epitope by name:</h4>
+          <v-flex class="sm2">
+          <v-text-field
+            v-model="searchedName"
+            append-icon="close"
+            @click:append="resetSearchedName"
+          ></v-text-field>
+          </v-flex>
+        </v-layout>
+
         <div v-for="(epitope, index) in epitopeAddedReview">
-          <v-card style="background-color: #C0C0C0">
+          <v-card style="background-color: #C0C0C0" v-if="epitope['Epitope name'].includes(searchedName)">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{index + 1}}</b></span>
@@ -214,7 +226,7 @@
 
         <v-layout wrap justify-center style="margin-top: 40px" v-if="epitopeAdded.length>0">
           <v-spacer></v-spacer>
-         <v-btn @click="deleteAllEpitopes()" class="white--text" color="#696969">DELETE ALL EPITOPES</v-btn>
+         <v-btn @click="deleteAllEpitopes()" class="white--text" color="#696969">DELETE ALL EPITOPES ({{this.epitopeAdded.length}})</v-btn>
         </v-layout>
 
       </v-container>
@@ -255,6 +267,7 @@ export default {
       epitopeToAdd: null,
       precision_float_table: 5,
       nameAlreadyExisting: false,
+      searchedName: '',
     }
   },
   computed: {
@@ -566,6 +579,9 @@ export default {
          this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
        }
      },
+     resetSearchedName(){
+       this.searchedName = '';
+     }
    },
   created() {
       if(this.compound_query['gcm'].taxon_name) {
@@ -590,6 +606,9 @@ export default {
           });
   },
   watch:{
+    searchedName(){
+      this.searchedName = this.searchedName.charAt(0).toUpperCase() + this.searchedName.slice(1);
+    },
     epitope_name(){
       this.epitope_name = this.epitope_name.charAt(0).toUpperCase() + this.epitope_name.slice(1);
       this.setNewSingleEpitopeSelected({field: 'epitope_name', list: this.epitope_name})
