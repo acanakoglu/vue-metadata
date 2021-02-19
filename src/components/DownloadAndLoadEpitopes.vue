@@ -8,7 +8,10 @@
               :disabled="epitopeAdded.length === 0">
           Download Epitopes (JSON)</v-btn>
         <v-spacer></v-spacer>
-        <input id="fileInput" type="file" style="display:none" v-on:change="loadEpitopes()" accept="application/JSON"/>
+        <input id="fileInput" type="file" style="display:none"
+               v-on:change="loadEpitopes()" accept="application/JSON"
+               onclick="document.getElementById('fileInput').value = ''"
+        />
         <v-btn
                  onclick="document.getElementById('fileInput').click()"
                  class="white--text"
@@ -70,6 +73,7 @@ export default {
     return{
       epitopeArr: [],
       dialogMergeEpitope: false,
+      nameLoadedFile: '',
     }
   },
   computed: {
@@ -99,6 +103,8 @@ export default {
       var reader = new FileReader();
       let selectedFile = document.getElementById ('fileInput'). files [0];
 
+      this.nameLoadedFile = selectedFile.name;
+
       var that = this;
       reader.onload = function() {
         let epitopeArray = reader.result;
@@ -114,6 +120,7 @@ export default {
       let i = 0;
       while(i<len){
         epitopeArr[i] = this.controlExistingName(epitopeArr[i]);
+        epitopeArr[i]['file_name'] = this.nameLoadedFile;
         this.addNewEpitopeToList(epitopeArr[i]);
         i++;
       }
@@ -140,6 +147,14 @@ export default {
       }
     },
     deleteEpitopes(){
+      if(this.epitopeArr) {
+        let len = this.epitopeArr.length;
+        let i = 0;
+        while(i<len){
+          this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+          i++;
+        }
+      }
       this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
       let epitopeArr = (JSON.stringify(this.epitopeAdded));
       localStorage.setItem('epitopeArr', epitopeArr);
@@ -150,6 +165,14 @@ export default {
         this.dialogMergeEpitope = true;
       }
       else {
+        if(this.epitopeArr) {
+          let len = this.epitopeArr.length;
+          let i = 0;
+          while(i<len){
+            this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+            i++;
+          }
+        }
         this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);

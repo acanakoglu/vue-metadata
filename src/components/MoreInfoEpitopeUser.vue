@@ -101,12 +101,17 @@ export default {
     createEpitopeInfos(epitope){
       let infos = {};
       infos['Epitope name'] = epitope.epitope_name;
+      if(epitope.file_name){
+        infos['File Name'] = epitope.file_name;
+      }
       infos['Protein'] = epitope.product;
       infos['Position range'] = epitope.position_range_to_show;
       infos['Virus taxon name'] = epitope.taxon_name;
       infos['Host taxon name'] = epitope.host_taxon_name;
       infos['Number of sequences'] = epitope.num_seq;
       infos['Number of variants'] = epitope.num_var;
+      infos['Variants frequency'] = epitope.mutated_freq;
+      infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
       infos['Total number of sequences (metadata)'] = epitope.total_num_of_seq_metadata;
       return infos;
     },
