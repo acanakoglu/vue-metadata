@@ -699,6 +699,9 @@ export default {
       if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
           this.pageEpitopeList = 0;
         }
+      if(this.numOfElemInPage2 === 'All' && (this.epitopeAddedReview.length !== this.numOfElemInPage)){
+        this.numOfElemInPage = this.epitopeAddedReview.length;
+      }
     },
     finish_count_seq(){
       if(this.finish_count_seq === true && this.finish_count_var === true){
