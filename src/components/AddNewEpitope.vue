@@ -207,7 +207,7 @@
           </v-flex>
         </v-layout>
 
-        <div v-for="(epitope, index) in epitopeAddedReview" v-if="index >= pageEpitopeList*5 && index < Math.min((pageEpitopeList+1)*5, epitopeAddedReview.length)">
+        <div v-for="(epitope, index) in epitopeAddedReview" v-if="index >= pageEpitopeList*numOfElemInPage && index < Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)">
           <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
@@ -232,17 +232,28 @@
 
         <v-layout wrap align-center justify-center style="margin-top: 40px" v-if="epitopeAddedReview.length>0">
           <v-spacer></v-spacer>
-          <span>{{pageEpitopeList*5 + 1}} - {{Math.min((pageEpitopeList+1)*5, epitopeAddedReview.length)}} of {{epitopeAddedReview.length}}</span>
-          <v-btn @click="pageLeft()" class="white--text arrowButton"
+          <div>
+            <span>Epitopes per page: </span>
+              <v-select
+                v-model="numOfElemInPage2"
+              :items="listPossibleNumPage"
+                class="shrink"
+                style="display: inline-block"
+            ></v-select>
+          </div>
+          <div>
+            <span style="margin-right: 10px">{{pageEpitopeList*numOfElemInPage + 1}} - {{Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)}} of {{epitopeAddedReview.length}}</span>
+            <v-btn @click="pageLeft()" class="white--text arrowButton"
                  color="rgb(122, 139, 157)" icon medium
                   :disabled="pageEpitopeList === 0">
-           <v-icon>arrow_back</v-icon>
-         </v-btn>
-         <v-btn @click="pageRight()" class="white--text arrowButton"
-                color="rgb(122, 139, 157)" icon medium
-                :disabled="pageEpitopeList === maxPage">
-           <v-icon>arrow_forward</v-icon>
-         </v-btn>
+              <v-icon>arrow_back</v-icon>
+            </v-btn>
+            <v-btn @click="pageRight()" class="white--text arrowButton"
+                  color="rgb(122, 139, 157)" icon medium
+                  :disabled="pageEpitopeList === maxPage">
+             <v-icon>arrow_forward</v-icon>
+            </v-btn>
+          </div>
         </v-layout>
 
         <v-layout wrap justify-center style="margin-top: 40px" v-if="epitopeAdded.length>0">
@@ -291,6 +302,9 @@ export default {
       searchedName: '',
       pageEpitopeList: 0,
       maxPage: 0,
+      numOfElemInPage: 5,
+      numOfElemInPage2: 5,
+      listPossibleNumPage: [1,2,5,10,20, 'All']
     }
   },
   computed: {
@@ -379,8 +393,8 @@ export default {
         arrayToReturn.push(line);
         i++;
       }
-      let arrayFiltered = arrayToReturn.filter(item => item['Epitope name'].includes(this.searchedName));
-      this.maxPage = Math.max(Math.ceil(arrayFiltered.length/5) - 1, 0);
+      let arrayFiltered = arrayToReturn.filter(item => item['Epitope name'].toLowerCase().includes(this.searchedName.toLowerCase()));
+      this.maxPage = Math.max(Math.ceil(arrayFiltered.length/this.numOfElemInPage) - 1, 0);
       return arrayFiltered;
     }
   },
@@ -469,7 +483,7 @@ export default {
      },
      deleteEpitope(index){
         this.removeNewEpitopeFromList(index);
-        if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
+        if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
           this.pageEpitopeList = Math.max(this.pageEpitopeList - 1, 0);
         }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
@@ -648,10 +662,18 @@ export default {
           });
   },
   watch:{
+    numOfElemInPage2(){
+      if(this.numOfElemInPage2 === 'All'){
+        this.numOfElemInPage = this.epitopeAddedReview.length;
+      }
+      else{
+        this.numOfElemInPage = this.numOfElemInPage2;
+      }
+    },
     searchedName(){
-      this.searchedName = this.searchedName.charAt(0).toUpperCase() + this.searchedName.slice(1);
-      if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
-          this.pageEpitopeList = Math.max(Math.ceil(this.epitopeAddedReview.length/5) - 1, 0);
+      //this.searchedName = this.searchedName.charAt(0).toUpperCase() + this.searchedName.slice(1);
+      if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
+          this.pageEpitopeList = Math.max(Math.ceil(this.epitopeAddedReview.length/this.numOfElemInPage) - 1, 0);
       }
       if (this.pageEpitopeList < 0){
         this.pageEpitopeList = 0;
@@ -674,7 +696,7 @@ export default {
     },
     epitopeAdded(){
       this.setCountEpi(this.epitopeAdded.length);
-      if((this.pageEpitopeList*5) + 1 > this.epitopeAddedReview.length){
+      if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
           this.pageEpitopeList = 0;
         }
     },
@@ -775,6 +797,13 @@ export default {
 
   .arrowButton:disabled{
     opacity: 0.5 !important;
+  }
+
+  .shrink{
+    width: 50px;
+    margin-right: 30px;
+    margin-left: 30px;
+    font-size: small;
   }
 
 </style>
