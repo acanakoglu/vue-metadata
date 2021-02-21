@@ -224,11 +224,50 @@
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
-                 <v-btn @click="deleteEpitope(epitope.index - 1)" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
+                 <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
           </v-card>
         </div>
+
+        <v-dialog
+          persistent
+          scrollable
+            v-model="confirmDeleteSingleEpitope"
+            width="300">
+        <v-card>
+            <v-card-title
+                    class="headline"
+                    style="background-color:rgb(201, 53, 53) ; color: white">
+                Delete epitope
+            </v-card-title>
+            <v-card-text style="text-align: center; justify-content: center">
+                <p>
+                </p>
+                <p>
+                  Are you sure?
+                </p>
+            </v-card-text>
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="yesDeleteSingleEpitope()">
+                    Yes
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="noDeleteSingleEpitope()"
+                >
+                    No
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 
         <v-layout wrap align-center justify-center style="margin-top: 40px" v-if="epitopeAddedReview.length>0">
           <v-spacer></v-spacer>
@@ -242,7 +281,17 @@
             ></v-select>
           </div>
           <div>
-            <span style="margin-right: 10px">{{pageEpitopeList*numOfElemInPage + 1}} - {{Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)}} of {{epitopeAddedReview.length}}</span>
+            <span style="margin-right: 10px"
+                  v-if="(pageEpitopeList*numOfElemInPage + 1) ===
+                  Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)">
+              {{pageEpitopeList*numOfElemInPage + 1}}
+              of {{epitopeAddedReview.length}}
+            </span>
+            <span style="margin-right: 10px" v-else>
+              {{pageEpitopeList*numOfElemInPage + 1}} -
+              {{Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)}}
+              of {{epitopeAddedReview.length}}
+            </span>
             <v-btn @click="pageLeft()" class="white--text arrowButton"
                  color="rgb(122, 139, 157)" icon medium
                   :disabled="pageEpitopeList === 0">
@@ -258,8 +307,47 @@
 
         <v-layout wrap justify-center style="margin-top: 40px" v-if="epitopeAdded.length>0">
           <v-spacer></v-spacer>
-         <v-btn @click="deleteAllEpitopes()" class="white--text" color="#696969">DELETE ALL EPITOPES ({{this.epitopeAdded.length}})</v-btn>
+         <v-btn @click="confirmDeleteAllEpitopes = true" class="white--text" color="#696969">DELETE ALL EPITOPES ({{this.epitopeAdded.length}})</v-btn>
         </v-layout>
+
+        <v-dialog
+          persistent
+          scrollable
+            v-model="confirmDeleteAllEpitopes"
+            width="300">
+        <v-card>
+            <v-card-title
+                    class="headline"
+                    style="background-color:rgb(201, 53, 53) ; color: white">
+                Delete all epitopes
+            </v-card-title>
+            <v-card-text style="text-align: center; justify-content: center">
+                <p>
+                </p>
+                <p>
+                  Are you sure?
+                </p>
+            </v-card-text>
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="yesDeleteAllEpitopes()">
+                    Yes
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                        color="rgb(201, 53, 53) "
+                        flat
+                        @click="noDeleteAllEpitopes()"
+                >
+                    No
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 
       </v-container>
 
@@ -304,7 +392,10 @@ export default {
       maxPage: 0,
       numOfElemInPage: 5,
       numOfElemInPage2: 5,
-      listPossibleNumPage: [1,2,5,10,20, 'All']
+      listPossibleNumPage: [1,2,5,10,20, 'All'],
+      confirmDeleteSingleEpitope: false,
+      epitopeIndexToDelete: 0,
+      confirmDeleteAllEpitopes: false,
     }
   },
   computed: {
@@ -405,6 +496,23 @@ export default {
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
      'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
+     setEpitopeIndexToDelete(index){
+       this.epitopeIndexToDelete = index;
+     },
+     yesDeleteSingleEpitope(){
+       this.deleteEpitope(this.epitopeIndexToDelete);
+       this.confirmDeleteSingleEpitope = false;
+     },
+     noDeleteSingleEpitope(){
+       this.confirmDeleteSingleEpitope = false;
+     },
+     yesDeleteAllEpitopes(){
+       this.deleteAllEpitopes()
+       this.confirmDeleteAllEpitopes = false;
+     },
+     noDeleteAllEpitopes(){
+       this.confirmDeleteAllEpitopes = false;
+     },
      openShowAminoacidVariantUserNewEpi(){
        this.setNewSingleAminoAcidConditionUserAction({field: 'product', list: ''});
       this.setNewSingleAminoAcidConditionUserAction({field: 'variant_aa_type', list: ''});
@@ -700,7 +808,7 @@ export default {
           this.pageEpitopeList = 0;
         }
       if(this.numOfElemInPage2 === 'All' && (this.epitopeAddedReview.length !== this.numOfElemInPage)){
-        this.numOfElemInPage = this.epitopeAddedReview.length;
+        this.numOfElemInPage = this.epitopeAdded.length;
       }
     },
     finish_count_seq(){
