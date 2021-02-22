@@ -5,14 +5,16 @@
         <v-card-text>
           Please disable the pop-up blocker for this page, to open the VirusViz directly nextime.
           <br>
-          In order to open the VirusViz this time, please <a :href='alertLink' target="_blank">click me</a>.
+          In order to open the VirusViz this time, please
+          <a :href='alertLink' target="_blank" @click="alertDialog = false">click me</a>.
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            text
+            small
+            dark
             @click="alertDialog = false"
           >
             Close
@@ -257,11 +259,74 @@
                                 Select/Sort fields
                             </v-btn>
                         </v-dialog>
-                        <v-btn style="text-transform: none" dark small color="#009688"
-                               @click="virusVizClicked()">
-                          <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                          VirusViz
-                        </v-btn>
+                        <v-dialog
+                                v-model="dialogVirusviz"
+                                width="500">
+
+
+                                <v-btn slot="activator"
+                                    style="text-transform: none" dark small color="#009688">
+                                  <v-img style="margin-right: 5px; min-width: 15px;" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                                  VirusViz
+                                </v-btn>
+                            <v-card>
+                                <v-card-title
+                                        class="headline blue lighten-4"
+                                        primary-title>
+                                    Open in VirusViz
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+
+
+                                <v-card-text>
+                                    <p>
+                                        Click the "VirusViz (Full)" button below to open the selected sequences
+                                      in the VirusViz tool.
+                                    </p>
+                                    <p>
+                                         Click the "VirusViz (AA mutations only)" button below
+                                      to open the selected sequences with loading only amino acid mutations
+                                      in the VirusViz tool.
+                                      Loading amino acid mutations is optimized for memory consumption.
+                                      If you are interested in only aminoacid mutations, please use this method.
+                                    </p>
+                                    <p v-if="(count > 10000) || (count == null)">
+                                        <span v-if="count != null">
+                                          The number of sequences to forward to VirusViz are {{count}}.
+                                        </span>
+                                      Due to the memory limitation of the browsers or your computer,
+                                      your browser could be crashed.
+                                    </p>
+
+
+                                </v-card-text>
+
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                  <v-btn style="text-transform: none" dark small color="#009688"
+                                         @click="virusVizClicked(); dialogVirusviz = false;">
+                                    <v-img style="margin-right: 5px; min-width: 15px;" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                                    VirusViz (Full)
+                                  </v-btn>
+                                  <v-btn style="text-transform: none" dark small color="#009688"
+                                         @click="virusVizClicked(true); dialogVirusviz = false;">
+                                    <v-img style="margin-right: 5px; min-width: 15px;" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                                    VirusViz (AA mutations only)
+                                  </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="primary"
+                                            dark small
+                                            @click="dialogVirusviz = false;"
+                                    >
+                                        Close
+                                    </v-btn>
+
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -372,6 +437,7 @@
         },
         data() {
             return {
+              dialogVirusviz: false,
               alertLink: null,
                alertDialog: false,
                 downloadFileFormat: 'fasta',
@@ -475,7 +541,7 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
-            virusVizClicked(){
+            virusVizClicked(aa_only=false){
               console.log("VirusViz clicked");
               let orderDir = "";
 
