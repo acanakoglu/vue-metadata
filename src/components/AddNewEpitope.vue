@@ -739,6 +739,9 @@ export default {
      },
      resetSearchedName(){
        this.searchedName = '';
+       if(this.numOfElemInPage2 === 'All' ){
+         this.numOfElemInPage = this.epitopeAdded.length;
+       }
      },
      pageLeft(){
        this.pageEpitopeList = this.pageEpitopeList - 1;
