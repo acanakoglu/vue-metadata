@@ -61,7 +61,7 @@
                 <span class=label>Query:</span>
             </v-flex>-->  <!--query utils-->
             <v-flex md2 sm2 class="no-horizontal-padding">
-              <v-btn color='info' @click="afterQuerySelection()">Clear your query
+              <v-btn color='info' @click="afterQuerySelection();sars_info=false;">Clear your query
               </v-btn>
             </v-flex>  <!--clear all-->
             <!--                        <v-flex md1 sm2 class="no-horizontal-padding">-->
@@ -145,7 +145,7 @@
         <v-container fluid grid-list-xl style="background:#FFFFFF">
           <v-layout wrap align-center test style="background:#FFFFFF">
             <v-flex xs12 justify-center>
-              <div style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>Severe
+              <div v-if="sars_info" style="font-size: 1.3em;color: blue;justify-content: center;">Novel <strong>Severe
                 acute respiratory syndrome coronavirus 2</strong> sequences are preselected.
                 If you are interested in other virus(es), please change it from the dropdown menu below:
               </div>
@@ -248,6 +248,7 @@ export default {
   },
   data() {
     return {
+      sars_info: true,
       snackbar: true,
       infoBar: true,
       inputValid: true,
