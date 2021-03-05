@@ -263,7 +263,7 @@ export default {
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Num Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Num Mut Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},

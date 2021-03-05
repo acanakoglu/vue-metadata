@@ -22,6 +22,15 @@
                         <h3 style="color:red"  v-if="epiSearchDis">{{requirement}}</h3>
                       </v-flex>
 
+                      <v-flex xs12 class="no-horizontal-padding" v-if="Object.keys(epiQuerySel).length > 0" style="margin-bottom: 30px; margin-left: 20px; margin-right: 20px">
+                      <span class="label">
+                                        Epitope
+                                    </span>
+                      <span style="font-family:monospace; font-size:120%;">
+                                        {{ queryToShow }}
+                                    </span>
+                    </v-flex>
+
                       <v-flex class="no-horizontal-padding xs12 sm6 md4 lg2 d-flex EpitopeSelectors"
                               v-for="fieldEpi in epitopeFields" v-bind:key="fieldEpi.text">
                               <EpitopeSelectorText
@@ -114,21 +123,88 @@ export default {
   },
   computed: {
     ...mapState(['disableSelectorEpitopePart', 'countEpi', 'epitopeAdded',
-      'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart']),
+      'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query'
     }),
+    queryToShow() {
+      let inner_list = [];
+      Object.keys(this.epiQuerySel).forEach(key => {
+        const value2 = [];
+        const value = this.epiQuerySel[key];
+
+        let modifiedKey = this.modifyKey(key);
+
+        if (Array.isArray(value)) {
+          value.forEach(val => {
+            if (val === null)
+              value2.push("N/D");
+            else
+              value2.push(val);
+          });
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
+        } else {
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+        }
+      });
+      return inner_list.join(", ");
+    }
   },
    methods: {
      ...mapMutations(['resetEpiQuery', 'setCountEpi', 'setFalseDisableSelectorUserNewEpitopePart',
-       'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart', 'setFalseShowAminoacidVariantEpi']),
+       'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart',
+       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantEpi']),
      toSend(){
       let res = {};
       Object.assign(res,{"compound_query": this.compound_query},
                         {"epi_query": this.epiQuerySel});
       return res;
     },
+     modifyKey(key){
+       let modifiedKey = '';
+       if(key === 'product'){
+         modifiedKey = 'protein';
+       }
+       else if(key === 'cell_type'){
+         modifiedKey = 'assay_type';
+       }
+       else if(key === 'mhc_allele'){
+         modifiedKey = 'hla_restriction';
+       }
+       else if(key === 'startExt'){
+         modifiedKey = 'position_range_start';
+       }
+       else if(key === 'stopExt'){
+         modifiedKey = 'position_range_stop';
+       }
+       else if(key === 'startFreqExt'){
+         modifiedKey = 'response_frequency_start';
+       }
+       else if(key === 'stopFreqExt'){
+         modifiedKey = 'response_frequency_stop';
+       }
+       else if(key === 'variant_aa_type'){
+         modifiedKey = 'variant_type';
+       }
+       else if(key === 'sequence_aa_original'){
+         modifiedKey = 'original_amino_acid';
+       }
+       else if(key === 'sequence_aa_alternative'){
+         modifiedKey = 'alternative_amino_acid';
+       }
+       else if(key === 'startExtVariant'){
+         modifiedKey = 'variant_pos_range_start';
+       }
+       else if(key === 'stopExtVariant'){
+         modifiedKey = 'variant_pos_range_stop';
+       }
+       else{
+         modifiedKey = key;
+       }
+
+       return modifiedKey;
+     },
    },
   watch:{
     countEpi(){
@@ -152,6 +228,11 @@ export default {
           this.setFalseDisableSelectorUserNewEpitopePart();
           this.setFalseDisableSelectorEpitopePart();
           this.setFalseShowAminoacidVariantUserNewEpi();
+        }
+
+        if(Object.keys(this.aminoacidConditions).length > 0){
+          this.setTrueDisableSelectorEpitopePart();
+          this.setTrueShowAminoacidVariantEpi();
         }
 
         if(!this.epiSearchDis) {
@@ -219,6 +300,12 @@ export default {
   .EpitopeCard{
     background:#fafafa;
     padding-bottom: 100px;
+  }
+
+  .label {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 12px;
   }
 
 </style>

@@ -12,7 +12,7 @@
     >
       <template slot="item" slot-scope="data">
           <span class="item-value-span"> {{rename(data.item)}}</span>
-          <span class="item-count-span"> {{data.item.count}}</span>
+          <!--<span class="item-count-span"> {{data.item.count}}</span>-->    <!-- TOLTA COUNT INUTILE  -->
       </template>
     </v-autocomplete>
   </v-card>

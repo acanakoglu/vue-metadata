@@ -2,6 +2,14 @@
   <v-container fluid grid-list-xl class="EpitopeMenu" >
     <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
     <v-layout wrap align-center>
+      <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(aminoacidConditions).length > 0" style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
+          <span class="label">
+            Amino Acid Variant
+          </span>
+          <span style="font-family:monospace; font-size:120%;">
+              {{ queryToShow }}
+          </span>
+        </v-flex>
       <v-flex class="no-horizontal-padding xs12 sm6 md6 lg3 d-flex EpitopeSelectors"
                   v-for="fieldEpi in epitopeAminoacidFields" v-bind:key="fieldEpi.text">
                   <EpitopeSelectorText
@@ -66,6 +74,28 @@ export default {
     ...mapGetters({
         compound_query: 'build_query',
     }),
+    queryToShow() {
+      let inner_list = [];
+      Object.keys(this.aminoacidConditions).forEach(key => {
+        const value2 = [];
+        const value = this.aminoacidConditions[key];
+
+        let modifiedKey = this.modifyKey(key);
+
+        if (Array.isArray(value)) {
+          value.forEach(val => {
+            if (val === null)
+              value2.push("N/D");
+            else
+              value2.push(val);
+          });
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
+        } else {
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+        }
+      });
+      return inner_list.join(", ");
+    }
   },
   methods:{
     ...mapMutations([
@@ -115,6 +145,29 @@ export default {
         this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
       }
     },
+    modifyKey(key){
+       let modifiedKey = '';
+       if(key === 'variant_aa_type'){
+         modifiedKey = 'variant_type';
+       }
+       else if(key === 'sequence_aa_original'){
+         modifiedKey = 'original_amino_acid';
+       }
+       else if(key === 'sequence_aa_alternative'){
+         modifiedKey = 'alternative_amino_acid';
+       }
+       else if(key === 'startExtVariant'){
+         modifiedKey = 'variant_pos_range_start';
+       }
+       else if(key === 'stopExtVariant'){
+         modifiedKey = 'variant_pos_range_stop';
+       }
+       else{
+         modifiedKey = key;
+       }
+
+       return modifiedKey;
+     },
   },
   watch: {
     compound_query(){
@@ -151,4 +204,11 @@ export default {
   .EpitopeSelectors{
     margin-bottom: 10px;
   }
+
+  .label {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 12px;
+  }
+
 </style>

@@ -13,7 +13,7 @@
                       :label="text"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="epiSearchDis || isLoading || waitProteinSelected || positionRangeBlocked"
+                      :disabled="epiSearchDis || isLoading || waitProteinSelected || positionRangeBlocked || menu"
                       :loading = "isLoading"
         ></v-text-field>
 

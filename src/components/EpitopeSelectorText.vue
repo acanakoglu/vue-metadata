@@ -38,7 +38,7 @@ export default {
     },
     aminoacidConditions(){
       if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
-        this.disableTxtAmino = this.getDisableTxtAmino();
+        //this.disableTxtAmino = this.getDisableTxtAmino();       //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
         this.loadData();
       }
     },
@@ -202,13 +202,13 @@ export default {
       isLoading : true,
       results: [],
       disableTxtSel: false,
-      disableTxtAmino: true,
+      disableTxtAmino: false,   //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO set true
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
     }
   },
   mounted() {
-    this.disableTxtAmino = this.getDisableTxtAmino();
+    //this.disableTxtAmino = this.getDisableTxtAmino();       //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
     this.loadData();
   },
 }

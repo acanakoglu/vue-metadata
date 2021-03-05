@@ -9,8 +9,18 @@
             <h2>Custom Epitopes</h2>
           </v-flex>
 
+          <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(newSingleEpitope).length > 0 && !epiSearchDis"
+                  style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
+          <span class="label">
+            New Epitope
+          </span>
+          <span style="font-family:monospace; font-size:120%;">
+              {{ queryToShow }}
+          </span>
+        </v-flex>
+
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-            <h3 style="color:red;"  v-if="epiSearchDis">{{requirement}}</h3>
+            <h3 style="color:red; margin-bottom: 10px"  v-if="epiSearchDis">{{requirement}}</h3>
           </v-flex>
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
           <v-layout wrap align-center justify-space-around>
@@ -475,7 +485,7 @@ export default {
         line['Position range'] = val[i].position_range_to_show;
         line['Virus taxon name'] = val[i].taxon_name;
         line['Host taxon name'] = val[i].host_taxon_name;
-        line['Number of sequences'] = val[i].num_seq;
+        line['Number of mutated sequences'] = val[i].num_seq;
         line['Number of variants'] = val[i].num_var;
         if(val[i].file_name) {
           line['file_name'] = val[i].file_name;
@@ -487,6 +497,51 @@ export default {
       let arrayFiltered = arrayToReturn.filter(item => item['Epitope name'].toLowerCase().includes(this.searchedName.toLowerCase()));
       this.maxPage = Math.max(Math.ceil(arrayFiltered.length/this.numOfElemInPage) - 1, 0);
       return arrayFiltered;
+    },
+    queryToShow() {
+      let inner_list = [];
+      Object.keys(this.newSingleEpitope).forEach(key => {
+        const value2 = [];
+        const value = this.newSingleEpitope[key];
+
+        let modifiedKey = this.modifyKey(key);
+
+        if (Array.isArray(value)) {
+          value.forEach(val => {
+            if (val === null)
+              value2.push("N/D");
+            else
+              value2.push(val);
+          });
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
+        } else {
+          inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+        }
+      });
+      let i = 0;
+      let len = this.epitopeAminoacidConditionsArrayUserNew.length;
+      while(i<len) {
+        Object.keys(this.epitopeAminoacidConditionsArrayUserNew[i]).forEach(key => {
+          const value2 = [];
+          const value = this.epitopeAminoacidConditionsArrayUserNew[i][key];
+
+          let modifiedKey = this.modifyKey2(key);
+
+          if (Array.isArray(value)) {
+            value.forEach(val => {
+              if (val === null)
+                value2.push("N/D");
+              else
+                value2.push(val);
+            });
+            inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
+          } else {
+            inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+          }
+        });
+        i++;
+      }
+      return inner_list.join(", ");
     }
   },
    methods: {
@@ -748,7 +803,47 @@ export default {
      },
      pageRight(){
        this.pageEpitopeList = this.pageEpitopeList + 1;
-     }
+     },
+     modifyKey(key){
+       let modifiedKey = '';
+       if(key === 'taxon_name'){
+         modifiedKey = 'virus';
+       }
+       else if(key === 'host_taxon_name'){
+         modifiedKey = 'host';
+       }
+       else if(key === 'product'){
+         modifiedKey = 'protein';
+       }
+       else{
+         modifiedKey = key;
+       }
+
+       return modifiedKey;
+     },
+     modifyKey2(key){
+       let modifiedKey = '';
+       if(key === 'variant_aa_type'){
+         modifiedKey = 'variant_type';
+       }
+       else if(key === 'sequence_aa_original'){
+         modifiedKey = 'original_amino_acid';
+       }
+       else if(key === 'sequence_aa_alternative'){
+         modifiedKey = 'alternative_amino_acid';
+       }
+       else if(key === 'product'){
+         modifiedKey = 'variant_protein';
+       }
+       else if(key === 'start_aa_original'){
+         modifiedKey = 'variant_position_range';
+       }
+       else{
+         modifiedKey = key;
+       }
+
+       return modifiedKey;
+     },
    },
   created() {
       if(this.compound_query['gcm'].taxon_name) {

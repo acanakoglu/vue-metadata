@@ -108,7 +108,7 @@ export default {
       infos['Position range'] = epitope.position_range_to_show;
       infos['Virus taxon name'] = epitope.taxon_name;
       infos['Host taxon name'] = epitope.host_taxon_name;
-      infos['Number of sequences'] = epitope.num_seq;
+      infos['Number of mutated sequences'] = epitope.num_seq;
       infos['Number of variants'] = epitope.num_var;
       infos['Variants frequency'] = epitope.mutated_freq;
       infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;

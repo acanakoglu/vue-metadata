@@ -27,7 +27,7 @@
             <v-btn @click="openShowAminoacidVariantEpi()"
                        color="rgb(201, 53, 53) "
                    style="color:white;"
-                      :disabled="epiSearchDis">
+                      :disabled="epiSearchDis || showAminoacidVariantEpi">
               Add condition on amino acids</v-btn>
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
@@ -308,7 +308,7 @@ export default {
           //{text: 'All Epitope Fragments', value: 'all_fragment_position', sortable: false, show: false, to_send: true, can_be_shown: false}, //ONLY FOR VERSION 2 TABLE
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Num Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Num Mut Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio2', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},

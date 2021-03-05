@@ -31,9 +31,9 @@ export default {
   },
   watch: {
     newSingleAminoAcidConditionUser(){
-      if(this.field === 'sequence_aa_original' || this.field === 'sequence_aa_alternative'){
+      /*if(this.field === 'sequence_aa_original' || this.field === 'sequence_aa_alternative'){
         this.disableTxtAmino = this.getDisableTxtAmino();
-      }
+      }*/                                                     //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
       if(!this.disableTxtAmino) {
           this.loadData();
       }
@@ -131,17 +131,17 @@ export default {
       isLoading : false,
       results: [],
       disableTxtSel: false,
-      disableTxtAmino: true,
+      disableTxtAmino: false,
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
       disableTextAmino: true,
     }
   },
   mounted() {
-    this.disableTxtAmino = this.getDisableTxtAmino();
-    if(!this.disableTxtAmino) {
-      this.loadData();
-    }
+    //this.disableTxtAmino = this.getDisableTxtAmino();     //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
+    //if(!this.disableTxtAmino) {
+    this.loadData();
+    //}
   },
 }
 </script>
