@@ -292,6 +292,23 @@ export default {
         this.deleteExtremesLocal();
       }
       this.loadExtremes();
+      if(this.field === 'position_range') {
+        if (this.epiQuerySel['startExt']) {
+          this.min = this.epiQuerySel['startExt'];
+        }
+        if (this.epiQuerySel['stopExt']) {
+          this.max = this.epiQuerySel['stopExt'];
+        }
+      }
+      else{
+        if (this.epiQuerySel['startExtVariant']) {
+          this.min = this.epiQuerySel['startExtVariant'];
+        }
+        if (this.epiQuerySel['stopExtVariant']) {
+          this.max = this.epiQuerySel['stopExtVariant'];
+        }
+      }
+      this.shown_value = this.textBoxValue;
     },
     aminoacidConditions(){
       if (this.field === 'variant_position_range' && !this.aminoacidConditions['startExtVariant'] && !this.aminoacidConditions['stopExtVariant']) {
@@ -336,6 +353,23 @@ export default {
   },
   created() {
     this.loadExtremes();
+    if(this.field === 'position_range') {
+        if (this.epiQuerySel['startExt']) {
+          this.min = this.epiQuerySel['startExt'];
+        }
+        if (this.epiQuerySel['stopExt']) {
+          this.max = this.epiQuerySel['stopExt'];
+        }
+      }
+      else{
+        if (this.epiQuerySel['startExtVariant']) {
+          this.min = this.epiQuerySel['startExtVariant'];
+        }
+        if (this.epiQuerySel['stopExtVariant']) {
+          this.max = this.epiQuerySel['stopExtVariant'];
+        }
+      }
+      this.shown_value = this.textBoxValue;
   },
 }
 </script>

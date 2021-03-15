@@ -171,7 +171,7 @@ export default {
   },
   watch: {
     compound_query(){
-      this.closeAminoEpiMenu();
+      //this.closeAminoEpiMenu();
     }
   },
   created() {

@@ -124,6 +124,8 @@ export default {
       forceNull: false,
       disablePercSel: false,
       disabledEpi_AminoacidMenuOpened: false,
+      minRange: null,
+      maxRange: null,
     }
   },
   computed: {
@@ -135,10 +137,14 @@ export default {
       epiSearchDis: 'epiSearchDisabled',
     }),
     textBoxValue() {
-        let a = [];
-        a.push('min: ' + this.range[0]);
-        a.push('max: ' + this.range[1]);
-        return a.join('; ');
+      let a = [];
+        //a.push('min: ' + this.range[0]);
+        //a.push('max: ' + this.range[1]);
+      if(this.minRange != null)
+          a.push('min: ' + this.minRange);
+      if(this.maxRange != null)
+        a.push('max: ' + this.maxRange);
+      return a.join('; ');
     },
     rangeUpdate(){
       return [this.minFreqExt, this.maxFreqExt];
@@ -155,6 +161,8 @@ export default {
           this.range = this.rangeUpdate;
           this.menu = false;
           this.shown_value = '';
+          this.minRange = null;
+          this.maxRange = null;
           //console.log("CLEAR: " , this.epiQuerySel);
       },
       setExtremesLocal() {
@@ -221,6 +229,8 @@ export default {
                     this.maxFreqExt = Math.ceil(this.results['stopFreq'] * 100);
                     this.maxFreqExtString = "Max: " + this.maxFreqExt;
                     this.range = this.rangeUpdate;
+                    this.minRange = this.minFreqExt;
+                    this.maxRange = this.maxFreqExt;
                     this.forceNull = false;
                     this.disablePercSel = false;
                   }
@@ -245,6 +255,13 @@ export default {
         this.deleteExtremesLocal();
       }
       this.loadExtremes();
+      if (this.epiQuerySel['startFreqExt']){
+        this.minRange = this.epiQuerySel['startFreqExt'] * 100;
+      }
+      if (this.epiQuerySel['stopFreqExt']){
+        this.maxRange = this.epiQuerySel['stopFreqExt'] * 100;
+      }
+      this.shown_value = this.textBoxValue;
     },
     disableSelectorEpitopePart() {
       if (this.disableSelectorEpitopePart) {

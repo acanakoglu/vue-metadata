@@ -44,6 +44,7 @@ export default new Vuex.Store({
         newSingleAminoAcidConditionUser: {},
         isEpitopeSurf: false,
         addingEpitope: false,
+        exampleCustomEpitope: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -181,8 +182,35 @@ export default new Vuex.Store({
         resetQuery: (state) => {
             state.query = {}
         },
+        setEpiQuery: (state, query) => {
+            state.epiQuerySel = Object.assign({}, query);
+        },
         resetEpiQuery: (state) => {
             state.epiQuerySel = {}
+        },
+        setAminoacidConditionQuery: (state, query) => {
+            state.aminoacidConditions = Object.assign({}, query);
+        },
+        resetAminoacidConditionQuery: (state) => {
+            state.aminoacidConditions = {}
+        },
+        setNewSingleEpitopeQuery: (state, query) => {
+            state.newSingleEpitope = Object.assign({}, query);
+        },
+        resetNewSingleEpitopeQuery: (state) => {
+            state.newSingleEpitope = {}
+        },
+        setNewSingleAminoacidConditionUserQuery: (state, query) => {
+            state.newSingleAminoAcidConditionUser = Object.assign({}, query);
+        },
+        resetNewSingleAminoacidConditionUserQuery: (state) => {
+            state.newSingleAminoAcidConditionUser = {}
+        },
+        setTrueExampleCustomEpitope: (state) => {
+            state.exampleCustomEpitope = true;
+        },
+        setFalseExampleCustomEpitope: (state) => {
+            state.exampleCustomEpitope = false;
         },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;

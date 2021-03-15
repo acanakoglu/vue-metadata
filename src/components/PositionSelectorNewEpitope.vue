@@ -96,7 +96,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'aminoacidConditions', 'disableSelectorEpitopePart', 'epitopeAminoacidFields', 'newSingleEpitope', 'newSingleEpitope'
+      'epiQuerySel', 'aminoacidConditions', 'disableSelectorEpitopePart',
+      'epitopeAminoacidFields', 'newSingleEpitope', 'newSingleEpitope', 'exampleCustomEpitope'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -120,7 +121,7 @@ export default {
   },
   methods: {
       ...mapActions(['setEpiDropDownSelected', "setAminoacidConditionsSelected", 'setNewSingleEpitopeSelected']),
-      ...mapMutations(['resetEpiQueryField']),
+      ...mapMutations(['resetEpiQueryField', 'setFalseExampleCustomEpitope']),
     deleteExtremesLocal() {
         this.errorExt = '';
         this.min = '';
@@ -171,7 +172,14 @@ export default {
               poll(res.result, (res) => {
                 let vals = res.values;
                 this.results = vals[0];
-                this.minExt = this.results['start'];
+                if(this.exampleCustomEpitope){
+                  this.minExt = this.newSingleEpitope['position_range'][this.newSingleEpitope['position_range'].length - 1][1] + 1;
+                  this.setFalseExampleCustomEpitope();
+                }
+                else
+                {
+                  this.minExt = this.results['start'];
+                }
                 this.saveMin = this.results['start'];
                 this.min_min = this.minExt;
                 this.maxExt = this.results['stop'];
@@ -217,7 +225,9 @@ export default {
       if(this.newSingleEpitope['product']){
         this.waitProteinSelected = false;
         if(this.newSingleEpitope['product'] !== this.previousProtein){
-          this.setNewSingleEpitopeSelected({field: "position_range", list: ''});
+          if(!this.exampleCustomEpitope) {
+            this.setNewSingleEpitopeSelected({field: "position_range", list: ''});
+          }
           this.loadExtremes();
         }
         this.previousProtein = this.newSingleEpitope['product'];

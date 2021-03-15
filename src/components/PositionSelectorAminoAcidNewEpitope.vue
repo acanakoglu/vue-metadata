@@ -244,10 +244,20 @@ export default {
         this.max = null;
         this.shown_value = this.textBoxValue;
       }
+      if(this.newSingleAminoAcidConditionUser['start_aa_original']){
+        this.min = this.newSingleAminoAcidConditionUser['start_aa_original']['min_val'];
+        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];;
+        this.shown_value = this.textBoxValue;
+      }
       this.loadExtremes();
     },
   },
   created() {
+    if(this.newSingleAminoAcidConditionUser['start_aa_original']){
+        this.min = this.newSingleAminoAcidConditionUser['start_aa_original']['min_val'];
+        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];;
+        this.shown_value = this.textBoxValue;
+      }
     //this.loadExtremes();
   },
   mounted() {

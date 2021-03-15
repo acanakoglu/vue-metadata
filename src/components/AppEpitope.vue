@@ -269,6 +269,72 @@ export default {
       selectedQuery: null,
       queryItems: [
         {
+          text: 'Example Epitope',
+          value: {
+            query: {
+              "gcm": {
+                "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                "host_taxon_name": ["homo sapiens"],
+                "country" : ["italy"],
+              },
+              "type": "original",
+              "kv": {}
+            },
+            epi_query: {
+              epitope_meta: {
+                "product": ["Spike (surface glycoprotein)"],
+                "cell_type": ["B cell"],
+                "is_linear": [true],
+                "mhc_allele": [null],
+                "startExt": [14],
+                "stopExt": [150],
+                "startFreqExt": [0.01],
+                "stopFreqExt": [0.08],
+              },
+              variant_meta: {
+                "variant_aa_type": ["SUB"],
+                "sequence_aa_original": ["N"],
+                "sequence_aa_alternative": ["T"],
+                "startExtVariant": [17],
+                "stopExtVariant": [55],
+              }
+            }
+          }
+        },
+        {
+          text: 'Example Custom Epitope',
+          value: {
+            query: {
+              "gcm": {
+                "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                "host_taxon_name": ["homo sapiens"],
+                "country" : ["italy"],
+              },
+              "type": "original",
+              "kv": {}
+            },
+            custom_epi_query: {
+              custom_epitope_meta: {
+                "epitope_name": "Custom epitope example",
+                "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                "host_taxon_name": "homo sapiens",
+                "product": "spike (surface glycoprotein)",
+                "position_range": [[1,12],[15,20]],
+              },
+              custom_variant_meta: {
+                "product": ["spike (surface glycoprotein)"],
+                "variant_aa_type": ["sub"],
+                "sequence_aa_original": ["d"],
+                "sequence_aa_alternative": ["g"],
+                "start_aa_original" : {
+                  "max_val": 300,
+                  "min_val": 100,
+                }
+              }
+            }
+          }
+        },
+        {
           text: 'Example 1 - Complete sequences from GenBank',
           value: {
             query: {
@@ -912,7 +978,12 @@ export default {
     ...
         mapMutations(['setQuery', 'setType', 'resetType', 'setQueryGraph', "resetKv",
           "resetQuery", 'resetPanelActive', 'setExampleQueryLoaded', 'setQueryStartEpi',
-        'setTrueIsEpitopeSurf']),
+        'setTrueIsEpitopeSurf', 'setEpiQuery', 'resetEpiQuery', 'setTrueShowAminoacidVariantEpi',
+        'setTrueDisableSelectorEpitopePart', 'setAminoacidConditionQuery', 'resetAminoacidConditionQuery',
+        'setNewSingleEpitopeQuery', "resetNewSingleEpitopeQuery", 'setTrueDisableSelectorUserNewEpitopePart',
+        'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantUserNewEpi',
+        'setNewSingleAminoacidConditionUserQuery', 'resetNewSingleAminoacidConditionUserQuery',
+        'resetEpitopeAminoacidConditionsArrayUserNew', 'setTrueExampleCustomEpitope']),
     ...
         mapActions(["setKv", "setKvFull", "deleteAge"]),
     setInputQuery() {
@@ -928,18 +999,49 @@ export default {
       this.infoDialog = true;
     }
     ,
-    afterQuerySelection(item) {
+    afterQuerySelection(item2) {
+      let item = JSON.parse(JSON.stringify(item2));
       this.resetPanelActive();
       this.setExampleQueryLoaded();
       // console.log(item);
       if (item) {
         this.setQuery(item.query.gcm);
         this.setKvFull(item.query.kv);
-        this.setType(item.query.type)
+        this.setType(item.query.type);
+
+        if(item.epi_query) {
+          let total_epitope_meta = {};
+          Object.assign(total_epitope_meta, item.epi_query.epitope_meta, item.epi_query.variant_meta);
+          this.setEpiQuery(total_epitope_meta);
+          if (item.epi_query.variant_meta) {
+            this.resetAminoacidConditionQuery();
+            this.setTrueShowAminoacidVariantEpi();
+            this.setTrueDisableSelectorEpitopePart();
+            this.setAminoacidConditionQuery(item.epi_query.variant_meta);
+          }
+        }
+
+        if(item.custom_epi_query) {
+          this.setTrueExampleCustomEpitope();
+          this.resetEpitopeAminoacidConditionsArrayUserNew();
+          this.setNewSingleEpitopeQuery(item.custom_epi_query.custom_epitope_meta);
+          if (item.custom_epi_query.custom_variant_meta) {
+            this.resetNewSingleAminoacidConditionUserQuery();
+            this.setTrueDisableSelectorEpitopePart();
+            this.setTrueShowAminoacidVariantUserNewEpi();
+            this.setTrueDisableSelectorUserNewEpitopePart();
+            this.setNewSingleAminoacidConditionUserQuery(item.custom_epi_query.custom_variant_meta);
+          }
+        }
+
       } else {
         this.resetQuery();
         this.resetType();
         this.resetKv();
+        this.resetEpiQuery();
+        this.resetNewSingleEpitopeQuery();
+        this.resetAminoacidConditionQuery();
+        this.resetNewSingleAminoacidConditionUserQuery();
       }
       this.$nextTick(() => {
         this.selectedQuery = null
@@ -1023,7 +1125,7 @@ export default {
   computed: {
     ...
         mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
-        'countSeq2', 'countSeq3', 'countSeq4']),
+        'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope']),
     ...
         mapGetters({
           compound_query: 'build_query',

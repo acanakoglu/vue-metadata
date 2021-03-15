@@ -868,6 +868,11 @@ export default {
           });
   },
   watch:{
+    newSingleEpitope(){
+      if(this.newSingleEpitope['epitope_name'] && this.newSingleEpitope['epitope_name'] !== this.epitope_name){
+        this.epitope_name = this.newSingleEpitope['epitope_name'];
+      }
+    },
     numOfElemInPage2(){
       if(this.numOfElemInPage2 === 'All'){
         this.numOfElemInPage = this.epitopeAddedReview.length;
