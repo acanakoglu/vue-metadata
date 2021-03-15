@@ -251,6 +251,19 @@ export default {
       )
       delete epitope_conditions['startExtVariant'];
       delete epitope_conditions['stopExtVariant'];
+
+      /*    CHANGE EPITOPE AMINO ACID SELECTION
+      if(this.field === 'variant_position_range'){
+        delete epitope_conditions['cell_type'];
+        delete epitope_conditions['is_linear'];
+        delete epitope_conditions['mhc_allele'];
+        delete epitope_conditions['startExt'];
+        delete epitope_conditions['startFreqExt'];
+        delete epitope_conditions['stopExt'];
+        delete epitope_conditions['stopFreqExt'];
+      }
+       */
+
       let aminoacid_conditions = JSON.parse(JSON.stringify(this.aminoacidConditions));
       let epitope_and_aminoacid_conditions = Object.assign(aminoacid_conditions, epitope_conditions);
       if(this.field === 'variant_position_range'){
