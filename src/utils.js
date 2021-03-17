@@ -1,16 +1,24 @@
 export const FULL_TEXT = 'FULL NUCLEOTIDE SEQUENCE'
 export const LOADING_TEXT = 'Loading...'
+import axios from "axios";
 
 export const poll = (id, callback) => {
     let myInterval;
     myInterval = setInterval(() => {
-        $.get(`api/poll/${id}`, (data) => {
-            if (data.ready) {
+        let url = `poll/${id}`
+        axios.get(url)
+            .then((res) => {
+                return res.data;
+            })
+            .then((res) => {
+                if (res.ready) {
+                    clearInterval(myInterval);
+                    callback(res.result);
+                }
+            }).catch(
+            function (error) {
                 clearInterval(myInterval);
-                callback(data.result);
             }
-        }).fail(function () {
-            clearInterval(myInterval);
-        });
+        );
     }, 5000);
 }
