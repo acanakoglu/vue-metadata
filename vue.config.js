@@ -10,5 +10,5 @@ module.exports = {
             },
         }
     },
-    baseUrl: '/virusurf_epitope/',
+    baseUrl: '/virusurf/',
 }
