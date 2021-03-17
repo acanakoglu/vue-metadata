@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     isEpitope() {
-      if (this.$route.hash === '#epitope')
+      if (this.$route.path.startsWith('/epitope') || this.$route.hash === '#epitope')
         return true;
       else
         return false;
