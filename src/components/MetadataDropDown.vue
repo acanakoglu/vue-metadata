@@ -7,7 +7,7 @@
             item-value="value"
             :label="labelTitle"
             :multiple="is_gcm"
-            :disabled="searchDisabled"
+            :disabled="searchDisabled ||  disableSelectorEpitopePart"
     >
         <template slot="item" slot-scope="data">
             <span class="item-value-span"> {{ rename(data.item)}}</span>
@@ -47,7 +47,7 @@
         },
         computed: {
             ...mapState([
-                'query', 'synonym', "panelActive"
+                'query', 'synonym', "panelActive", 'disableSelectorEpitopePart'
             ]),
             ...mapGetters({
                 compound_query: 'build_query',

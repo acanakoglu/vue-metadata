@@ -1,33 +1,32 @@
 <template>
   <v-app>
 
-    <!--<div v-if="isEpitope" >
-      <App2></App2>
+    <div v-if="isEpitope" >
+      <AppEpitope></AppEpitope>
     </div>
     <div v-else >
-      <App1></App1>
-    </div>-->
+      <AppMain></AppMain>
+    </div>
 
-    <AppMain></AppMain>
+    <!--<AppMain></AppMain>-->
 
   </v-app>
 </template>
 
 <script>
 
-import {mapMutations, mapState, mapActions, mapGetters} from 'vuex'
-//import App2 from "./components/App2";
+import AppEpitope from "./components/AppEpitope";
 import AppMain from "./components/AppMain";
 
 export default {
   name: 'App',
   components: {
-    //App2,
+    AppEpitope,
     AppMain
   },
   computed: {
     isEpitope() {
-      if (this.$route.hash === '#epitope')
+      if (this.$route.path.startsWith('/epitope') || this.$route.hash === '#epitope')
         return true;
       else
         return false;

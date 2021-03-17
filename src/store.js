@@ -19,6 +19,32 @@ export default new Vuex.Store({
         numerical: new Set(),
         exampleQueryLoaded: null,
         gisaidOnly: false,
+        epiQuerySel: {},
+        aminoacidConditions: {},
+        countSeq: null,          // metadata + epitope + aminoacid
+        countSeq2: null,         //only metadata
+        countSeq3: null,         //metadata + aminoacid
+        countSeq4: null,         //metadata + epitope
+        countEpi: null,
+        showSequenceEpiTable: false,
+        chosenEpitope: null,
+        showAminoacidVariantEpi: false,
+        epitopeAminoacidFields: [],
+        disableSelectorEpitopePart: false,
+        epitopeAdded: [],
+        newSingleEpitope: {},
+        newEpitopeLoading: false,
+        showSequenceEpiTableUser: false,
+        showMoreInfoEpitopeUser: false,
+        userEpitopeSelected: null,
+        showAminoacidVariantUserNewEpi: false,
+        epitopeAminoacidConditionsArrayUserNew: [],
+        epitopeAminoacidConditionsArrayUserNewInOR: [],
+        disableSelectorUserNewEpitopePart: false,
+        newSingleAminoAcidConditionUser: {},
+        isEpitopeSurf: false,
+        addingEpitope: false,
+        exampleCustomEpitope: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -30,8 +56,23 @@ export default new Vuex.Store({
         },
         keysEmpty: (state) => state.keys.length === 0,
         panels: state => Object.keys(state.kv),
+        epiSearchDisabled: state => {
+            let res = true;
+            if(state.query['taxon_name'] && state.query['host_taxon_name'] ){
+                if(state.query['taxon_name'].length === 1 && state.query['host_taxon_name'].length === 1 ) {
+                    res = false;
+                }
+            }
+            return res;
+        },
     },
     mutations: {
+        setQueryStartEpi:(state)=>{
+            state.query = {
+                taxon_name: ["severe acute respiratory syndrome coronavirus 2"],
+                host_taxon_name: ["homo sapiens"]
+            }
+        },
         setExampleQueryLoaded:(state)=>{
             console.log("state.exampleQueryLoaded",state.exampleQueryLoaded)
             console.log("snew Date().getTime()",new Date().getTime())
@@ -97,16 +138,82 @@ export default new Vuex.Store({
         reloadQuery: (state) => {
             state.query = Object.assign({}, state.query);
         },
+        reloadEpiQuery: (state) => {
+            state.epiQuerySel = Object.assign({}, state.epiQuerySel);
+        },
+        reloadAminoacidConditions: (state) => {
+            state.aminoacidConditions = Object.assign({}, state.aminoacidConditions);
+        },
+        reloadNewSingleEpitope: (state) => {
+            state.newSingleEpitope = Object.assign({}, state.newSingleEpitope);
+        },
+        reloadNewSingleAminoAcidConditionUser: (state) => {
+            state.newSingleAminoAcidConditionUser = Object.assign({}, state.newSingleAminoAcidConditionUser);
+        },
         setQueryField: (state, payload) => {
             state.query[payload.field] = payload.fieldQuery;
             // Vue.set(state.query, payload.field, payload.list);
+        },
+        setEpiQueryField: (state, payload) => {
+            state.epiQuerySel[payload.field] = payload.fieldQuery;
+        },
+        setAminoacidConditions: (state, payload) => {
+            state.aminoacidConditions[payload.field] = payload.fieldQuery;
+        },
+        setNewSingleEpitope: (state, payload) => {
+            state.newSingleEpitope[payload.field] = payload.fieldQuery;
+        },
+        setNewSingleAminoAcidConditionUser: (state, payload) => {
+            state.newSingleAminoAcidConditionUser[payload.field] = payload.fieldQuery;
         },
         resetQueryField: (state, field) => {
             delete state.query[field];
             // Vue.delete(state.query, field);
         },
+        resetEpiQueryField: (state, field) => {
+            delete state.epiQuerySel[field];
+        },
+        resetAminoacidConditions: (state, field) => {
+            delete state.aminoacidConditions[field];
+        },
+        resetNewSingleEpitope: (state, field) => {
+            delete state.newSingleEpitope[field];
+        },
+        resetNewSingleAminoAcidConditionUser: (state, field) => {
+            delete state.newSingleAminoAcidConditionUser[field];
+        },
         resetQuery: (state) => {
             state.query = {}
+        },
+        setEpiQuery: (state, query) => {
+            state.epiQuerySel = Object.assign({}, query);
+        },
+        resetEpiQuery: (state) => {
+            state.epiQuerySel = {}
+        },
+        setAminoacidConditionQuery: (state, query) => {
+            state.aminoacidConditions = Object.assign({}, query);
+        },
+        resetAminoacidConditionQuery: (state) => {
+            state.aminoacidConditions = {}
+        },
+        setNewSingleEpitopeQuery: (state, query) => {
+            state.newSingleEpitope = Object.assign({}, query);
+        },
+        resetNewSingleEpitopeQuery: (state) => {
+            state.newSingleEpitope = {}
+        },
+        setNewSingleAminoacidConditionUserQuery: (state, query) => {
+            state.newSingleAminoAcidConditionUser = Object.assign({}, query);
+        },
+        resetNewSingleAminoacidConditionUserQuery: (state) => {
+            state.newSingleAminoAcidConditionUser = {}
+        },
+        setTrueExampleCustomEpitope: (state) => {
+            state.exampleCustomEpitope = true;
+        },
+        setFalseExampleCustomEpitope: (state) => {
+            state.exampleCustomEpitope = false;
         },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;
@@ -124,6 +231,108 @@ export default new Vuex.Store({
         },
         setQueryGraph: (state, input) => {
             state.showGraphQuery = input;
+        },
+        setCountSeq: (state, count) => {
+            state.countSeq = count;
+        },
+        setCountSeq2: (state, count) => {
+            state.countSeq2 = count;
+        },
+        setCountSeq3: (state, count) => {
+            state.countSeq3 = count;
+        },
+        setCountSeq4: (state, count) => {
+            state.countSeq4 = count;
+        },
+        setCountEpi: (state, count) => {
+            state.countEpi = count;
+        },
+        showSeqEpiTable: (state) => {
+            state.showSequenceEpiTable = !state.showSequenceEpiTable;
+        },
+        showSeqEpiTableUser: (state) => {
+            state.showSequenceEpiTableUser = !state.showSequenceEpiTableUser;
+        },
+        showMoreInfo: (state) => {
+            state.showMoreInfoEpitopeUser = !state.showMoreInfoEpitopeUser;
+        },
+        setChosenEpitope: (state, item) => {
+            state.chosenEpitope = item;
+        },
+        setUserEpitopeSelected: (state, index) => {
+            state.userEpitopeSelected = index;
+        },
+        setTrueShowAminoacidVariantEpi: (state) => {
+            state.showAminoacidVariantEpi = true;
+        },
+        setFalseShowAminoacidVariantEpi: (state) => {
+            state.showAminoacidVariantEpi = false;
+        },
+        setTrueShowAminoacidVariantUserNewEpi: (state) => {
+            state.showAminoacidVariantUserNewEpi = true;
+        },
+        setFalseShowAminoacidVariantUserNewEpi: (state) => {
+            state.showAminoacidVariantUserNewEpi = false;
+        },
+        setEpitopeAminoacidFields: (state, item) => {
+            state.epitopeAminoacidFields = item;
+        },
+        addEpitopeAminoacidConditionsArrayUserNew: (state, new_condition) => {
+            state.epitopeAminoacidConditionsArrayUserNew.push(new_condition);
+        },
+        removeEpitopeAminoacidConditionsArrayUserNew: (state, index) => {
+            state.epitopeAminoacidConditionsArrayUserNew.splice(index, 1);
+        },
+        resetEpitopeAminoacidConditionsArrayUserNew: (state) => {
+            state.epitopeAminoacidConditionsArrayUserNew = [];
+        },
+        addEpitopeAminoacidConditionsArrayUserNewInOR: (state, new_condition) => {
+            state.epitopeAminoacidConditionsArrayUserNewInOR.push(new_condition);
+        },
+        removeEpitopeAminoacidConditionsArrayUserNewInOR: (state, index) => {
+            state.epitopeAminoacidConditionsArrayUserNewInOR.splice(index, 1);
+        },
+        resetEpitopeAminoacidConditionsArrayUserNewInOR: (state) => {
+            state.epitopeAminoacidConditionsArrayUserNewInOR = [];
+        },
+        setTrueDisableSelectorEpitopePart: (state) => {
+            state.disableSelectorEpitopePart = true;
+        },
+        setFalseDisableSelectorEpitopePart: (state) => {
+            state.disableSelectorEpitopePart = false;
+        },
+        setTrueDisableSelectorUserNewEpitopePart: (state) => {
+            state.disableSelectorUserNewEpitopePart = true;
+        },
+        setFalseDisableSelectorUserNewEpitopePart: (state) => {
+            state.disableSelectorUserNewEpitopePart = false;
+        },
+        addNewEpitopeToList: (state, new_epitope) => {
+            state.epitopeAdded.push(new_epitope);
+        },
+        removeNewEpitopeFromList: (state, index) => {
+            state.epitopeAdded.splice(index, 1);
+        },
+        resetNewEpitopeFromLocalStorage: (state, epitopeArr) => {
+            state.epitopeAdded = epitopeArr;
+        },
+        removePositionFromNewEpitope: (state, index) => {
+            state.newSingleEpitope['position_range'].splice(index, 1);
+        },
+        setTrueNewEpitopeLoading: (state) => {
+            state.newEpitopeLoading = true;
+        },
+        setFalseNewEpitopeLoading: (state) => {
+            state.newEpitopeLoading = false;
+        },
+        setTrueIsEpitopeSurf: (state) => {
+            state.isEpitopeSurf = true;
+        },
+        setFalseIsEpitopeSurf: (state) => {
+            state.isEpitopeSurf = false;
+        },
+        changeAddingEpitope: (state) => {
+            state.addingEpitope = !state.addingEpitope;
         },
     },
     actions: {
@@ -207,6 +416,89 @@ export default new Vuex.Store({
                 } else
                     commit('resetQueryField', field);
                 commit('reloadQuery');
+            }
+        },
+        setEpiDropDownSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.epiQuerySel[field];
+            if (!previousList)
+                previousList = [];
+
+            //update if they are not equal
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setEpiQueryField', newPayload);
+                } else
+                    commit('resetEpiQueryField', field);
+                commit('reloadEpiQuery');
+            }
+        },
+        setAminoacidConditionsSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.aminoacidConditions[field];
+            if (!previousList)
+                previousList = [];
+
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setAminoacidConditions', newPayload);
+                } else
+                    commit('resetAminoacidConditions', field);
+                commit('reloadAminoacidConditions');
+            }
+        },
+        setNewSingleEpitopeSelected({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.newSingleEpitope[field];
+            if (!previousList)
+                previousList = [];
+
+            if ((!(JSON.stringify(previousList) === JSON.stringify(newList))) || newList.length === 0){
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setNewSingleEpitope', newPayload);
+                } else {
+                    commit('resetNewSingleEpitope', field);
+                }
+                commit('reloadNewSingleEpitope');
+            }
+        },
+        setNewSingleAminoAcidConditionUserAction({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.newSingleAminoAcidConditionUser[field];
+            if (!previousList)
+                previousList = [];
+
+            if ((!(JSON.stringify(previousList) === JSON.stringify(newList))) || newList.length === 0){
+                if (newList.length > 0 || newList['min_val']) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setNewSingleAminoAcidConditionUser', newPayload);
+                } else {
+                    commit('resetNewSingleAminoAcidConditionUser', field);
+                }
+                commit('reloadNewSingleAminoAcidConditionUser');
             }
         },
     },

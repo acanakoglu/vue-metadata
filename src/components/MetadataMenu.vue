@@ -5,14 +5,14 @@
             :nudge-width="200"
             v-model="menu"
             offset-y
-            :disabled="searchDisabled"
+            :disabled="searchDisabled ||  disableSelectorEpitopePart"
     >
         <v-text-field slot="activator"
                       name="input-1"
                       :label="labelTitle"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="menu ||searchDisabled"
+                      :disabled="menu ||searchDisabled ||  disableSelectorEpitopePart"
         ></v-text-field>
 
         <v-card>
@@ -216,7 +216,7 @@
             }
         },
         computed: {
-            ...mapState(["panelActive"]),
+            ...mapState(["panelActive", 'disableSelectorEpitopePart']),
             ...mapGetters({
                 compound_query: 'build_query',
             }),
