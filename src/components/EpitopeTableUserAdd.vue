@@ -34,7 +34,7 @@
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
           <v-flex sm3 align-self-center>
-              <v-dialog width="500" v-model="dialogOrder">
+              <v-dialog width="500" v-model="dialogOrder" persistent>
                   <v-card>
                       <v-card-title
                               class="headline"
@@ -102,11 +102,21 @@
                   <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
                     <span v-else-if="header.value === 'virusViz_button'">
-                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+
+                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0"
+                              @click="openDialogVirusViz(props.item, props.item['num_seq'])">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz
+                      </v-btn>
+                        <!--<v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
                                  @click="virusVizClicked(props.item)" :disabled="props.item['num_seq'] === 0">
                             <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                             VirusViz
                         </v-btn>
+                        -->
+
                     </span>
 
                     <span v-else>{{props.item[header.value]}}</span>
@@ -120,6 +130,67 @@
                   Loading
               </v-alert>
         </v-data-table>
+
+        <v-dialog
+          v-model="dialogVirusviz"
+          width="500"
+          persistent>
+        <v-card>
+          <v-card-title
+              class="headline"
+              style="background-color:rgb(201, 53, 53) ; color: white">
+            Open in VirusViz
+          </v-card-title>
+          <v-progress-linear height="2" color = "rgb(201, 53, 53)" ></v-progress-linear>
+
+          <v-card-text>
+            <p>
+              You selected
+              <span v-if="sendToDialogVirusViz.num_seq">{{sendToDialogVirusViz.num_seq}}</span>
+              <span v-else> ... </span>
+              sequence<span v-if="sendToDialogVirusViz.num_seq > 1">s</span>,
+              they must be formatted and then opened by the VirusViz
+              tool.
+              This may take time, and your browser could crash if the file is too large.
+            <p>
+              By checking “FULL” you will open full FASTA sequences and nucleotide / amino acid variants, this is
+              usually well supported with 5K sequences or less.
+            </p>
+            <p>
+              By checking “AA Mutations only” you will only open amino acid variants, this option requires less
+              memory and is usually well supported with 30K sequences or less.
+            </p>
+
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope); dialogVirusviz = false;">
+              <v-img style="margin-right: 5px; min-width: 15px;"
+                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+              VirusViz (Full)
+            </v-btn>
+            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope, true); dialogVirusviz = false;">
+              <v-img style="margin-right: 5px; min-width: 15px;"
+                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+              VirusViz (AA mutations only)
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="rgb(122, 139, 157)"
+                style="color: white"
+                text
+                @click="dialogVirusviz = false;"
+            >
+              Close
+            </v-btn>
+
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       </v-layout>
 
@@ -169,6 +240,11 @@ export default {
           totalItems: 0,
           rowsPerPageItems: [10, 100, 1000] //mani che si alzano
       },
+      dialogVirusviz: false,
+      sendToDialogVirusViz: {
+        epitope_id : null,
+        num_seq : null,
+      }
     }
   },
   computed: {
@@ -211,12 +287,17 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
-    virusVizClicked(prop){
+    openDialogVirusViz(epitope, num_seq){
+      this.dialogVirusviz = true;
+      this.sendToDialogVirusViz.epitope = epitope;
+      this.sendToDialogVirusViz.num_seq = num_seq;
+    },
+    virusVizClicked(prop, aa_only = false){
         let orderDir = "";
 
         let to_send = prop['compound_query'];
 
-          let url = `viz/submit?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+          let url = `viz/submit?aa_only=${aa_only}&&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
           if (this.selectedProduct !== FULL_TEXT) {
               url += `&annotation_type=${this.selectedProduct}`;
           }

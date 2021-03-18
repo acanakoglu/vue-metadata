@@ -49,6 +49,7 @@
                           v-model="range"
                           :max="max"
                           :min="min"
+                          :step="0.01"
                           hide-details
                           class="align-center"
                           :disabled="isNull"
@@ -110,10 +111,10 @@ export default {
     return {
       isLoading : true,
       min: 0,
-      max: 100,
+      max: 1,
       minFreqExt: 0,
-      maxFreqExt: 100,
-      range: [0,100],
+      maxFreqExt: 1,
+      range: [0,1],
       minFreqExtString: '',
       maxFreqExtString: '',
       errorExt: '',
@@ -176,10 +177,10 @@ export default {
             this.shown_value = this.textBoxValue;
             this.menu = false;
 
-            let sendStart = {'field': 'startFreqExt', 'list': [this.range[0] / 100]};
+            let sendStart = {'field': 'startFreqExt', 'list': [this.range[0]]}; //   aggiungo / 100
             this.setEpiDropDownSelected(sendStart);
 
-            let sendStop = {'field': 'stopFreqExt', 'list': [this.range[1] / 100]};
+            let sendStop = {'field': 'stopFreqExt', 'list': [this.range[1]]}; //   aggiungo / 100
             this.setEpiDropDownSelected(sendStop);
 
             //console.log("SET: ", this.epiQuerySel);
@@ -224,11 +225,14 @@ export default {
                     this.forceNull = true;
                     this.disablePercSel = false;
                   } else {
-                    this.minFreqExt = Math.floor(this.results['startFreq'] * 100);
+                    this.minFreqExt = (Math.floor(this.results['startFreq'] * 100 ) / 100);  //    tolgo / 100
                     this.minFreqExtString = "Min: " + this.minFreqExt;
-                    this.maxFreqExt = Math.ceil(this.results['stopFreq'] * 100);
+                    this.maxFreqExt = (Math.ceil(this.results['stopFreq'] * 100) / 100);    //    tolgo / 100
                     this.maxFreqExtString = "Max: " + this.maxFreqExt;
                     this.range = this.rangeUpdate;
+                    if(this.results['stopFreq'] > 1){
+                      this.max = Math.ceil(this.results['stopFreq']);
+                    }
                     this.minRange = this.minFreqExt;
                     this.maxRange = this.maxFreqExt;
                     this.forceNull = false;
@@ -256,10 +260,10 @@ export default {
       }
       this.loadExtremes();
       if (this.epiQuerySel['startFreqExt']){
-        this.minRange = this.epiQuerySel['startFreqExt'] * 100;
+        this.minRange = this.epiQuerySel['startFreqExt'];   //    aggiungo * 100
       }
       if (this.epiQuerySel['stopFreqExt']){
-        this.maxRange = this.epiQuerySel['stopFreqExt'] * 100;
+        this.maxRange = this.epiQuerySel['stopFreqExt'];    //    aggiungo * 100
       }
       this.shown_value = this.textBoxValue;
     },

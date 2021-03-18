@@ -118,12 +118,13 @@ export default {
       ],*/
       epitopeFields: [],
       requirement: 'A single Host and a single Virus are required',
-      selectedTab: 0
+      selectedTab: this.setSelectedTab(),
     }
   },
   computed: {
     ...mapState(['disableSelectorEpitopePart', 'countEpi', 'epitopeAdded',
-      'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions']),
+      'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions',
+    'selectedTabEpitope']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query'
@@ -160,6 +161,9 @@ export default {
       Object.assign(res,{"compound_query": this.compound_query},
                         {"epi_query": this.epiQuerySel});
       return res;
+    },
+     setSelectedTab(){
+      this.selectedTab = this.selectedTabEpitope;
     },
      modifyKey(key){
        let modifiedKey = '';
@@ -207,6 +211,9 @@ export default {
      },
    },
   watch:{
+    selectedTabEpitope(){
+      this.selectedTab = this.selectedTabEpitope;
+    },
     countEpi(){
       if(this.selectedTab === 1){
         this.setCountEpi(this.epitopeAdded.length);

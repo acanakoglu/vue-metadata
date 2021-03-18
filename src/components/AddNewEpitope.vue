@@ -226,7 +226,7 @@
                <v-flex sm6>
                  <span v-for="(value, key) in epitope" style="display: block;">
                    <b v-if="key !== 'file_name' && key !== 'index'">- {{key}} : </b>
-                   <span v-if="key === 'Epitope name'" class="capitalize"> <u>{{value}}</u>
+                   <span v-if="key === 'Epitope name'"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
                    <span v-else-if="key !== 'file_name' && key !== 'index'" class="capitalize">{{value}} </span>

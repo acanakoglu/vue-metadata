@@ -249,6 +249,7 @@
     import TextReader from "./TextReader"
     import PairQuery from "./PairQuery"
     import Epitope from "./Epitope";
+    import axios from "axios";
 
     export default {
         name: 'AppEpitope',
@@ -270,6 +271,10 @@
                 dialogShowQuery: false,
                 mainContent: true,
                 selectedQuery: null,
+                epitopeToAdd: null,
+                is_control: false,
+                finish_count_seq: false,
+                finish_count_var: false,
                 queryItems: [
                     {
                         text: 'Example Epitope',
@@ -323,8 +328,6 @@
                                     "startExt": [331],
                                     "stopExt": [524]
                                 },
-                                variant_meta: {
-                                }
                             }
                         }
                     },
@@ -476,7 +479,9 @@
                     'setNewSingleEpitopeQuery', "resetNewSingleEpitopeQuery", 'setTrueDisableSelectorUserNewEpitopePart',
                     'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantUserNewEpi',
                     'setNewSingleAminoacidConditionUserQuery', 'resetNewSingleAminoacidConditionUserQuery',
-                    'resetEpitopeAminoacidConditionsArrayUserNew', 'setTrueExampleCustomEpitope']),
+                    'resetEpitopeAminoacidConditionsArrayUserNew', 'setTrueExampleCustomEpitope',
+                'setOneSelectedTabEpitope', 'setZeroSelectedTabEpitope', 'setTrueNewEpitopeLoading',
+                'setFalseNewEpitopeLoading', 'addNewEpitopeToList']),
             ...
                 mapActions(["setKv", "setKvFull", "deleteAge"]),
             setInputQuery() {
@@ -493,7 +498,10 @@
             }
             ,
             afterQuerySelection(item2) {
-                let item = JSON.parse(JSON.stringify(item2));
+              let item = undefined;
+              if(item2 !== null && item2 !== undefined) {
+                item = JSON.parse(JSON.stringify(item2));
+              }
                 this.resetPanelActive();
                 this.setExampleQueryLoaded();
                 // console.log(item);
@@ -503,6 +511,7 @@
                     this.setType(item.query.type);
 
                     if (item.epi_query) {
+                      this.setZeroSelectedTabEpitope();
                         let total_epitope_meta = {};
                         Object.assign(total_epitope_meta, item.epi_query.epitope_meta, item.epi_query.variant_meta);
                         this.setEpiQuery(total_epitope_meta);
@@ -515,7 +524,9 @@
                     }
 
                     if (item.custom_epi_query) {
-                        this.setTrueExampleCustomEpitope();
+                      this.addCustomEpitope(item.custom_epi_query, item.query);
+                      this.setOneSelectedTabEpitope();
+                        /*this.setTrueExampleCustomEpitope();
                         this.resetEpitopeAminoacidConditionsArrayUserNew();
                         this.setNewSingleEpitopeQuery(item.custom_epi_query.custom_epitope_meta);
                         if (item.custom_epi_query.custom_variant_meta) {
@@ -524,7 +535,7 @@
                             this.setTrueShowAminoacidVariantUserNewEpi();
                             this.setTrueDisableSelectorUserNewEpitopePart();
                             this.setNewSingleAminoacidConditionUserQuery(item.custom_epi_query.custom_variant_meta);
-                        }
+                        }*/
                     }
 
                 } else {
@@ -596,6 +607,174 @@
                     return (superset.indexOf(value) >= 0);
                 });
             }
+            ,
+            addCustomEpitope(item, compound_query){
+              let item_custom_epi_meta;
+              let item_custom_var_meta;
+              if(item.custom_epitope_meta){
+                item_custom_epi_meta = item.custom_epitope_meta;
+                item_custom_epi_meta = this.controlExistingName(item_custom_epi_meta);
+              }
+              if(item.custom_variant_meta) {
+                item_custom_var_meta = item.custom_variant_meta;
+              }
+
+             let val = JSON.parse(JSON.stringify(item_custom_epi_meta));
+
+             val['compound_query'] = JSON.parse(JSON.stringify(compound_query));
+
+             val['compound_query']['kv'] = this.addKvPart(val, item_custom_var_meta);
+
+             let listPosition = val['position_range'];
+             let len = listPosition.length;
+             let i = 0;
+             let newListPositionString = '';
+             while (i < len) {
+               if (i === 0) {
+                 val['position_range'] = listPosition[i][0];
+               }
+               let min = listPosition[i][0];
+               let max = listPosition[i][1];
+               newListPositionString += min + "-" + max;
+               i++;
+               if (i < len) {
+                 newListPositionString += ", \n"
+               }
+             }
+             val['position_range_to_show'] = newListPositionString;
+
+             this.epitopeToAdd = val;
+             this.countNumSeq(val);
+             this.countNumVar(val);
+
+            },
+            controlExistingName(epitope) {
+              if (this.epitopeAdded.some(item => item.epitope_name === epitope.epitope_name)) {
+                let i = 1;
+                while (i) {
+                  let name = epitope.epitope_name + ' (' + i + ')';
+                  if (!this.epitopeAdded.some(item => item.epitope_name === name)) {
+                    epitope.epitope_name = name;
+                    return epitope;
+                  } else {
+                    i++;
+                  }
+                }
+              } else {
+                return epitope;
+              }
+            }
+            ,
+            addKvPart(val, var_meta){
+               let kv = {};
+               kv['aa_0'] = {};
+               kv['aa_0']['type_query'] = 'aa';
+               kv['aa_0']['exact'] = false;
+
+               let array_conditions = [];
+
+               let len = val['position_range'].length;
+               let i = 0;
+               while(i<len){
+                 let product = val['product'];
+                 let position = val['position_range'][i];
+                 let min = position[0];
+                 let max = position[1];
+                 let line = {};
+                 line['product'] = [product];
+                 line['start_aa_original'] = {'min_val': min, 'max_val': max};
+                 array_conditions.push(line);
+                 i++;
+               }
+
+               kv['aa_0']['query'] = array_conditions;
+
+
+               let array = [];
+               array.push(var_meta);
+
+               let copy = JSON.parse(JSON.stringify(array));
+               let length = copy.length;
+               let j = 0;
+               while(j < length){
+                 let single = copy[j];
+                 j++;
+                 let name = 'aa_' + j;
+                 kv[name] = {};
+                 kv[name]['type_query'] = 'aa';
+                 kv[name]['exact'] = false;
+                 if(single.length === undefined || single.length === null) {
+                    kv[name]['query'] = [single];
+                 }
+                 else{
+                    kv[name]['query'] = single;
+                 }
+               }
+
+               return kv;
+
+             },
+          countNumSeq(val){
+               let to_send = val['compound_query'];
+              this.finish_count_seq = false;
+              this.setTrueNewEpitopeLoading();
+
+              let count_url = `query/count?is_control=${this.is_control}`;
+
+              axios.post(count_url, to_send)
+                  .then((res) => {
+                      return res.data;
+                  })
+                  .then((res) => {
+                      val['num_seq'] = res;
+                      this.epitopeToAdd['num_seq'] = res;
+                      this.finish_count_seq = true;
+                  });
+              },
+          countNumVar(val){
+               let to_send = val['compound_query'];
+              this.finish_count_var = false;
+              this.setTrueNewEpitopeLoading();
+
+                let count_url = `epitope/countVariantsEpitopeUser`;
+
+                axios.post(count_url, to_send)
+                    .then((res) => {
+                      return res.data;
+                    })
+                    .then((res) => {
+                      if (res[0].count === null || res[0].count === undefined) {
+                        val['num_var'] = 0;
+                        this.epitopeToAdd['num_var'] = 0;
+                      } else {
+                        val['num_var'] = res[0].count;
+                        this.epitopeToAdd['num_var'] = res[0].count;
+                      }
+                      this.finish_count_var = true;
+                    });
+          },
+          addFrequencies() {
+            if (this.epitopeToAdd['num_var'] === 'N/D') {
+              this.epitopeToAdd['mutated_freq'] = 'N/D';
+              this.epitopeToAdd['mutated_seq_ratio'] = 'N/D';
+              this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+            } else {
+              if (this.epitopeToAdd['num_seq'] === 0) {
+                this.epitopeToAdd['mutated_freq'] = 0;
+              } else {
+                this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
+              }
+              this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
+              this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
+              if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
+                this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
+              } else {
+                this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
+              }
+              this.epitopeToAdd['mutated_seq_ratio'] += ' %';
+              this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+            }
+          }
         }
         ,
         watch: {
@@ -612,13 +791,35 @@
             ,
             inputQuery() {
                 this.inputValid = this.validateJson(this.inputQuery)
-            }
+            },
+            finish_count_seq(){
+                if(this.finish_count_seq === true && this.finish_count_var === true){
+
+                  this.addFrequencies();
+                  this.addNewEpitopeToList(this.epitopeToAdd);
+                  let epitopeArr = (JSON.stringify(this.epitopeAdded));
+                  localStorage.setItem('epitopeArr', epitopeArr);
+                  this.setFalseNewEpitopeLoading();
+                  this.epitopeToAdd = null;
+                }
+              },
+            finish_count_var() {
+              if (this.finish_count_seq === true && this.finish_count_var === true) {
+
+                this.addFrequencies();
+                this.addNewEpitopeToList(this.epitopeToAdd);
+                let epitopeArr = (JSON.stringify(this.epitopeAdded));
+                localStorage.setItem('epitopeArr', epitopeArr);
+                this.setFalseNewEpitopeLoading();
+                this.epitopeToAdd = null;
+              }
+            },
         }
         ,
         computed: {
             ...
                 mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
-                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope']),
+                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded']),
             ...
                 mapGetters({
                     compound_query: 'build_query',

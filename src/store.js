@@ -45,6 +45,7 @@ export default new Vuex.Store({
         isEpitopeSurf: false,
         addingEpitope: false,
         exampleCustomEpitope: false,
+        selectedTabEpitope: 0,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -331,6 +332,12 @@ export default new Vuex.Store({
         changeAddingEpitope: (state) => {
             state.addingEpitope = !state.addingEpitope;
         },
+        setOneSelectedTabEpitope: (state) => {
+            state.selectedTabEpitope = 1;
+        },
+        setZeroSelectedTabEpitope: (state) => {
+            state.selectedTabEpitope = 0;
+        }
     },
     actions: {
         deleteKv({commit}, field) {
