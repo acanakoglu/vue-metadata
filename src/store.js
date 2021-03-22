@@ -46,6 +46,7 @@ export default new Vuex.Store({
         addingEpitope: false,
         exampleCustomEpitope: false,
         selectedTabEpitope: 0,
+        analyzeSubstitutionPanel: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -337,6 +338,12 @@ export default new Vuex.Store({
         },
         setZeroSelectedTabEpitope: (state) => {
             state.selectedTabEpitope = 0;
+        },
+        setTrueAnalyzeSubstitutionPanel: (state) => {
+            state.analyzeSubstitutionPanel = true;
+        },
+        setFalseAnalyzeSubstitutionPanel: (state) => {
+            state.analyzeSubstitutionPanel = false;
         }
     },
     actions: {

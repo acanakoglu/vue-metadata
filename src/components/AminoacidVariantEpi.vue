@@ -1,6 +1,14 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
-    <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+    <v-layout wrap align-center>
+      <v-flex xs12 md8 lg8 class="no-horizontal-padding">
+        <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+      </v-flex>
+      <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
+        <v-btn @click="openAnalyzeSubstitutionPanel()"  color="rgb(122, 139, 157)" style="color:white;">
+                  Analyze subsitutions</v-btn>
+      </v-flex>
+    </v-layout>
     <v-layout wrap align-center>
       <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(aminoacidConditions).length > 0" style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
           <span class="label">
@@ -51,6 +59,9 @@
        <v-btn @click="clearAminoEpiMenu()" class="white--text" color="rgb(122, 139, 157)">CLEAR</v-btn>
       <v-btn @click="applyAminoacidConditions()" class="white--text" color="#00008B">APPLY</v-btn>
     </v-layout>
+
+    <AnalyzeSubstitutionPanel></AnalyzeSubstitutionPanel>
+
   </v-container>
 </template>
 
@@ -59,10 +70,11 @@ import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
 import EpitopeSelectorText from "./EpitopeSelectorText";
 import EpitopeSelectorNum from "./EpitopeSelectorNum";
+import AnalyzeSubstitutionPanel from "./AnalyzeSubstitutionPanel";
 
 export default {
   name: "AminoacidVariantEpi",
-  components: {EpitopeSelectorNum, EpitopeSelectorText},
+  components: {AnalyzeSubstitutionPanel, EpitopeSelectorNum, EpitopeSelectorText},
   data() {
     return {
     }
@@ -99,9 +111,13 @@ export default {
   },
   methods:{
     ...mapMutations([
-        'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setEpitopeAminoacidFields', 'setFalseDisableSelectorEpitopePart'
+        'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setEpitopeAminoacidFields',
+      'setFalseDisableSelectorEpitopePart', 'setTrueAnalyzeSubstitutionPanel'
     ]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
+    openAnalyzeSubstitutionPanel(){
+      this.setTrueAnalyzeSubstitutionPanel();
+    },
     closeAminoEpiMenu(){
       this.setFalseShowAminoacidVariantEpi();
       this.clearAminoEpiMenu();
