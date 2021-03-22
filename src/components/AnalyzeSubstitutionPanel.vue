@@ -39,6 +39,26 @@
                   </template>
                 </v-autocomplete>
               </v-card>
+              <v-dialog width="500">
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="grey">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-card>
+                      <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                      >
+                          Original Aminoacid
+                      </v-card-title>
+                      <v-card-text>
+                          Affected amino acid
+                      </v-card-text>
+                  </v-card>
+              </v-dialog>
             </v-flex>
             <v-flex class="no-horizontal-padding xs12 sm6 md6 lg6 d-flex EpitopeSelectors">
               <v-card>
@@ -56,6 +76,26 @@
                   </template>
                 </v-autocomplete>
               </v-card>
+              <v-dialog width="500">
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="grey">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-card>
+                      <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                      >
+                          Alternative Aminoacid
+                      </v-card-title>
+                      <v-card-text>
+                          Changed amino acid
+                      </v-card-text>
+                  </v-card>
+              </v-dialog>
             </v-flex>
           </v-layout>
           <v-layout wrap justify-center style="margin-top: 20px">
@@ -112,6 +152,26 @@
               >
                 {{coefficient}}
               </v-chip>
+              <v-dialog width="500">
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="grey">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-card>
+                      <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                      >
+                          Grantham's distance
+                      </v-card-title>
+                      <v-card-text>
+                          ??
+                      </v-card-text>
+                  </v-card>
+              </v-dialog>
             </v-layout>
         </div>
 
