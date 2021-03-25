@@ -942,7 +942,7 @@ export default {
     },*/
     countSeq2(){
       if(this.countSeq2 !== null) {
-        this.loadTable();
+        //this.loadTable();
         //this.loadTable2();
       }
     },

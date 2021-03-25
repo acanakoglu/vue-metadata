@@ -98,12 +98,26 @@
               </v-dialog>
             </v-flex>
           </v-layout>
+
+          <!--
           <v-layout wrap justify-center style="margin-top: 20px">
             <v-btn @click="analyzeThisSubstitution()" class="white--text" color="#00008B">APPLY</v-btn>
           </v-layout>
-        </v-card-text>
+          -->
 
 
+        <v-layout wrap justify-center style="margin-top: 20px">
+          <table v-if="aminoAcidSelectedList.length > 0" style="width: 600px; margin: 20px; border-collapse: collapse;">
+            <tbody>
+              <tr v-for="header in headers" style="text-align: center;">
+                <td> <b> {{header.text}} </b> </td>
+                <td v-for="item in aminoAcidSelectedList" v-if="item"> <span v-if="item"> {{item[header.value]}} </span> </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        <!--
         <v-data-table
                 :headers="headers"
                 :items="aminoAcidSelectedList"
@@ -111,6 +125,7 @@
                 class="elevation-1"
                 v-if="showTable"
                 style="margin: 20px; border: solid 1px black;"
+                id = "table"
         >
             <template slot="items" slot-scope="props">
                 <td style="white-space:pre-wrap; word-wrap:break-word;" v-for="header in headers"
@@ -118,31 +133,13 @@
                   <span v-if="header.value === 'code'"> <b>{{props.item[header.value]}}</b> </span>
                 <span v-else-if="header.value === 'role' || header.value === 'name'">{{props.item[header.value]}}</span>
                   <span v-else> {{props.item[header.value]}} </span>
-                 <!--
-                  <span v-else>
-                    <v-chip
-                      color="light-green"
-                      dark
-                      style="color: white"
-                      v-if="aminoAcidSelectedList[0][header.value] === aminoAcidSelectedList[1][header.value]"
-                    >
-                      {{props.item[header.value]}}
-                    </v-chip>
-                    <v-chip
-                      color="#E57373"
-                      dark
-                      style="color: white"
-                      v-else
-                    >
-                      {{props.item[header.value]}}
-                    </v-chip>
-                  </span>
-                  -->
                 </td>
             </template>
         </v-data-table>
+        -->
 
-        <div style="margin: 20px; border: solid 1px black; margin-bottom: 80px !important;" v-if="showTable">
+
+        <div style="margin: 20px; border: solid 1px black; margin-bottom: 80px !important;" v-if="originalSetted && alternativeSetted">
             <v-layout wrap align-center justify-center>
               <h3 style="margin: 20px"> Grantham's distance: </h3>
               <v-chip
@@ -150,7 +147,7 @@
                 dark
                 style="color: white"
               >
-                {{coefficient}}
+                {{calculateCoefficient}}
               </v-chip>
               <v-dialog width="500">
                   <v-btn
@@ -175,6 +172,8 @@
             </v-layout>
         </div>
 
+        </v-layout>
+        </v-card-text>
       </v-card>
     </v-dialog>
 
@@ -333,6 +332,11 @@ export default {
         },
         set(value){
           this.originalSetted = value;
+          if(value !== null) {
+            let original = this.aminoAcidList.filter(elem => elem.code === this.originalSetted);
+            original[0]['role'] = "Original";
+            this.aminoAcidSelectedList[0] = original[0];
+          }
         }
       },
       selectedAlternativeAmino: {
@@ -341,8 +345,21 @@ export default {
         },
         set(value){
           this.alternativeSetted = value;
+          if(value !== null) {
+            let alternative = this.aminoAcidList.filter(elem => elem.code === this.alternativeSetted);
+            alternative[0]['role'] = "Alternative";
+            this.aminoAcidSelectedList[1] = alternative[0];
+          }
         }
       },
+      calculateCoefficient(){
+        if(this.originalSetted !== null && this.alternativeSetted !== null) {
+          return this.coefficient = this.retrieveCoefficient();
+        }
+        else{
+          return 0;
+        }
+      }
     },
     methods: {
       ...mapMutations([
@@ -466,7 +483,20 @@ export default {
     watch: {
       analyzeSubstitutionPanel(){
         this.analyzeSubPanel = this.analyzeSubstitutionPanel;
-      }
+      },
+      aminoAcidSelectedList(){
+        console.log("a", this.originalSetted, this.alternativeSetted);
+        /*if(this.originalSetted === this.alternativeSetted){
+          this.errorSameAmino = true;
+        }
+        else {
+          this.showTable = true;
+          this.aminoAcidSelectedList = [];
+          if(this.originalSetted !== null && this.alternativeSetted !== null) {
+            this.coefficient = this.retrieveCoefficient();
+          }
+        }*/
+      },
     },
   mounted() {
     let newAminoAcidList = JSON.parse(JSON.stringify(this.aminoAcidList));
@@ -479,7 +509,7 @@ export default {
     let pred_head = [];
     Object.keys(this.aminoAcidList[0]).forEach(key => {
       let header = {};
-      header['text'] = key.toUpperCase();
+      header['text'] = key.toUpperCase().replaceAll("_", " ");
       header['value'] = key;
       header['sortable'] = false;
       header['class']  ='black--text';
@@ -502,4 +532,15 @@ export default {
     padding: 20px;
     margin-bottom: 10px;
   }
+
+  table td {
+      border: solid darkgray 1px;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+
+  tr:hover {background-color: #f5f5f5}
+
 </style>
