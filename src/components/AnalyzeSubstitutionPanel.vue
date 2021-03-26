@@ -141,7 +141,7 @@
 
         <div style="margin: 20px; border: solid 1px black; margin-bottom: 80px !important;" v-if="originalSetted && alternativeSetted">
             <v-layout wrap align-center justify-center>
-              <h3 style="margin: 20px"> Grantham's distance: </h3>
+              <h3 style="margin: 20px"> Grantham distance: </h3>
               <v-chip
                 color="blue"
                 dark
@@ -162,10 +162,12 @@
                               class="headline grey lighten-2"
                               primary-title
                       >
-                          Grantham's distance
+                          Grantham distance
                       </v-card-title>
                       <v-card-text>
-                          ??
+                          Grantham distance is a formula for difference between amino acids combines properties that
+                        correlate best with protein residue substitution frequencies: composition, polarity,
+                        and molecular volume.
                       </v-card-text>
                   </v-card>
               </v-dialog>
