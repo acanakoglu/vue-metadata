@@ -99,7 +99,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
-import {poll} from "../utils";
+import {poll, stopPoll} from "../utils";
 
 export default {
   name: "EpitopeSelectorPercentage",
@@ -127,6 +127,7 @@ export default {
       disabledEpi_AminoacidMenuOpened: false,
       minRange: null,
       maxRange: null,
+      my_interval_extremes: null,
     }
   },
   computed: {
@@ -201,6 +202,11 @@ export default {
         }
     },
     loadExtremes(){
+
+      if(this.my_interval_extremes !== null){
+          stopPoll(this.my_interval_extremes);
+      }
+
       if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
         this.isLoading = true;
         const url = `epitope/epiFreqExtremes`;
@@ -210,7 +216,8 @@ export default {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_extremes = poll(res.result, (res) => {
+                this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
                 //console.log("RES PERC: ", this.results);

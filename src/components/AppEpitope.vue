@@ -204,13 +204,18 @@
                             class="bottom-info">
 
 
-                        <div v-if="countSeq2 === null || countEpi=== null" style="font-size:1.4em;">Loading...</div>
-                        <div style="font-size:1.4em;" v-else-if="countSeq2>0 || countEpi>0">
-                            <span v-if="countSeq2>0">{{ countSeq2 }} sequence</span>
+                        <div v-if="countSeq2 === null && countEpiToShow=== null" style="font-size:1.4em;">Loading...</div>
+                        <div style="font-size:1.4em;" v-else-if="countSeq2>0 || countEpiToShow>0">
+                            <span v-if="countSeq2>0">{{ countSeq2 }}</span>
+                            <span v-if="countSeq2 === null"> ...</span>
+                            <span> sequence</span>
                             <span
-                                    v-if="countSeq2>1">s</span><span v-if="countEpi>0 && countSeq2>0"> and </span>
-                            <span v-if="countEpi>0">{{ countEpi }} epitope</span><span
-                                v-if="countEpi>1">s</span> found
+                                    v-if="countSeq2>1">s</span><span> and </span>
+                            <span v-if="countEpiToShow>0">{{ countEpiToShow }}</span>
+                             <span v-if="countEpiToShow === null"> ...</span>
+                            <span> epitope</span>
+                            <span
+                                v-if="countEpiToShow>1">s</span> found
                         </div>
                         <div v-else>No result</div>
 
@@ -286,7 +291,11 @@
                                     "country": ["italy"],
                                 },
                                 "type": "original",
-                                "kv": {}
+                                "kv": {
+                                  "aa0" : {
+                                    "product": "spike"
+                                  }
+                                }
                             },
                             epi_query: {
                                 epitope_meta: {
@@ -819,7 +828,7 @@
         computed: {
             ...
                 mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
-                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded']),
+                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded', 'countEpiToShow']),
             ...
                 mapGetters({
                     compound_query: 'build_query',

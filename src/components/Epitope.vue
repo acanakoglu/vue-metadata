@@ -124,7 +124,7 @@ export default {
   computed: {
     ...mapState(['disableSelectorEpitopePart', 'countEpi', 'epitopeAdded',
       'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions',
-    'selectedTabEpitope']),
+    'selectedTabEpitope', 'countEpiToShow', 'countEpiCustom']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query'
@@ -155,7 +155,8 @@ export default {
    methods: {
      ...mapMutations(['resetEpiQuery', 'setCountEpi', 'setFalseDisableSelectorUserNewEpitopePart',
        'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart',
-       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantEpi']),
+       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantEpi',
+     'setCountEpiCustom', 'setCountEpiToShow']),
      toSend(){
       let res = {};
       Object.assign(res,{"compound_query": this.compound_query},
@@ -216,7 +217,18 @@ export default {
     },
     countEpi(){
       if(this.selectedTab === 1){
-        this.setCountEpi(this.epitopeAdded.length);
+        this.setCountEpiToShow(this.countEpiCustom);
+      }
+      else{
+        this.setCountEpiToShow(this.countEpi);
+      }
+    },
+    countEpiCustom(){
+      if(this.selectedTab === 1){
+        this.setCountEpiToShow(this.countEpiCustom);
+      }
+      else{
+        this.setCountEpiToShow(this.countEpi);
       }
     },
     selectedTab(){
@@ -227,7 +239,7 @@ export default {
           this.setFalseShowAminoacidVariantEpi();
         }
 
-        this.setCountEpi(this.epitopeAdded.length);
+        this.setCountEpiToShow(this.countEpiCustom);
       }
       else{
 
@@ -241,8 +253,10 @@ export default {
           this.setTrueDisableSelectorEpitopePart();
           this.setTrueShowAminoacidVariantEpi();
         }
-
         if(!this.epiSearchDis) {
+          this.setCountEpiToShow(this.countEpi);
+        }
+        /*if(!this.epiSearchDis) {
           let to_send = this.toSend();
           this.setCountEpi(null);
           let count_url = 'epitope/count';
@@ -258,7 +272,7 @@ export default {
                   }
                 })
               })
-        }
+        }*/
         else{
           this.setCountEpi(0);
         }

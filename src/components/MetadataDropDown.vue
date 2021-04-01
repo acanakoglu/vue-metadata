@@ -18,7 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
-    import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
+    import {FULL_TEXT, LOADING_TEXT, poll, stopPoll} from '../utils.js'
 
 
     export default {
@@ -34,6 +34,7 @@
                 ageDialog: false,
                 isLoading: true,
                 values: [],//the list of values of the drop-down menu
+                my_interval_data: null,
             }
         },
         watch: {
@@ -114,6 +115,10 @@
                 return res;
             },
             loadData() {
+                if(this.my_interval_data !== null){
+                  stopPoll(this.my_interval_data);
+                }
+
                 const url = `field/${this.field}`;
                 this.isLoading = true;
                 this.values = [{value: LOADING_TEXT}];
@@ -127,7 +132,8 @@
                     .then((res) => {
                         // console.log(res.result)
                         // console.log(this.field, res.result)
-                        poll(res.result,(res)=>{
+                        this.my_interval_data = poll(res.result,(res)=>{
+                          this.my_interval_data = null;
                           // console.log(this.field)
                           let vals = res.values
                           // console.log(res);

@@ -21,4 +21,10 @@ export const poll = (id, callback) => {
             }
         );
     }, 5000);
+    return [myInterval, id];
+}
+
+
+export const stopPoll = (array_interval) => {
+    clearInterval(array_interval[0])
 }

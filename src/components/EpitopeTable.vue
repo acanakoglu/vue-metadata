@@ -227,7 +227,7 @@
 import axios from "axios";
 import {mapGetters, mapMutations, mapState} from "vuex";
 import draggable from 'vuedraggable'
-import {FULL_TEXT, poll} from "../utils";
+import {FULL_TEXT, poll, stopPoll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
 
@@ -267,7 +267,9 @@ export default {
       sendToDialogVirusViz: {
         epitope_id : null,
         num_seq : null,
-      }
+      },
+      my_interval_num_epi: null,
+      my_interval_table: null,
     }
   },
   computed: {
@@ -277,6 +279,7 @@ export default {
     ]),
     ...mapGetters({
       compound_query: 'build_query',
+      compound_query_epi: 'build_query_epi',
       epiSearchDis: 'epiSearchDisabled',
       panels:'panels',
     }),
@@ -412,6 +415,12 @@ export default {
       return res;
     },
     loadTable(){
+      console.log("qui");
+
+      if(this.my_interval_table !== null){
+        stopPoll(this.my_interval_table);
+      }
+
       if(!this.epiSearchDis) {
 
         let orderDir = "";
@@ -426,34 +435,37 @@ export default {
         let to_send = this.toSend();
         const url2 = `epitope/epiTableResLimit?page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`
         const url = `epitope/epiTableRes1`
+        console.log("qui2");
         axios.post(url, to_send)
             .then((res) => {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_table = poll(res.result, (res) => {
+                this.my_interval_table = null;
                 let vals = res.values;
                 vals.forEach(item => {
                   for (let k in item) {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
-                      if (values.length !== undefined && key !== 'epi_fragment_all_information') {
-                        if (values.length === 1) {
-                          if (item[k][0] != null) {
+                      if (key !== 'epi_fragment_all_information') {
+                        //let a = 1;
+                        //if (a === 1) {
+                          if (item[k] != null) {
                             if (key === "mhc_allele") {
-                              let str = item[k][0];
+                              let str = item[k];
                               let regex = /[,]/g;
                               let subst = "$&\n";
                               let result_str = str.replace(regex, subst);
                               item[k] = result_str;
                             } else {
-                              item[k] = item[k][0];
+                              item[k] = item[k];
                             }
                           } else {
                             item[k] = "N/D";
                           }
-                        } else {
+                        /*} else {
                           let to_replace = "";
                           let i = 0;
                           while (i < values.length) {
@@ -477,7 +489,7 @@ export default {
                             }
                           }
                           item[k] = to_replace;
-                        }
+                        }*/
                       } else if (key === 'epi_fragment_all_information') {
 
                         let position = "";
@@ -815,6 +827,11 @@ export default {
           });
     },*/
     loadCountEpi() {
+
+      if(this.my_interval_num_epi !== null){
+        stopPoll(this.my_interval_num_epi);
+      }
+
       if(!this.epiSearchDis) {
         let to_send = this.toSend();
         this.setCountEpi(null);
@@ -825,7 +842,8 @@ export default {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_num_epi = poll(res.result, (res) => {
+                this.my_interval_num_epi = null;
                 if (res != null) {
                   this.pagination.totalItems = res[0].count;
                   this.pagination.page = 1;
@@ -929,12 +947,15 @@ export default {
     this.loadEveything();
   },
   watch: {
-    epiQuerySel() {
+    compound_query_epi() {
+      this.loadEveything();
+    },
+    /*epiQuerySel() {
       this.loadEveything();
     },
     compound_query() {
       this.loadEveything();
-    },
+    },*/
     /*countSeq(){
       if(this.countSeq !== null) {
         this.loadTable();

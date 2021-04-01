@@ -18,7 +18,7 @@
 
 <script>
     import {mapActions, mapState, mapGetters} from 'vuex'
-        import {poll} from '../utils.js'
+        import {poll, stopPoll} from '../utils.js'
 
 
     export default {
@@ -33,6 +33,7 @@
             return {
                 isLoading: true,
                 values: [],//the list of values of the drop-down menu
+                my_interval_data: null,
             }
         },
         watch: {
@@ -100,6 +101,11 @@
             }
             ,
             loadData() {
+
+                if(this.my_interval_data !== null){
+                  stopPoll(this.my_interval_data);
+                }
+
                 let queryToRun = Object.assign({}, this.compound_query);
                 queryToRun['panel'] = this.groupCondition;
 
@@ -112,7 +118,8 @@
                         return res.data
                     })
                     .then((res) => {
-                      poll(res.result,(res)=>{
+                      this.my_interval_data = poll(res.result,(res)=>{
+                          this.my_interval_data = null;
                           let vals = res.values
                           // console.log(res);
                           //to clean previously selected values

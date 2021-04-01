@@ -65,7 +65,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
-import {poll} from "../utils";
+import {poll, stopPoll} from "../utils";
 
 export default {
   name: "EpitopeSelectorNum",
@@ -88,6 +88,7 @@ export default {
       shown_value: null,
       disableNumSel: false,
       disabledEpi_AminoacidMenuOpened: false,
+      my_interval_extremes: null,
     }
   },
   computed: {
@@ -210,6 +211,11 @@ export default {
         }
     },
     loadExtremes(){
+
+      if(this.my_interval_extremes !== null){
+        stopPoll(this.my_interval_extremes);
+      }
+
       if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened){
         this.isLoading = true;
         //console.log("RELOAD extremes");
@@ -220,7 +226,8 @@ export default {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_extremes = poll(res.result, (res) => {
+                this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
                 if (this.results['start'] === null || this.results['stop'] === null) {

@@ -549,7 +549,8 @@ export default {
      'setFalseNewEpitopeLoading', 'setTrueNewEpitopeLoading', 'showMoreInfo', 'setUserEpitopeSelected',
      'setTrueShowAminoacidVariantUserNewEpi', 'setTrueDisableSelectorUserNewEpitopePart',
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
-     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage']),
+     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage',
+     'setCountEpiCustom']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
      setEpitopeIndexToDelete(index){
        this.epitopeIndexToDelete = index;
@@ -906,7 +907,7 @@ export default {
       }
     },
     epitopeAdded(){
-      this.setCountEpi(this.epitopeAdded.length);
+      this.setCountEpiCustom(this.epitopeAdded.length);
       if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
           this.pageEpitopeList = 0;
         }

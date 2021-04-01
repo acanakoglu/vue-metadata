@@ -26,6 +26,8 @@ export default new Vuex.Store({
         countSeq3: null,         //metadata + aminoacid
         countSeq4: null,         //metadata + epitope
         countEpi: null,
+        countEpiCustom: null,
+        countEpiToShow: null,
         showSequenceEpiTable: false,
         chosenEpitope: null,
         showAminoacidVariantEpi: false,
@@ -54,6 +56,11 @@ export default new Vuex.Store({
         build_query: state => {
             let res = {};
             Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
+            return res
+        },
+        build_query_epi: state => {
+            let res = {};
+            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv}, {"epi": state.epiQuerySel}, {"epi_amino": state.aminoacidConditions})
             return res
         },
         keysEmpty: (state) => state.keys.length === 0,
@@ -245,6 +252,12 @@ export default new Vuex.Store({
         },
         setCountEpi: (state, count) => {
             state.countEpi = count;
+        },
+        setCountEpiCustom: (state, count) => {
+            state.countEpiCustom = count;
+        },
+        setCountEpiToShow: (state, count) => {
+            state.countEpiToShow = count;
         },
         showSeqEpiTable: (state) => {
             state.showSequenceEpiTable = !state.showSequenceEpiTable;
