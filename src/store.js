@@ -60,7 +60,7 @@ export default new Vuex.Store({
         },
         build_query_epi: state => {
             let res = {};
-            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv}, {"epi": state.epiQuerySel}, {"epi_amino": state.aminoacidConditions})
+            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv}, {"epi": state.epiQuerySel})
             return res
         },
         keysEmpty: (state) => state.keys.length === 0,

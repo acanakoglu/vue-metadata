@@ -415,7 +415,6 @@ export default {
       return res;
     },
     loadTable(){
-      console.log("qui");
 
       if(this.my_interval_table !== null){
         stopPoll(this.my_interval_table);
@@ -435,7 +434,6 @@ export default {
         let to_send = this.toSend();
         const url2 = `epitope/epiTableResLimit?page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`
         const url = `epitope/epiTableRes1`
-        console.log("qui2");
         axios.post(url, to_send)
             .then((res) => {
               return res.data

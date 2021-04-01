@@ -205,13 +205,13 @@
 
 
                         <div v-if="countSeq2 === null && countEpiToShow=== null" style="font-size:1.4em;">Loading...</div>
-                        <div style="font-size:1.4em;" v-else-if="countSeq2>0 || countEpiToShow>0">
-                            <span v-if="countSeq2>0">{{ countSeq2 }}</span>
+                        <div style="font-size:1.4em;" v-else-if="countSeq2>=0 || countEpiToShow>=0">
+                            <span v-if="countSeq2>=0">{{ countSeq2 }}</span>
                             <span v-if="countSeq2 === null"> ...</span>
                             <span> sequence</span>
                             <span
                                     v-if="countSeq2>1">s</span><span> and </span>
-                            <span v-if="countEpiToShow>0">{{ countEpiToShow }}</span>
+                            <span v-if="countEpiToShow>=0">{{ countEpiToShow }}</span>
                              <span v-if="countEpiToShow === null"> ...</span>
                             <span> epitope</span>
                             <span
