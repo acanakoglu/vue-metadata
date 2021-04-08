@@ -280,6 +280,7 @@
                 is_control: false,
                 finish_count_seq: false,
                 finish_count_var: false,
+                precision_float_table: 5,
                 queryItems: [
                     {
                         text: 'Example Epitope',
@@ -489,8 +490,8 @@
                     'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantUserNewEpi',
                     'setNewSingleAminoacidConditionUserQuery', 'resetNewSingleAminoacidConditionUserQuery',
                     'resetEpitopeAminoacidConditionsArrayUserNew', 'setTrueExampleCustomEpitope',
-                'setOneSelectedTabEpitope', 'setZeroSelectedTabEpitope', 'setTrueNewEpitopeLoading',
-                'setFalseNewEpitopeLoading', 'addNewEpitopeToList']),
+                'setSelectedTabEpitopeToEpitopeVariants', 'setSelectedTabEpitopeToCustom', 'setTrueNewEpitopeLoading',
+                'setFalseNewEpitopeLoading', 'addNewEpitopeToList', 'setTrueFromPredefinedQuery', 'setFalseFromPredefinedQuery']),
             ...
                 mapActions(["setKv", "setKvFull", "deleteAge"]),
             setInputQuery() {
@@ -520,8 +521,10 @@
                     this.setType(item.query.type);
 
                     if (item.epi_query) {
-                      this.setZeroSelectedTabEpitope();
+                      this.setTrueFromPredefinedQuery();
+                      this.setSelectedTabEpitopeToEpitopeVariants();
                         let total_epitope_meta = {};
+
                         Object.assign(total_epitope_meta, item.epi_query.epitope_meta, item.epi_query.variant_meta);
                         this.setEpiQuery(total_epitope_meta);
                         if (item.epi_query.variant_meta) {
@@ -533,8 +536,9 @@
                     }
 
                     if (item.custom_epi_query) {
+                      this.setTrueFromPredefinedQuery();
                       this.addCustomEpitope(item.custom_epi_query, item.query);
-                      this.setOneSelectedTabEpitope();
+                      this.setSelectedTabEpitopeToCustom();
                         /*this.setTrueExampleCustomEpitope();
                         this.resetEpitopeAminoacidConditionsArrayUserNew();
                         this.setNewSingleEpitopeQuery(item.custom_epi_query.custom_epitope_meta);
@@ -783,7 +787,7 @@
               this.epitopeToAdd['mutated_seq_ratio'] += ' %';
               this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
             }
-          }
+          },
         }
         ,
         watch: {
@@ -802,7 +806,7 @@
                 this.inputValid = this.validateJson(this.inputQuery)
             },
             finish_count_seq(){
-                if(this.finish_count_seq === true && this.finish_count_var === true){
+                if(this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population === true){
 
                   this.addFrequencies();
                   this.addNewEpitopeToList(this.epitopeToAdd);
@@ -813,7 +817,7 @@
                 }
               },
             finish_count_var() {
-              if (this.finish_count_seq === true && this.finish_count_var === true) {
+              if (this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population === true) {
 
                 this.addFrequencies();
                 this.addNewEpitopeToList(this.epitopeToAdd);
@@ -823,12 +827,25 @@
                 this.epitopeToAdd = null;
               }
             },
+            finish_count_population() {
+              if (this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population === true) {
+                if(this.epitopeToAdd !== null){
+                this.addFrequencies();
+                this.addNewEpitopeToList(this.epitopeToAdd);
+                let epitopeArr = (JSON.stringify(this.epitopeAdded));
+                localStorage.setItem('epitopeArr', epitopeArr);
+                this.setFalseNewEpitopeLoading();
+                this.epitopeToAdd = null;
+                }
+              }
+            },
         }
         ,
         computed: {
             ...
                 mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
-                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded', 'countEpiToShow']),
+                    'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded', 'countEpiToShow'
+                , 'finish_count_population', 'disableSelectorEpitopePart', 'fromPredefinedQuery']),
             ...
                 mapGetters({
                     compound_query: 'build_query',

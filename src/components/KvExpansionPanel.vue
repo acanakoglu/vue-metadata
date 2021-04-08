@@ -3,6 +3,11 @@
 
     <div slot="header">
       <span class="label">{{ getFullQueryType() }} query: </span>
+
+      <v-btn @click="openAnalyzeSubstitutionPanel()"  color="info" v-if="getFullQueryType() === 'Amino acid'">
+        Analyze subsitutions</v-btn>
+      <AnalyzeSubstitutionPanel></AnalyzeSubstitutionPanel>
+
       <span style="font-family:monospace" v-html="queryToShow"></span>
 
     </div>
@@ -86,10 +91,11 @@ import {mapGetters, mapMutations, mapActions, mapState} from 'vuex';
 import MetadataDropDown from "./MetadataDropDown";
 import AnnotDropDown from "./AnnotDropDown";
 import AnnotMenu from "./AnnotMenu";
+import AnalyzeSubstitutionPanel from "./AnalyzeSubstitutionPanel";
 
 export default {
   name: "KvExpansionPanel",
-  components: {AnnotDropDown, MetadataDropDown, AnnotMenu},
+  components: {AnalyzeSubstitutionPanel, AnnotDropDown, MetadataDropDown, AnnotMenu},
   props: {
     id: {type: Number, required: true},
     query_text: {type: String, required: true},
@@ -134,8 +140,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["deleteKey", "setPanelActive", "resetPanelActive", "deleteKvField"]),
+    ...mapMutations(["deleteKey", "setPanelActive", "resetPanelActive", "deleteKvField", 'setTrueAnalyzeSubstitutionPanel']),
     ...mapActions(["setKv", "deleteKv"]),
+    openAnalyzeSubstitutionPanel(){
+      this.setTrueAnalyzeSubstitutionPanel();
+    },
     variantRadioChanged(newValue, cond) {
       console.log(cond);
       const oldValue = cond.filter(el => el['field'] == 'variant_type')[0]['value'][0];

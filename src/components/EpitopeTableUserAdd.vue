@@ -34,6 +34,7 @@
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
           <v-flex sm3 align-self-center>
+            <v-layout justify-end>
               <v-dialog width="500" v-model="dialogOrder" persistent>
                   <v-card>
                       <v-card-title
@@ -78,6 +79,7 @@
                       Select/Sort fields
                   </v-btn>
               </v-dialog>
+            </v-layout>
           </v-flex>
       </v-layout>
     </v-container>
@@ -101,6 +103,65 @@
 
                   <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
+                  <span v-else-if="header.value === 'metadata'">
+                    <br>
+                    <!--<br> <h3><b>Metadata:</b></h3><br>-->
+                    <span v-if="Object.keys(createMetadataInfos(props.item)).length !== undefined && Object.keys(createMetadataInfos(props.item)).length !== null && Object.keys(createMetadataInfos(props.item)).length > 0">
+                      <br>
+                      <span v-for="(value, key) in createMetadataInfos(props.item)" style="display: block;"> <b class="text-capitalize">{{key}}: <br></b>
+                        <div v-if="value.length !== undefined && value.length !== null" style="display: inline">
+                          <span v-for="(val, index) in value">
+                            <span v-if="index!=0"> , <br></span>
+                            <span class="capitalize">{{val}} </span>
+                          </span>
+                        </div>
+                        <div v-else style="display: inline">
+                          <span>
+                            {{value}} <br>
+                          </span>
+                        </div>
+                        <br><br>
+                      </span>
+                    <br><br>
+                    </span>
+                    <span v-else> N/D <br><br></span>
+                    <!--<span v-if="createAminoAcidInfos(props.item).length !== undefined && createAminoAcidInfos(props.item).length !== null && createAminoAcidInfos(props.item).length > 0">
+                      <h3><b>-----------</b></h3><br>
+                      <h3><b>Amino Acid Condition:</b></h3><br>
+                      <div v-for="(conditionsAND, index) in createAminoAcidInfos(props.item)">
+                         <div v-for="(conditionsOR, index) in conditionsAND">
+                          <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
+                          <span v-for="(value, key) in conditionsOR" style="display: block;">
+                            <b>{{key}}: <br></b>
+                            <span class="capitalize">{{value}} </span>
+                            <br><br>
+                          </span>
+                        </div>
+                      </div>
+                      <br><br>
+                    </span>-->
+                  </span>
+
+                  <span v-else-if="header.value === 'aminoacid_condition'">
+                    <br>
+                    <span v-if="createAminoAcidInfos(props.item).length !== undefined && createAminoAcidInfos(props.item).length !== null && createAminoAcidInfos(props.item).length > 0">
+                      <br>
+                      <div v-for="(conditionsAND, index) in createAminoAcidInfos(props.item)">
+                        <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
+                        <div v-for="(conditionsOR, index) in conditionsAND">
+                          <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
+                          <span v-for="(value, key) in conditionsOR" style="display: block;">
+                            <b>{{key}}: <br></b>
+                            <span class="capitalize">{{value}} </span>
+                            <br><br>
+                          </span>
+                        </div>
+                      </div>
+                      <br><br>
+                    </span>
+                    <span v-else> N/D <br><br></span>
+                  </span>
+
                     <span v-else-if="header.value === 'virusViz_button'">
 
                       <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
@@ -117,6 +178,24 @@
                         </v-btn>
                         -->
 
+                    </span>
+
+                    <span v-else-if="header.value === 'virusViz_button_all_population'">
+
+                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0"
+                              @click="openDialogVirusViz(props.item, props.item['total_num_of_seq_metadata'], true)">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz
+                      </v-btn>
+                      <!--
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
+                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                            VirusViz
+                        </v-btn>
+                        -->
                     </span>
 
                     <span v-else>{{props.item[header.value]}}</span>
@@ -167,13 +246,13 @@
 
           <v-card-actions>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope); dialogVirusviz = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope, false, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (Full)
             </v-btn>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope, true); dialogVirusviz = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope, true, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (AA mutations only)
@@ -183,7 +262,7 @@
                 color="rgb(122, 139, 157)"
                 style="color: white"
                 text
-                @click="dialogVirusviz = false;"
+                @click="dialogVirusviz = false; virusviz_all_pop = false;"
             >
               Close
             </v-btn>
@@ -194,7 +273,8 @@
 
       </v-layout>
 
-      <SequencesEpiTableUser></SequencesEpiTableUser>
+      <SequencesEpiTable></SequencesEpiTable>
+      <!--<SequencesEpiTableUser></SequencesEpiTableUser>-->
 
     </v-card>
   </div>
@@ -244,7 +324,8 @@ export default {
       sendToDialogVirusViz: {
         epitope_id : null,
         num_seq : null,
-      }
+      },
+      virusviz_all_pop: false,
     }
   },
   computed: {
@@ -287,15 +368,64 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
-    openDialogVirusViz(epitope, num_seq){
+    createAminoAcidInfos(epitope){
+      let kv = epitope.compound_query.kv;
+      let arrayToShowInAND = [];
+
+      Object.keys(kv).forEach(function(key) {
+        let arrayToShowInOR = [];
+        if(key !== 'aa_0'){
+          let single = kv[key];
+          let query = single['query'];
+          let len = query.length;
+          let i = 0;
+          while(i < len){
+            let line = {};
+            let single = query[i];
+            Object.keys(single).forEach(function(key) {
+              if (key === 'product') {
+                line['Protein'] = single[key][0];
+              } else if (key === 'variant_aa_type') {
+                line['Variant type'] = single[key][0];
+              } else if (key === 'sequence_aa_original') {
+                line['Original amino acid'] = single[key][0];
+              } else if (key === 'sequence_aa_alternative') {
+                line['New amino acid'] = single[key][0];
+              } else if (key === 'start_aa_original') {
+                let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
+                line['Position range'] = pos;
+              }
+            })
+            arrayToShowInOR.push(line);
+            i++;
+          }
+          arrayToShowInAND.push(arrayToShowInOR);
+        }
+      })
+
+      return arrayToShowInAND;
+    },
+    createMetadataInfos(epitope){
+      let infos = {};
+      let metadata = epitope.compound_query.gcm;
+
+      Object.keys(metadata).forEach(function(key) {
+        if(key !== 'host_taxon_name' && key !== 'taxon_name') {
+          infos[key] = metadata[key];
+        }
+      })
+      return infos;
+    },
+    openDialogVirusViz(epitope, num_seq, all_pop = false){
       this.dialogVirusviz = true;
       this.sendToDialogVirusViz.epitope = epitope;
       this.sendToDialogVirusViz.num_seq = num_seq;
+      this.virusviz_all_pop = all_pop;
     },
-    virusVizClicked(prop, aa_only = false){
+    virusVizClicked(prop, aa_only = false, all_pop = false){
         let orderDir = "";
 
-        let to_send = prop['compound_query'];
+        let to_send = JSON.parse(JSON.stringify(prop['compound_query']));
 
           let url = `viz/submit?aa_only=${aa_only}&&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
           if (this.selectedProduct !== FULL_TEXT) {
@@ -308,7 +438,13 @@ export default {
           epitope_info['protein'] = prop['product'];
           epitope_info['link'] = '';
 
-          to_send['userEpitope'] = epitope_info;
+          //to_send['userEpitope'] = epitope_info;
+          if(all_pop){
+            to_send['kv'] = {};
+            to_send['epitope_without_variants'] = epitope_info;
+          }else {
+            to_send['userEpitope'] = epitope_info;
+          }
 
           axios.post(url, to_send)
               .then((res) => {
@@ -339,11 +475,16 @@ export default {
     getHeaders() {
       const predefinedHeaders = [
           {text: 'Epitope Name', value: 'epitope_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'Creation Date', value: 'creation_date', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Metadata', value: 'metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Amino Acid Condition', value: 'aminoacid_condition', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Num Seq Population', value: 'total_num_of_seq_metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Num Mut Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
@@ -507,6 +648,15 @@ export default {
 
   .brown-label label {
         color: #D2691E !important;
+  }
+
+  .capitalize {
+    text-transform: lowercase;
+    display: inline-block;
+  }
+
+  .capitalize:first-letter {
+    text-transform: uppercase
   }
 
 

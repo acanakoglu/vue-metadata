@@ -7,7 +7,20 @@
       width="800"
     >
       <v-card>
-        <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">
+        <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white" v-if="isEpitopeSurf">
+          Analyze Substitutions
+          <v-spacer></v-spacer>
+          <v-btn
+            color="rgb(122, 139, 157)"
+            style="color:white;"
+            text
+            @click="exit()"
+          >
+            CLOSE
+          </v-btn>
+        </v-card-title>
+        <v-card-title class="headline blue lighten-4"
+                    primary-title v-else>
           Analyze Substitutions
           <v-spacer></v-spacer>
           <v-btn
@@ -44,8 +57,17 @@
                           slot="activator"
                           class="info-button"
                           small
-                          flat icon color="grey">
+                          flat icon color="grey"
+                          v-if="isEpitopeSurf">
                       <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-btn
+                            slot="activator"
+                            class="info-button"
+                            small
+                            flat icon color="blue"
+                            v-else>
+                        <v-icon class="info-icon">info</v-icon>
                   </v-btn>
                   <v-card>
                       <v-card-title
@@ -81,7 +103,16 @@
                           slot="activator"
                           class="info-button"
                           small
-                          flat icon color="grey">
+                          flat icon color="grey"
+                          v-if="isEpitopeSurf">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="blue"
+                          v-else>
                       <v-icon class="info-icon">info</v-icon>
                   </v-btn>
                   <v-card>
@@ -154,7 +185,16 @@
                           slot="activator"
                           class="info-button"
                           small
-                          flat icon color="grey">
+                          flat icon color="grey"
+                          v-if="isEpitopeSurf">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="blue"
+                          v-else>
                       <v-icon class="info-icon">info</v-icon>
                   </v-btn>
                   <v-card>
@@ -168,9 +208,17 @@
                           Grantham distance is a formula for difference between amino acids combines properties that
                         correlate best with protein residue substitution frequencies: composition, polarity,
                         and molecular volume.
+                        <br><br>
+                        <u>Conservative Change:</u><br> rarely results in dysfunction (Grantham distance <= 66)
+                        <br><br>
+                        <u>Radical Change:</u><br> might lead to change in the phenotype (Grantham distance > 66)
                       </v-card-text>
                   </v-card>
               </v-dialog>
+            </v-layout>
+            <v-layout wrap align-center justify-center v-if="calculateCoefficient !== null && calculateCoefficient>0">
+              <h4 style="margin-bottom: 20px" v-if="calculateCoefficient > 66"> Radical Change </h4>
+              <h4 style="margin-bottom: 20px" v-if="calculateCoefficient <= 66"> Conservative Change </h4>
             </v-layout>
         </div>
 
@@ -323,7 +371,7 @@ export default {
     },
     computed: {
       ...mapState([
-          "analyzeSubstitutionPanel"
+          "analyzeSubstitutionPanel", 'isEpitopeSurf'
       ]),
       ...mapGetters({
         compound_query: 'build_query',
@@ -487,7 +535,7 @@ export default {
         this.analyzeSubPanel = this.analyzeSubstitutionPanel;
       },
       aminoAcidSelectedList(){
-        console.log("a", this.originalSetted, this.alternativeSetted);
+        //console.log("a", this.originalSetted, this.alternativeSetted);
         /*if(this.originalSetted === this.alternativeSetted){
           this.errorSameAmino = true;
         }

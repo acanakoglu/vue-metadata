@@ -132,7 +132,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'disableSelectorEpitopePart'
+      'epiQuerySel', 'disableSelectorEpitopePart', 'aminoacidConditions','epitopeAminoacidFields'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -209,8 +209,22 @@ export default {
 
       if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
         this.isLoading = true;
-        const url = `epitope/epiFreqExtremes`;
+        let url = '';
         let to_send = this.toSend();
+        if (this.epitopeAminoacidFields.some(item => item.field === this.field)) {
+           url = `epitope/epiFreqExtremes`;
+        }
+        else {
+          let to_send_epi_query = to_send.epi_query;
+           delete to_send.epi_query;
+           delete to_send_epi_query.sequence_aa_original;
+           delete to_send_epi_query.sequence_aa_alternative;
+           delete to_send_epi_query.variant_aa_type;
+           delete to_send_epi_query.startExtVariant;
+           delete to_send_epi_query.stopExtVariant;
+           to_send['epi_query'] = to_send_epi_query;
+          url = `epitope/epiFreqExtremesWithoutVariants`;
+        }
         axios.post(url, to_send)
             .then((res) => {
               return res.data
@@ -261,6 +275,11 @@ export default {
     compound_query() {
       this.loadExtremes();
     },
+    aminoacidConditions(){
+      if(Object.keys(this.aminoacidConditions).length > 0){
+        this.disabledEpi_AminoacidMenuOpened = true;
+      }
+    },
     epiQuerySel(){
       if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
         this.deleteExtremesLocal();
@@ -284,6 +303,11 @@ export default {
   },
   created() {
     this.loadExtremes();
+    if (this.disableSelectorEpitopePart) {
+      this.disabledEpi_AminoacidMenuOpened = true;
+    } else {
+      this.disabledEpi_AminoacidMenuOpened = false;
+    }
   },
 }
 </script>

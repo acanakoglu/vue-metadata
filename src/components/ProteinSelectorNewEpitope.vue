@@ -30,9 +30,9 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
-    compound_query(){
+    'compound_query.taxon_name': function(){
       this.loadData();
-    }
+    },
   },
   computed: {
     ...mapState([
@@ -71,7 +71,7 @@ export default {
         let queryToRun = Object.assign({}, this.compound_query);
         queryToRun['panel'] = this.groupCondition;
 
-        const url = `field/${this.field}`;
+        const url = `epitope/proteinCustomEpitope`;
         this.isLoading = true;
 
         axios.post(url, queryToRun)
@@ -95,6 +95,32 @@ export default {
               this.isLoading = false;
             });
         })
+
+
+        /*const url = `field/${this.field}`;
+        this.isLoading = true;
+
+        axios.post(url, queryToRun)
+        .then((res) => {
+            return res.data
+        })
+        .then((res) => {
+          this.my_interval_data = poll(res.result,(res)=>{
+            this.my_interval_data = null;
+              let vals = res.values;
+              if (this.selected) {
+                let arraySelected = [this.selected];
+                  let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
+                      .sort().map(v => Object({
+                          value: v,
+                          count: 0
+                      }));
+                  vals = vals.concat(zero_elements);
+              }
+              this.results = vals;
+              this.isLoading = false;
+            });
+        })*/
     },
     rename(inp) {
         let value_in;

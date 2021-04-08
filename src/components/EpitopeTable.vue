@@ -48,6 +48,7 @@
           </v-flex>
           <v-flex sm2 align-self-center></v-flex>
           <v-flex sm3 align-self-center>
+            <v-layout justify-end>
               <v-dialog width="500" v-model="dialogOrder" persistent>
                   <v-card>
                       <v-card-title
@@ -92,6 +93,7 @@
                       Select/Sort fields
                   </v-btn>
               </v-dialog>
+            </v-layout>
           </v-flex>
       </v-layout>
     </v-container>
@@ -129,6 +131,23 @@
                       <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
                              :disabled="props.item['num_seq'] === 0"
                               @click="openDialogVirusViz(props.item[epitopeId], props.item['num_seq'])">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz
+                      </v-btn>
+                      <!--
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
+                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                            VirusViz
+                        </v-btn>
+                        -->
+                    </span>
+
+                    <span v-else-if="header.value === 'virusViz_button_all_population'">
+
+                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                              @click="openDialogVirusViz(props.item[epitopeId], countSeq2, true)">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                         VirusViz
@@ -190,13 +209,13 @@
 
           <v-card-actions>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id); dialogVirusviz = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, false, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (Full)
             </v-btn>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, true); dialogVirusviz = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, true, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (AA mutations only)
@@ -206,7 +225,7 @@
                 color="rgb(122, 139, 157)"
                 style="color: white"
                 text
-                @click="dialogVirusviz = false;"
+                @click="dialogVirusviz = false; virusviz_all_pop = false;"
             >
               Close
             </v-btn>
@@ -270,6 +289,8 @@ export default {
       },
       my_interval_num_epi: null,
       my_interval_table: null,
+      reCalculateTable: false,
+      virusviz_all_pop: false,
     }
   },
   computed: {
@@ -312,12 +333,13 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
-    openDialogVirusViz(epitope_id, num_seq){
+    openDialogVirusViz(epitope_id, num_seq, all_pop = false){
       this.dialogVirusviz = true;
       this.sendToDialogVirusViz.epitope_id = epitope_id;
       this.sendToDialogVirusViz.num_seq = num_seq;
+      this.virusviz_all_pop = all_pop;
     },
-    virusVizClicked(epitope_id, aa_only = false){
+    virusVizClicked(epitope_id, aa_only = false, all_pop = false){
         let orderDir = "";
 
           if (this.pagination.descending)
@@ -334,7 +356,11 @@ export default {
 
           let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
           epitope_and_aminoacid_conditions[this.epitopeId] = epitope_id;
-          to_send['epitope'] = epitope_and_aminoacid_conditions;
+          if(all_pop){
+            to_send['epitope_without_variants'] = epitope_and_aminoacid_conditions;
+          }else {
+            to_send['epitope'] = epitope_and_aminoacid_conditions;
+          }
 
 
           axios.post(url, to_send)
@@ -370,7 +396,8 @@ export default {
           //{text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
-          {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -415,6 +442,7 @@ export default {
       return res;
     },
     loadTable(){
+      this.reCalculateTable = false;
 
       if(this.my_interval_table !== null){
         stopPoll(this.my_interval_table);
@@ -447,7 +475,27 @@ export default {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
-                      if (key !== 'epi_fragment_all_information') {
+                      if (key === 'cell_type'){
+                        if (item[k] != null) {
+                          let to_replace = "";
+                          let i = 0;
+                          while (i < values.length) {
+                            if (item[k][i] != null) {
+                              to_replace += item[k][i];
+                            } else {
+                              to_replace += "N/D";
+                            }
+                            i++;
+                            if (i !== values.length) {
+                              to_replace += ",\n";
+                            }
+                          }
+                          item[k] = to_replace;
+                        } else {
+                          item[k] = "N/D";
+                        }
+                      }
+                      else if (key !== 'epi_fragment_all_information') {
                         //let a = 1;
                         //if (a === 1) {
                           if (item[k] != null) {
@@ -574,6 +622,7 @@ export default {
                 } else {
                   this.result = [];
                   this.isLoading = true;
+                  this.reCalculateTable = true;
                 }
               })
             })
@@ -948,12 +997,18 @@ export default {
     compound_query_epi() {
       this.loadEveything();
     },
+    reCalculateTable(){
+      if(this.reCalculateTable){
+        this.loadTable();
+      }
+    },
     /*epiQuerySel() {
       this.loadEveything();
     },
+    */
     compound_query() {
-      this.loadEveything();
-    },*/
+      //this.loadCountSeq2();
+    },
     /*countSeq(){
       if(this.countSeq !== null) {
         this.loadTable();

@@ -101,6 +101,7 @@ export default {
     createEpitopeInfos(epitope){
       let infos = {};
       infos['Epitope name'] = epitope.epitope_name;
+      infos['Creation date'] = epitope.creation_date;
       if(epitope.file_name){
         infos['File Name'] = epitope.file_name;
       }

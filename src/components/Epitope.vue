@@ -4,13 +4,31 @@
       <v-tabs color="#ebebeb" v-model="selectedTab">
         <v-tabs-slider color="rgb(201, 53, 53)"  style="height: 5px"></v-tabs-slider>
           <v-tab>
-              Use IEDB Epitopes
-          </v-tab>
-          <v-tab>
                Custom Epitopes
           </v-tab>
+          <v-tab>
+              Use IEDB Epitopes Without Variants Count
+          </v-tab>
+          <v-tab>
+              Use IEDB Epitopes
+          </v-tab>
+
 
           <v-tab-item>
+            <div v-if="selectedTab === this.toCustom">
+            <AddNewEpitope></AddNewEpitope>
+            </div>
+          </v-tab-item>
+
+          <v-tab-item>
+            <div v-if="selectedTab === this.toEpitopeWithoutVariants">
+            <EpitopeWithoutVariants></EpitopeWithoutVariants>
+            </div>
+          </v-tab-item>
+
+
+          <v-tab-item>
+            <div v-if="selectedTab === this.toEpitopeVariants">
                   <v-container fluid grid-list-xl class="EpitopeMenu">
                     <v-layout wrap align-center >
 
@@ -79,9 +97,7 @@
                   </v-container>
 
                   <EpitopeTable></EpitopeTable>
-          </v-tab-item>
-          <v-tab-item>
-            <AddNewEpitope></AddNewEpitope>
+            </div>
           </v-tab-item>
       </v-tabs>
 
@@ -97,10 +113,12 @@ import EpitopeSelectorPercentage from "./EpitopeSelectorPercentage"
 import EpitopeTable from "./EpitopeTable";
 import AddNewEpitope from "./AddNewEpitope";
 import {poll} from "../utils";
+import EpitopeWithoutVariants from "./EpitopeWithoutVariants";
 
 export default {
   name: "Epitope",
   components: {
+    EpitopeWithoutVariants,
     AddNewEpitope,
     EpitopeTable,
     EpitopeSelectorText,
@@ -118,13 +136,18 @@ export default {
       ],*/
       epitopeFields: [],
       requirement: 'A single Host and a single Virus are required',
+      toEpitopeVariants: 2,
+      toEpitopeWithoutVariants: 1,
+      toCustom : 0,
       selectedTab: this.setSelectedTab(),
+      epiQueryUsedTab: 0,
     }
   },
   computed: {
     ...mapState(['disableSelectorEpitopePart', 'countEpi', 'epitopeAdded',
-      'epiQuerySel', 'disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions',
-    'selectedTabEpitope', 'countEpiToShow', 'countEpiCustom']),
+      'epiQuerySel', 'epiQuerySelWithoutVariants','disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions',
+    'selectedTabEpitope', 'countEpiToShow', 'countEpiCustom', 'countEpiWithoutVariants', 'epitopeAminoacidFields',
+    'fromPredefinedQuery']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query'
@@ -153,10 +176,12 @@ export default {
     }
   },
    methods: {
-     ...mapMutations(['resetEpiQuery', 'setCountEpi', 'setFalseDisableSelectorUserNewEpitopePart',
+     ...mapMutations(['resetEpiQuery', 'resetEpiQueryWithoutVariants', 'setCountEpi', 'setFalseDisableSelectorUserNewEpitopePart',
        'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart',
        'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantEpi',
-     'setCountEpiCustom', 'setCountEpiToShow']),
+     'setCountEpiCustom', 'setCountEpiToShow', 'setSelectedTabEpitopeToCustom', 'setSelectedTabEpitopeToEpitopeVariants',
+     'setSelectedTabEpitopeToEpitopeWithoutVariants', 'setCountEpiWithoutVariants',
+     'setEpiQuery', 'setEpiQueryWithoutVariants', 'setFalseFromPredefinedQuery', 'resetAminoacidConditionQuery']),
      toSend(){
       let res = {};
       Object.assign(res,{"compound_query": this.compound_query},
@@ -216,33 +241,60 @@ export default {
       this.selectedTab = this.selectedTabEpitope;
     },
     countEpi(){
-      if(this.selectedTab === 1){
+      if(this.selectedTab === this.toCustom){
         this.setCountEpiToShow(this.countEpiCustom);
       }
-      else{
+      else if(this.selectedTab === this.toEpitopeVariants){
         this.setCountEpiToShow(this.countEpi);
+      }
+      else if(this.selectedTab === this.toEpitopeWithoutVariants){
+        this.setCountEpiToShow(this.countEpiWithoutVariants);
       }
     },
     countEpiCustom(){
-      if(this.selectedTab === 1){
+      if(this.selectedTab === this.toCustom){
         this.setCountEpiToShow(this.countEpiCustom);
       }
-      else{
+      else if(this.selectedTab === this.toEpitopeVariants){
         this.setCountEpiToShow(this.countEpi);
+      }
+      else if(this.selectedTab === this.toEpitopeWithoutVariants){
+        this.setCountEpiToShow(this.countEpiWithoutVariants);
+      }
+    },
+    countEpiWithoutVariants(){
+      if(this.selectedTab === this.toCustom){
+        this.setCountEpiToShow(this.countEpiCustom);
+      }
+      else if(this.selectedTab === this.toEpitopeVariants){
+        this.setCountEpiToShow(this.countEpi);
+      }
+      else if(this.selectedTab === this.toEpitopeWithoutVariants){
+        this.setCountEpiToShow(this.countEpiWithoutVariants);
       }
     },
     selectedTab(){
-      if(this.selectedTab === 1){
-
+      if(this.selectedTab === this.toCustom){
+        this.setSelectedTabEpitopeToCustom();
         if(this.disableSelectorEpitopePart){
           this.setFalseDisableSelectorEpitopePart();
           this.setFalseShowAminoacidVariantEpi();
         }
-
+        this.setFalseFromPredefinedQuery();
         this.setCountEpiToShow(this.countEpiCustom);
       }
-      else{
-
+      else if(this.selectedTab === this.toEpitopeVariants){
+        if(this.epiQueryUsedTab === this.toEpitopeWithoutVariants && !this.fromPredefinedQuery){
+            this.resetAminoacidConditionQuery();
+            this.setFalseShowAminoacidVariantEpi();
+            this.setFalseDisableSelectorEpitopePart();
+            let query = JSON.parse(JSON.stringify(this.epiQuerySelWithoutVariants));
+            this.resetEpiQuery();
+            this.setEpiQuery(query);
+        }
+        this.setFalseFromPredefinedQuery();
+        this.epiQueryUsedTab = this.toEpitopeVariants;
+        this.setSelectedTabEpitopeToEpitopeVariants();
         if(this.disableSelectorUserNewEpitopePart){
           this.setFalseDisableSelectorUserNewEpitopePart();
           this.setFalseDisableSelectorEpitopePart();
@@ -276,6 +328,25 @@ export default {
         else{
           this.setCountEpi(0);
         }
+      }
+      else if(this.selectedTab === this.toEpitopeWithoutVariants && !this.fromPredefinedQuery){
+        if(this.epiQueryUsedTab === this.toEpitopeVariants){
+            let query = JSON.parse(JSON.stringify(this.epiQuerySel));
+            this.epitopeAminoacidFields.forEach(elem => {
+                  delete query[elem.field];
+                }
+            )
+            delete query['startExtVariant'];
+            delete query['stopExtVariant'];
+            this.resetEpiQueryWithoutVariants();
+            this.setEpiQueryWithoutVariants(query);
+        }
+        this.setFalseFromPredefinedQuery();
+        this.epiQueryUsedTab = this.toEpitopeWithoutVariants;
+        this.setSelectedTabEpitopeToEpitopeWithoutVariants();
+        this.setCountEpiToShow(this.countEpiWithoutVariants);
+        this.setFalseDisableSelectorEpitopePart();
+        //this.setFalseShowAminoacidVariantEpi();
       }
     }
   },
