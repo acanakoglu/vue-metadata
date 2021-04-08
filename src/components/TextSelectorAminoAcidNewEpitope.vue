@@ -21,7 +21,7 @@
 <script>
 import axios from "axios";
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
-import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
+import {FULL_TEXT, LOADING_TEXT, poll, stopPoll} from '../utils.js'
 
 export default {
   name: "TextSelectorAminoAcidNewEpitope",
@@ -71,6 +71,11 @@ export default {
     ...mapMutations([]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected', 'setNewSingleAminoAcidConditionUserAction']),
     loadData(){
+
+        if(this.my_interval_data !== null){
+          stopPoll(this.my_interval_data);
+        }
+
         this.isLoading = true;
         this.results = [{value: LOADING_TEXT}];
 
@@ -85,8 +90,9 @@ export default {
             return res.data
         })
         .then((res) => {
-          poll(res.result,(res)=>{
-              let vals = res.values
+          this.my_interval_data = poll(res.result,(res)=>{
+              this.my_interval_data = null;
+              let vals = res.values;
               if (this.selected) {
                 let arraySelected = [this.selected];
                   let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
@@ -135,6 +141,7 @@ export default {
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
       disableTextAmino: true,
+      my_interval_data: null,
     }
   },
   mounted() {

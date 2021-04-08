@@ -65,7 +65,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
-import {poll} from "../utils";
+import {poll, stopPoll} from "../utils";
 
 export default {
   name: "PositionSelectorAminoAcidNewEpitope",
@@ -89,6 +89,7 @@ export default {
       shown_value: null,
       disableNumSel: false,
       disabledEpi_AminoacidMenuOpened: false,
+      my_interval_extremes: null,
     }
   },
   computed: {
@@ -163,6 +164,11 @@ export default {
         }
     },
     loadExtremes(){
+
+        if(this.my_interval_extremes !== null){
+          stopPoll(this.my_interval_extremes);
+        }
+
         this.isLoading = true;
 
         let to_send = {};
@@ -192,7 +198,8 @@ export default {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_extremes = poll(res.result, (res) => {
+                this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
                 this.minExt = this.results['start'];
@@ -246,7 +253,7 @@ export default {
       }
       if(this.newSingleAminoAcidConditionUser['start_aa_original']){
         this.min = this.newSingleAminoAcidConditionUser['start_aa_original']['min_val'];
-        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];;
+        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];
         this.shown_value = this.textBoxValue;
       }
       this.loadExtremes();
@@ -255,7 +262,7 @@ export default {
   created() {
     if(this.newSingleAminoAcidConditionUser['start_aa_original']){
         this.min = this.newSingleAminoAcidConditionUser['start_aa_original']['min_val'];
-        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];;
+        this.max = this.newSingleAminoAcidConditionUser['start_aa_original']['max_val'];
         this.shown_value = this.textBoxValue;
       }
     //this.loadExtremes();

@@ -1,6 +1,14 @@
 <template>
   <v-container fluid grid-list-xl class="EpitopeMenu" >
-    <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+    <v-layout wrap align-center>
+      <v-flex xs12 md8 lg8 class="no-horizontal-padding">
+        <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+      </v-flex>
+      <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
+        <v-btn @click="openAnalyzeSubstitutionPanel()"  color="rgb(122, 139, 157)" style="color:white;">
+                  Analyze subsitutions</v-btn>
+      </v-flex>
+    </v-layout>
     <v-layout wrap align-center justify-space-around style="margin-bottom: 10px">
       <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(newSingleAminoAcidConditionUser).length > 0"
               style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
@@ -63,6 +71,8 @@
         <!--<v-btn @click="addAminoacidConditionsInOR()" class="white--text" color="light-green">ADD IN OR</v-btn>-->
     </v-layout>
 
+    <AnalyzeSubstitutionPanel></AnalyzeSubstitutionPanel>
+
   </v-container>
 </template>
 
@@ -75,10 +85,12 @@ import ProteinSelectorNewEpitope from "./ProteinSelectorNewEpitope";
 import PositionSelectorNewEpitope from "./PositionSelectorNewEpitope";
 import PositionSelectorAminoAcidNewEpitope from "./PositionSelectorAminoAcidNewEpitope";
 import TextSelectorAminoAcidNewEpitope from "./TextSelectorAminoAcidNewEpitope";
+import AnalyzeSubstitutionPanel from "./AnalyzeSubstitutionPanel";
 
 export default {
   name: "AminoacidVariantNewUserEpitope",
   components: {
+    AnalyzeSubstitutionPanel,
     TextSelectorAminoAcidNewEpitope,
     PositionSelectorAminoAcidNewEpitope, PositionSelectorNewEpitope, ProteinSelectorNewEpitope},
   data() {
@@ -130,9 +142,12 @@ export default {
       'setFalseShowAminoacidVariantUserNewEpi', 'setFalseDisableSelectorEpitopePart',
         'addEpitopeAminoacidConditionsArrayUserNew', 'addEpitopeAminoacidConditionsArrayUserNewInOR',
         'resetEpitopeAminoacidConditionsArrayUserNewInOR', 'resetNewSingleAminoAcidConditionUser',
-        'changeAddingEpitope'
+        'changeAddingEpitope', 'setTrueAnalyzeSubstitutionPanel'
     ]),
     ...mapActions(['setNewSingleAminoAcidConditionUserAction']),
+    openAnalyzeSubstitutionPanel(){
+      this.setTrueAnalyzeSubstitutionPanel();
+    },
     closeAminoEpiMenu(){
       this.setFalseDisableSelectorEpitopePart();
       this.setFalseShowAminoacidVariantUserNewEpi();

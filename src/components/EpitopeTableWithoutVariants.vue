@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-dialog max-width="500" @keydown.esc="alertDialog = false" v-model="alertDialog"  >
         <v-card>
         <v-card-text>
@@ -25,21 +24,33 @@
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
+            <v-layout>
             <v-btn @click="downloadTable()"
                    class="white--text"
                        small
                    color="rgb(122, 139, 157)"
-                      :disabled="isLoading || epitopeAdded.length===0">
+                      :disabled="epiSearchDis || isLoading">
               Download Table</v-btn>
+            </v-layout>
           </v-flex>
-          <v-flex sm2 align-self-center></v-flex>
-          <v-flex sm3 align-self-center>
+          <v-flex sm2 align-self-center>
+            <v-layout justify-center>
+            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="this.result === null || this.result === undefined || this.result.length === 0"
+                              @click="openDialogVirusViz('all')">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz All Population
+                      </v-btn>
+            </v-layout>
+          </v-flex>
+          <v-flex sm3 align-self-right>
             <v-layout justify-end>
               <v-dialog width="500" v-model="dialogOrder" persistent>
                   <v-card>
                       <v-card-title
                               class="headline"
-                              style="background-color: rgb(201, 53, 53) ; color: white"
+                              style="background-color:rgb(201, 53, 53) ; color: white"
                       >
                           Field order
                           <v-spacer></v-spacer>
@@ -65,7 +76,7 @@
                               Press APPLY to go back to the result window.</p>
                           <draggable v-model="headers_can_be_shown" @start="drag=true" @end="drag=false">
                               <v-list v-for="element in headers_can_be_shown" :key="element.value">
-                                  <v-checkbox :label=element.text v-model=element.show color= "rgb(201, 53, 53)"></v-checkbox>
+                                  <v-checkbox :label=element.text v-model=element.show color="rgb(201, 53, 53)"></v-checkbox>
                               </v-list>
                           </draggable>
                       </v-card-text>
@@ -86,123 +97,44 @@
 
 
     <v-card>
+      <h3 style="color:red" v-if="epiSearchDis">{{requirement}}</h3>
       <v-layout wrap align-center >
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
-                :loading="isLoading || newEpitopeLoading"
+                :loading="isLoading"
                 class="data-table"
         >
             <template slot="items" slot-scope="props">
                 <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
-                    :key="header.value" v-show="header.show">
+                    :key="header.value" v-show="header.show"  v-if="!epiSearchDis">
 
                     <span v-if="header.value === 'num_seq'">
-                        <a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                        <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
                     </span>
 
-                  <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
+                    <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
-                  <span v-else-if="header.value === 'metadata'">
-                    <br>
-                    <!--<br> <h3><b>Metadata:</b></h3><br>-->
-                    <span v-if="Object.keys(createMetadataInfos(props.item)).length !== undefined && Object.keys(createMetadataInfos(props.item)).length !== null && Object.keys(createMetadataInfos(props.item)).length > 0">
-                      <br>
-                      <span v-for="(value, key) in createMetadataInfos(props.item)" style="display: block;"> <b class="text-capitalize">{{key}}: <br></b>
-                        <div v-if="value.length !== undefined && value.length !== null" style="display: inline">
-                          <span v-for="(val, index) in value">
-                            <span v-if="index!=0"> , <br></span>
-                            <span class="capitalize">{{val}} </span>
-                          </span>
-                        </div>
-                        <div v-else style="display: inline">
-                          <span>
-                            {{value}} <br>
-                          </span>
-                        </div>
-                        <br><br>
-                      </span>
-                    <br><br>
+                    <span v-else-if="header.value === 'epitope_iri'">
+                        <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                        <span v-else>N/D</span>
                     </span>
-                    <span v-else> N/D <br><br></span>
-                    <!--<span v-if="createAminoAcidInfos(props.item).length !== undefined && createAminoAcidInfos(props.item).length !== null && createAminoAcidInfos(props.item).length > 0">
-                      <h3><b>-----------</b></h3><br>
-                      <h3><b>Amino Acid Condition:</b></h3><br>
-                      <div v-for="(conditionsAND, index) in createAminoAcidInfos(props.item)">
-                         <div v-for="(conditionsOR, index) in conditionsAND">
-                          <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
-                          <span v-for="(value, key) in conditionsOR" style="display: block;">
-                            <b>{{key}}: <br></b>
-                            <span class="capitalize">{{value}} </span>
-                            <br><br>
-                          </span>
-                        </div>
-                      </div>
-                      <br><br>
-                    </span>-->
-                  </span>
-
-                  <span v-else-if="header.value === 'aminoacid_condition'">
-                    <br>
-                    <span v-if="createAminoAcidInfos(props.item).length !== undefined && createAminoAcidInfos(props.item).length !== null && createAminoAcidInfos(props.item).length > 0">
-                      <br>
-                      <div v-for="(conditionsAND, index) in createAminoAcidInfos(props.item)">
-                        <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
-                        <div v-for="(conditionsOR, index) in conditionsAND">
-                          <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
-                          <span v-for="(value, key) in conditionsOR" style="display: block;">
-                            <b>{{key}}: <br></b>
-                            <span class="capitalize">{{value}} </span>
-                            <br><br>
-                          </span>
-                        </div>
-                      </div>
-                      <br><br>
-                    </span>
-                    <span v-else> N/D <br><br></span>
-                  </span>
 
                     <span v-else-if="header.value === 'virusViz_button'">
 
                       <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="props.item['num_seq'] === 0"
-                              @click="openDialogVirusViz(props.item, props.item['num_seq'])">
+                              @click="openDialogVirusViz(props.item[epitopeId])">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                         VirusViz
                       </v-btn>
-                        <!--<v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                                 @click="virusVizClicked(props.item)" :disabled="props.item['num_seq'] === 0">
-                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                            VirusViz
-                        </v-btn>
-                        -->
-
-                    </span>
-
-                    <span v-else-if="header.value === 'virusViz_button_all_population'">
-
-                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="props.item['num_seq'] === 0"
-                              @click="openDialogVirusViz(props.item, props.item['total_num_of_seq_metadata'], true)">
-                        <v-img style="margin-right: 5px; min-width: 15px;"
-                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz
-                      </v-btn>
-                      <!--
-                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
-                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                            VirusViz
-                        </v-btn>
-                        -->
                     </span>
 
                     <span v-else>{{props.item[header.value]}}</span>
 
                 </td>
             </template>
-            <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading && !newEpitopeLoading">
+            <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
                   Sorry, nothing to display here :(
               </v-alert>
               <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
@@ -246,13 +178,13 @@
 
           <v-card-actions>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope, false, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id); dialogVirusviz = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (Full)
             </v-btn>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope, true, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
+                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, true); dialogVirusviz = false;">
               <v-img style="margin-right: 5px; min-width: 15px;"
                      src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
               VirusViz (AA mutations only)
@@ -262,7 +194,7 @@
                 color="rgb(122, 139, 157)"
                 style="color: white"
                 text
-                @click="dialogVirusviz = false; virusviz_all_pop = false;"
+                @click="dialogVirusviz = false;"
             >
               Close
             </v-btn>
@@ -274,7 +206,6 @@
       </v-layout>
 
       <SequencesEpiTable></SequencesEpiTable>
-      <!--<SequencesEpiTableUser></SequencesEpiTableUser>-->
 
     </v-card>
   </div>
@@ -284,17 +215,15 @@
 import axios from "axios";
 import {mapGetters, mapMutations, mapState} from "vuex";
 import draggable from 'vuedraggable'
-import {FULL_TEXT, poll} from "../utils";
+import {FULL_TEXT, poll, stopPoll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
-import SequencesEpiTableUser from "./SequencesEpiTableUser";
 
 const itemSourceIdName = 'iedb_epitope_id';
 
 export default {
-  name: "EpitopeTableUserAdd",
+  name: "EpitopeTableWithoutVariants2",
   components: {
-    SequencesEpiTableUser,
     AminoacidVariantEpi,
     SequencesEpiTable,
     draggable},
@@ -302,10 +231,12 @@ export default {
     return {
       alertLink: null,
       alertDialog: false,
+      epitopeId : 'iedb_epitope_id',
       isLoading : true,
       result: [],
       requirement: 'A single Host and a single Virus are required',
       is_control : false,
+      precision_float_table: 5,
       sortCheckbox: false,
       headers: this.getHeaders(),
       dialogOrder: false,
@@ -325,17 +256,18 @@ export default {
         epitope_id : null,
         num_seq : null,
       },
-      virusviz_all_pop: false,
+      my_interval_num_epi: null,
+      my_interval_table: null,
     }
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpi', 'showSequenceEpiTable',
-      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields', 'epitopeAdded',
-        'newEpitopeLoading'
+      'epiQuerySel', 'epiQuerySelWithoutVariants',  'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpiWithoutVariants', 'showSequenceEpiTable',
+      'chosenEpitope', 'aminoacidConditions', 'epitopeAminoacidFields'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
+      compound_query_epi: 'build_query_epi',
       epiSearchDis: 'epiSearchDisabled',
       panels:'panels',
     }),
@@ -364,98 +296,51 @@ export default {
   },
   methods: {
     ...mapMutations([
-        'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
-      'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
-      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
+        'setCountEpiWithoutVariants', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
+      'showSeqEpiTable', 'setChosenEpitope', 'setTrueDisableSelectorEpitopePart'
     ]),
-    createAminoAcidInfos(epitope){
-      let kv = epitope.compound_query.kv;
-      let arrayToShowInAND = [];
-
-      Object.keys(kv).forEach(function(key) {
-        let arrayToShowInOR = [];
-        if(key !== 'aa_0'){
-          let single = kv[key];
-          let query = single['query'];
-          let len = query.length;
-          let i = 0;
-          while(i < len){
-            let line = {};
-            let single = query[i];
-            Object.keys(single).forEach(function(key) {
-              if (key === 'product') {
-                line['Protein'] = single[key][0];
-              } else if (key === 'variant_aa_type') {
-                line['Variant type'] = single[key][0];
-              } else if (key === 'sequence_aa_original') {
-                line['Original amino acid'] = single[key][0];
-              } else if (key === 'sequence_aa_alternative') {
-                line['New amino acid'] = single[key][0];
-              } else if (key === 'start_aa_original') {
-                let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
-                line['Position range'] = pos;
-              }
-            })
-            arrayToShowInOR.push(line);
-            i++;
-          }
-          arrayToShowInAND.push(arrayToShowInOR);
-        }
-      })
-
-      return arrayToShowInAND;
-    },
-    createMetadataInfos(epitope){
-      let infos = {};
-      let metadata = epitope.compound_query.gcm;
-
-      Object.keys(metadata).forEach(function(key) {
-        if(key !== 'host_taxon_name' && key !== 'taxon_name') {
-          infos[key] = metadata[key];
-        }
-      })
-      return infos;
-    },
-    openDialogVirusViz(epitope, num_seq, all_pop = false){
+    openDialogVirusViz(epitope_id){
       this.dialogVirusviz = true;
-      this.sendToDialogVirusViz.epitope = epitope;
-      this.sendToDialogVirusViz.num_seq = num_seq;
-      this.virusviz_all_pop = all_pop;
+      this.sendToDialogVirusViz.epitope_id = epitope_id;
+      this.sendToDialogVirusViz.num_seq = this.countSeq2;
     },
-    virusVizClicked(prop, aa_only = false, all_pop = false){
+    virusVizClicked(epitope_id, aa_only = false){
         let orderDir = "";
 
-        let to_send = JSON.parse(JSON.stringify(prop['compound_query']));
+          if (this.pagination.descending)
+              orderDir = "DESC";
+          else
+              orderDir = "ASC";
 
           let url = `viz/submit?aa_only=${aa_only}&&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
           if (this.selectedProduct !== FULL_TEXT) {
               url += `&annotation_type=${this.selectedProduct}`;
           }
 
-          let epitope_info = {};
-          epitope_info['epitope_name'] = prop['epitope_name'];
-          epitope_info['position_range'] = prop['position_range_to_show'];
-          epitope_info['protein'] = prop['product'];
-          epitope_info['link'] = '';
+          let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-          //to_send['userEpitope'] = epitope_info;
-          if(all_pop){
-            to_send['kv'] = {};
-            to_send['epitope_without_variants'] = epitope_info;
-          }else {
-            to_send['userEpitope'] = epitope_info;
+          let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySelWithoutVariants));
+          epitope_and_aminoacid_conditions[this.epitopeId] = epitope_id;
+          if(epitope_id !== 'all') {
+            to_send['epitope_without_variants'] = epitope_and_aminoacid_conditions;
           }
+          else{
+            to_send['epitope_without_variants_all_population'] = JSON.parse(JSON.stringify(this.retrieveAllEpitopes()));
+          }
+
 
           axios.post(url, to_send)
               .then((res) => {
                   return res.data
               })
               .then((res) => {
+                console.log("res: ", res)
                 let appUrl = window.location.origin + window.location.pathname
                 let virusVizPollUrl = appUrl;
                 virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
                 virusVizPollUrl += "/api/poll/";
                 virusVizPollUrl += res.result;
+                console.log("virusVizPollUrl: " + virusVizPollUrl);
                 let virusVizUrl = "http://genomic.deib.polimi.it/virusviz/static/#!/home?";
                 const appName = "ViruSurf";
                 virusVizUrl += `appName=${appName}&`;
@@ -472,24 +357,88 @@ export default {
               });
 
     },
+    retrieveAllEpitopes(){
+      let res = this.result;
+      let i = 0;
+      let all_epi = [];
+      while(i < res.length){
+        let single_epitope_info = {};
+        let epi = res[i];
+
+        single_epitope_info['link'] = epi['epitope_iri'];
+        single_epitope_info['protein'] = epi['protein_name'];
+        //single_epitope_info['protein'] = "Spike (surface glycoprotein)";
+        single_epitope_info['position'] = epi['position_range_to_show'];
+        single_epitope_info['id'] =epi['iedb_epitope_id'];
+
+        /*let all_position = epi['position_range_to_show'];
+
+        let regex = /[\n]/g;
+        let subst = "";
+        all_position = all_position.replace(regex, subst);
+
+        let array_all_position = [];
+        let arr_start= [];
+        let arr_stop = [];
+        let arr = all_position.split(',')
+
+        arr.forEach(item => {
+          let arr2 = item.split('-');
+          arr_start.push(arr2[0]);
+          arr_stop.push(arr2[1]);
+        })
+
+        let start_pos_name = "";
+        let stop_pos_name = "";
+
+        let length = arr_start.length;
+        let j = 0;
+        while (j < length) {
+          if(j === 0){
+            start_pos_name = arr_start[j] + '-' + arr_stop[j];
+          }
+          else if( j === length-1){
+            stop_pos_name = arr_start[j] + '-' + arr_stop[j];
+          }
+          let position = [];
+          position.push(arr_start[j]);
+          position.push(arr_stop[j]);
+          array_all_position.push(position);
+          j++;
+        }
+
+        single_epitope_info['position'] = array_all_position;
+
+        let both_position = "";
+        if(stop_pos_name !== ''){
+          both_position = start_pos_name + ' .. ' + stop_pos_name;
+        }
+        else{
+          both_position = start_pos_name ;
+        }
+
+        single_epitope_info['id'] = both_position + " - id " + epi['iedb_epitope_id'];*/
+        all_epi.push(single_epitope_info);
+        i++;
+      }
+      return all_epi;
+    },
     getHeaders() {
       const predefinedHeaders = [
-          {text: 'Epitope Name', value: 'epitope_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Creation Date', value: 'creation_date', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
-          {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
-          {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
+          {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          {text: 'Virus Name', value: 'virus_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Host Name', value: 'host_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Protein', value: 'protein_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          //{text: 'Protein', value: 'protein_ncbi_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Epitope Seq.', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Metadata', value: 'metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Amino Acid Condition', value: 'aminoacid_condition', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Num Seq Population', value: 'total_num_of_seq_metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Num Mut Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-      ];
+          {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          ];
       return predefinedHeaders;
     },
     toSend(){
@@ -501,30 +450,128 @@ export default {
       })
       let res = {};
       Object.assign(res,{"compound_query": this.compound_query},
+                        {"epi_query": this.epiQuerySelWithoutVariants},
                         {"table_headers": table_headers_to_send});
       return res;
     },
     loadTable(){
+
+      if(this.my_interval_table !== null){
+        stopPoll(this.my_interval_table);
+      }
+
       if(!this.epiSearchDis) {
+
+        let orderDir = "";
+        if (this.pagination.descending)
+            orderDir = "DESC";
+        else
+            orderDir = "ASC";
+
+        this.result = [];
         this.isLoading = true;
         let to_send = this.toSend();
-        /*const url = `epitope/epiTableUserAdd`
+        const url = `epitope/epiTableResWithoutVariants`
         axios.post(url, to_send)
             .then((res) => {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_table = poll(res.result, (res) => {
+                this.my_interval_table = null;
+                let vals = res.values;
+                vals.forEach(item => {
+                  for (let k in item) {
+                    if (item.hasOwnProperty(k)) {
+                      let key = k;
+                      let values = item[k];
+                      if (key === 'cell_type'){
+                        if (item[k] != null) {
+                          let to_replace = "";
+                          let i = 0;
+                          while (i < values.length) {
+                            if (item[k][i] != null) {
+                              to_replace += item[k][i];
+                            } else {
+                              to_replace += "N/D";
+                            }
+                            i++;
+                            if (i !== values.length) {
+                              to_replace += ",\n";
+                            }
+                          }
+                          item[k] = to_replace;
+                        } else {
+                          item[k] = "N/D";
+                        }
+                      }
+                      else if (key !== 'epi_fragment_all_information') {
+                          if (item[k] != null) {
+                            if (key === "mhc_allele") {
+                              let str = item[k];
+                              let regex = /[,]/g;
+                              let subst = "$&\n";
+                              let result_str = str.replace(regex, subst);
+                              item[k] = result_str;
+                            } else {
+                              item[k] = item[k];
+                            }
+                          } else {
+                            item[k] = "N/D";
+                          }
+                      } else if (key === 'epi_fragment_all_information') {
 
+                        let position = "";
+                        let sequence = "";
+                        let str_sequence = item[k];
+
+                        let arr_seq = [];
+                        let arr_start= [];
+                        let arr_stop = [];
+                        let len = str_sequence.length;
+                        str_sequence = str_sequence.substring(2, len-2);
+                        let arr = str_sequence.split('","')
+
+                        arr.forEach(item => {
+                          let len2 = item.length;
+                          item = item.substring(1,len2-1);
+                          let arr2 = item.split(',');
+                          arr_start.push(arr2[0]);
+                          arr_stop.push(arr2[1]);
+                          arr_seq.push(arr2[2]);
+                        })
+
+                        let length = arr_start.length;
+                        let i = 0;
+                        while (i < length) {
+                          if (i === 0) {
+                            item['position_range'] = arr_start[i];
+                          }
+                          position += arr_start[i];
+                          position += "-";
+                          position += arr_stop[i];
+                          sequence += arr_seq[i];
+                          i++;
+                          if (i !== length) {
+                            position += ",\n";
+                            sequence += ",\n";
+                          }
+                        }
+                        item['position_range_to_show'] = position;
+                        item['epi_fragment_sequence'] = sequence;
+                      }
+                    }
+                  }
+                })
+                  this.result = vals;
+                  this.isLoading = false;
               })
-            })*/
+            })
       }
-      this.isLoading = false;
     },
     loadCountSeq2(){
       this.received_count_seq = false;
       this.setCountSeq2(null);
-
      let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
       let count_url = `query/count?is_control=${this.is_control}`;
@@ -537,12 +584,40 @@ export default {
             this.received_count_seq = true;
         });
     },
+    loadCountEpi() {
+
+      if(this.my_interval_num_epi !== null){
+        stopPoll(this.my_interval_num_epi);
+      }
+
+      if(!this.epiSearchDis) {
+        let to_send = this.toSend();
+        this.setCountEpiWithoutVariants(null);
+        let count_url = 'epitope/countWithoutVariants';
+
+        axios.post(count_url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+              this.my_interval_num_epi = poll(res.result, (res) => {
+                this.my_interval_num_epi = null;
+                if (res != null) {
+                  this.pagination.totalItems = res[0].count;
+                  this.pagination.page = 1;
+                  this.setCountEpiWithoutVariants(res[0].count);
+                }
+              })
+            })
+      }
+      else{
+        this.setCountEpiWithoutVariants(0);
+      }
+    },
     loadEveything(){
-      //if(this.compound_query['gcm'].host_taxon_name && this.compound_query['gcm'].taxon_name ) {
-        //this.loadCountSeq2();
-        //this.loadCountEpi();
-        this.loadTable();
-      //}
+      this.loadCountSeq2();
+      this.loadCountEpi();
+      this.loadTable();
     },
     sendDataToSeqEpiTable(item){
       this.showSeqEpiTable();
@@ -573,14 +648,14 @@ export default {
         }
         return res;
     },
-    openShowAminoacidVariantEpi(){
-      this.setTrueShowAminoacidVariantEpi();
-      this.setTrueDisableSelectorEpitopePart();
-    },
     json2csv(input, selected_headers) {
         var json = input;
         var fields = [];
         var fields2 = [];
+        if(!selected_headers.some(item => item.value === this.epitopeId)){
+              fields.push('Epitope IEDB ID');
+              fields2.push(this.epitopeId);
+        }
         selected_headers.forEach(function (el) {
           if(el.value !== 'virusViz_button')
                 fields.push(el.text);
@@ -618,24 +693,32 @@ export default {
       document.body.removeChild(element);
     }
   },
+  mounted() {
+    this.loadEveything();
+  },
   watch: {
+    compound_query_epi() {
+      //this.loadEveything();
+    },
     compound_query() {
+      this.loadCountSeq2();
+    },
+    epiQuerySelWithoutVariants(){
       this.loadEveything();
     },
     countSeq2(){
       if(this.countSeq2 !== null) {
-        this.loadTable();
+        //this.loadTable();
+        //this.loadTable2();
       }
     },
-    epitopeAdded(){
-      this.result = this.epitopeAdded;
-      this.isLoading = false;
+    pagination: {
+        handler(val, oldVal) {
+            if (JSON.stringify(val) !== JSON.stringify(oldVal))
+              this.loadTable();
+        },
+        deep: true
     },
-    newEpitopeLoading(){
-      if(this.newEpitopeLoading){
-        this.result = [];
-      }
-    }
   }
 }
 </script>
@@ -645,19 +728,5 @@ export default {
   .data-table{
     width: 100%;
   }
-
-  .brown-label label {
-        color: #D2691E !important;
-  }
-
-  .capitalize {
-    text-transform: lowercase;
-    display: inline-block;
-  }
-
-  .capitalize:first-letter {
-    text-transform: uppercase
-  }
-
 
 </style>

@@ -115,7 +115,8 @@
                                                 field="annotation_view_product"
                                                 labelTitle="Choose protein name to extract its sequence"
                                                 :is_gcm="false"
-                                                v-model="selectedProduct"/>
+                                                v-model="selectedProduct"
+                                                v-if = "dialogDownload"/>
                                     </v-flex>
                                     <p>
                                         Click the "Download" button below to download a "sequences.fasta" or

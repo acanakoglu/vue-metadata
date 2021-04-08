@@ -1,12 +1,16 @@
 <template>
     <v-expansion-panel-content :readonly="readOnly" @input="setOpen()" :value="[open]" hide-actions>
+<div slot="header">
+      <span class="label">{{ getFullQueryType() }} query: </span>
 
-        <div slot="header">
-            <span class="label">{{ getFullQueryType() }} query: </span>
-            <span style="font-family:monospace" v-html="queryToShow"></span>
+      <v-btn @click="openAnalyzeSubstitutionPanel()"  color="info" v-if="getFullQueryType() === 'Amino acid'">
+        Analyze subsitutions</v-btn>
+      <AnalyzeSubstitutionPanel></AnalyzeSubstitutionPanel>
 
-        </div>
-        <v-spacer></v-spacer>
+      <span style="font-family:monospace" v-html="queryToShow"></span>
+
+    </div>
+    <v-spacer></v-spacer>spacer>
 
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
                @click="deleteKvLocal()">
@@ -86,10 +90,11 @@
     import MetadataDropDown from "./MetadataDropDown";
     import AnnotDropDown from "./AnnotDropDown";
     import AnnotMenu from "./AnnotMenu";
+    import AnalyzeSubstitutionPanel from "./AnalyzeSubstitutionPanel";
 
     export default {
         name: "KvExpansionPanel",
-        components: {AnnotDropDown, MetadataDropDown, AnnotMenu},
+        components: {AnalyzeSubstitutionPanel, AnnotDropDown, MetadataDropDown, AnnotMenu},
         props: {
             id: {type: Number, required: true},
             query_text: {type: String, required: true},
@@ -134,8 +139,11 @@
             }
         },
         methods: {
-            ...mapMutations(["deleteKey", "setPanelActive", "resetPanelActive", "deleteKvField"]),
+            ...mapMutations(["deleteKey", "setPanelActive", "resetPanelActive", "deleteKvField", 'setTrueAnalyzeSubstitutionPanel']),
             ...mapActions(["setKv", "deleteKv"]),
+    openAnalyzeSubstitutionPanel(){
+      this.setTrueAnalyzeSubstitutionPanel();
+    },
     variantRadioChanged(newValue, cond) {
       console.log(cond);
       const oldValue = cond.filter(el => el['field'] == 'variant_type')[0]['value'][0];

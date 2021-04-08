@@ -65,7 +65,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import axios from "axios";
-import {poll} from "../utils";
+import {poll, stopPoll} from "../utils";
 
 export default {
   name: "EpitopeSelectorNum",
@@ -88,6 +88,7 @@ export default {
       shown_value: null,
       disableNumSel: false,
       disabledEpi_AminoacidMenuOpened: false,
+      my_interval_extremes: null,
     }
   },
   computed: {
@@ -210,17 +211,37 @@ export default {
         }
     },
     loadExtremes(){
+
+      if(this.my_interval_extremes !== null){
+        stopPoll(this.my_interval_extremes);
+      }
+
       if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened){
         this.isLoading = true;
         //console.log("RELOAD extremes");
         let to_send = this.toSend();
-        const url = `epitope/epiExtremes/${this.field}`;
-        axios.post(url, to_send)
+        let url = '';
+        if (this.epitopeAminoacidFields.some(item => item.field === this.field)) {
+           url = `epitope/epiExtremes/${this.field}`;
+        }
+        else {
+           let to_send_epi_query = to_send.epi_query;
+           delete to_send.epi_query;
+           delete to_send_epi_query.sequence_aa_original;
+           delete to_send_epi_query.sequence_aa_alternative;
+           delete to_send_epi_query.variant_aa_type;
+           delete to_send_epi_query.startExtVariant;
+           delete to_send_epi_query.stopExtVariant;
+           to_send['epi_query'] = to_send_epi_query;
+          url = `epitope/epiExtremesWithoutVariants/${this.field}`;  //ONLY IF ALL EPITOPE HAVE A MUTATION
+        }
+          axios.post(url, to_send)
             .then((res) => {
               return res.data
             })
             .then((res) => {
-              poll(res.result, (res) => {
+              this.my_interval_extremes = poll(res.result, (res) => {
+                this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
                 if (this.results['start'] === null || this.results['stop'] === null) {
@@ -317,6 +338,11 @@ export default {
       if(this.field === 'variant_position_range'){
         this.loadExtremes();
       }
+      else{
+        if(Object.keys(this.aminoacidConditions).length > 0){
+          this.disabledEpi_AminoacidMenuOpened = true;
+        }
+      }
     },
     min() {
       if(this.min === '' || this.min === undefined){
@@ -353,6 +379,11 @@ export default {
   },
   created() {
     this.loadExtremes();
+    if (!this.epitopeAminoacidFields.some(item => item.field === this.field) && this.disableSelectorEpitopePart) {
+      this.disabledEpi_AminoacidMenuOpened = true;
+    } else {
+      this.disabledEpi_AminoacidMenuOpened = false;
+    }
     if(this.field === 'position_range') {
         if (this.epiQuerySel['startExt']) {
           this.min = this.epiQuerySel['startExt'];

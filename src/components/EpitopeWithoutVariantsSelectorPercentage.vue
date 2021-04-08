@@ -6,14 +6,14 @@
             :loading = "isLoading"
             v-model="menu"
             offset-y
-            :disabled="epiSearchDis || isLoading || disablePercSel || disabledEpi_AminoacidMenuOpened"
+            :disabled="epiSearchDis || isLoading || disablePercSel"
     >
         <v-text-field slot="activator"
                       name="input-1"
                       :label="text"
                       v-model="shown_value"
                       :append-icon="menu ? 'arrow_drop_up' : 'arrow_drop_down'"
-                      :disabled="epiSearchDis || isLoading || disablePercSel || menu || disabledEpi_AminoacidMenuOpened"
+                      :disabled="epiSearchDis || isLoading || disablePercSel || menu"
                       :loading = "isLoading"
         ></v-text-field>
 
@@ -102,7 +102,7 @@ import axios from "axios";
 import {poll, stopPoll} from "../utils";
 
 export default {
-  name: "EpitopeSelectorPercentage",
+  name: "EpitopeWithoutVariantsSelectorPercentage",
   props: {
       text: {type: String, required: true,},
       field: {type: String, required: true,},
@@ -124,7 +124,6 @@ export default {
       isNull: false,
       forceNull: false,
       disablePercSel: false,
-      disabledEpi_AminoacidMenuOpened: false,
       minRange: null,
       maxRange: null,
       my_interval_extremes: null,
@@ -132,7 +131,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'epiQuerySel', 'disableSelectorEpitopePart', 'aminoacidConditions','epitopeAminoacidFields'
+      'epiQuerySelWithoutVariants',
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -140,8 +139,6 @@ export default {
     }),
     textBoxValue() {
       let a = [];
-        //a.push('min: ' + this.range[0]);
-        //a.push('max: ' + this.range[1]);
       if(this.minRange != null)
           a.push('min: ' + this.minRange);
       if(this.maxRange != null)
@@ -153,19 +150,18 @@ export default {
     },
   },
   methods: {
-      ...mapActions(['setEpiDropDownSelected']),
-      ...mapMutations(['resetEpiQueryField']),
+      ...mapActions(['setEpiDropDownSelectedWithoutVariants']),
+      ...mapMutations(['resetEpiQueryFieldWithoutVariants']),
       deleteExtremesLocal() {
           this.isNull = false;
           this.errorExt = '';
-          this.setEpiDropDownSelected({field: 'startFreqExt', list: []});
-          this.setEpiDropDownSelected({field: 'stopFreqExt', list: []});
+          this.setEpiDropDownSelectedWithoutVariants({field: 'startFreqExt', list: []});
+          this.setEpiDropDownSelectedWithoutVariants({field: 'stopFreqExt', list: []});
           this.range = this.rangeUpdate;
           this.menu = false;
           this.shown_value = '';
           this.minRange = null;
           this.maxRange = null;
-          //console.log("CLEAR: " , this.epiQuerySel);
       },
       setExtremesLocal() {
 
@@ -179,12 +175,10 @@ export default {
             this.menu = false;
 
             let sendStart = {'field': 'startFreqExt', 'list': [this.range[0]]}; //   aggiungo / 100
-            this.setEpiDropDownSelected(sendStart);
+            this.setEpiDropDownSelectedWithoutVariants(sendStart);
 
             let sendStop = {'field': 'stopFreqExt', 'list': [this.range[1]]}; //   aggiungo / 100
-            this.setEpiDropDownSelected(sendStop);
-
-            //console.log("SET: ", this.epiQuerySel);
+            this.setEpiDropDownSelectedWithoutVariants(sendStop);
           }
         }
         else{
@@ -193,12 +187,10 @@ export default {
           this.menu = false;
 
           let sendStart = {'field': 'startFreqExt', 'list': [null]};
-          this.setEpiDropDownSelected(sendStart);
+          this.setEpiDropDownSelectedWithoutVariants(sendStart);
 
           let sendStop = {'field': 'stopFreqExt', 'list': [null]};
-          this.setEpiDropDownSelected(sendStop);
-
-          //console.log("SET: ", this.epiQuerySel);
+          this.setEpiDropDownSelectedWithoutVariants(sendStop);
         }
     },
     loadExtremes(){
@@ -207,24 +199,10 @@ export default {
           stopPoll(this.my_interval_extremes);
       }
 
-      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
+      if(!this.epiSearchDis) {
         this.isLoading = true;
-        let url = '';
+        const url = `epitope/epiFreqExtremesWithoutVariants`;
         let to_send = this.toSend();
-        if (this.epitopeAminoacidFields.some(item => item.field === this.field)) {
-           url = `epitope/epiFreqExtremes`;
-        }
-        else {
-          let to_send_epi_query = to_send.epi_query;
-           delete to_send.epi_query;
-           delete to_send_epi_query.sequence_aa_original;
-           delete to_send_epi_query.sequence_aa_alternative;
-           delete to_send_epi_query.variant_aa_type;
-           delete to_send_epi_query.startExtVariant;
-           delete to_send_epi_query.stopExtVariant;
-           to_send['epi_query'] = to_send_epi_query;
-          url = `epitope/epiFreqExtremesWithoutVariants`;
-        }
         axios.post(url, to_send)
             .then((res) => {
               return res.data
@@ -234,10 +212,8 @@ export default {
                 this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
-                //console.log("RES PERC: ", this.results);
                 if (this.results['count'] == 0) {
-                  //this.deleteExtremesLocal();
-                  if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
+                  if (!this.epiQuerySelWithoutVariants['startFreqExt'] && !this.epiQuerySelWithoutVariants['stopFreqExt']) {
                     this.disablePercSel = true;
                   }
                 } else {
@@ -267,47 +243,32 @@ export default {
     },
     toSend(){
       let res = {};
-      Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": this.epiQuerySel});
+      Object.assign(res, {"compound_query": this.compound_query}, {"epi_query": this.epiQuerySelWithoutVariants});
       return res;
     },
   },
   watch:{
-    compound_query() {
-      this.loadExtremes();
-    },
-    aminoacidConditions(){
-      if(Object.keys(this.aminoacidConditions).length > 0){
-        this.disabledEpi_AminoacidMenuOpened = true;
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadExtremes();
       }
     },
-    epiQuerySel(){
-      if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
+    epiQuerySelWithoutVariants(){
+      if (!this.epiQuerySelWithoutVariants['startFreqExt'] && !this.epiQuerySelWithoutVariants['stopFreqExt']) {
         this.deleteExtremesLocal();
       }
       this.loadExtremes();
-      if (this.epiQuerySel['startFreqExt']){
-        this.minRange = this.epiQuerySel['startFreqExt'];   //    aggiungo * 100
+      if (this.epiQuerySelWithoutVariants['startFreqExt']){
+        this.minRange = this.epiQuerySelWithoutVariants['startFreqExt'];   //    aggiungo * 100
       }
-      if (this.epiQuerySel['stopFreqExt']){
-        this.maxRange = this.epiQuerySel['stopFreqExt'];    //    aggiungo * 100
+      if (this.epiQuerySelWithoutVariants['stopFreqExt']){
+        this.maxRange = this.epiQuerySelWithoutVariants['stopFreqExt'];    //    aggiungo * 100
       }
       this.shown_value = this.textBoxValue;
     },
-    disableSelectorEpitopePart() {
-      if (this.disableSelectorEpitopePart) {
-        this.disabledEpi_AminoacidMenuOpened = true;
-      } else {
-        this.disabledEpi_AminoacidMenuOpened = false;
-      }
-    }
   },
   created() {
     this.loadExtremes();
-    if (this.disableSelectorEpitopePart) {
-      this.disabledEpi_AminoacidMenuOpened = true;
-    } else {
-      this.disabledEpi_AminoacidMenuOpened = false;
-    }
   },
 }
 </script>

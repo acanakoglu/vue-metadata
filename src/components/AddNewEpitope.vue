@@ -6,7 +6,7 @@
         <v-layout wrap align-center justify-center>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-            <h2>Custom Epitopes</h2>
+            <h2>Custom Epitopes on linked population</h2>
           </v-flex>
 
           <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(newSingleEpitope).length > 0 && !epiSearchDis"
@@ -72,7 +72,7 @@
 
           <h3 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 10px; margin-left: 10px"> Positions: </h3>
           <v-layout wrap justify-left style="margin-left: 10px">
-          <div v-for="(pos, index) in newSingleEpitope['position_range']"v-if="!epiSearchDis">
+          <div v-for="(pos, index) in newSingleEpitope['position_range']" v-if="!epiSearchDis">
                <v-layout align-center style="margin: 0px">
                  <div class="singlePosition">
                     <span>
@@ -226,7 +226,7 @@
                <v-flex sm6>
                  <span v-for="(value, key) in epitope" style="display: block;">
                    <b v-if="key !== 'file_name' && key !== 'index'">- {{key}} : </b>
-                   <span v-if="key === 'Epitope name'" class="capitalize"> <u>{{value}}</u>
+                   <span v-if="key === 'Epitope name'"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
                    <span v-else-if="key !== 'file_name' && key !== 'index'" class="capitalize">{{value}} </span>
@@ -234,6 +234,8 @@
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
+                 <v-btn class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
+                 <v-btn class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
                  <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
@@ -412,7 +414,7 @@ export default {
     ...mapState(['epitopeAdded', 'newSingleEpitope', 'newEpitopeLoading', 'showMoreInfoEpitopeUser',
       'countSeq2', 'showAminoacidVariantUserNewEpi',
       'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
-      'epitopeAminoacidConditionsArrayUserNew']),
+      'epitopeAminoacidConditionsArrayUserNew',]),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query',
@@ -481,6 +483,7 @@ export default {
       while(i<len){
         let line = {};
         line['Epitope name'] = val[i].epitope_name;
+        line['Creation date'] = val[i].creation_date;
         line['Protein'] = val[i].product;
         line['Position range'] = val[i].position_range_to_show;
         line['Virus taxon name'] = val[i].taxon_name;
@@ -549,8 +552,23 @@ export default {
      'setFalseNewEpitopeLoading', 'setTrueNewEpitopeLoading', 'showMoreInfo', 'setUserEpitopeSelected',
      'setTrueShowAminoacidVariantUserNewEpi', 'setTrueDisableSelectorUserNewEpitopePart',
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
-     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage']),
+     'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage',
+     'setCountEpiCustom', 'setCountSeq2', 'setTrueFinishCountPopulation', 'setFalseFinishCountPopulation']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
+     loadCountSeq2(){
+       this.setFalseFinishCountPopulation()
+     let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+      let count_url = `query/count?is_control=${this.is_control}`;
+      axios.post(count_url, to_send)
+        .then((res) => {
+            return res.data;
+        })
+        .then((res) => {
+            this.setCountSeq2(res);
+            this.setTrueFinishCountPopulation();
+        });
+    },
      setEpitopeIndexToDelete(index){
        this.epitopeIndexToDelete = index;
      },
@@ -613,6 +631,7 @@ export default {
              }
            }
            val['position_range_to_show'] = newListPositionString;
+           val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
 
            this.epitopeToAdd = val;
            this.countNumSeq(val);
@@ -846,6 +865,9 @@ export default {
      },
    },
   created() {
+      //if(this.countSeq2 === null || this.countSeq2 === undefined) {
+        this.loadCountSeq2();
+      //}
       if(this.compound_query['gcm'].taxon_name) {
         this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
       }
@@ -868,6 +890,11 @@ export default {
           });
   },
   watch:{
+    epiSearchDis(){
+      if(this.epiSearchDis){
+        this.clearEpitope();
+      }
+    },
     newSingleEpitope(){
       if(this.newSingleEpitope['epitope_name'] && this.newSingleEpitope['epitope_name'] !== this.epitope_name){
         this.epitope_name = this.newSingleEpitope['epitope_name'];
@@ -895,6 +922,7 @@ export default {
       this.setNewSingleEpitopeSelected({field: 'epitope_name', list: this.epitope_name})
     },
     compound_query(){
+      this.loadCountSeq2();
       if(this.compound_query['gcm'].taxon_name) {
         this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
       }
@@ -906,7 +934,7 @@ export default {
       }
     },
     epitopeAdded(){
-      this.setCountEpi(this.epitopeAdded.length);
+      this.setCountEpiCustom(this.epitopeAdded.length);
       if((this.pageEpitopeList*this.numOfElemInPage) + 1 > this.epitopeAddedReview.length){
           this.pageEpitopeList = 0;
         }

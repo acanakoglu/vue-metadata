@@ -40,17 +40,17 @@
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
                     <v-flex sm3 align-self-center>
-                        <v-dialog
-                                v-model="dialogDownloadTable"
-                                width="500">
-                            <v-btn style="color: white;"
-                                   slot="activator"
+                        <v-btn style="color: white;"
+                                   @click="dialogDownloadTable = true"
                                    small
                                    color="rgb(122, 139, 157)"
                                    :disabled="this.result.length === 0">
                                 Download Table
-                            </v-btn>
-
+                        </v-btn>
+                        <v-dialog
+                                v-model="dialogDownloadTable"
+                                width="500"
+                                persistent>
                             <v-card>
                                 <v-card-title
                                         class="headline"
@@ -90,16 +90,17 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-                        <v-dialog
-                                v-model="dialogDownload"
-                                width="500">
-                            <v-btn style="color: white;"
-                                   slot="activator"
+                        <v-btn style="color: white;"
+                                   @click="dialogDownload = true"
                                    small
                                    color="rgb(122, 139, 157)"
                                    :disabled="this.result.length === 0">
                                 Download sequence
                             </v-btn>
+                        <v-dialog
+                                v-model="dialogDownload"
+                                width="500"
+                                persistent>
                             <v-card>
                                 <v-card-title
                                         class="headline"
@@ -116,7 +117,8 @@
                                                 field="annotation_view_product"
                                                 labelTitle="Choose protein name to extract its sequence"
                                                 :is_gcm="false"
-                                                v-model="selectedProduct"/>
+                                                v-model="selectedProduct"
+                                                v-if= "dialogDownload" />
                                     </v-flex>
                                     <p>
                                         Click the "Download" button below to download a "sequences.fasta" or
@@ -171,7 +173,15 @@
                     </v-flex>
 
                     <v-flex sm3 align-self-center>
-                        <v-dialog width="500" v-model="dialogOrder">
+                        <v-btn style="color: white;"
+                                   @click="dialogOrder = true"
+                                   small
+                                   color="rgb(122, 139, 157)"
+                                   :disabled="this.result.length === 0"
+                            >
+                                Select/Sort fields
+                        </v-btn>
+                        <v-dialog width="500" v-model="dialogOrder" persistent>
                             <v-card>
                                 <v-card-title
                                         class="headline"
@@ -208,20 +218,81 @@
                                 <v-divider></v-divider>
 
                             </v-card>
-                            <v-btn style="color: white;"
-                                   slot="activator"
-                                   small
-                                   color="rgb(122, 139, 157)"
-                                   :disabled="this.result.length === 0"
-                            >
-                                Select/Sort fields
-                            </v-btn>
                         </v-dialog>
-                        <v-btn style="text-transform: none ; color: white" small color="rgb(79, 131, 164)"
+
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="this.result.length === 0"
+                              @click="openDialogVirusViz()">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz
+                        </v-btn>
+                        <v-dialog
+                          v-model="dialogVirusviz"
+                          width="500"
+                          persistent>
+                        <v-card>
+                          <v-card-title
+                              class="headline"
+                              style="background-color:rgb(201, 53, 53) ; color: white">
+                            Open in VirusViz
+                          </v-card-title>
+                          <v-progress-linear height="2" color = "rgb(201, 53, 53)" ></v-progress-linear>
+
+                          <v-card-text>
+                            <p>
+                              You selected
+                              <span v-if="pagination.totalItems">{{pagination.totalItems}}</span>
+                              <span v-else> ... </span>
+                              sequence<span v-if="pagination.totalItems > 1">s</span>,
+                              they must be formatted and then opened by the VirusViz
+                              tool.
+                              This may take time, and your browser could crash if the file is too large.
+                            <p>
+                              By checking “FULL” you will open full FASTA sequences and nucleotide / amino acid variants, this is
+                              usually well supported with 5K sequences or less.
+                            </p>
+                            <p>
+                              By checking “AA Mutations only” you will only open amino acid variants, this option requires less
+                              memory and is usually well supported with 30K sequences or less.
+                            </p>
+
+                          </v-card-text>
+
+                          <v-divider></v-divider>
+
+                          <v-card-actions>
+                            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                   @click="virusVizClicked(); dialogVirusviz = false;">
+                              <v-img style="margin-right: 5px; min-width: 15px;"
+                                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                              VirusViz (Full)
+                            </v-btn>
+                            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                   @click="virusVizClicked(true); dialogVirusviz = false;">
+                              <v-img style="margin-right: 5px; min-width: 15px;"
+                                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                              VirusViz (AA mutations only)
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                color="rgb(122, 139, 157)"
+                                style="color: white"
+                                text
+                                @click="dialogVirusviz = false;"
+                            >
+                              Close
+                            </v-btn>
+
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+
+                        <!--<v-btn style="text-transform: none ; color: white" small color="rgb(79, 131, 164)"
                                @click="virusVizClicked()" :disabled="this.result.length === 0">
                           <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                           VirusViz
-                        </v-btn>
+                        </v-btn>-->
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -368,6 +439,7 @@
                     totalItems: 0,
                     rowsPerPageItems: [10, 100, 1000] //mani che si alzano
                 },
+                dialogVirusviz: false,
             }
         },
         watch: {
@@ -407,7 +479,10 @@
                 'openExtraMetadataDialog',
                 'setCount'
             ]),
-            virusVizClicked(){
+            openDialogVirusViz(){
+              this.dialogVirusviz = true;
+            },
+            virusVizClicked(aa_only = false){
               let orderDir = "";
 
                 if (this.pagination.descending)
@@ -415,7 +490,7 @@
                 else
                     orderDir = "ASC";
 
-                let url = `viz/submit?is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let url = `viz/submit?aa_only=${aa_only}&&is_control=${this.is_control}&page=${this.pagination.page}&num_elems=${this.pagination.rowsPerPage}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     url += `&annotation_type=${this.selectedProduct}`;
                 }

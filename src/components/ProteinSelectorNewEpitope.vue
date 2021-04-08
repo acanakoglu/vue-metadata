@@ -21,7 +21,7 @@
 <script>
 import axios from "axios";
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
-import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
+import {FULL_TEXT, LOADING_TEXT, poll, stopPoll} from '../utils.js'
 
 export default {
   name: "ProteinSelectorNewEpitope",
@@ -30,9 +30,9 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
-    compound_query(){
+    'compound_query.taxon_name': function(){
       this.loadData();
-    }
+    },
   },
   computed: {
     ...mapState([
@@ -60,13 +60,18 @@ export default {
     ...mapMutations([]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected', 'setNewSingleEpitopeSelected']),
     loadData(){
+
+        if(this.my_interval_data !== null){
+          stopPoll(this.my_interval_data);
+        }
+
         this.isLoading = true;
         this.results = [{value: LOADING_TEXT}];
 
         let queryToRun = Object.assign({}, this.compound_query);
         queryToRun['panel'] = this.groupCondition;
 
-        const url = `field/${this.field}`;
+        const url = `epitope/proteinCustomEpitope`;
         this.isLoading = true;
 
         axios.post(url, queryToRun)
@@ -74,8 +79,9 @@ export default {
             return res.data
         })
         .then((res) => {
-          poll(res.result,(res)=>{
-              let vals = res.values
+          this.my_interval_data = poll(res.result,(res)=>{
+            this.my_interval_data = null;
+              let vals = res.values;
               if (this.selected) {
                 let arraySelected = [this.selected];
                   let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
@@ -89,6 +95,32 @@ export default {
               this.isLoading = false;
             });
         })
+
+
+        /*const url = `field/${this.field}`;
+        this.isLoading = true;
+
+        axios.post(url, queryToRun)
+        .then((res) => {
+            return res.data
+        })
+        .then((res) => {
+          this.my_interval_data = poll(res.result,(res)=>{
+            this.my_interval_data = null;
+              let vals = res.values;
+              if (this.selected) {
+                let arraySelected = [this.selected];
+                  let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
+                      .sort().map(v => Object({
+                          value: v,
+                          count: 0
+                      }));
+                  vals = vals.concat(zero_elements);
+              }
+              this.results = vals;
+              this.isLoading = false;
+            });
+        })*/
     },
     rename(inp) {
         let value_in;
@@ -107,6 +139,7 @@ export default {
       disableTxtAmino: true,
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
+      my_interval_data: null,
     }
   },
   mounted() {

@@ -21,7 +21,7 @@
 <script>
 import axios from "axios";
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
-import {FULL_TEXT, LOADING_TEXT, poll} from '../utils.js'
+import {FULL_TEXT, LOADING_TEXT, poll, stopPoll} from '../utils.js'
 
 export default {
   name: "EpitopeSelectorText",
@@ -30,16 +30,29 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
-    compound_query() {
+    compound_query_epi() {
+      this.loadData();
+    },
+    compound_query(){
+      if(this.epiSearchDis){
+        this.resetEpiQuery();
+      }
+    },
+    /*compound_query() {
         this.loadData();
     },
     epiQuerySel() {
       this.loadData();
-    },
+    },*/
     aminoacidConditions(){
       if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
         //this.disableTxtAmino = this.getDisableTxtAmino();       //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
         this.loadData();
+      }
+      else{
+        if(Object.keys(this.aminoacidConditions).length > 0){
+          this.disabledEpi_AminoacidMenuOpened = true;
+        }
       }
     },
     disableSelectorEpitopePart(){
@@ -58,9 +71,11 @@ export default {
       'epitopeAminoacidFields',
       'aminoacidConditions',
       'disableSelectorEpitopePart',
+      'selectedTabEpitope'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
+      compound_query_epi: 'build_query_epi',
       epiSearchDis: 'epiSearchDisabled',
     }),
     /*searchDisabled() {
@@ -71,33 +86,66 @@ export default {
         if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
           return this.aminoacidConditions[this.field];
         }else {
-          return this.epiQuerySel[this.field];
+          if(this.field === 'product'){
+            if(this.epiQuerySel[this.field]) {
+              return this.epiQuerySel[this.field][0];
+            }
+          }
+          else {
+            return this.epiQuerySel[this.field];
+          }
         }
       },
       set(value){
         //this.setEpiDropDownSelected({field: this.field, list: value});  FOR APPLY
-
         if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
           this.setAminoacidConditionsSelected({field: this.field, list: value});
           //this.clearEpiQueryFromAmino();
         }
         else{
-          this.setEpiDropDownSelected({field: this.field, list: value}); //FOR APPLY
+          if(this.field === 'product'){
+            let list = [];
+            list.push(value);
+            this.setEpiDropDownSelected({field: this.field, list: list}); //FOR APPLY
+          }
+          else {
+            this.setEpiDropDownSelected({field: this.field, list: value}); //FOR APPLY
+          }
         }
       }
     },
   },
   methods:{
-    ...mapMutations([]),
+    ...mapMutations(['resetEpiQuery']),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
     loadData(){
+
+      if(this.my_interval_data !== null){
+        stopPoll(this.my_interval_data);
+      }
+
       if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
         //console.log("RELOAD ", this.value);
         this.isLoading = true;
         this.results = [{value: LOADING_TEXT}];
         let to_send = this.toSend();
+        let url = ''
+        if (this.epitopeAminoacidFields.some(item => item.field === this.field)) {
+           url = `epitope/epiSel/${this.field}`;
+        }
+        else {
+           let to_send_epi_query = to_send.epi_query;
+           delete to_send.epi_query;
+           delete to_send_epi_query.sequence_aa_original;
+           delete to_send_epi_query.sequence_aa_alternative;
+           delete to_send_epi_query.variant_aa_type;
+           delete to_send_epi_query.startExtVariant;
+           delete to_send_epi_query.stopExtVariant;
+           to_send['epi_query'] = to_send_epi_query;
 
-        const url = `epitope/epiSel/${this.field}`;
+           url = `epitope/epiSelWithoutVariants/${this.field}`;
+        }
+        console.log("qui", this.field);
         axios.post(url, to_send)
             .then((res) => {
               return res.data
@@ -105,7 +153,8 @@ export default {
             .then((res) => {
               //console.log("ID ", res.result)
 
-              poll(res.result, (res) => {
+              this.my_interval_data = poll(res.result, (res) => {
+                this.my_interval_data = null;
                 let vals = res.values;
 
                 //console.log("RES: ", vals, "SEL: ", this.selected , "ARR: ", Array.isArray(this.selected));
@@ -132,6 +181,13 @@ export default {
 
             }*/
                 this.results = vals;
+
+                if(this.field === "product"){
+                  if(this.results.length !== 0 && !this.results.some(item => item.value === this.selected)){
+                    this.selected = this.results[0].value;
+                    //this.selected.set(this.results[0]);
+                  }
+                }
 
                 if (this.results.length === 0) {
                   this.disableTxtSel = true;
@@ -218,12 +274,24 @@ export default {
       disableTxtAmino: false,   //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO set true
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
+      my_interval_data: null,
     }
   },
   mounted() {
     //this.disableTxtAmino = this.getDisableTxtAmino();       //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO
-    this.loadData();
+    if(this.field === "product"){
+      this.is_multiple = false;
+    }
+    //this.loadData();
   },
+  created() {
+    this.loadData();
+    if (!this.epitopeAminoacidFields.some(item => item.field === this.field) && this.disableSelectorEpitopePart) {
+      this.disabledEpi_AminoacidMenuOpened = true;
+    } else {
+      this.disabledEpi_AminoacidMenuOpened = false;
+    }
+  }
 }
 </script>
 

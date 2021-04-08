@@ -19,13 +19,21 @@ export default new Vuex.Store({
         numerical: new Set(),
         exampleQueryLoaded: null,
         gisaidOnly: false,
-        epiQuerySel: {},
+        epiQuerySel: {
+            "product": ['Spike (surface glycoprotein)'],
+        },
+        epiQuerySelWithoutVariants: {
+            "product": ['Spike (surface glycoprotein)'],
+        },
         aminoacidConditions: {},
         countSeq: null,          // metadata + epitope + aminoacid
         countSeq2: null,         //only metadata
         countSeq3: null,         //metadata + aminoacid
         countSeq4: null,         //metadata + epitope
         countEpi: null,
+        countEpiWithoutVariants: null,
+        countEpiCustom: null,
+        countEpiToShow: null,
         showSequenceEpiTable: false,
         chosenEpitope: null,
         showAminoacidVariantEpi: false,
@@ -45,6 +53,10 @@ export default new Vuex.Store({
         isEpitopeSurf: false,
         addingEpitope: false,
         exampleCustomEpitope: false,
+        selectedTabEpitope: 0,
+        analyzeSubstitutionPanel: false,
+        finish_count_population: true,
+        fromPredefinedQuery: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -52,6 +64,11 @@ export default new Vuex.Store({
         build_query: state => {
             let res = {};
             Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv})
+            return res
+        },
+        build_query_epi: state => {
+            let res = {};
+            Object.assign(res, {"gcm": state.query}, {"type": state.type}, {"kv": state.kv}, {"epi": state.epiQuerySel})
             return res
         },
         keysEmpty: (state) => state.keys.length === 0,
@@ -141,6 +158,9 @@ export default new Vuex.Store({
         reloadEpiQuery: (state) => {
             state.epiQuerySel = Object.assign({}, state.epiQuerySel);
         },
+        reloadEpiQueryWithoutVariants: (state) => {
+            state.epiQuerySelWithoutVariants = Object.assign({}, state.epiQuerySelWithoutVariants);
+        },
         reloadAminoacidConditions: (state) => {
             state.aminoacidConditions = Object.assign({}, state.aminoacidConditions);
         },
@@ -156,6 +176,9 @@ export default new Vuex.Store({
         },
         setEpiQueryField: (state, payload) => {
             state.epiQuerySel[payload.field] = payload.fieldQuery;
+        },
+         setEpiQueryFieldWithoutVariants: (state, payload) => {
+            state.epiQuerySelWithoutVariants[payload.field] = payload.fieldQuery;
         },
         setAminoacidConditions: (state, payload) => {
             state.aminoacidConditions[payload.field] = payload.fieldQuery;
@@ -173,6 +196,9 @@ export default new Vuex.Store({
         resetEpiQueryField: (state, field) => {
             delete state.epiQuerySel[field];
         },
+        resetEpiQueryFieldWithoutVariants: (state, field) => {
+            delete state.epiQuerySelWithoutVariants[field];
+        },
         resetAminoacidConditions: (state, field) => {
             delete state.aminoacidConditions[field];
         },
@@ -188,8 +214,16 @@ export default new Vuex.Store({
         setEpiQuery: (state, query) => {
             state.epiQuerySel = Object.assign({}, query);
         },
+        setEpiQueryWithoutVariants: (state, query) => {
+            state.epiQuerySelWithoutVariants = Object.assign({}, query);
+        },
         resetEpiQuery: (state) => {
-            state.epiQuerySel = {}
+            let protein = state.epiQuerySel["product"]
+            state.epiQuerySel = {"product": protein}
+        },
+        resetEpiQueryWithoutVariants: (state) => {
+            let protein = state.epiQuerySelWithoutVariants["product"]
+            state.epiQuerySelWithoutVariants = {"product": protein}
         },
         setAminoacidConditionQuery: (state, query) => {
             state.aminoacidConditions = Object.assign({}, query);
@@ -214,6 +248,18 @@ export default new Vuex.Store({
         },
         setFalseExampleCustomEpitope: (state) => {
             state.exampleCustomEpitope = false;
+        },
+        setTrueFinishCountPopulation: (state) => {
+            state.finish_count_population = true;
+        },
+        setFalseFinishCountPopulation: (state) => {
+            state.finish_count_population = false;
+        },
+        setTrueFromPredefinedQuery: (state) => {
+            state.fromPredefinedQuery = true;
+        },
+        setFalseFromPredefinedQuery: (state) => {
+            state.fromPredefinedQuery = false;
         },
         openGraphDialog: (state, sourceId) => {
             state.graphSourceId = sourceId;
@@ -246,6 +292,15 @@ export default new Vuex.Store({
         },
         setCountEpi: (state, count) => {
             state.countEpi = count;
+        },
+        setCountEpiWithoutVariants: (state, count) => {
+            state.countEpiWithoutVariants = count;
+        },
+        setCountEpiCustom: (state, count) => {
+            state.countEpiCustom = count;
+        },
+        setCountEpiToShow: (state, count) => {
+            state.countEpiToShow = count;
         },
         showSeqEpiTable: (state) => {
             state.showSequenceEpiTable = !state.showSequenceEpiTable;
@@ -334,6 +389,21 @@ export default new Vuex.Store({
         changeAddingEpitope: (state) => {
             state.addingEpitope = !state.addingEpitope;
         },
+        setSelectedTabEpitopeToCustom: (state) => {
+            state.selectedTabEpitope = 0;
+        },
+        setSelectedTabEpitopeToEpitopeVariants: (state) => {
+            state.selectedTabEpitope = 2;
+        },
+        setSelectedTabEpitopeToEpitopeWithoutVariants: (state) => {
+            state.selectedTabEpitope = 1;
+        },
+        setTrueAnalyzeSubstitutionPanel: (state) => {
+            state.analyzeSubstitutionPanel = true;
+        },
+        setFalseAnalyzeSubstitutionPanel: (state) => {
+            state.analyzeSubstitutionPanel = false;
+        }
     },
     actions: {
         deleteKv({commit}, field) {
@@ -437,6 +507,27 @@ export default new Vuex.Store({
                 } else
                     commit('resetEpiQueryField', field);
                 commit('reloadEpiQuery');
+            }
+        },
+        setEpiDropDownSelectedWithoutVariants({commit, state}, payload) {
+            const field = payload.field;
+
+            let newList = payload.list;
+            if (!newList)
+                newList = [];
+
+            let previousList = state.epiQuerySelWithoutVariants[field];
+            if (!previousList)
+                previousList = [];
+
+            //update if they are not equal
+            if (!(JSON.stringify(previousList) === JSON.stringify(newList))) {
+                if (newList.length > 0) {
+                    const newPayload = {field: field, fieldQuery: newList};
+                    commit('setEpiQueryFieldWithoutVariants', newPayload);
+                } else
+                    commit('resetEpiQueryFieldWithoutVariants', field);
+                commit('reloadEpiQueryWithoutVariants');
             }
         },
         setAminoacidConditionsSelected({commit, state}, payload) {
