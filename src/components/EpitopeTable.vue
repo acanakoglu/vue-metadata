@@ -116,7 +116,10 @@
                     :key="header.value" v-show="header.show"  v-if="!epiSearchDis">
 
                     <span v-if="header.value === 'num_seq'">
+                      <span v-if="props.item[header.value] !== 0">
                         <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
+                      </span>
+                      <span v-else style="color: royalblue">{{props.item[header.value]}}</span>
                     </span>
 
                     <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
