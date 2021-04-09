@@ -183,7 +183,6 @@
                     <span v-else-if="header.value === 'virusViz_button_all_population'">
 
                       <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="props.item['num_seq'] === 0"
                               @click="openDialogVirusViz(props.item, props.item['total_num_of_seq_metadata'], true)">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
