@@ -220,22 +220,23 @@ export default {
         this.isLoading = true;
         //console.log("RELOAD extremes");
         let to_send = this.toSend();
+        let to_send_modified = JSON.parse(JSON.stringify(to_send));
         let url = '';
         if (this.epitopeAminoacidFields.some(item => item.field === this.field)) {
            url = `epitope/epiExtremes/${this.field}`;
         }
         else {
-           let to_send_epi_query = to_send.epi_query;
-           delete to_send.epi_query;
+           let to_send_epi_query = to_send_modified.epi_query;
+           delete to_send_modified.epi_query;
            delete to_send_epi_query.sequence_aa_original;
            delete to_send_epi_query.sequence_aa_alternative;
            delete to_send_epi_query.variant_aa_type;
            delete to_send_epi_query.startExtVariant;
            delete to_send_epi_query.stopExtVariant;
-           to_send['epi_query'] = to_send_epi_query;
+           to_send_modified['epi_query'] = to_send_epi_query;
           url = `epitope/epiExtremesWithoutVariants/${this.field}`;  //ONLY IF ALL EPITOPE HAVE A MUTATION
         }
-          axios.post(url, to_send)
+          axios.post(url, to_send_modified)
             .then((res) => {
               return res.data
             })

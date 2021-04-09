@@ -7,10 +7,10 @@
                Custom Epitopes
           </v-tab>
           <v-tab>
-              Use IEDB Epitopes Without Variants Count
+              Use IEDB Epitopes
           </v-tab>
           <v-tab>
-              Use IEDB Epitopes
+              Use IEDB Epitopes With Variants Count
           </v-tab>
 
 
