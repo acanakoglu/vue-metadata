@@ -18,7 +18,7 @@
                  small
                  color="rgb(122, 139, 157)"
           >
-              Load Epitopes (JSON)
+              Upload Epitopes (JSON)
           </v-btn>
       </v-layout>
       <v-dialog
