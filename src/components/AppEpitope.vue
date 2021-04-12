@@ -292,11 +292,7 @@
                                     "country": ["italy"],
                                 },
                                 "type": "original",
-                                "kv": {
-                                  "aa0" : {
-                                    "product": "spike"
-                                  }
-                                }
+                                "kv": {}
                             },
                             epi_query: {
                                 epitope_meta: {
@@ -633,6 +629,12 @@
               }
 
              let val = JSON.parse(JSON.stringify(item_custom_epi_meta));
+              val['all_information'] = {};
+             let all_info = val['all_information'] ;
+             all_info['compound_query'] = JSON.parse(JSON.stringify(compound_query));
+             all_info['epitope_info'] = JSON.parse(JSON.stringify(item_custom_epi_meta));
+             all_info['amino_acid_info'] = JSON.parse(JSON.stringify(item_custom_var_meta));
+
 
              val['compound_query'] = JSON.parse(JSON.stringify(compound_query));
 
@@ -655,6 +657,18 @@
                }
              }
              val['position_range_to_show'] = newListPositionString;
+             
+             val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+             val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+
+             if(/virusurf_gisaid/.test(window.location.href)){
+               val['creation_database'] = "GISAID";
+               val['refresh_database'] = "GISAID";
+             }
+             else{
+               val['creation_database'] = "GenBank";
+               val['refresh_database'] = "GenBank";
+             }
 
              this.epitopeToAdd = val;
              this.countNumSeq(val);

@@ -131,7 +131,7 @@
 
         <v-layout wrap justify-center style="margin-top: 40px">
          <v-btn :disabled="epiSearchDis" @click="clearEpitope()" class="white--text" color="rgb(122, 139, 157)">CLEAR EPITOPE</v-btn>
-          <v-btn :disabled="epiSearchDis" @click="addEpitope()" class="white--text" color="#00008B">ADD EPITOPE</v-btn>
+          <v-btn :disabled="epiSearchDis || newEpitopeLoading" @click="addEpitope()" class="white--text" color="#00008B">ADD EPITOPE</v-btn>
         </v-layout>
 
         <v-dialog
@@ -221,6 +221,12 @@
           <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">
                <v-flex sm2 class="text-xs-center">
+                 <v-progress-circular
+                        indeterminate
+                        color="primary"
+                        v-if="refreshingIndex === epitope.index - 1"
+                        style="margin-right: 20px"
+                 ></v-progress-circular>
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{epitope.index}}</b></span>
                </v-flex>
                <v-flex sm6>
@@ -229,13 +235,14 @@
                    <span v-if="key === 'Epitope name'"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
+                   <span v-else-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
                    <span v-else-if="key !== 'file_name' && key !== 'index'" class="capitalize">{{value}} </span>
                  </span>
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
-                 <v-btn class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
-                 <v-btn class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
+                 <v-btn :disabled="newEpitopeLoading" @click="refreshCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
+                 <v-btn @click="reloadCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
                  <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
@@ -408,13 +415,17 @@ export default {
       confirmDeleteSingleEpitope: false,
       epitopeIndexToDelete: 0,
       confirmDeleteAllEpitopes: false,
+      isRefresh: false,
+      refreshingIndex: null,
+      countPopulationRefreshed: null,
+      finish_count_population_refreshed: true,
     }
   },
   computed: {
     ...mapState(['epitopeAdded', 'newSingleEpitope', 'newEpitopeLoading', 'showMoreInfoEpitopeUser',
       'countSeq2', 'showAminoacidVariantUserNewEpi',
       'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
-      'epitopeAminoacidConditionsArrayUserNew',]),
+      'epitopeAminoacidConditionsArrayUserNew', 'epitopeAdded', 'userEpitopeSelected']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query',
@@ -483,7 +494,8 @@ export default {
       while(i<len){
         let line = {};
         line['Epitope name'] = val[i].epitope_name;
-        line['Creation date'] = val[i].creation_date;
+        line['Creation date'] = val[i].creation_date + " on " + val[i].creation_database;
+        line['Refresh date'] = val[i].refresh_date + " on " + val[i].refresh_database;
         line['Protein'] = val[i].product;
         line['Position range'] = val[i].position_range_to_show;
         line['Virus taxon name'] = val[i].taxon_name;
@@ -553,10 +565,15 @@ export default {
      'setTrueShowAminoacidVariantUserNewEpi', 'setTrueDisableSelectorUserNewEpitopePart',
        'setTrueDisableSelectorEpitopePart', 'removeEpitopeAminoacidConditionsArrayUserNew',
      'resetEpitopeAminoacidConditionsArrayUserNew', 'changeAddingEpitope', 'resetNewEpitopeFromLocalStorage',
-     'setCountEpiCustom', 'setCountSeq2', 'setTrueFinishCountPopulation', 'setFalseFinishCountPopulation']),
-     ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction']),
+     'setCountEpiCustom', 'setCountSeq2', 'setTrueFinishCountPopulation', 'setFalseFinishCountPopulation',
+     'setTrueExampleCustomEpitope', 'setNewSingleEpitopeQuery', 'resetNewSingleAminoacidConditionUserQuery',
+     'setNewSingleAminoacidConditionUserQuery', 'setQuery', 'setFalseDisableSelectorEpitopePart',
+     'setFalseDisableSelectorUserNewEpitopePart', 'setFalseShowAminoacidVariantUserNewEpi',
+     'resetNewSingleEpitopeQuery', 'refreshEpitopeInList']),
+     ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction',]),
      loadCountSeq2(){
-       this.setFalseFinishCountPopulation()
+       this.setFalseFinishCountPopulation();
+       this.setCountSeq2(null);
      let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
       let count_url = `query/count?is_control=${this.is_control}`;
@@ -609,6 +626,16 @@ export default {
              list: this.compound_query['gcm'].host_taxon_name[0]
            })
            let val = JSON.parse(JSON.stringify(this.newSingleEpitope));
+           val['all_information'] = {};
+           let all_info = val['all_information'] ;
+           all_info['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
+           all_info['epitope_info'] = JSON.parse(JSON.stringify(this.newSingleEpitope));
+           if (this.epitopeAminoacidConditionsArrayUserNew.length>0) {
+             all_info['amino_acid_info'] = JSON.parse(JSON.stringify(this.epitopeAminoacidConditionsArrayUserNew[0]));
+           }
+           else{
+             all_info['amino_acid_info'] = {};
+           }
 
            val['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
 
@@ -632,6 +659,16 @@ export default {
            }
            val['position_range_to_show'] = newListPositionString;
            val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+           val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+
+           if(/virusurf_gisaid/.test(window.location.href)){
+             val['creation_database'] = "GISAID";
+             val['refresh_database'] = "GISAID";
+           }
+           else{
+             val['creation_database'] = "GenBank";
+             val['refresh_database'] = "GenBank";
+           }
 
            this.epitopeToAdd = val;
            this.countNumSeq(val);
@@ -662,6 +699,10 @@ export default {
        this.setNewSingleEpitopeSelected({field: "position_range", list: ''});
        this.setNewSingleEpitopeSelected({field: "num_seq", list: ''});
        this.resetEpitopeAminoacidConditionsArrayUserNew();
+       this.resetNewSingleAminoacidConditionUserQuery();
+       this.setFalseDisableSelectorEpitopePart();
+       this.setFalseDisableSelectorUserNewEpitopePart();
+       this.setFalseShowAminoacidVariantUserNewEpi();
      },
      deleteEpitope(index){
         this.removeNewEpitopeFromList(index);
@@ -763,6 +804,24 @@ export default {
               //this.setFalseNewEpitopeLoading();
           });
      },
+     countPopulationRefreshedFunction(val){
+       let to_send = JSON.parse(JSON.stringify(val['compound_query']));
+       to_send['kv'] = {};
+      this.isLoading = true;
+      this.finish_count_population_refreshed = false;
+      this.setTrueNewEpitopeLoading();
+
+      let count_url = `query/count?is_control=${this.is_control}`;
+
+      axios.post(count_url, to_send)
+          .then((res) => {
+              return res.data;
+          })
+          .then((res) => {
+              this.countPopulationRefreshed = res;
+              this.finish_count_population_refreshed = true;
+          });
+     },
      countNumVar(val){
        let to_send = val['compound_query'];
       this.isLoading = true;
@@ -801,14 +860,24 @@ export default {
            this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
          }
          this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
-         this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
+         if(!this.isRefresh) {
+           this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
+         }
+         else{
+            this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countPopulationRefreshed) * 100;
+         }
          if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
            this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
          } else {
            this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
          }
          this.epitopeToAdd['mutated_seq_ratio'] += ' %';
-         this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+         if(!this.isRefresh) {
+           this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+         }
+         else{
+           this.epitopeToAdd['total_num_of_seq_metadata'] = this.countPopulationRefreshed;
+         }
        }
      },
      resetSearchedName(){
@@ -863,6 +932,47 @@ export default {
 
        return modifiedKey;
      },
+     reloadCustomEpitope(epitope_index){
+       let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
+       let custom_epi_info = epitope.all_information.epitope_info;
+       let amino_acid_info = epitope.all_information.amino_acid_info;
+       let metadata = epitope.all_information.compound_query;
+       this.setQuery(metadata.gcm);
+
+        this.setTrueExampleCustomEpitope();
+        this.resetEpitopeAminoacidConditionsArrayUserNew();
+        this.resetNewSingleEpitopeQuery();
+        this.setNewSingleEpitopeQuery(custom_epi_info);
+        this.resetNewSingleAminoacidConditionUserQuery();
+        if (Object.keys(amino_acid_info).length > 0) {
+            this.setTrueDisableSelectorEpitopePart();
+            this.setTrueShowAminoacidVariantUserNewEpi();
+            this.setTrueDisableSelectorUserNewEpitopePart();
+            this.setNewSingleAminoacidConditionUserQuery(amino_acid_info);
+        }
+        else{
+          this.setFalseDisableSelectorEpitopePart();
+          this.setFalseDisableSelectorUserNewEpitopePart();
+          this.setFalseShowAminoacidVariantUserNewEpi();
+        }
+     },
+    refreshCustomEpitope(epitope_index){
+      this.setUserEpitopeSelected(epitope_index);
+      this.isRefresh = true;
+      this.refreshingIndex = epitope_index;
+     let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
+     epitope['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+     if(/virusurf_gisaid/.test(window.location.href)){
+       epitope['refresh_database'] = "GISAID";
+     }
+     else{
+       epitope['refresh_database'] = "GenBank";
+     }
+     this.epitopeToAdd = epitope;
+     this.countNumSeq(epitope);
+     this.countNumVar(epitope);
+     this.countPopulationRefreshedFunction(epitope);
+    }
    },
   created() {
       //if(this.countSeq2 === null || this.countSeq2 === undefined) {
@@ -943,25 +1053,68 @@ export default {
       }
     },
     finish_count_seq(){
-      if(this.finish_count_seq === true && this.finish_count_var === true){
+      if(this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population_refreshed === true){
 
         this.addFrequencies();
-        this.addNewEpitopeToList(this.epitopeToAdd);
+        if(!this.isRefresh) {
+          this.addNewEpitopeToList(this.epitopeToAdd);
+        }
+        else{
+          this.deleteEpitope(this.userEpitopeSelected);
+          let epitope_to_pass = {epitope: this.epitopeToAdd, index: this.userEpitopeSelected};
+          this.refreshEpitopeInList(epitope_to_pass);
+          this.setUserEpitopeSelected(null);
+        }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
         this.setFalseNewEpitopeLoading();
+        this.countPopulationRefreshed = null;
         this.epitopeToAdd = null;
+        this.refreshingIndex = null;
+        this.isRefresh = false;
       }
     },
     finish_count_var(){
-      if(this.finish_count_seq === true && this.finish_count_var === true){
+      if(this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population_refreshed === true){
 
         this.addFrequencies();
-        this.addNewEpitopeToList(this.epitopeToAdd);
+        if(!this.isRefresh) {
+          this.addNewEpitopeToList(this.epitopeToAdd);
+        }
+        else{
+          this.deleteEpitope(this.userEpitopeSelected);
+          let epitope_to_pass = {epitope: this.epitopeToAdd, index: this.userEpitopeSelected};
+          this.refreshEpitopeInList(epitope_to_pass);
+          this.setUserEpitopeSelected(null);
+        }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         localStorage.setItem('epitopeArr', epitopeArr);
         this.setFalseNewEpitopeLoading();
+        this.countPopulationRefreshed = null;
         this.epitopeToAdd = null;
+        this.refreshingIndex = null;
+        this.isRefresh = false;
+      }
+    },
+    finish_count_population_refreshed(){
+      if(this.finish_count_seq === true && this.finish_count_var === true && this.finish_count_population_refreshed === true){
+        this.addFrequencies();
+        if(!this.isRefresh) {
+          this.addNewEpitopeToList(this.epitopeToAdd);
+        }
+        else{
+          this.deleteEpitope(this.userEpitopeSelected);
+          let epitope_to_pass = {epitope: this.epitopeToAdd, index: this.userEpitopeSelected};
+          this.refreshEpitopeInList(epitope_to_pass);
+          this.setUserEpitopeSelected(null);
+        }
+        let epitopeArr = (JSON.stringify(this.epitopeAdded));
+        localStorage.setItem('epitopeArr', epitopeArr);
+        this.setFalseNewEpitopeLoading();
+        this.countPopulationRefreshed = null;
+        this.epitopeToAdd = null;
+        this.refreshingIndex = null;
+        this.isRefresh = false;
       }
     },
     pageEpitopeList(){

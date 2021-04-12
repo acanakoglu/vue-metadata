@@ -244,7 +244,7 @@ export default {
       }
     },
     positionRanges() {
-      if(this.newSingleEpitope['position_range']) {
+      if(this.newSingleEpitope.hasOwnProperty('position_range')) {
         this.minExt = this.newSingleEpitope['position_range'][this.newSingleEpitope['position_range'].length - 1][1] + 1;
         if(this.minExt > this.maxExt){
           this.positionRangeBlocked = true;

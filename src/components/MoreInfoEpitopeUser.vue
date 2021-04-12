@@ -24,7 +24,8 @@
           <div v-if="Object.keys(epitope_infos).length > 0">
             <h2 style="display: block; margin-bottom: 5px;">Epitope Info:</h2>
             <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} : </b>
-              <span class="capitalize">{{value}} </span>
+              <span v-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
+              <span v-else class="capitalize">{{value}} </span>
             </span>
           </div>
           <div>
@@ -101,7 +102,8 @@ export default {
     createEpitopeInfos(epitope){
       let infos = {};
       infos['Epitope name'] = epitope.epitope_name;
-      infos['Creation date'] = epitope.creation_date;
+      infos['Creation date'] = epitope.creation_date + " on " + epitope.creation_database;
+      infos['Refresh date'] = epitope.refresh_date + " on " + epitope.creation_database;
       if(epitope.file_name){
         infos['File Name'] = epitope.file_name;
       }

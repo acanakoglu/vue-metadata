@@ -121,6 +121,15 @@ export default {
       while(i<len){
         epitopeArr[i] = this.controlExistingName(epitopeArr[i]);
         epitopeArr[i]['file_name'] = this.nameLoadedFile;
+        if((/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GenBank')
+            ||
+          (!/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GISAID')){
+          epitopeArr[i]['num_var'] = '-';
+          epitopeArr[i]['num_seq'] = '-';
+          epitopeArr[i]['mutated_freq'] = '-';
+          epitopeArr[i]['mutated_seq_ratio'] = '-';
+          epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+        }
         this.addNewEpitopeToList(epitopeArr[i]);
         i++;
       }
@@ -152,6 +161,15 @@ export default {
         let i = 0;
         while(i<len){
           this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+          if((/virusurf_gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GenBank')
+            ||
+          (!/virusurf_gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GISAID')){
+          this.epitopeArr[i]['num_var'] = '-';
+          this.epitopeArr[i]['num_seq'] = '-';
+          this.epitopeArr[i]['mutated_freq'] = '-';
+          this.epitopeArr[i]['mutated_seq_ratio'] = '-';
+          this.epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+        }
           i++;
         }
       }
@@ -170,6 +188,15 @@ export default {
           let i = 0;
           while(i<len){
             this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+            if((/virusurf_gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GenBank')
+                ||
+              (!/virusurf_gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GISAID')){
+              this.epitopeArr[i]['num_var'] = '-';
+              this.epitopeArr[i]['num_seq'] = '-';
+              this.epitopeArr[i]['mutated_freq'] = '-';
+              this.epitopeArr[i]['mutated_seq_ratio'] = '-';
+              this.epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+            }
             i++;
           }
         }
