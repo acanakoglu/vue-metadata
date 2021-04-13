@@ -19,34 +19,89 @@
       <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
       <!--                <span class="font-weight-light">doc</span></span>-->
       <!--            </v-btn>-->
-      <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
-        <span class="mr-2">ViruSurf GISAID</span>
-      </v-btn>
-      <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
-        <span class="mr-2">GenoSurf</span>
-      </v-btn>
-      <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
-        <span class="mr-2">Data curation</span>
-      </v-btn>
-      <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
-        <span class="mr-2">Wiki</span>
-      </v-btn>
-      <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF"
-             target="_blank">
-        <span class="mr-2">Video</span>
-      </v-btn>
-      <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
-        <span class="mr-2">Survey</span>
-      </v-btn>
-      <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
-                    <span class="mr-2">Acknowledgements</span>
-                </v-btn>
-                <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
-                    <span class="mr-2">Contacts</span>
-                </v-btn>-->
-      <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
-        <span class="mr-2">About</span>
-      </v-btn>
+      <v-toolbar-items class="hidden-md-and-down">
+        <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
+          <span class="mr-2">ViruSurf GISAID</span>
+        </v-btn>
+        <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+          <span class="mr-2">GenoSurf</span>
+        </v-btn>
+        <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
+          <span class="mr-2">Data curation</span>
+        </v-btn>
+        <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
+          <span class="mr-2">Wiki</span>
+        </v-btn>
+        <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF"
+               target="_blank">
+          <span class="mr-2">Video</span>
+        </v-btn>
+        <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
+          <span class="mr-2">Survey</span>
+        </v-btn>
+        <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
+                      <span class="mr-2">Acknowledgements</span>
+                  </v-btn>
+                  <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                      <span class="mr-2">Contacts</span>
+                  </v-btn>-->
+        <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
+          <span class="mr-2">About</span>
+        </v-btn>
+      </v-toolbar-items>
+      <v-menu class="hidden-lg-and-up">
+        <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
+                <span class="mr-2">ViruSurf GISAID</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+                <span class="mr-2">GenoSurf</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
+                <span class="mr-2">Data curation</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
+                <span class="mr-2">Wiki</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF"
+                     target="_blank">
+                <span class="mr-2">Video</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
+                <span class="mr-2">Survey</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile style="background-color: white">
+            <v-list-tile-content>
+              <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
+                <span class="mr-2">About</span>
+              </v-btn>
+            </v-list-tile-content>
+        </v-list-tile>
+      </v-menu>
     </v-toolbar>
     <v-content class="main-content">
       <v-content v-show="mainContent">
