@@ -528,6 +528,7 @@
                       console.log("res: ", res)
                       let appUrl = window.location.origin + window.location.pathname
                       let virusVizPollUrl = appUrl;
+                      virusVizPollUrl = virusVizPollUrl.replaceAll("/epitope","")
                       virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
                       virusVizPollUrl += "/api/poll/";
                       virusVizPollUrl += res.result;

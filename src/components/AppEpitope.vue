@@ -25,37 +25,67 @@
             <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
             <!--                <span class="font-weight-light">doc</span></span>-->
             <!--            </v-btn>-->
-            <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
-                <span class="mr-2">ViruSurf</span>
-            </v-btn>
-            <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
-                <span class="mr-2">ViruSurf GISAID</span>
-            </v-btn>
-            <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
-                <span class="mr-2">GenoSurf</span>
-            </v-btn>
-            <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
-                <span class="mr-2">Data curation</span>
-            </v-btn>
-            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
-                <span class="mr-2">Wiki</span>
-            </v-btn>
-            <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF"
-                   target="_blank">
-                <span class="mr-2">Video</span>
-            </v-btn>
-            <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
-                <span class="mr-2">Survey</span>
-            </v-btn>
-            <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
-                          <span class="mr-2">Acknowledgements</span>
-                      </v-btn>
-                      <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
-                          <span class="mr-2">Contacts</span>
-                      </v-btn>-->
-            <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
-                <span class="mr-2">About</span>
-            </v-btn>
+            <v-toolbar-items class="hidden-md-and-down">
+              <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
+                  <span class="mr-2">ViruSurf</span>
+              </v-btn>
+              <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
+                  <span class="mr-2">ViruSurf GISAID</span>
+              </v-btn>
+              <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+                  <span class="mr-2">GenoSurf</span>
+              </v-btn>
+              <v-btn flat href="https://github.com/DEIB-GECO/EpiSurf/wiki" target="_blank">
+                  <span class="mr-2">Wiki</span>
+              </v-btn>
+              <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
+                            <span class="mr-2">Acknowledgements</span>
+                        </v-btn>
+                        <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                            <span class="mr-2">Contacts</span>
+                        </v-btn>-->
+              <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                  <span class="mr-2">About</span>
+              </v-btn>
+            </v-toolbar-items>
+            <v-menu class="hidden-lg-and-up">
+              <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
+              <v-list-tile style="background-color: white">
+                  <v-list-tile-content>
+                    <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
+                        <span class="mr-2">ViruSurf</span>
+                    </v-btn>
+                  </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile style="background-color: white">
+                  <v-list-tile-content>
+                    <v-btn flat href="http://geco.deib.polimi.it/virusurf_gisaid/" target="_blank">
+                        <span class="mr-2">ViruSurf GISAID</span>
+                    </v-btn>
+                  </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile style="background-color: white">
+                  <v-list-tile-content>
+                    <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
+                        <span class="mr-2">GenoSurf</span>
+                    </v-btn>
+                  </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile style="background-color: white">
+                  <v-list-tile-content>
+                    <v-btn flat href="https://github.com/DEIB-GECO/EpiSurf/wiki" target="_blank">
+                        <span class="mr-2">Wiki</span>
+                    </v-btn>
+                  </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile style="background-color: white">
+                  <v-list-tile-content>
+                    <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                        <span class="mr-2">About</span>
+                    </v-btn>
+                  </v-list-tile-content>
+              </v-list-tile>
+            </v-menu>
         </v-toolbar>
         <v-content class="main-content">
             <v-content v-show="mainContent">
@@ -287,6 +317,7 @@
                 finish_count_seq: false,
                 finish_count_var: false,
                 precision_float_table: 5,
+                isGisaid: false,
                 queryItems: [
                     {
                         text: 'Example Epitope',
@@ -298,11 +329,7 @@
                                     "country": ["italy"],
                                 },
                                 "type": "original",
-                                "kv": {
-                                  "aa0" : {
-                                    "product": "spike"
-                                  }
-                                }
+                                "kv": {}
                             },
                             epi_query: {
                                 epitope_meta: {
@@ -452,6 +479,12 @@
             }
         },
         created() {
+            if(/gisaid/.test(window.location.href)){
+              this.isGisaid = true;
+            }
+            else{
+              this.isGisaid = false;
+            }
             document.title = 'EpiSurf GISAID'
             this.setQueryStartEpi();
             this.setTrueIsEpitopeSurf();
@@ -639,6 +672,12 @@
               }
 
              let val = JSON.parse(JSON.stringify(item_custom_epi_meta));
+              val['all_information'] = {};
+             let all_info = val['all_information'] ;
+             all_info['compound_query'] = JSON.parse(JSON.stringify(compound_query));
+             all_info['epitope_info'] = JSON.parse(JSON.stringify(item_custom_epi_meta));
+             all_info['amino_acid_info'] = JSON.parse(JSON.stringify(item_custom_var_meta));
+
 
              val['compound_query'] = JSON.parse(JSON.stringify(compound_query));
 
@@ -661,6 +700,18 @@
                }
              }
              val['position_range_to_show'] = newListPositionString;
+
+             val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+             val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+
+             if(/gisaid/.test(window.location.href)){
+               val['creation_database'] = "GISAID";
+               val['refresh_database'] = "GISAID";
+             }
+             else{
+               val['creation_database'] = "GenBank";
+               val['refresh_database'] = "GenBank";
+             }
 
              this.epitopeToAdd = val;
              this.countNumSeq(val);
@@ -817,7 +868,14 @@
                   this.addFrequencies();
                   this.addNewEpitopeToList(this.epitopeToAdd);
                   let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                  localStorage.setItem('epitopeArr', epitopeArr);
+                  let storage_name = 'epitopeArr';
+                  if(this.isGisaid){
+                    storage_name = storage_name + '_' + 'GISAID'
+                  }
+                  else{
+                    storage_name = storage_name + '_' + 'GenBank'
+                  }
+                  localStorage.setItem(storage_name, epitopeArr);
                   this.setFalseNewEpitopeLoading();
                   this.epitopeToAdd = null;
                 }
@@ -828,7 +886,14 @@
                 this.addFrequencies();
                 this.addNewEpitopeToList(this.epitopeToAdd);
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                localStorage.setItem('epitopeArr', epitopeArr);
+                let storage_name = 'epitopeArr';
+                if(this.isGisaid){
+                  storage_name = storage_name + '_' + 'GISAID'
+                }
+                else{
+                  storage_name = storage_name + '_' + 'GenBank'
+                }
+                localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();
                 this.epitopeToAdd = null;
               }
@@ -839,7 +904,14 @@
                 this.addFrequencies();
                 this.addNewEpitopeToList(this.epitopeToAdd);
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                localStorage.setItem('epitopeArr', epitopeArr);
+                let storage_name = 'epitopeArr';
+                if(this.isGisaid){
+                  storage_name = storage_name + '_' + 'GISAID'
+                }
+                else{
+                  storage_name = storage_name + '_' + 'GenBank'
+                }
+                localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();
                 this.epitopeToAdd = null;
                 }

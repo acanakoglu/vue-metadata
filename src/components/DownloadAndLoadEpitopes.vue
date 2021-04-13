@@ -74,6 +74,7 @@ export default {
       epitopeArr: [],
       dialogMergeEpitope: false,
       nameLoadedFile: '',
+      isGisaid:  false,
     }
   },
   computed: {
@@ -121,11 +122,28 @@ export default {
       while(i<len){
         epitopeArr[i] = this.controlExistingName(epitopeArr[i]);
         epitopeArr[i]['file_name'] = this.nameLoadedFile;
+        if((/gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GenBank')
+            ||
+          (!/gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GISAID')){
+          epitopeArr[i]['num_var'] = '-';
+          epitopeArr[i]['num_seq'] = '-';
+          epitopeArr[i]['mutated_freq'] = '-';
+          epitopeArr[i]['mutated_seq_ratio'] = '-';
+          epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+        }
         this.addNewEpitopeToList(epitopeArr[i]);
         i++;
       }
       let epitopeArrNew = (JSON.stringify(this.epitopeAdded));
-      localStorage.setItem('epitopeArr', epitopeArrNew);
+
+      let storage_name = 'epitopeArr';
+      if(this.isGisaid){
+        storage_name = storage_name + '_' + 'GISAID'
+      }
+      else{
+        storage_name = storage_name + '_' + 'GenBank'
+      }
+      localStorage.setItem(storage_name, epitopeArrNew);
       this.dialogMergeEpitope = false;
     },
     controlExistingName(epitope){
@@ -152,12 +170,28 @@ export default {
         let i = 0;
         while(i<len){
           this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+          if((/gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GenBank')
+            ||
+          (!/gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GISAID')){
+          this.epitopeArr[i]['num_var'] = '-';
+          this.epitopeArr[i]['num_seq'] = '-';
+          this.epitopeArr[i]['mutated_freq'] = '-';
+          this.epitopeArr[i]['mutated_seq_ratio'] = '-';
+          this.epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+        }
           i++;
         }
       }
       this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
       let epitopeArr = (JSON.stringify(this.epitopeAdded));
-      localStorage.setItem('epitopeArr', epitopeArr);
+      let storage_name = 'epitopeArr';
+      if(this.isGisaid){
+        storage_name = storage_name + '_' + 'GISAID'
+      }
+      else{
+        storage_name = storage_name + '_' + 'GenBank'
+      }
+      localStorage.setItem(storage_name, epitopeArr);
       this.dialogMergeEpitope = false;
     },
     saveNewEpitopes(){
@@ -170,17 +204,41 @@ export default {
           let i = 0;
           while(i<len){
             this.epitopeArr[i]['file_name'] = this.nameLoadedFile;
+            if((/gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GenBank')
+                ||
+              (!/gisaid/.test(window.location.href) && this.epitopeArr[i]['refresh_database'] === 'GISAID')){
+              this.epitopeArr[i]['num_var'] = '-';
+              this.epitopeArr[i]['num_seq'] = '-';
+              this.epitopeArr[i]['mutated_freq'] = '-';
+              this.epitopeArr[i]['mutated_seq_ratio'] = '-';
+              this.epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+            }
             i++;
           }
         }
         this.resetNewEpitopeFromLocalStorage(this.epitopeArr);
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
-        localStorage.setItem('epitopeArr', epitopeArr);
+        let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
       }
     }
   },
   watch: {
   },
+  created() {
+    if(/gisaid/.test(window.location.href)){
+      this.isGisaid = true;
+    }
+    else{
+      this.isGisaid = false;
+    }
+  }
 }
 </script>
 

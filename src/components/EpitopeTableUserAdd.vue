@@ -197,6 +197,16 @@
                         -->
                     </span>
 
+                    <span v-else-if="header.value === 'creation_date'">
+                      {{props.item[header.value]}}
+                      ({{props.item['creation_database']}})
+                    </span>
+
+                    <span v-else-if="header.value === 'refresh_date'">
+                      {{props.item[header.value]}}
+                      ({{props.item['refresh_database']}})
+                    </span>
+
                     <span v-else>{{props.item[header.value]}}</span>
 
                 </td>
@@ -452,6 +462,7 @@ export default {
               .then((res) => {
                 let appUrl = window.location.origin + window.location.pathname
                 let virusVizPollUrl = appUrl;
+                virusVizPollUrl = virusVizPollUrl.replaceAll("/epitope","")
                 virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
                 virusVizPollUrl += "/api/poll/";
                 virusVizPollUrl += res.result;
@@ -475,6 +486,7 @@ export default {
       const predefinedHeaders = [
           {text: 'Epitope Name', value: 'epitope_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Creation Date', value: 'creation_date', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Refresh Date', value: 'refresh_date', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},

@@ -46,7 +46,17 @@
                       :disabled="epiSearchDis || isLoading">
               Download Table</v-btn>
           </v-flex>
-          <v-flex sm2 align-self-center></v-flex>
+          <v-flex sm2 align-self-center>
+            <v-layout justify-center>
+            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="this.result === null || this.result === undefined || this.result.length === 0"
+                              @click="openDialogVirusViz('all')">
+                        <v-img style="margin-right: 5px; min-width: 15px;"
+                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                        VirusViz All Population
+                      </v-btn>
+            </v-layout>
+          </v-flex>
           <v-flex sm3 align-self-center>
             <v-layout justify-end>
               <v-dialog width="500" v-model="dialogOrder" persistent>
@@ -336,6 +346,24 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
+    retrieveAllEpitopes(){
+      let res = this.result;
+      let i = 0;
+      let all_epi = [];
+      while(i < res.length){
+        let single_epitope_info = {};
+        let epi = res[i];
+
+        single_epitope_info['link'] = epi['epitope_iri'];
+        single_epitope_info['protein'] = epi['product'];
+        single_epitope_info['position'] = epi['position_range_to_show'];
+        single_epitope_info['id'] =epi['iedb_epitope_id'];
+
+        all_epi.push(single_epitope_info);
+        i++;
+      }
+      return all_epi;
+    },
     openDialogVirusViz(epitope_id, num_seq, all_pop = false){
       this.dialogVirusviz = true;
       this.sendToDialogVirusViz.epitope_id = epitope_id;
@@ -359,10 +387,16 @@ export default {
 
           let epitope_and_aminoacid_conditions = JSON.parse(JSON.stringify(this.epiQuerySel));
           epitope_and_aminoacid_conditions[this.epitopeId] = epitope_id;
-          if(all_pop){
-            to_send['epitope_without_variants'] = epitope_and_aminoacid_conditions;
-          }else {
-            to_send['epitope'] = epitope_and_aminoacid_conditions;
+
+          if(epitope_id === 'all'){
+            to_send['epitope_without_variants_all_population'] = JSON.parse(JSON.stringify(this.retrieveAllEpitopes()));
+          }
+          else {
+            if (all_pop) {
+              to_send['epitope_without_variants'] = epitope_and_aminoacid_conditions;
+            } else {
+              to_send['epitope'] = epitope_and_aminoacid_conditions;
+            }
           }
 
 
@@ -374,6 +408,7 @@ export default {
                 console.log("res: ", res)
                 let appUrl = window.location.origin + window.location.pathname
                 let virusVizPollUrl = appUrl;
+                virusVizPollUrl = virusVizPollUrl.replaceAll("/epitope","");
                 virusVizPollUrl = virusVizPollUrl.replace(/\/+$/,'')
                 virusVizPollUrl += "/api/poll/";
                 virusVizPollUrl += res.result;

@@ -365,6 +365,9 @@ export default new Vuex.Store({
         addNewEpitopeToList: (state, new_epitope) => {
             state.epitopeAdded.push(new_epitope);
         },
+        refreshEpitopeInList: (state, new_epitope) => {
+            state.epitopeAdded.splice(new_epitope.index, 0, new_epitope.epitope);
+        },
         removeNewEpitopeFromList: (state, index) => {
             state.epitopeAdded.splice(index, 1);
         },
