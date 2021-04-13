@@ -50,7 +50,7 @@
             <v-layout justify-center>
             <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
                              :disabled="this.result === null || this.result === undefined || this.result.length === 0"
-                              @click="openDialogVirusViz('all')">
+                              @click="openDialogVirusViz('all', countSeq2)">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
                         VirusViz All Population
