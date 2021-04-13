@@ -419,6 +419,7 @@ export default {
       refreshingIndex: null,
       countPopulationRefreshed: null,
       finish_count_population_refreshed: true,
+      isGisaid: false,
     }
   },
   computed: {
@@ -661,7 +662,7 @@ export default {
            val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
            val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
 
-           if(/virusurf_gisaid/.test(window.location.href)){
+           if(/gisaid/.test(window.location.href)){
              val['creation_database'] = "GISAID";
              val['refresh_database'] = "GISAID";
            }
@@ -710,7 +711,14 @@ export default {
           this.pageEpitopeList = Math.max(this.pageEpitopeList - 1, 0);
         }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
-        localStorage.setItem('epitopeArr', epitopeArr);
+        let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
      },
      deleteAllEpitopes(){
        this.pageEpitopeList = 0;
@@ -718,7 +726,14 @@ export default {
        let arr = [];
        this.resetNewEpitopeFromLocalStorage(arr);
        let epitopeArr = (JSON.stringify(this.epitopeAdded));
-       localStorage.setItem('epitopeArr', epitopeArr);
+       let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
      },
      deleteAminoConditions(index){
        this.removeEpitopeAminoacidConditionsArrayUserNew(index);
@@ -962,7 +977,7 @@ export default {
       this.refreshingIndex = epitope_index;
      let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
      epitope['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
-     if(/virusurf_gisaid/.test(window.location.href)){
+     if(/gisaid/.test(window.location.href)){
        epitope['refresh_database'] = "GISAID";
      }
      else{
@@ -975,8 +990,14 @@ export default {
     }
    },
   created() {
+      if(/gisaid/.test(window.location.href)){
+        this.isGisaid = true;
+      }
+      else{
+        this.isGisaid = false;
+      }
       //if(this.countSeq2 === null || this.countSeq2 === undefined) {
-        this.loadCountSeq2();
+      this.loadCountSeq2();
       //}
       if(this.compound_query['gcm'].taxon_name) {
         this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
@@ -1066,7 +1087,14 @@ export default {
           this.setUserEpitopeSelected(null);
         }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
-        localStorage.setItem('epitopeArr', epitopeArr);
+        let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
         this.countPopulationRefreshed = null;
         this.epitopeToAdd = null;
@@ -1088,7 +1116,14 @@ export default {
           this.setUserEpitopeSelected(null);
         }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
-        localStorage.setItem('epitopeArr', epitopeArr);
+        let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
         this.countPopulationRefreshed = null;
         this.epitopeToAdd = null;
@@ -1109,7 +1144,14 @@ export default {
           this.setUserEpitopeSelected(null);
         }
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
-        localStorage.setItem('epitopeArr', epitopeArr);
+        let storage_name = 'epitopeArr';
+        if(this.isGisaid){
+          storage_name = storage_name + '_' + 'GISAID'
+        }
+        else{
+          storage_name = storage_name + '_' + 'GenBank'
+        }
+        localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
         this.countPopulationRefreshed = null;
         this.epitopeToAdd = null;
@@ -1127,28 +1169,19 @@ export default {
     },
   },
   mounted() {
-    if(localStorage.getItem('epitopeArr')) {
+    let storage_name = 'epitopeArr';
+    if(this.isGisaid){
+      storage_name = storage_name + '_' + 'GISAID'
+    }
+    else{
+      storage_name = storage_name + '_' + 'GenBank'
+    }
+    if(localStorage.getItem(storage_name)) {
       try {
-        let epitopeArr = JSON.parse(localStorage.getItem('epitopeArr'));
-        if(epitopeArr) {
-          let len = epitopeArr.length;
-          let i = 0;
-          while(i<len){
-            if((/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GenBank')
-                ||
-              (!/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GISAID')){
-              epitopeArr[i]['num_var'] = '-';
-              epitopeArr[i]['num_seq'] = '-';
-              epitopeArr[i]['mutated_freq'] = '-';
-              epitopeArr[i]['mutated_seq_ratio'] = '-';
-              epitopeArr[i]['total_num_of_seq_metadata'] = '-';
-            }
-            i++;
-          }
-        }
+        let epitopeArr = JSON.parse(localStorage.getItem(storage_name));
         this.resetNewEpitopeFromLocalStorage(epitopeArr);
       } catch (e) {
-        localStorage.removeItem('epitopeArr');
+        localStorage.removeItem(storage_name);
       }
     }
   }

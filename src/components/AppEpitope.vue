@@ -271,6 +271,7 @@
                 finish_count_seq: false,
                 finish_count_var: false,
                 precision_float_table: 5,
+                isGisaid: false,
                 queryItems: [
                     {
                         text: 'Example Epitope',
@@ -432,6 +433,12 @@
             }
         },
         created() {
+            if(/gisaid/.test(window.location.href)){
+              this.isGisaid = true;
+            }
+            else{
+              this.isGisaid = false;
+            }
             document.title = 'EpiSurf'
             this.setQueryStartEpi();
             this.setTrueIsEpitopeSurf();
@@ -651,7 +658,7 @@
              val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
              val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
 
-             if(/virusurf_gisaid/.test(window.location.href)){
+             if(/gisaid/.test(window.location.href)){
                val['creation_database'] = "GISAID";
                val['refresh_database'] = "GISAID";
              }
@@ -815,7 +822,14 @@
                   this.addFrequencies();
                   this.addNewEpitopeToList(this.epitopeToAdd);
                   let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                  localStorage.setItem('epitopeArr', epitopeArr);
+                  let storage_name = 'epitopeArr';
+                  if(this.isGisaid){
+                    storage_name = storage_name + '_' + 'GISAID'
+                  }
+                  else{
+                    storage_name = storage_name + '_' + 'GenBank'
+                  }
+                  localStorage.setItem(storage_name, epitopeArr);
                   this.setFalseNewEpitopeLoading();
                   this.epitopeToAdd = null;
                 }
@@ -826,7 +840,14 @@
                 this.addFrequencies();
                 this.addNewEpitopeToList(this.epitopeToAdd);
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                localStorage.setItem('epitopeArr', epitopeArr);
+                let storage_name = 'epitopeArr';
+                if(this.isGisaid){
+                  storage_name = storage_name + '_' + 'GISAID'
+                }
+                else{
+                  storage_name = storage_name + '_' + 'GenBank'
+                }
+                localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();
                 this.epitopeToAdd = null;
               }
@@ -837,7 +858,14 @@
                 this.addFrequencies();
                 this.addNewEpitopeToList(this.epitopeToAdd);
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
-                localStorage.setItem('epitopeArr', epitopeArr);
+                let storage_name = 'epitopeArr';
+                if(this.isGisaid){
+                  storage_name = storage_name + '_' + 'GISAID'
+                }
+                else{
+                  storage_name = storage_name + '_' + 'GenBank'
+                }
+                localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();
                 this.epitopeToAdd = null;
                 }
