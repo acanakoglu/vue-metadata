@@ -28,18 +28,8 @@
             <v-btn flat href="http://geco.deib.polimi.it/genosurf/" target="_blank">
                 <span class="mr-2">GenoSurf</span>
             </v-btn>
-            <v-btn flat href="/virusurf/repo_static/datacuration.html" target="_blank">
-                <span class="mr-2">Data curation</span>
-            </v-btn>
-            <v-btn flat href="https://github.com/DEIB-GECO/vue-metadata/wiki" target="_blank">
+            <v-btn flat href="https://github.com/DEIB-GECO/EpiSurf/wiki" target="_blank">
                 <span class="mr-2">Wiki</span>
-            </v-btn>
-            <v-btn flat href="https://www.youtube.com/watch?v=ljo4WWZ1rU0&list=PLfWxoOMC6swIkqfLc3G4H-hW_pdmI1jFF"
-                   target="_blank">
-                <span class="mr-2">Video</span>
-            </v-btn>
-            <v-btn flat href="http://geco.deib.polimi.it/surveys/index.php/2/" target="_blank">
-                <span class="mr-2">Survey</span>
             </v-btn>
             <!--          <v-btn flat href="/virusurf/repo_static/acknowledgements.html" target="_blank">
                           <span class="mr-2">Acknowledgements</span>
@@ -47,7 +37,7 @@
                       <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                           <span class="mr-2">Contacts</span>
                       </v-btn>-->
-            <v-btn flat href="/virusurf/repo_static/about.html" target="_blank">
+            <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                 <span class="mr-2">About</span>
             </v-btn>
         </v-toolbar>

@@ -1130,6 +1130,22 @@ export default {
     if(localStorage.getItem('epitopeArr')) {
       try {
         let epitopeArr = JSON.parse(localStorage.getItem('epitopeArr'));
+        if(epitopeArr) {
+          let len = epitopeArr.length;
+          let i = 0;
+          while(i<len){
+            if((/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GenBank')
+                ||
+              (!/virusurf_gisaid/.test(window.location.href) && epitopeArr[i]['refresh_database'] === 'GISAID')){
+              epitopeArr[i]['num_var'] = '-';
+              epitopeArr[i]['num_seq'] = '-';
+              epitopeArr[i]['mutated_freq'] = '-';
+              epitopeArr[i]['mutated_seq_ratio'] = '-';
+              epitopeArr[i]['total_num_of_seq_metadata'] = '-';
+            }
+            i++;
+          }
+        }
         this.resetNewEpitopeFromLocalStorage(epitopeArr);
       } catch (e) {
         localStorage.removeItem('epitopeArr');
