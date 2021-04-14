@@ -30,9 +30,6 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
-    'compound_query.taxon_name': function(){
-      this.loadData();
-    },
   },
   computed: {
     ...mapState([
