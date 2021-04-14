@@ -98,7 +98,10 @@
                     :key="header.value" v-show="header.show">
 
                     <span v-if="header.value === 'num_seq'">
+                      <span v-if="props.item[header.value] !== '-'">
                         <a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                      </span>
+                      <span v-else>{{props.item[header.value]}}</span>
                     </span>
 
                   <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
@@ -631,9 +634,6 @@ export default {
     }
   },
   watch: {
-    compound_query() {
-      this.loadEveything();
-    },
     countSeq2(){
       if(this.countSeq2 !== null) {
         this.loadTable();
