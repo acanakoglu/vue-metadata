@@ -241,8 +241,8 @@
                </v-flex>
                <v-flex sm4 class="text-xs-center">
                  <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
-                 <v-btn :disabled="newEpitopeLoading" @click="refreshCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
-                 <v-btn @click="reloadCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
+                 <v-btn :disabled="newEpitopeLoading || epiSearchDis || !allPossibleProteinAnnotations.includes(epitope['Protein'].toLowerCase())" @click="refreshCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
+                 <v-btn :disabled="epiSearchDis || !allPossibleProteinAnnotations.includes(epitope['Protein'].toLowerCase())" @click="reloadCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
                  <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
                </v-flex>
              </v-layout>
@@ -420,6 +420,8 @@ export default {
       countPopulationRefreshed: null,
       finish_count_population_refreshed: true,
       isGisaid: false,
+      allPossibleProteinAnnotations: [],
+      previousVirus: '',
     }
   },
   computed: {
@@ -990,6 +992,7 @@ export default {
     }
    },
   created() {
+
       if(/gisaid/.test(window.location.href)){
         this.isGisaid = true;
       }
@@ -1019,6 +1022,22 @@ export default {
           .then((res) => {
               this.newEpitopeFields = res.fields;
           });
+
+      let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+      let protein_url = `epitope/allProtein`;
+      axios.post(protein_url, to_send)
+        .then((res) => {
+            return res.data;
+        })
+        .then((res) => {
+            this.allPossibleProteinAnnotations = res;
+            this.allPossibleProteinAnnotations  = this.allPossibleProteinAnnotations .filter(function (el) {
+              return el != null;
+            });
+            this.allPossibleProteinAnnotations = this.allPossibleProteinAnnotations .map(protein => protein.toLowerCase());
+        });
+
   },
   watch:{
     epiSearchDis(){
@@ -1063,6 +1082,29 @@ export default {
           list: this.compound_query['gcm'].host_taxon_name[0]
         })
       }
+
+      if(!this.epiSearchDis){
+        let virus = this.compound_query.gcm.taxon_name;
+        if(this.previousVirus !== virus) {
+          let to_send = JSON.parse(JSON.stringify(this.compound_query));
+
+          let protein_url = `epitope/allProtein`;
+          axios.post(protein_url, to_send)
+              .then((res) => {
+                return res.data;
+              })
+              .then((res) => {
+                this.allPossibleProteinAnnotations = res;
+                this.allPossibleProteinAnnotations  = this.allPossibleProteinAnnotations .filter(function (el) {
+                  return el != null;
+                });
+                this.allPossibleProteinAnnotations = this.allPossibleProteinAnnotations .map(protein => protein.toLowerCase());
+              });
+        }
+        this.previousVirus = virus;
+      }
+
+
     },
     epitopeAdded(){
       this.setCountEpiCustom(this.epitopeAdded.length);
