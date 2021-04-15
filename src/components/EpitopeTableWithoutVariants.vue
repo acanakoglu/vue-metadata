@@ -705,18 +705,22 @@ export default {
               fields2.push(this.epitopeId);
         }
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields.push(el.text);
         });
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields2.push(el.value);
         });
         var csv = json.map(function (row) {
             return fields2.map(function (fieldName) {
                 let string_val ;
-                if(fieldName !== 'position_range') {
+                if(fieldName !== 'position_range' && fieldName !== 'external_link') {
                   string_val = String(row[fieldName]);
+                }
+                else if (fieldName === 'external_link'){
+                  string_val = String(row['external_link_to_show']);
+                  string_val = string_val.replaceAll(",", ",  ");
                 }
                 else {
                   string_val = String(row['position_range_to_show']);

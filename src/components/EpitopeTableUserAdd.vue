@@ -626,27 +626,46 @@ export default {
         var json = input;
         var fields = [];
         var fields2 = [];
+        if(!selected_headers.some(item => item.value === "epitope_name")){
+              fields.push('Epitope name');
+              fields2.push(this.epitope_name);
+        }
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields.push(el.text);
         });
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields2.push(el.value);
         });
         var csv = json.map(function (row) {
             return fields2.map(function (fieldName) {
                 let string_val ;
-                if(fieldName !== 'position_range') {
+                if(fieldName !== 'position_range' && fieldName !== 'external_link'
+                && fieldName !== 'metadata' && fieldName !== 'aminoacid_condition') {
                   string_val = String(row[fieldName]);
+                }
+                else if (fieldName === 'metadata') {
+                   string_val = JSON.stringify(this.createMetadataInfos(row));
+                }
+                else if (fieldName === 'aminoacid_condition') {
+                   string_val = JSON.stringify(this.createAminoAcidInfos(row));
+                }
+                else if (fieldName === 'external_link'){
+                  string_val = String(row['external_link_to_show']);
                 }
                 else {
                   string_val = String(row['position_range_to_show']);
                 }
                 string_val = string_val.replaceAll("\n", " ");
-                return JSON.stringify(string_val);
-            }).join(',')
-        });
+                string_val = JSON.stringify(string_val);
+                if (fieldName === 'metadata' || fieldName === 'aminoacid_condition'){
+                   string_val = string_val.replaceAll(/\\/g, "");
+                   string_val = string_val.replaceAll(",", "-");
+                }
+                return string_val
+            }.bind(this)).join(',')
+        }.bind(this));
         csv.unshift(fields.join(','));
 
         return csv.join('\r\n')
