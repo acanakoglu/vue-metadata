@@ -82,6 +82,35 @@
             </v-layout>
           </v-flex>
       </v-layout>
+      <v-layout align-center justify-end>
+          <v-dialog width="500">
+              <v-btn
+                    slot="activator"
+                    color="rgb(122, 139, 157)"
+                    small
+                    class="white--text">
+                Statistics Info
+                <v-icon class="info-icon" color="white" style="margin-left: 10px">info</v-icon>
+              </v-btn>
+              <v-card>
+                  <v-card-title
+                          class="headline grey lighten-2"
+                          primary-title
+                  >
+                      Statistics:
+                  </v-card-title>
+                  <v-card-text>
+                      <b>- NUM VAR:</b>
+                      <br><br>
+                      <b>- NUM SEQ:</b>
+                      <br><br>
+                      <b>- MUTATED FREQ:</b>
+                      <br><br>
+                      <b>- MUTATED SEQ RATIO:</b>
+                  </v-card-text>
+              </v-card>
+          </v-dialog>
+      </v-layout>
     </v-container>
 
 
@@ -95,7 +124,7 @@
         >
             <template slot="items" slot-scope="props">
                 <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
-                    :key="header.value" v-show="header.show">
+                    :key="header.value" v-show="header.show" :title=header.text>
 
                     <span v-if="header.value === 'num_seq'">
                       <span v-if="props.item[header.value] !== '-'">
@@ -597,27 +626,46 @@ export default {
         var json = input;
         var fields = [];
         var fields2 = [];
+        if(!selected_headers.some(item => item.value === "epitope_name")){
+              fields.push('Epitope name');
+              fields2.push(this.epitope_name);
+        }
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields.push(el.text);
         });
         selected_headers.forEach(function (el) {
-          if(el.value !== 'virusViz_button')
+          if(el.value !== 'virusViz_button' && el.value !== 'virusViz_button_all_population')
                 fields2.push(el.value);
         });
         var csv = json.map(function (row) {
             return fields2.map(function (fieldName) {
                 let string_val ;
-                if(fieldName !== 'position_range') {
+                if(fieldName !== 'position_range' && fieldName !== 'external_link'
+                && fieldName !== 'metadata' && fieldName !== 'aminoacid_condition') {
                   string_val = String(row[fieldName]);
+                }
+                else if (fieldName === 'metadata') {
+                   string_val = JSON.stringify(this.createMetadataInfos(row));
+                }
+                else if (fieldName === 'aminoacid_condition') {
+                   string_val = JSON.stringify(this.createAminoAcidInfos(row));
+                }
+                else if (fieldName === 'external_link'){
+                  string_val = String(row['external_link_to_show']);
                 }
                 else {
                   string_val = String(row['position_range_to_show']);
                 }
                 string_val = string_val.replaceAll("\n", " ");
-                return JSON.stringify(string_val);
-            }).join(',')
-        });
+                string_val = JSON.stringify(string_val);
+                if (fieldName === 'metadata' || fieldName === 'aminoacid_condition'){
+                   string_val = string_val.replaceAll(/\\/g, "");
+                   string_val = string_val.replaceAll(",", "-");
+                }
+                return string_val
+            }.bind(this)).join(',')
+        }.bind(this));
         csv.unshift(fields.join(','));
 
         return csv.join('\r\n')

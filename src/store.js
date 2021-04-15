@@ -209,7 +209,13 @@ export default new Vuex.Store({
             delete state.newSingleAminoAcidConditionUser[field];
         },
         resetQuery: (state) => {
-            state.query = {}
+            if(/gisaid/.test(window.location.href)) {
+                let taxon_name = state.query["taxon_name"];
+                state.query = {"taxon_name": taxon_name};
+            }
+            else{
+                state.query = {};
+            }
         },
         setEpiQuery: (state, query) => {
             state.epiQuerySel = Object.assign({}, query);

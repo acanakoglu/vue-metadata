@@ -217,6 +217,36 @@
           </v-flex>
         </v-layout>
 
+        <v-layout align-center justify-end style="margin-right: 53px">
+          <v-dialog width="500">
+              <v-btn
+                    slot="activator"
+                    color="rgb(122, 139, 157)"
+                    small
+                    class="white--text">
+                Buttons Info
+                <v-icon class="info-icon" color="white" style="margin-left: 10px">info</v-icon>
+              </v-btn>
+              <v-card>
+                  <v-card-title
+                          class="headline grey lighten-2"
+                          primary-title
+                  >
+                      Buttons functionalities:
+                  </v-card-title>
+                  <v-card-text>
+                      <b>- MORE INFO:</b>
+                      <br><br>
+                      <b>- REFRESH:</b>
+                      <br><br>
+                      <b>- RELOAD:</b>
+                      <br><br>
+                      <b>- DELETE:</b>
+                  </v-card-text>
+              </v-card>
+          </v-dialog>
+        </v-layout>
+
         <div v-for="(epitope, index) in epitopeAddedReview" v-if="index >= pageEpitopeList*numOfElemInPage && index < Math.min((pageEpitopeList+1)*numOfElemInPage, epitopeAddedReview.length)">
           <v-card style="background-color: #C0C0C0">
              <v-layout wrap justify-center align-center style="margin-top: 20px">

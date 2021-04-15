@@ -57,6 +57,7 @@ export default {
     ...mapMutations([]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected', 'setNewSingleEpitopeSelected']),
     loadData(){
+      if(!this.epiSearchDis) {
 
         if(this.my_interval_data !== null){
           stopPoll(this.my_interval_data);
@@ -93,31 +94,7 @@ export default {
             });
         })
 
-
-        /*const url = `field/${this.field}`;
-        this.isLoading = true;
-
-        axios.post(url, queryToRun)
-        .then((res) => {
-            return res.data
-        })
-        .then((res) => {
-          this.my_interval_data = poll(res.result,(res)=>{
-            this.my_interval_data = null;
-              let vals = res.values;
-              if (this.selected) {
-                let arraySelected = [this.selected];
-                  let zero_elements = arraySelected.filter(value => !res.values.map(v => v.value).includes(value))
-                      .sort().map(v => Object({
-                          value: v,
-                          count: 0
-                      }));
-                  vals = vals.concat(zero_elements);
-              }
-              this.results = vals;
-              this.isLoading = false;
-            });
-        })*/
+      }
     },
     rename(inp) {
         let value_in;
@@ -130,7 +107,7 @@ export default {
   },
   data(){
     return {
-      isLoading : true,
+      isLoading : false,
       results: [],
       disableTxtSel: false,
       disableTxtAmino: true,
