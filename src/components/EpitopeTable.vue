@@ -336,7 +336,7 @@ export default {
       epitopeId : 'iedb_epitope_id',
       isLoading : true,
       result: [],
-      requirement: 'A single Host and a single Virus are required',
+      requirement: 'A single Host is required',
       is_control : false,
       precision_float_table: 5,
       sortCheckbox: false,

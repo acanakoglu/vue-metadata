@@ -426,7 +426,7 @@ export default {
     MoreInfoEpitopeUser, PositionSelectorNewEpitope, ProteinSelectorNewEpitope, EpitopeTableUserAdd},
   data() {
     return {
-      requirement: 'A single Host and a single Virus are required',
+      requirement: 'A single Host is required',
       missingFields: false,
       newEpitopeFields: [],
       epitope_name: '',

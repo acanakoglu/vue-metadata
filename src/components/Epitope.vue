@@ -135,7 +135,7 @@ export default {
                       {text:'Position Range', field:'position_range', is_numerical: true , is_percentage: false, description: 'f'},
       ],*/
       epitopeFields: [],
-      requirement: 'A single Host and a single Virus are required',
+      requirement: 'A single Host is required',
       toEpitopeVariants: 2,
       toEpitopeWithoutVariants: 1,
       toCustom : 0,

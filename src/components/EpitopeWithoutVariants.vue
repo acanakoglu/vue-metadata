@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       epitopeFields: [],
-      requirement: 'A single Host and a single Virus are required',
+      requirement: 'A single Host is required',
     }
   },
   computed: {

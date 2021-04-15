@@ -346,7 +346,7 @@ export default {
       alertDialog: false,
       isLoading : true,
       result: [],
-      requirement: 'A single Host and a single Virus are required',
+      requirement: 'A single Host is required',
       is_control : false,
       sortCheckbox: false,
       headers: this.getHeaders(),
