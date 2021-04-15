@@ -40,7 +40,7 @@
                               @click="openDialogVirusViz('all')">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz All Population
+                        VirusViz All Epitope Population
                       </v-btn>
             </v-layout>
           </v-flex>
@@ -107,7 +107,7 @@
         >
             <template slot="items" slot-scope="props">
                 <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
-                    :key="header.value" v-show="header.show"  v-if="!epiSearchDis">
+                    :key="header.value" v-show="header.show"  v-if="!epiSearchDis"  :title=header.text>
 
                     <span v-if="header.value === 'num_seq'">
                         <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
@@ -118,6 +118,35 @@
                     <span v-else-if="header.value === 'epitope_iri'">
                         <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
                         <span v-else>N/D</span>
+                    </span>
+
+                    <span v-else-if="header.value === 'external_link'">
+                        <v-dialog width="500">
+                          <v-btn
+                                slot="activator"
+                                color="rgb(122, 139, 157)"
+                                small
+                                class="white--text">
+                            Reference link
+                            <span v-if="props.item[header.value] > 1">s</span>
+                            <span>&nbsp;({{props.item[header.value]}})</span>
+                           </v-btn>
+                          <v-card>
+                              <v-card-title
+                                      class="headline grey lighten-2"
+                                      primary-title
+                              >
+                                  Reference link
+                                <span v-if="props.item[header.value]> 1">s</span>
+                              </v-card-title>
+                              <v-card-text>
+                                <span v-for="link in props.item['external_link_to_show']">
+                                  <a :href="link" target="_blank">- {{link}}</a>
+                                  <br><br>
+                                </span>
+                              </v-card-text>
+                          </v-card>
+                      </v-dialog>
                     </span>
 
                     <span v-else-if="header.value === 'virusViz_button'">
@@ -429,6 +458,7 @@ export default {
       const predefinedHeaders = [
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
+          {text: 'Ref Page', value: 'external_link', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'virus_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -506,6 +536,22 @@ export default {
                         } else {
                           item[k] = "N/D";
                         }
+                      }
+                      else if (key === 'external_link'){
+                        let arr_sequence = item[k];
+                        let to_replace = [];
+                        let i = 0;
+                        while(i<arr_sequence.length){
+                          let single_arr = arr_sequence[i].split(",");
+                          to_replace.push.apply(to_replace, single_arr);
+                          i = i+1;
+                        }
+                        to_replace = to_replace.filter(function(elem, index, self) {
+                            return index === self.indexOf(elem);
+                        })
+                        to_replace = to_replace.sort();
+                        item['external_link_to_show'] = to_replace;
+                        item[k] = to_replace.length;
                       }
                       else if (key !== 'epi_fragment_all_information') {
                           if (item[k] != null) {

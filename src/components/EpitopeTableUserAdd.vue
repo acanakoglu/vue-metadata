@@ -82,6 +82,35 @@
             </v-layout>
           </v-flex>
       </v-layout>
+      <v-layout align-center justify-end>
+          <v-dialog width="500">
+              <v-btn
+                    slot="activator"
+                    color="rgb(122, 139, 157)"
+                    small
+                    class="white--text">
+                Statistics Info
+                <v-icon class="info-icon" color="white" style="margin-left: 10px">info</v-icon>
+              </v-btn>
+              <v-card>
+                  <v-card-title
+                          class="headline grey lighten-2"
+                          primary-title
+                  >
+                      Statistics:
+                  </v-card-title>
+                  <v-card-text>
+                      <b>- NUM VAR:</b>
+                      <br><br>
+                      <b>- NUM SEQ:</b>
+                      <br><br>
+                      <b>- MUTATED FREQ:</b>
+                      <br><br>
+                      <b>- MUTATED SEQ RATIO:</b>
+                  </v-card-text>
+              </v-card>
+          </v-dialog>
+      </v-layout>
     </v-container>
 
 
@@ -95,7 +124,7 @@
         >
             <template slot="items" slot-scope="props">
                 <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
-                    :key="header.value" v-show="header.show">
+                    :key="header.value" v-show="header.show" :title=header.text>
 
                     <span v-if="header.value === 'num_seq'">
                       <span v-if="props.item[header.value] !== '-'">
