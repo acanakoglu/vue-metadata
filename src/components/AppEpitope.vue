@@ -275,7 +275,7 @@
 <!--            </v-btn>-->
 <!--        </v-snackbar>-->
 
-        <v-content>
+        <v-content style="padding-top: 10px !important;">
             <Epitope></Epitope>
         </v-content>
     </div>

@@ -1,6 +1,10 @@
 <template>
   <v-card class="EpitopeCard">
 
+    <v-layout wrap align-center justify-center>
+        <div class="separator"></div>
+      </v-layout>
+
       <v-tabs color="#ebebeb" v-model="selectedTab">
         <v-tabs-slider color="rgb(201, 53, 53)"  style="height: 5px"></v-tabs-slider>
           <v-tab>
@@ -101,6 +105,27 @@
           </v-tab-item>
       </v-tabs>
 
+      <v-dialog
+              v-model="dialogModeEpitopeWithVariants"
+              width="500"
+          >
+          <v-card>
+              <v-card-title
+                      class="headline"
+                      style="background-color:rgb(201, 53, 53) ; color: white">
+                  Warning
+              </v-card-title>
+              <v-card-text>
+                We discourage using the mode "USE IEDB EPITOPES WITH VARIANTS COUNT"
+                with very big sets of sequences.
+                For optimal functioning of EpiSurf, we suggest selecting on the order of
+                thousands of sequences (if the set is bigger, expect considerable slowing down!)
+                In addition to host species and virus species,
+                please use other metadata filters to restrict your choice.
+              </v-card-text>
+          </v-card>
+      </v-dialog>
+
   </v-card>
 </template>
 
@@ -141,6 +166,7 @@ export default {
       toCustom : 0,
       selectedTab: this.setSelectedTab(),
       epiQueryUsedTab: 0,
+      dialogModeEpitopeWithVariants: false,
     }
   },
   computed: {
@@ -284,6 +310,7 @@ export default {
         this.setCountEpiToShow(this.countEpiCustom);
       }
       else if(this.selectedTab === this.toEpitopeVariants){
+        this.dialogModeEpitopeWithVariants = true;
         if(this.epiQueryUsedTab === this.toEpitopeWithoutVariants && !this.fromPredefinedQuery){
             this.resetAminoacidConditionQuery();
             this.setFalseShowAminoacidVariantEpi();
@@ -398,6 +425,14 @@ export default {
     font-size: 1.3em;
     font-weight: bold;
     padding: 12px;
+  }
+
+  .separator{
+    width: 98%;
+    height: 8px;
+    background-color: #404040;
+    border-radius: 100%;
+    margin-bottom: 40px;
   }
 
 </style>
