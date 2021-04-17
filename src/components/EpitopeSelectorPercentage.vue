@@ -274,7 +274,7 @@ export default {
   },
   watch:{
     compound_query() {
-      this.loadExtremes();
+      //this.loadExtremes();
     },
     aminoacidConditions(){
       if(Object.keys(this.aminoacidConditions).length > 0){

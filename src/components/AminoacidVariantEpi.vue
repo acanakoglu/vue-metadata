@@ -60,6 +60,18 @@
       <v-btn @click="applyAminoacidConditions()" class="white--text" color="#00008B">APPLY</v-btn>
     </v-layout>
 
+    <v-layout wrap justify-center align-center style="margin-top: 20px">
+      <span v-if="appliedActuaQuery === true">
+        Actual Query Applied
+      </span>
+      <v-icon v-if="appliedActuaQuery === true" style="margin-left: 5px" medium color="green" right>check_circle</v-icon>
+      <span v-if="appliedActuaQuery === false">
+        Actual Query Applied To Apply
+      </span>
+      <v-icon v-if="appliedActuaQuery === false" style="background-color: red; border-radius: 100%; margin-left: 5px" color="white" right>close</v-icon>
+
+    </v-layout>
+
     <AnalyzeSubstitutionPanel></AnalyzeSubstitutionPanel>
 
   </v-container>
@@ -77,6 +89,7 @@ export default {
   components: {AnalyzeSubstitutionPanel, EpitopeSelectorNum, EpitopeSelectorText},
   data() {
     return {
+      appliedActuaQuery: true,
     }
   },
   computed: {
@@ -144,6 +157,7 @@ export default {
       this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
     },
     applyAminoacidConditions(){
+      this.appliedActuaQuery = true;
       Object.entries(this.aminoacidConditions).forEach(item => {
           this.setEpiDropDownSelected({field: item[0], list:item[1]});
       });
@@ -188,6 +202,9 @@ export default {
   watch: {
     compound_query(){
       //this.closeAminoEpiMenu();
+    },
+    aminoacidConditions(){
+      this.appliedActuaQuery = false;
     }
   },
   created() {
