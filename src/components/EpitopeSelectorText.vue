@@ -31,7 +31,7 @@ export default {
   },
   watch: {
     compound_query_epi() {
-      this.loadData();
+      //this.loadData();
     },
     compound_query(){
       if(this.epiSearchDis){
@@ -40,10 +40,10 @@ export default {
     },
     /*compound_query() {
         this.loadData();
-    },
+    },*/
     epiQuerySel() {
       this.loadData();
-    },*/
+    },
     aminoacidConditions(){
       if(this.epitopeAminoacidFields.some(item => item.field === this.field)){
         //this.disableTxtAmino = this.getDisableTxtAmino();       //DISATTIVA ORIGINAL AND ALTERNATIVE AMINO

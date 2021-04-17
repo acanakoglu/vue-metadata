@@ -22,294 +22,368 @@
     </v-dialog>
 
     <v-container fluid grid-list-xs>
-      <v-layout justify-space-between row>
-          <v-flex sm3 align-self-center>
+      <v-layout justify-center row>
             <v-btn @click="openShowAminoacidVariantEpi()"
                        color="rgb(201, 53, 53) "
                    style="color:white;"
                       :disabled="epiSearchDis || showAminoacidVariantEpi">
               Add condition on amino acids</v-btn>
-          </v-flex>
-          <v-flex sm2 align-self-center></v-flex>
-          <v-flex sm3 align-self-center></v-flex>
       </v-layout>
       <AminoacidVariantEpi v-if="showAminoacidVariantEpi"></AminoacidVariantEpi>
     </v-container>
 
-    <v-container fluid grid-list-xs>
-      <v-layout justify-space-between row>
-          <v-flex sm3 align-self-center>
-            <v-btn @click="downloadTable()"
-                   class="white--text"
-                       small
-                   color="rgb(122, 139, 157)"
-                      :disabled="epiSearchDis || isLoading">
-              Download Table</v-btn>
-          </v-flex>
-          <v-flex sm2 align-self-center>
-            <v-layout justify-center>
-            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="this.result === null || this.result === undefined || this.result.length === 0"
-                              @click="openDialogVirusViz('all', countSeq2)">
-                        <v-img style="margin-right: 5px; min-width: 15px;"
-                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz All Epitope Population
-                      </v-btn>
-            </v-layout>
-          </v-flex>
-          <v-flex sm3 align-self-center>
-            <v-layout justify-end>
-              <v-dialog width="500" v-model="dialogOrder" persistent>
-                  <v-card>
-                      <v-card-title
-                              class="headline"
-                              style="background-color:rgb(201, 53, 53) ; color: white"
-                      >
-                          Field order
-                          <v-spacer></v-spacer>
-                          <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
-                                      :label="sortCheckBoxLabel" color="white"></v-checkbox>
-                          <v-btn
-                                  color="white"
-                                  flat
-                                  @click="dialogOrder = false"
-                          >
-                              Close
-                          </v-btn>
-                          <v-btn color="white"
-                                 flat
-                                 @click="resetHeadersOrder()"
-                          >
-                              Reset
-                          </v-btn>
-                      </v-card-title>
-                      <v-card-text>
-                          <p>Drag and drop field names in the desired position.
-                              Check or uncheck fields to re-define table content.
-                              Press APPLY to go back to the result window.</p>
-                          <draggable v-model="headers_can_be_shown" @start="drag=true" @end="drag=false">
-                              <v-list v-for="element in headers_can_be_shown" :key="element.value">
-                                  <v-checkbox :label=element.text v-model=element.show color="rgb(201, 53, 53)"></v-checkbox>
-                              </v-list>
-                          </draggable>
-                      </v-card-text>
-                      <v-divider></v-divider>
-                  </v-card>
-                  <v-btn dark
-                         slot="activator"
-                         small
-                         color="rgb(122, 139, 157)"
-                  >
-                      Select/Sort fields
-                  </v-btn>
-              </v-dialog>
-            </v-layout>
-          </v-flex>
-      </v-layout>
-      <v-layout align-center justify-end>
-          <v-dialog width="500">
-              <v-btn
-                    slot="activator"
-                    color="rgb(122, 139, 157)"
-                    small
-                    class="white--text">
-                Statistics Info
-                <v-icon class="info-icon" color="white" style="margin-left: 10px">info</v-icon>
-              </v-btn>
-              <v-card>
-                  <v-card-title
-                          class="headline grey lighten-2"
-                          primary-title
-                  >
-                      Statistics:
-                  </v-card-title>
-                  <v-card-text>
-                      <b>- NUM VAR:</b>
-                      <br><br>
-                      <b>- NUM SEQ:</b>
-                      <br><br>
-                      <b>- MUTATED FREQ:</b>
-                      <br><br>
-                      <b>- MUTATED SEQ RATIO:</b>
-                  </v-card-text>
-              </v-card>
-          </v-dialog>
-      </v-layout>
-    </v-container>
+     <v-container fluid grid-list-xs>
+        <v-layout justify-center>
+          <v-dialog
+              v-model="dialogApplyEpitopeTable"
+              width="500"
+              persistent>
+            <v-card>
+              <v-card-title
+                  class="headline"
+                  style="background-color:rgb(201, 53, 53) ; color: white">
+                Update Epitope Table
+              </v-card-title>
 
+              <v-card-text>
+                You have selected
+                <span v-if="countSeq2 === null">
+                  ...
+                </span>
+                <span v-else>
+                  {{countSeq2}}
+                </span>
+                sequences and
+                <span v-if="countEpi === null">
+                  ...
+                </span>
+                <span v-else>
+                  {{countEpi}}
+                </span>
+                epitopes.
+                Beware that our system is optimized for checking the selected sequences on top of  a limited number of
+                epitopes (e.g., thousands of sequences over tens of epitopes)
+              </v-card-text>
 
-    <v-card>
-      <h3 style="color:red" v-if="epiSearchDis">{{requirement}}</h3>
-      <v-layout wrap align-center >
-        <v-data-table
-                :headers="selected_headers"
-                :items="result"
-                :loading="isLoading"
-                class="data-table"
-        >
-      <!--:pagination.sync="pagination"
-                :rows-per-page-items="pagination.rowsPerPageItems"
-                :total-items="pagination.totalItems" -->
-            <template slot="items" slot-scope="props">
-                <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
-                    :key="header.value" v-show="header.show"  v-if="!epiSearchDis"  :title=header.text>
+              <v-divider></v-divider>
 
-                    <span v-if="header.value === 'num_seq'">
-                      <span>
-                        <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
-                      </span>
-                      <!--<span v-else style="color: royalblue">{{props.item[header.value]}}</span>-->
-                    </span>
-
-                    <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
-
-                    <span v-else-if="header.value === 'epitope_iri'">
-                        <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
-                        <span v-else>N/D</span>
-                    </span>
-
-                    <span v-else-if="header.value === 'external_link'">
-                        <v-dialog width="500">
-                          <v-btn
-                                slot="activator"
-                                color="rgb(122, 139, 157)"
-                                small
-                                class="white--text">
-                            Reference link
-                            <span v-if="props.item[header.value] > 1">s</span>
-                            <span>&nbsp;({{props.item[header.value]}})</span>
-                           </v-btn>
-                          <v-card>
-                              <v-card-title
-                                      class="headline grey lighten-2"
-                                      primary-title
-                              >
-                                  Reference link
-                                <span v-if="props.item[header.value] > 1">s</span>
-                              </v-card-title>
-                              <v-card-text>
-                                <span v-for="link in props.item['external_link_to_show']">
-                                  <a :href="link" target="_blank">- {{link}}</a>
-                                  <br><br>
-                                </span>
-                              </v-card-text>
-                          </v-card>
-                      </v-dialog>
-                    </span>
-
-                    <span v-else-if="header.value === 'virusViz_button'">
-
-                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="props.item['num_seq'] === 0"
-                              @click="openDialogVirusViz(props.item[epitopeId], props.item['num_seq'])">
-                        <v-img style="margin-right: 5px; min-width: 15px;"
-                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz
-                      </v-btn>
-                      <!--
-                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
-                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                            VirusViz
-                        </v-btn>
-                        -->
-                    </span>
-
-                    <span v-else-if="header.value === 'virusViz_button_all_population'">
-
-                      <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                              @click="openDialogVirusViz(props.item[epitopeId], countSeq2, true)">
-                        <v-img style="margin-right: 5px; min-width: 15px;"
-                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz
-                      </v-btn>
-                      <!--
-                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                                 @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
-                            <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                            VirusViz
-                        </v-btn>
-                        -->
-                    </span>
-
-                    <span v-else>{{props.item[header.value]}}</span>
-
-                </td>
-            </template>
-            <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
-                  Sorry, nothing to display here :(
-              </v-alert>
-              <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
-                  Loading
-              </v-alert>
-        </v-data-table>
-
-        <v-dialog
-          v-model="dialogVirusviz"
-          width="500"
-          persistent>
-        <v-card>
-          <v-card-title
-              class="headline"
-              style="background-color:rgb(201, 53, 53) ; color: white">
-            Open in VirusViz
-          </v-card-title>
-          <v-progress-linear height="2" color = "rgb(201, 53, 53)" ></v-progress-linear>
-
-          <v-card-text>
-            <p>
-              You selected
-              <span v-if="sendToDialogVirusViz.num_seq">{{sendToDialogVirusViz.num_seq}}</span>
-              <span v-else> ... </span>
-              sequence<span v-if="sendToDialogVirusViz.num_seq > 1">s</span>,
-              they must be formatted and then opened by the VirusViz
-              tool.
-              This may take time, and your browser could crash if the file is too large.
-            <p>
-              By checking “FULL” you will open full FASTA sequences and nucleotide / amino acid variants, this is
-              usually well supported with 5K sequences or less.
-            </p>
-            <p>
-              By checking “AA Mutations only” you will only open amino acid variants, this option requires less
-              memory and is usually well supported with 30K sequences or less.
-            </p>
-
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, false, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
-              <v-img style="margin-right: 5px; min-width: 15px;"
-                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-              VirusViz (Full)
-            </v-btn>
-            <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                   @click="virusVizClicked(sendToDialogVirusViz.epitope_id, true, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
-              <v-img style="margin-right: 5px; min-width: 15px;"
-                     src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-              VirusViz (AA mutations only)
-            </v-btn>
-            <v-spacer></v-spacer>
+              <v-card-actions>
+                <v-container fluid grid-list-xs>
+                  <v-layout justify-center>
+                    <v-btn
+                      class="white--text"
+                      color="#00008B"
+                      text
+                       @click="showTheTable(); dialogApplyEpitopeTable = false"
+                    >
+                        Apply anyways
+                    </v-btn>
+                    <v-btn
+                      color="rgb(122, 139, 157)"
+                      style="color: white"
+                      text
+                      @click="dialogApplyEpitopeTable = false"
+                    >
+                        Add other condition
+                    </v-btn>
+                  </v-layout>
+                </v-container>
+              </v-card-actions>
+            </v-card>
             <v-btn
-                color="rgb(122, 139, 157)"
-                style="color: white"
-                text
-                @click="dialogVirusviz = false; virusviz_all_pop = false;"
+              class="white--text"
+             color="#00008B"
+             slot="activator"
             >
-              Close
+               Apply Epitope Search
             </v-btn>
+          </v-dialog>
+        </v-layout>
+     </v-container>
 
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
 
+    <div v-if="showTable === true">
+
+      <v-layout wrap align-center justify-center>
+        <div class="separator"></div>
       </v-layout>
 
-      <SequencesEpiTable></SequencesEpiTable>
+      <v-container fluid grid-list-xs>
+        <v-layout justify-space-between row>
+            <v-flex sm3 align-self-center>
+              <v-btn @click="downloadTable()"
+                     class="white--text"
+                         small
+                     color="rgb(122, 139, 157)"
+                        :disabled="epiSearchDis || isLoading">
+                Download Table</v-btn>
+            </v-flex>
+            <v-flex sm2 align-self-center>
+              <v-layout justify-center>
+              <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                               :disabled="this.result === null || this.result === undefined || this.result.length === 0"
+                                @click="openDialogVirusViz('all', countSeq2)">
+                          <v-img style="margin-right: 5px; min-width: 15px;"
+                                 src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                          VirusViz All Epitope Population
+                        </v-btn>
+              </v-layout>
+            </v-flex>
+            <v-flex sm3 align-self-center>
+              <v-layout justify-end>
+                <v-dialog width="500" v-model="dialogOrder" persistent>
+                    <v-card>
+                        <v-card-title
+                                class="headline"
+                                style="background-color:rgb(201, 53, 53) ; color: white"
+                        >
+                            Field order
+                            <v-spacer></v-spacer>
+                            <v-checkbox v-model="sortCheckbox" @change="selectAllHeaders()"
+                                        :label="sortCheckBoxLabel" color="white"></v-checkbox>
+                            <v-btn
+                                    color="white"
+                                    flat
+                                    @click="dialogOrder = false"
+                            >
+                                Close
+                            </v-btn>
+                            <v-btn color="white"
+                                   flat
+                                   @click="resetHeadersOrder()"
+                            >
+                                Reset
+                            </v-btn>
+                        </v-card-title>
+                        <v-card-text>
+                            <p>Drag and drop field names in the desired position.
+                                Check or uncheck fields to re-define table content.
+                                Press APPLY to go back to the result window.</p>
+                            <draggable v-model="headers_can_be_shown" @start="drag=true" @end="drag=false">
+                                <v-list v-for="element in headers_can_be_shown" :key="element.value">
+                                    <v-checkbox :label=element.text v-model=element.show color="rgb(201, 53, 53)"></v-checkbox>
+                                </v-list>
+                            </draggable>
+                        </v-card-text>
+                        <v-divider></v-divider>
+                    </v-card>
+                    <v-btn dark
+                           slot="activator"
+                           small
+                           color="rgb(122, 139, 157)"
+                    >
+                        Select/Sort fields
+                    </v-btn>
+                </v-dialog>
+              </v-layout>
+            </v-flex>
+        </v-layout>
+        <v-layout align-center justify-end>
+            <v-dialog width="500">
+                <v-btn
+                      slot="activator"
+                      color="rgb(122, 139, 157)"
+                      small
+                      class="white--text">
+                  Statistics Info
+                  <v-icon class="info-icon" color="white" style="margin-left: 10px">info</v-icon>
+                </v-btn>
+                <v-card>
+                    <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                    >
+                        Statistics:
+                    </v-card-title>
+                    <v-card-text>
+                        <b>- NUM VAR:</b>
+                        <br><br>
+                        <b>- NUM SEQ:</b>
+                        <br><br>
+                        <b>- MUTATED FREQ:</b>
+                        <br><br>
+                        <b>- MUTATED SEQ RATIO:</b>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-layout>
+      </v-container>
 
-    </v-card>
+
+      <v-card>
+        <h3 style="color:red" v-if="epiSearchDis">{{requirement}}</h3>
+        <v-layout wrap align-center >
+          <v-data-table
+                  :headers="selected_headers"
+                  :items="result"
+                  :loading="isLoading"
+                  class="data-table"
+          >
+        <!--:pagination.sync="pagination"
+                  :rows-per-page-items="pagination.rowsPerPageItems"
+                  :total-items="pagination.totalItems" -->
+              <template slot="items" slot-scope="props">
+                  <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in selected_headers"
+                      :key="header.value" v-show="header.show"  v-if="!epiSearchDis"  :title=header.text>
+
+                      <span v-if="header.value === 'num_seq'">
+                        <span>
+                          <a @click="sendDataToSeqEpiTable(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
+                        </span>
+                        <!--<span v-else style="color: royalblue">{{props.item[header.value]}}</span>-->
+                      </span>
+
+                      <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
+
+                      <span v-else-if="header.value === 'epitope_iri'">
+                          <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                          <span v-else>N/D</span>
+                      </span>
+
+                      <span v-else-if="header.value === 'external_link'">
+                          <v-dialog width="500">
+                            <v-btn
+                                  slot="activator"
+                                  color="rgb(122, 139, 157)"
+                                  small
+                                  class="white--text">
+                              Reference link
+                              <span v-if="props.item[header.value] > 1">s</span>
+                              <span>&nbsp;({{props.item[header.value]}})</span>
+                             </v-btn>
+                            <v-card>
+                                <v-card-title
+                                        class="headline grey lighten-2"
+                                        primary-title
+                                >
+                                    Reference link
+                                  <span v-if="props.item[header.value] > 1">s</span>
+                                </v-card-title>
+                                <v-card-text>
+                                  <span v-for="link in props.item['external_link_to_show']">
+                                    <a :href="link" target="_blank">- {{link}}</a>
+                                    <br><br>
+                                  </span>
+                                </v-card-text>
+                            </v-card>
+                        </v-dialog>
+                      </span>
+
+                      <span v-else-if="header.value === 'virusViz_button'">
+
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                               :disabled="props.item['num_seq'] === 0"
+                                @click="openDialogVirusViz(props.item[epitopeId], props.item['num_seq'])">
+                          <v-img style="margin-right: 5px; min-width: 15px;"
+                                 src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                          VirusViz
+                        </v-btn>
+                        <!--
+                          <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                   @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
+                              <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                              VirusViz
+                          </v-btn>
+                          -->
+                      </span>
+
+                      <span v-else-if="header.value === 'virusViz_button_all_population'">
+
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                @click="openDialogVirusViz(props.item[epitopeId], countSeq2, true)">
+                          <v-img style="margin-right: 5px; min-width: 15px;"
+                                 src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                          VirusViz
+                        </v-btn>
+                        <!--
+                          <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                                   @click="virusVizClicked(props.item[epitopeId])" :disabled="props.item['num_seq'] === 0">
+                              <v-img style="margin-right: 5px" src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                              VirusViz
+                          </v-btn>
+                          -->
+                      </span>
+
+                      <span v-else>{{props.item[header.value]}}</span>
+
+                  </td>
+              </template>
+              <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
+                    Sorry, nothing to display here :(
+                </v-alert>
+                <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
+                    Loading
+                </v-alert>
+          </v-data-table>
+
+          <v-dialog
+            v-model="dialogVirusviz"
+            width="500"
+            persistent>
+          <v-card>
+            <v-card-title
+                class="headline"
+                style="background-color:rgb(201, 53, 53) ; color: white">
+              Open in VirusViz
+            </v-card-title>
+            <v-progress-linear height="2" color = "rgb(201, 53, 53)" ></v-progress-linear>
+
+            <v-card-text>
+              <p>
+                You selected
+                <span v-if="sendToDialogVirusViz.num_seq">{{sendToDialogVirusViz.num_seq}}</span>
+                <span v-else> ... </span>
+                sequence<span v-if="sendToDialogVirusViz.num_seq > 1">s</span>,
+                they must be formatted and then opened by the VirusViz
+                tool.
+                This may take time, and your browser could crash if the file is too large.
+              <p>
+                By checking “FULL” you will open full FASTA sequences and nucleotide / amino acid variants, this is
+                usually well supported with 5K sequences or less.
+              </p>
+              <p>
+                By checking “AA Mutations only” you will only open amino acid variants, this option requires less
+                memory and is usually well supported with 30K sequences or less.
+              </p>
+
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                     @click="virusVizClicked(sendToDialogVirusViz.epitope_id, false, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
+                <v-img style="margin-right: 5px; min-width: 15px;"
+                       src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                VirusViz (Full)
+              </v-btn>
+              <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                     @click="virusVizClicked(sendToDialogVirusViz.epitope_id, true, all_pop = virusviz_all_pop); dialogVirusviz = false; virusviz_all_pop = false;">
+                <v-img style="margin-right: 5px; min-width: 15px;"
+                       src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
+                VirusViz (AA mutations only)
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="rgb(122, 139, 157)"
+                  style="color: white"
+                  text
+                  @click="dialogVirusviz = false; virusviz_all_pop = false;"
+              >
+                Close
+              </v-btn>
+
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        </v-layout>
+
+        <SequencesEpiTable></SequencesEpiTable>
+
+      </v-card>
+
+    </div>
   </div>
 </template>
 
@@ -362,6 +436,8 @@ export default {
       my_interval_table: null,
       reCalculateTable: false,
       virusviz_all_pop: false,
+      dialogApplyEpitopeTable: false,
+      showTable: false,
     }
   },
   computed: {
@@ -404,6 +480,10 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
     ]),
+    showTheTable(){
+      this.showTable = true;
+      this.loadTable();
+    },
     retrieveAllEpitopes(){
       let res = this.result;
       let i = 0;
@@ -1023,7 +1103,7 @@ export default {
       //this.loadCountSeq3();
       //this.loadCountSeq4();
       this.loadCountEpi();
-      this.loadTable();
+      //this.loadTable();
       //this.loadTable2();
     },
     sendDataToSeqEpiTable(item){
@@ -1112,20 +1192,24 @@ export default {
     this.loadEveything();
   },
   watch: {
-    compound_query_epi() {
+    /*compound_query_epi() {
       this.loadEveything();
-    },
+    },*/
     reCalculateTable(){
       if(this.reCalculateTable){
         this.loadTable();
       }
     },
-    /*epiQuerySel() {
-      this.loadEveything();
+    epiQuerySel() {
+      this.loadCountEpi();
+      this.showTable = false;
     },
-    */
     compound_query() {
-      //this.loadCountSeq2();
+      this.loadCountSeq2();
+      this.showTable = false;
+    },
+    aminoacidConditions(){
+      this.showTable = false;
     },
     /*countSeq(){
       if(this.countSeq !== null) {
@@ -1164,6 +1248,15 @@ export default {
 
   .data-table{
     width: 100%;
+  }
+
+  .separator{
+    width: 98%;
+    height: 8px;
+    background-color: #404040;
+    border-radius: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
 </style>
