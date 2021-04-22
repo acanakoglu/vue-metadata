@@ -22,6 +22,10 @@
       </v-card>
     </v-dialog>
 
+    <v-layout wrap align-center justify-center>
+        <div class="separator"></div>
+      </v-layout>
+
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
@@ -245,7 +249,7 @@
                 </td>
             </template>
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading && !newEpitopeLoading">
-                  Sorry, nothing to display here :(
+                  Nothing to display here yet. Please add a custom epitope to see the result!
               </v-alert>
               <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
                   Loading
@@ -387,6 +391,7 @@ export default {
         var res = [];
         for (x in this.headers_can_be_shown) {
           if (this.headers_can_be_shown[x].show) {
+             this.headers_can_be_shown[x]['class'] = 'font-weight-black text-uppercase';
             res.push(this.headers_can_be_shown[x]);
           }
         }
@@ -718,6 +723,19 @@ export default {
 
   .capitalize:first-letter {
     text-transform: uppercase
+  }
+
+    .separator{
+    width: 98%;
+    height: 8px;
+    background-color: #404040;
+    border-radius: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  table.v-table tbody td {
+    font-size: 16px !important;
   }
 
 

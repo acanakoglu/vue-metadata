@@ -44,7 +44,7 @@
                         ></v-text-field>
                         <span class="mt-0 pt-0" style="color: red; font-size: x-small;">{{minFreqExtString}}</span>
                       </v-flex>
-                      <v-flex xs8>
+                      <v-flex xs8 style="padding-right: 25px !important; padding-left: 30px !important;">
                         <v-range-slider
                           v-model="range"
                           :max="max"
@@ -56,7 +56,7 @@
                         >
                         </v-range-slider>
                       </v-flex>
-                      <v-flex xs2>
+                      <v-flex xs2 style="padding-left: 0px !important;">
                         <v-text-field
                           :value="range[1]"
                           class="mt-0 pt-0"
@@ -207,7 +207,7 @@ export default {
           stopPoll(this.my_interval_extremes);
       }
 
-      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
+      if(!this.epiSearchDis) {
         this.isLoading = true;
         let url = '';
         let to_send = this.toSend();
@@ -273,6 +273,11 @@ export default {
     },
   },
   watch:{
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadExtremes();
+      }
+    },
     compound_query() {
       //this.loadExtremes();
     },

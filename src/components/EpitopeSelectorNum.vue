@@ -216,7 +216,7 @@ export default {
         stopPoll(this.my_interval_extremes);
       }
 
-      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened){
+      if(!this.epiSearchDis){
         this.isLoading = true;
         //console.log("RELOAD extremes");
         let to_send = this.toSend();
@@ -306,6 +306,11 @@ export default {
     },
   },
   watch:{
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadExtremes();
+      }
+    },
     compound_query() {
       //this.loadExtremes();
     },

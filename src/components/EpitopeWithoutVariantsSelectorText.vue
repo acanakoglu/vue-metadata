@@ -147,7 +147,7 @@ export default {
   },
   data(){
     return {
-      isLoading : true,
+      isLoading : false,
       results: [],
       disableTxtSel: false,
       is_multiple: true,

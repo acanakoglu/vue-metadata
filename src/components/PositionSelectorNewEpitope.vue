@@ -161,22 +161,23 @@ export default {
     },
     loadExtremes(){
 
-        if(this.my_interval_extremes !== null){
+        /*if(this.my_interval_extremes !== null){
           stopPoll(this.my_interval_extremes);
-        }
+        }*/
 
         this.isLoading = true;
         //console.log("RELOAD extremes");
         let to_send = {};
         to_send['product'] = this.newSingleEpitope['product'];
+        to_send['compound_query'] = this.compound_query;
         const url = `epitope/extremesPositionNewEpitope`;
         axios.post(url, to_send)
             .then((res) => {
               return res.data
             })
             .then((res) => {
-              this.my_interval_extremes = poll(res.result, (res) => {
-                this.my_interval_extremes = null;
+              //this.my_interval_extremes = poll(res.result, (res) => {
+                //this.my_interval_extremes = null;
                 let vals = res.values;
                 this.results = vals[0];
                 if(this.exampleCustomEpitope){
@@ -193,7 +194,7 @@ export default {
                 this.max_max = this.maxExt;
                 this.isLoading = false;
               })
-            })
+            //})
     },
     toSend(){
 
