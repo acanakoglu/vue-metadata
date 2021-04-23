@@ -19,9 +19,12 @@
             <!--            <v-btn flat href="api" target="repository_browser_api"><span class="mr-2">API-->
             <!--                <span class="font-weight-light">doc</span></span>-->
             <!--            </v-btn>-->
-          <v-toolbar-items class="hidden-md-and-down">
+          <v-toolbar-items class="hidden-lg-and-down">
             <v-btn flat href="http://geco.deib.polimi.it/episurf/" target="_blank">
               <span class="mr-2">EpiSurf</span>
+            </v-btn>
+            <v-btn flat href="http://geco.deib.polimi.it/episurf_gisaid/" target="_blank">
+                <span class="mr-2">EpiSurf GISAID</span>
             </v-btn>
             <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
                 <span class="mr-2">ViruSurf</span>
@@ -51,12 +54,19 @@
                 <span class="mr-2">About</span>
                  </v-btn>
           </v-toolbar-items>
-          <v-menu class="hidden-lg-and-up">
+          <v-menu class="hidden-xl-and-up">
             <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
             <v-list-tile style="background-color: white">
                 <v-list-tile-content>
                   <v-btn flat href="http://geco.deib.polimi.it/episurf/" target="_blank">
                     <span class="mr-2">EpiSurf</span>
+                  </v-btn>
+                </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile style="background-color: white">
+                <v-list-tile-content>
+                  <v-btn flat href="http://geco.deib.polimi.it/episurf_gisaid/" target="_blank">
+                      <span class="mr-2">EpiSurf GISAID</span>
                   </v-btn>
                 </v-list-tile-content>
             </v-list-tile>

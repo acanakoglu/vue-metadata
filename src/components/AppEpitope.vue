@@ -26,8 +26,8 @@
             <!--                <span class="font-weight-light">doc</span></span>-->
             <!--            </v-btn>-->
             <v-toolbar-items class="hidden-md-and-down">
-              <v-btn flat href="http://geco.deib.polimi.it/episurf_gisaid/" target="_blank">
-                  <span class="mr-2">EpiSurf GISAID</span>
+              <v-btn flat href="http://geco.deib.polimi.it/episurf/" target="_blank">
+                  <span class="mr-2">EpiSurf</span>
               </v-btn>
               <v-btn flat href="http://geco.deib.polimi.it/virusurf/" target="_blank">
                   <span class="mr-2">ViruSurf</span>
@@ -55,8 +55,8 @@
               <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
               <v-list-tile style="background-color: white">
                   <v-list-tile-content>
-                    <v-btn flat href="http://geco.deib.polimi.it/episurf_gisaid/" target="_blank">
-                        <span class="mr-2">EpiSurf GISAID</span>
+                    <v-btn flat href="http://geco.deib.polimi.it/episurf/" target="_blank">
+                        <span class="mr-2">EpiSurf</span>
                     </v-btn>
                   </v-list-tile-content>
               </v-list-tile>
