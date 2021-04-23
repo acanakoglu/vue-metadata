@@ -44,7 +44,7 @@
                               @click="openDialogVirusViz('all')">
                         <v-img style="margin-right: 5px; min-width: 15px;"
                                src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz All Epitope Population
+                        VirusViz All Epitopes
                       </v-btn>
             </v-layout>
           </v-flex>
