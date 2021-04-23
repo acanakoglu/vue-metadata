@@ -131,7 +131,7 @@
 
 <script>
 import axios from "axios";
-import {mapGetters, mapMutations, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import EpitopeSelectorText from "./EpitopeSelectorText"
 import EpitopeSelectorNum from "./EpitopeSelectorNum"
 import EpitopeSelectorPercentage from "./EpitopeSelectorPercentage"
@@ -207,7 +207,11 @@ export default {
        'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setTrueShowAminoacidVariantEpi',
      'setCountEpiCustom', 'setCountEpiToShow', 'setSelectedTabEpitopeToCustom', 'setSelectedTabEpitopeToEpitopeVariants',
      'setSelectedTabEpitopeToEpitopeWithoutVariants', 'setCountEpiWithoutVariants',
-     'setEpiQuery', 'setEpiQueryWithoutVariants', 'setFalseFromPredefinedQuery', 'resetAminoacidConditionQuery']),
+     'setEpiQuery', 'setEpiQueryWithoutVariants', 'setFalseFromPredefinedQuery', 'resetAminoacidConditionQuery',
+     'resetNewSingleEpitopeQuery', 'resetEpitopeAminoacidConditionsArrayUserNewInOR']),
+     ...mapActions([
+         'setNewSingleAminoAcidConditionUserAction'
+     ]),
      toSend(){
       let res = {};
       Object.assign(res,{"compound_query": this.compound_query},
@@ -301,6 +305,15 @@ export default {
     },
     selectedTab(){
       if(this.selectedTab === this.toCustom){
+        this.resetNewSingleEpitopeQuery();
+        this.setFalseDisableSelectorUserNewEpitopePart();
+        this.setNewSingleAminoAcidConditionUserAction({field: 'product', list: ''});
+        this.setNewSingleAminoAcidConditionUserAction({field: 'variant_aa_type', list: ''});
+        this.setNewSingleAminoAcidConditionUserAction({field: 'sequence_aa_original', list: ''});
+        this.setNewSingleAminoAcidConditionUserAction({field: 'sequence_aa_alternative', list: ''});
+        this.setNewSingleAminoAcidConditionUserAction({field: 'start_aa_original', list: ''});
+        this.resetEpitopeAminoacidConditionsArrayUserNewInOR();
+        this.setFalseShowAminoacidVariantUserNewEpi();
         this.setSelectedTabEpitopeToCustom();
         if(this.disableSelectorEpitopePart){
           this.setFalseDisableSelectorEpitopePart();
