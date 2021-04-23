@@ -44,7 +44,7 @@
                         <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
                             <span class="mr-2">Contacts</span>
                         </v-btn>-->
-              <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+              <v-btn flat href="/virusurf/repo_static/about_episurf.html" target="_blank">
                   <span class="mr-2">About</span>
               </v-btn>
             </v-toolbar-items>
@@ -80,7 +80,7 @@
               </v-list-tile>
               <v-list-tile style="background-color: white">
                   <v-list-tile-content>
-                    <v-btn flat href="/virusurf/repo_static/contact.html" target="_blank">
+                    <v-btn flat href="/virusurf/repo_static/about_episurf.html" target="_blank">
                         <span class="mr-2">About</span>
                     </v-btn>
                   </v-list-tile-content>

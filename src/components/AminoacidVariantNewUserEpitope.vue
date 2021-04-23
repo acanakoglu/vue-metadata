@@ -3,6 +3,7 @@
     <v-layout wrap align-center>
       <v-flex xs12 md8 lg8 class="no-horizontal-padding">
         <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+        <h3 style="margin-bottom: 20px">for computing statistics over a fraction of the selected population carrying the amino acid change</h3>
       </v-flex>
       <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
         <v-btn @click="openAnalyzeSubstitutionPanel()"  color="rgb(122, 139, 157)" style="color:white;">

@@ -310,7 +310,10 @@ export default {
         this.setCountEpiToShow(this.countEpiCustom);
       }
       else if(this.selectedTab === this.toEpitopeVariants){
-        this.dialogModeEpitopeWithVariants = true;
+        //console.log("qui", this.fromPredefinedQuery);
+        if(!this.fromPredefinedQuery) {
+          this.dialogModeEpitopeWithVariants = true;
+        }
         if(this.epiQueryUsedTab === this.toEpitopeWithoutVariants && !this.fromPredefinedQuery){
             this.resetAminoacidConditionQuery();
             this.setFalseShowAminoacidVariantEpi();
@@ -319,7 +322,7 @@ export default {
             this.resetEpiQuery();
             this.setEpiQuery(query);
         }
-        this.setFalseFromPredefinedQuery();
+        //this.setFalseFromPredefinedQuery();
         this.epiQueryUsedTab = this.toEpitopeVariants;
         this.setSelectedTabEpitopeToEpitopeVariants();
         if(this.disableSelectorUserNewEpitopePart){

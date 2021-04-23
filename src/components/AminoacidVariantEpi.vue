@@ -2,7 +2,8 @@
   <v-container fluid grid-list-xl class="EpitopeMenu" >
     <v-layout wrap align-center>
       <v-flex xs12 md8 lg8 class="no-horizontal-padding">
-        <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+        <h2 style="margin-bottom: 10px">Add Epitope condition on overlapping amino acid changes</h2>
+        <h3 style="margin-bottom: 20px">Choose amino acid changes that must be present in the epitope range within any sequence in the whole database</h3>
       </v-flex>
       <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
         <v-btn @click="openAnalyzeSubstitutionPanel()"  color="rgb(122, 139, 157)" style="color:white;">
@@ -62,11 +63,11 @@
 
     <v-layout wrap justify-center align-center style="margin-top: 20px">
       <span v-if="appliedActuaQuery === true">
-        Actual Query Applied
+        Current amino acid filter: applied
       </span>
       <v-icon v-if="appliedActuaQuery === true" style="margin-left: 5px" medium color="green" right>check_circle</v-icon>
       <span v-if="appliedActuaQuery === false">
-        Actual Query Applied To Apply
+        Current amino acid filter: not yet applied
       </span>
       <v-icon v-if="appliedActuaQuery === false" style="background-color: red; border-radius: 100%; margin-left: 5px" color="white" right>close</v-icon>
 
@@ -94,7 +95,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields', 'aminoacidConditions', 'epitopeAminoacidFields'
+      'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields',
+      'aminoacidConditions', 'epitopeAminoacidFields','fromPredefinedQuery', 'disableSelectorEpitopePart'
     ]),
     ...mapGetters({
         compound_query: 'build_query',
@@ -132,10 +134,10 @@ export default {
       this.setTrueAnalyzeSubstitutionPanel();
     },
     closeAminoEpiMenu(){
+      this.setFalseDisableSelectorEpitopePart();
       this.setFalseShowAminoacidVariantEpi();
       this.clearAminoEpiMenu();
       this.clearEpiQueryFromAmino();
-      this.setFalseDisableSelectorEpitopePart();
     },
     clearAminoEpiMenu(){
       this.epitopeAminoacidFields.forEach(elem => {
@@ -201,7 +203,9 @@ export default {
   },
   watch: {
     compound_query(){
-      //this.closeAminoEpiMenu();
+      if(!this.fromPredefinedQuery){
+        this.closeAminoEpiMenu();
+      }
     },
     aminoacidConditions(){
       this.appliedActuaQuery = false;

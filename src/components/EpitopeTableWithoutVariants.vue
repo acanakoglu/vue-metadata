@@ -21,6 +21,10 @@
       </v-card>
     </v-dialog>
 
+    <v-layout wrap align-center justify-center>
+        <div class="separator"></div>
+      </v-layout>
+
     <v-container fluid grid-list-xs>
       <v-layout justify-space-between row>
           <v-flex sm3 align-self-center>
@@ -115,8 +119,8 @@
 
                     <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
-                    <span v-else-if="header.value === 'epitope_iri'">
-                        <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                    <span v-else-if="header.value === 'iedb_epitope_id'">
+                        <a v-if="props.item[header.value]" :href="props.item['epitope_iri']" target="_blank">{{props.item[header.value]}}</a>
                         <span v-else>N/D</span>
                     </span>
 
@@ -164,6 +168,9 @@
                 </td>
             </template>
             <v-alert slot="no-data" :value="true" color="error" icon="warning" v-if="!isLoading">
+                  Sorry, nothing to display here :(
+              </v-alert>
+          <v-alert slot="no-results" :value="true" color="error" icon="warning" v-if="!isLoading">
                   Sorry, nothing to display here :(
               </v-alert>
               <v-alert slot="no-data" :value="true" style="opacity:0.6;" color="rgb(122, 139, 157)" icon="info" v-else>
@@ -261,7 +268,7 @@ export default {
       alertLink: null,
       alertDialog: false,
       epitopeId : 'iedb_epitope_id',
-      isLoading : true,
+      isLoading : false,
       result: [],
       requirement: 'A single Host is required',
       is_control : false,
@@ -306,6 +313,7 @@ export default {
         var res = [];
         for (x in this.headers_can_be_shown) {
           if (this.headers_can_be_shown[x].show) {
+            this.headers_can_be_shown[x]['class'] = 'font-weight-black text-uppercase';
             res.push(this.headers_can_be_shown[x]);
           }
         }
@@ -457,13 +465,14 @@ export default {
     getHeaders() {
       const predefinedHeaders = [
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
+          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Ref Page', value: 'external_link', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'VirusViz', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'virus_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein', value: 'protein_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          //{text: 'Protein', value: 'protein_ncbi_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -517,19 +526,29 @@ export default {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
-                      if (key === 'cell_type'){
+                      if (key === 'cell_type' || key === 'mhc_allele' || key === 'response_frequency_pos'
+                          || key === 'mhc_class' || key === 'assay_type'){
                         if (item[k] != null) {
                           let to_replace = "";
                           let i = 0;
                           while (i < values.length) {
                             if (item[k][i] != null) {
+                              if (key === "mhc_allele") {
+                                let str = item[k][i];
+                                let regex = /[,]/g;
+                                let subst = "$&\n";
+                                let result_str = str.replace(regex, subst);
+                                item[k][i] = result_str;
+                              } else {
+                                item[k][i] = item[k][i];
+                              }
                               to_replace += item[k][i];
                             } else {
                               to_replace += "N/D";
                             }
                             i++;
                             if (i !== values.length) {
-                              to_replace += ",\n";
+                              to_replace += "\n----\n";
                             }
                           }
                           item[k] = to_replace;
@@ -749,6 +768,12 @@ export default {
     this.loadEveything();
   },
   watch: {
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadTable();
+        this.loadCountEpi();
+      }
+    },
     compound_query_epi() {
       //this.loadEveything();
     },
@@ -779,6 +804,19 @@ export default {
 
   .data-table{
     width: 100%;
+  }
+
+  table.v-table tbody td {
+    font-size: 16px !important;
+  }
+
+    .separator{
+    width: 98%;
+    height: 8px;
+    background-color: #404040;
+    border-radius: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
 </style>

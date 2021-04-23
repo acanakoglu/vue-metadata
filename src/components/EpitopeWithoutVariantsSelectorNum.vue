@@ -75,7 +75,7 @@ export default {
   },
   data(){
     return {
-      isLoading : true,
+      isLoading : false,
       errorExt: '',
       results: [],
       min: null, //goes to query

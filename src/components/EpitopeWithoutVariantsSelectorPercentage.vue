@@ -44,7 +44,7 @@
                         ></v-text-field>
                         <span class="mt-0 pt-0" style="color: red; font-size: x-small;">{{minFreqExtString}}</span>
                       </v-flex>
-                      <v-flex xs8>
+                      <v-flex xs8 style="padding-right: 25px !important; padding-left: 30px !important;">
                         <v-range-slider
                           v-model="range"
                           :max="max"
@@ -56,7 +56,7 @@
                         >
                         </v-range-slider>
                       </v-flex>
-                      <v-flex xs2>
+                      <v-flex xs2 style="padding-left: 0px !important;">
                         <v-text-field
                           :value="range[1]"
                           class="mt-0 pt-0"
@@ -109,7 +109,7 @@ export default {
   },
   data(){
     return {
-      isLoading : true,
+      isLoading : false,
       min: 0,
       max: 1,
       minFreqExt: 0,

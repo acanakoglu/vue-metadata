@@ -235,8 +235,8 @@
 
                       <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
-                      <span v-else-if="header.value === 'epitope_iri'">
-                          <a v-if="props.item[header.value]" :href="props.item[header.value]" target="_blank">link</a>
+                      <span v-else-if="header.value === 'iedb_epitope_id'">
+                          <a v-if="props.item[header.value]" :href="props.item['epitope_iri']" target="_blank">{{props.item[header.value]}}</a>
                           <span v-else>N/D</span>
                       </span>
 
@@ -443,7 +443,7 @@ export default {
   computed: {
     ...mapState([
       'epiQuerySel', 'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpi', 'showSequenceEpiTable',
-      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields'
+      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields', 'fromPredefinedQuery'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -457,6 +457,7 @@ export default {
         var res = [];
         for (x in this.headers_can_be_shown) {
           if (this.headers_can_be_shown[x].show) {
+            this.headers_can_be_shown[x]['class'] = 'font-weight-black text-uppercase';
             res.push(this.headers_can_be_shown[x]);
           }
         }
@@ -478,7 +479,7 @@ export default {
     ...mapMutations([
         'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
-      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
+      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery'
     ]),
     showTheTable(){
       this.showTable = true;
@@ -572,16 +573,17 @@ export default {
       const predefinedHeaders = [
           //{text: 'Epitope ID', value: 'epitope_id', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: true, to_send: true, can_be_shown: true},
+          {text: 'Source Page', value: 'epitope_iri', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Ref Page', value: 'external_link', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          //{text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Epitope Seq.', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           /*{text: 'Variant Position', value: 'start_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -642,6 +644,7 @@ export default {
         const url = `epitope/epiTableRes1`
         axios.post(url, to_send)
             .then((res) => {
+              this.setFalseFromPredefinedQuery();
               return res.data
             })
             .then((res) => {
@@ -653,19 +656,29 @@ export default {
                     if (item.hasOwnProperty(k)) {
                       let key = k;
                       let values = item[k];
-                      if (key === 'cell_type'){
+                       if (key === 'cell_type' || key === 'mhc_allele' || key === 'response_frequency_pos'
+                          || key === 'mhc_class' || key === 'assay_type'){
                         if (item[k] != null) {
                           let to_replace = "";
                           let i = 0;
                           while (i < values.length) {
                             if (item[k][i] != null) {
+                              if (key === "mhc_allele") {
+                                let str = item[k][i];
+                                let regex = /[,]/g;
+                                let subst = "$&\n";
+                                let result_str = str.replace(regex, subst);
+                                item[k][i] = result_str;
+                              } else {
+                                item[k][i] = item[k][i];
+                              }
                               to_replace += item[k][i];
                             } else {
                               to_replace += "N/D";
                             }
                             i++;
                             if (i !== values.length) {
-                              to_replace += ",\n";
+                              to_replace += "\n----\n";
                             }
                           }
                           item[k] = to_replace;
@@ -1190,8 +1203,21 @@ export default {
   },
   mounted() {
     this.loadEveything();
+    if(this.fromPredefinedQuery){
+      this.showTheTable();
+    }
   },
   watch: {
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadCountEpi();
+      }
+    },
+    fromPredefinedQuery(){
+      if(this.fromPredefinedQuery){
+        this.showTheTable();
+      }
+    },
     /*compound_query_epi() {
       this.loadEveything();
     },*/
@@ -1202,14 +1228,20 @@ export default {
     },
     epiQuerySel() {
       this.loadCountEpi();
-      this.showTable = false;
+      if(!this.fromPredefinedQuery) {
+        this.showTable = false;
+      }
     },
     compound_query() {
       this.loadCountSeq2();
-      this.showTable = false;
+      if(!this.fromPredefinedQuery) {
+        this.showTable = false;
+      }
     },
     aminoacidConditions(){
-      this.showTable = false;
+      if(!this.fromPredefinedQuery) {
+        this.showTable = false;
+      }
     },
     /*countSeq(){
       if(this.countSeq !== null) {
@@ -1257,6 +1289,10 @@ export default {
     border-radius: 100%;
     margin-top: 20px;
     margin-bottom: 20px;
+  }
+
+  table.v-table tbody td {
+    font-size: 16px !important;
   }
 
 </style>
