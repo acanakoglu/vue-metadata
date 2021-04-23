@@ -12,7 +12,7 @@
     >
       <template slot="item" slot-scope="data">
           <span class="item-value-span"> {{rename(data.item)}}</span>
-          <span class="item-count-span"> {{data.item.count}}</span>
+          <span class="item-count-span" v-if="!epitopeAminoacidFields.some(item => item.field === field)"> {{data.item.count}}</span>
       </template>
     </v-autocomplete>
   </v-card>
@@ -30,6 +30,11 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
+    epiSearchDis(){
+      if(this.epiSearchDis === false){
+        this.loadData();
+      }
+    },
     compound_query_epi() {
       //this.loadData();
     },
@@ -124,7 +129,7 @@ export default {
         stopPoll(this.my_interval_data);
       }
 
-      if(!this.epiSearchDis && !this.disabledEpi_AminoacidMenuOpened) {
+      if(!this.epiSearchDis) {
         //console.log("RELOAD ", this.value);
         this.isLoading = true;
         this.results = [{value: LOADING_TEXT}];

@@ -156,7 +156,7 @@
             </v-card-title>
 
             <v-card-text class="text-xs-center">
-              Need all the fields compiled to save the new epitope
+              All fields need to be filled to save the new epitope
             </v-card-text>
 
           </v-card>
@@ -217,7 +217,7 @@
           </v-flex>
         </v-layout>
 
-        <v-layout align-center justify-end style="margin-right: 53px">
+        <v-layout align-center justify-end style="margin-right: 53px" v-if="epitopeAddedReview.length > 0">
           <v-dialog width="500">
               <v-btn
                     slot="activator"
@@ -549,21 +549,23 @@ export default {
     queryToShow() {
       let inner_list = [];
       Object.keys(this.newSingleEpitope).forEach(key => {
-        const value2 = [];
-        const value = this.newSingleEpitope[key];
+        if (key !== "taxon_name" && key !== "host_taxon_name") {
+          const value2 = [];
+          const value = this.newSingleEpitope[key];
 
-        let modifiedKey = this.modifyKey(key);
+          let modifiedKey = this.modifyKey(key);
 
-        if (Array.isArray(value)) {
-          value.forEach(val => {
-            if (val === null)
-              value2.push("N/D");
-            else
-              value2.push(val);
-          });
-          inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
-        } else {
-          inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+          if (Array.isArray(value)) {
+            value.forEach(val => {
+              if (val === null)
+                value2.push("N/D");
+              else
+                value2.push(val);
+            });
+            inner_list.push(modifiedKey + ': ' + JSON.stringify(value2));
+          } else {
+            inner_list.push(modifiedKey + ': ' + JSON.stringify(value));
+          }
         }
       });
       let i = 0;
@@ -979,9 +981,22 @@ export default {
 
        return modifiedKey;
      },
+     controlExistingName(name_epitope){
+        let i = 0;
+        while (i >= 0){
+          let name = name_epitope + '_' + i;
+          if(!this.epitopeAdded.some(item => item.epitope_name === name)) {
+              return name;
+          }
+          else{
+            i++;
+          }
+      }
+    },
      reloadCustomEpitope(epitope_index){
        let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
        let custom_epi_info = epitope.all_information.epitope_info;
+       custom_epi_info['epitope_name'] = this.controlExistingName(custom_epi_info['epitope_name']);
        let amino_acid_info = epitope.all_information.amino_acid_info;
        let metadata = epitope.all_information.compound_query;
        this.setQuery(metadata.gcm);

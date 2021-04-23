@@ -4,7 +4,7 @@
         persistent
         scrollable
       v-model="dialogMoreInfo"
-      width="500"
+      width="700"
     >
       <v-card>
         <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">
@@ -30,7 +30,7 @@
           </div>
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
-            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Epitope Metadata Info:</h2>
+            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Sequence Population Info:</h2>
             <span v-for="(value, key) in epitope_metadata_infos" style="display: block;"> <b class="text-capitalize">- {{key}} : </b>
               <div v-if="value.length !== undefined && value.length !== null" style="display: inline">
                 <span v-for="(val, index) in value">
@@ -45,7 +45,7 @@
               </div>
             </span>
           </div>
-          <div>
+          <div v-if="amino_acid_conditions.length > 0">
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
             <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Amino Acid Condition:</h2>
             <div v-for="(conditionsAND, index) in amino_acid_conditions">
@@ -59,6 +59,31 @@
               </div>
             </div>
           </div>
+
+          <div>
+            <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
+            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Statistics calculated on sequence population
+              <span v-if="amino_acid_conditions.length>0">with Amino Acid Condition
+              </span>
+              :
+            </h2>
+            <span v-for="(value, key) in epitope_statistics" style="display: block;"> <b class="text-capitalize">- {{key}} : </b>
+              <div style="display: inline">
+                <span v-if="key !== 'Mutated sequences ratio'">
+                  {{value}}
+                </span>
+                <span v-else>
+                  <span v-if="!amino_acid_conditions.length > 0">
+                     {{value}} (#mutated sequences/selected population)
+                  </span>
+                  <span v-else>
+                     {{value}} (#mutated sequences on the fraction of population with the amino acid condition/total population)
+                  </span>
+                </span>
+              </div>
+            </span>
+          </div>
+
         </v-card-text>
 
       </v-card>
@@ -81,6 +106,7 @@ export default {
       epitope_infos: [],
       epitope_metadata_infos: [],
       amino_acid_conditions: [],
+      epitope_statistics: [],
     }
   },
   computed: {
@@ -111,11 +137,11 @@ export default {
       infos['Position range'] = epitope.position_range_to_show;
       infos['Virus taxon name'] = epitope.taxon_name;
       infos['Host taxon name'] = epitope.host_taxon_name;
-      infos['Number of mutated sequences'] = epitope.num_seq;
+      /*infos['Number of mutated sequences'] = epitope.num_seq;
       infos['Number of variants'] = epitope.num_var;
       infos['Variants frequency'] = epitope.mutated_freq;
       infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
-      infos['Total number of sequences (metadata)'] = epitope.total_num_of_seq_metadata;
+      infos['Total number of sequences (metadata)'] = epitope.total_num_of_seq_metadata;*/
       return infos;
     },
     createMetadataInfos(epitope){
@@ -127,6 +153,7 @@ export default {
           infos[key] = metadata[key];
         }
       })
+      infos['Total number of sequences'] = epitope.total_num_of_seq_metadata;
       return infos;
     },
     createAminoAcidInfos(epitope){
@@ -165,7 +192,23 @@ export default {
       })
 
       return arrayToShowInAND;
-    }
+    },
+    createEpitopeStatistics(epitope){
+      let infos = {};
+      if(this.amino_acid_conditions.length > 0) {
+        infos['Number of mutated sequences on the fraction of population with the amino acid condition'] = epitope.num_seq;
+        infos['Number of variants on the fraction of population with the amino acid condition'] = epitope.num_var;
+        infos['Variants frequency on the fraction of population with the amino acid condition'] = epitope.mutated_freq;
+        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
+      }
+      else{
+        infos['Number of mutated sequences on selected population'] = epitope.num_seq;
+        infos['Number of variants on selected population'] = epitope.num_var;
+        infos['Variants frequency on selected population'] = epitope.mutated_freq;
+        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
+      }
+      return infos;
+    },
   },
   watch: {
     showMoreInfoEpitopeUser() {
@@ -176,6 +219,7 @@ export default {
         this.epitope_infos = this.createEpitopeInfos(this.epitope);
         this.epitope_metadata_infos = this.createMetadataInfos(this.epitope);
         this.amino_acid_conditions = this.createAminoAcidInfos(this.epitope);
+        this.epitope_statistics = this.createEpitopeStatistics(this.epitope);
       }
     },
   },

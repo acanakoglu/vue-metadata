@@ -192,7 +192,7 @@ export default {
         }
         to_send['panel'] = panel_to_send;
 
-        const url = `epitope/extremesPositionNewEpitope`;
+        const url = `epitope/extremesPositionNewEpitopeAminoacid`;
         axios.post(url, to_send)
             .then((res) => {
               return res.data
