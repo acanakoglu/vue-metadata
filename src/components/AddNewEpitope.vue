@@ -6,13 +6,13 @@
         <v-layout wrap align-center justify-center>
 
           <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-            <h2>Custom Epitopes on linked population</h2>
+            <h2>New custom epitopes</h2>
           </v-flex>
 
           <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(newSingleEpitope).length > 0 && !epiSearchDis"
                   style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
           <span class="label">
-            New Epitope
+            Epitope search condition:
           </span>
           <span style="font-family:monospace; font-size:120%;">
               {{ queryToShow }}
@@ -202,7 +202,7 @@
         ></v-progress-linear>
 
         <v-layout wrap align-center justify-center v-if="epitopeAdded.length>0">
-          <h2 style="margin-left: 10px"> Epitopes: </h2>
+          <h2 style="margin-left: 10px"> User-defined epitope list: </h2>
           <v-spacer></v-spacer>
           <h4>Search epitope by name:</h4>
           <v-flex class="sm2">
@@ -235,13 +235,23 @@
                       Buttons functionalities:
                   </v-card-title>
                   <v-card-text>
-                      <b>- MORE INFO:</b>
-                      <br><br>
-                      <b>- REFRESH:</b>
-                      <br><br>
-                      <b>- RELOAD:</b>
-                      <br><br>
-                      <b>- DELETE:</b>
+                    <b>- MORE INFO:</b>
+                    <span> Complete information on the epitope, the sequence population,
+                      optional amino acid condition, and computed statistics.</span>
+                    <br><br>
+                    <b>- REFRESH:</b>
+                    <span> It refreshes the four statistics computed for the epitope;
+                      this option is typically used after uploading from an external JSON file.</span>
+                    <br><br>
+                    <b>- RELOAD:</b>
+                    <span> It reloads all the values that were used to originally create that epitope into the
+                      drop-down menus of the sequence, epitopes, and amino acid condition search panels.
+                      This option facilitates the creation of a new epitope with slight coordinate changes or testing
+                      its conservancy on a different underlying population. Note that the amino acid condition
+                      should be completed or delete in order to modify the sequence population filters.</span>
+                    <br><br>
+                    <b>- DELETE:</b>
+                    <span> It deletes the element from the user-defined list.</span>
                   </v-card-text>
               </v-card>
           </v-dialog>
@@ -259,9 +269,10 @@
                  ></v-progress-circular>
                  <span style="border: solid black 2px; border-radius: 10%; padding: 5px"><b>{{epitope.index}}</b></span>
                </v-flex>
-               <v-flex sm6>
+               <v-flex sm6 style="font-size: 15.5px">
                  <span v-for="(value, key) in epitope" style="display: block;">
-                   <b v-if="key !== 'file_name' && key !== 'index'">- {{key}} : </b>
+                   <b v-if="key !== 'file_name' && key !== 'index' && key !== 'Protein'">- {{key}} : </b>
+                   <b v-else-if="key === 'Protein'">- {{key}} name : </b>
                    <span v-if="key === 'Epitope name'"> <u>{{value}}</u>
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
@@ -273,7 +284,7 @@
                  <v-btn @click="moreInfo(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">MORE INFO</v-btn>
                  <v-btn :disabled="newEpitopeLoading || epiSearchDis || !allPossibleProteinAnnotations.includes(epitope['Protein'].toLowerCase())" @click="refreshCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">REFRESH</v-btn>
                  <v-btn :disabled="epiSearchDis || !allPossibleProteinAnnotations.includes(epitope['Protein'].toLowerCase())" @click="reloadCustomEpitope(epitope.index - 1)" class="white--text" color="rgb(122, 139, 157)" style="width: 60%">RELOAD</v-btn>
-                 <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE EPITOPE</v-btn>
+                 <v-btn @click="setEpitopeIndexToDelete(epitope.index - 1); confirmDeleteSingleEpitope = true;" class="white--text" color="#696969" style="width: 60%">DELETE</v-btn>
                </v-flex>
              </v-layout>
           </v-card>
@@ -531,8 +542,8 @@ export default {
         line['Refresh date'] = val[i].refresh_date + " on " + val[i].refresh_database;
         line['Protein'] = val[i].product;
         line['Position range'] = val[i].position_range_to_show;
-        line['Virus taxon name'] = val[i].taxon_name;
-        line['Host taxon name'] = val[i].host_taxon_name;
+        //line['Virus taxon name'] = val[i].taxon_name;
+        //line['Host taxon name'] = val[i].host_taxon_name;
         line['Number of mutated sequences'] = val[i].num_seq;
         line['Number of variants'] = val[i].num_var;
         if(val[i].file_name) {
@@ -697,12 +708,12 @@ export default {
            val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
 
            if(/gisaid/.test(window.location.href)){
-             val['creation_database'] = "GISAID";
-             val['refresh_database'] = "GISAID";
+             val['creation_database'] = "EpiSurf GISAID";
+             val['refresh_database'] = "EpiSurf GISAID";
            }
            else{
-             val['creation_database'] = "GenBank";
-             val['refresh_database'] = "GenBank";
+             val['creation_database'] = "EpiSurf";
+             val['refresh_database'] = "EpiSurf";
            }
 
            this.epitopeToAdd = val;
@@ -747,10 +758,10 @@ export default {
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         let storage_name = 'epitopeArr';
         if(this.isGisaid){
-          storage_name = storage_name + '_' + 'GISAID'
+          storage_name = storage_name + '_' + 'EpiSurf GISAID'
         }
         else{
-          storage_name = storage_name + '_' + 'GenBank'
+          storage_name = storage_name + '_' + 'EpiSurf'
         }
         localStorage.setItem(storage_name, epitopeArr);
      },
@@ -762,10 +773,10 @@ export default {
        let epitopeArr = (JSON.stringify(this.epitopeAdded));
        let storage_name = 'epitopeArr';
         if(this.isGisaid){
-          storage_name = storage_name + '_' + 'GISAID'
+          storage_name = storage_name + '_' + 'EpiSurf GISAID'
         }
         else{
-          storage_name = storage_name + '_' + 'GenBank'
+          storage_name = storage_name + '_' + 'EpiSurf'
         }
         localStorage.setItem(storage_name, epitopeArr);
      },
@@ -1025,10 +1036,10 @@ export default {
      let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
      epitope['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
      if(/gisaid/.test(window.location.href)){
-       epitope['refresh_database'] = "GISAID";
+       epitope['refresh_database'] = "EpiSurf GISAID";
      }
      else{
-       epitope['refresh_database'] = "GenBank";
+       epitope['refresh_database'] = "EpiSurf";
      }
      this.epitopeToAdd = epitope;
      this.countNumSeq(epitope);
@@ -1176,10 +1187,10 @@ export default {
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         let storage_name = 'epitopeArr';
         if(this.isGisaid){
-          storage_name = storage_name + '_' + 'GISAID'
+          storage_name = storage_name + '_' + 'EpiSurf GISAID'
         }
         else{
-          storage_name = storage_name + '_' + 'GenBank'
+          storage_name = storage_name + '_' + 'EpiSurf'
         }
         localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
@@ -1205,10 +1216,10 @@ export default {
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         let storage_name = 'epitopeArr';
         if(this.isGisaid){
-          storage_name = storage_name + '_' + 'GISAID'
+          storage_name = storage_name + '_' + 'EpiSurf GISAID'
         }
         else{
-          storage_name = storage_name + '_' + 'GenBank'
+          storage_name = storage_name + '_' + 'EpiSurf'
         }
         localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
@@ -1233,10 +1244,10 @@ export default {
         let epitopeArr = (JSON.stringify(this.epitopeAdded));
         let storage_name = 'epitopeArr';
         if(this.isGisaid){
-          storage_name = storage_name + '_' + 'GISAID'
+          storage_name = storage_name + '_' + 'EpiSurf GISAID'
         }
         else{
-          storage_name = storage_name + '_' + 'GenBank'
+          storage_name = storage_name + '_' + 'EpiSurf'
         }
         localStorage.setItem(storage_name, epitopeArr);
         this.setFalseNewEpitopeLoading();
@@ -1258,10 +1269,10 @@ export default {
   mounted() {
     let storage_name = 'epitopeArr';
     if(this.isGisaid){
-      storage_name = storage_name + '_' + 'GISAID'
+      storage_name = storage_name + '_' + 'EpiSurf GISAID'
     }
     else{
-      storage_name = storage_name + '_' + 'GenBank'
+      storage_name = storage_name + '_' + 'EpiSurf'
     }
     if(localStorage.getItem(storage_name)) {
       try {
@@ -1323,7 +1334,7 @@ export default {
 }
 
   .capitalize:first-letter {
-    text-transform: uppercase
+    text-transform: uppercase !important;
   }
 
   .arrowButton:disabled{

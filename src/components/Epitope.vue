@@ -11,10 +11,10 @@
                Custom Epitopes
           </v-tab>
           <v-tab>
-              Use IEDB Epitopes Without Variants Count
+              Use IEDB Epitopes Without Variant Counts
           </v-tab>
           <v-tab>
-              Use IEDB Epitopes With Variants Count
+              Use IEDB Epitopes With Variant Counts
           </v-tab>
 
 
@@ -37,7 +37,7 @@
                     <v-layout wrap align-center >
 
                       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-                        <h2>Epitope Search</h2>
+                        <h2>IEDB Epitope search</h2>
                       </v-flex>
 
                       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
@@ -46,7 +46,7 @@
 
                       <v-flex xs12 class="no-horizontal-padding" v-if="Object.keys(epiQuerySel).length > 0" style="margin-bottom: 30px; margin-left: 20px; margin-right: 20px">
                       <span class="label">
-                                        Epitope
+                                        Epitope search condition:
                                     </span>
                       <span style="font-family:monospace; font-size:120%;">
                                         {{ queryToShow }}
@@ -116,12 +116,12 @@
                   Warning
               </v-card-title>
               <v-card-text>
-                We discourage using the mode "USE IEDB EPITOPES WITH VARIANTS COUNT"
+                We discourage using the mode "USE IEDB EPITOPES WITH VARIANT COUNTS"
                 with very big sets of sequences.
-                For optimal functioning of EpiSurf, we suggest selecting on the order of
-                thousands of sequences (if the set is bigger, expect considerable slowing down!)
-                In addition to host species and virus species,
-                please use other metadata filters to restrict your choice.
+                <br><br>
+                For optimal functioning of EpiSurf, we suggest selecting on the order of thousands of sequences;
+                please use metadata filters accordingly.
+                If the set is bigger, expect a slowdown!
               </v-card-text>
           </v-card>
       </v-dialog>

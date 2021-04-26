@@ -150,7 +150,12 @@ export default {
 
           if(this.min !== null && this.min !== undefined) {
             let sendStart;
-            sendStart = {'field': 'startExt', 'list': [this.min]};
+            if(Array.isArray(this.min)){
+              sendStart = {'field': 'startExt', 'list': this.min};
+            }
+            else {
+              sendStart = {'field': 'startExt', 'list': [this.min]};
+            }
             this.setEpiDropDownSelectedWithoutVariants(sendStart);
           }else{
             this.setEpiDropDownSelectedWithoutVariants({field: 'startExt', list: []});
@@ -158,7 +163,12 @@ export default {
 
           if(this.max !== null && this.max !== undefined) {
             let sendStop;
-            sendStop = {'field': 'stopExt', 'list': [this.max]};
+            if(Array.isArray(this.max)){
+              sendStop = {'field': 'stopExt', 'list': this.max};
+            }
+            else {
+              sendStop = {'field': 'stopExt', 'list': [this.max]};
+            }
             this.setEpiDropDownSelectedWithoutVariants(sendStop);
           }
           else{
