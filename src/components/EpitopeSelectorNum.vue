@@ -169,7 +169,12 @@ export default {
           if(this.min !== null && this.min !== undefined) {
             let sendStart;
             if (this.field === 'position_range') {
-              sendStart = {'field': 'startExt', 'list': [this.min]};
+              if(Array.isArray(this.min)){
+                sendStart = {'field': 'startExt', 'list': this.min};
+              }
+              else {
+                sendStart = {'field': 'startExt', 'list': [this.min]};
+              }
               this.setEpiDropDownSelected(sendStart);
             }
             else if(this.field === 'variant_position_range') {
@@ -190,7 +195,12 @@ export default {
           if(this.max !== null && this.max !== undefined) {
             let sendStop;
             if (this.field === 'position_range') {
-              sendStop = {'field': 'stopExt', 'list': [this.max]};
+               if(Array.isArray(this.max)){
+                  sendStop = {'field': 'stopExt', 'list': this.max};
+                }
+                else {
+                  sendStop = {'field': 'stopExt', 'list': [this.max]};
+                }
               this.setEpiDropDownSelected(sendStop);
             }
             else if(this.field === 'variant_position_range') {

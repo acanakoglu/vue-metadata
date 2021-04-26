@@ -207,7 +207,7 @@
                       <v-card-text>
                           Grantham distance is a formula for difference between amino acids combines properties that
                         correlate best with protein residue substitution frequencies: composition, polarity,
-                        and molecular volume.
+                        and molecular volume. (<a target="_blank" href="https://doi.org/10.1126/science.185.4154.862">source</a>)
                         <br><br>
                         <u>Conservative Change:</u><br> rarely results in dysfunction (Grantham distance <= 66)
                         <br><br>

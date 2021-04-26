@@ -196,13 +196,22 @@
                         Statistics:
                     </v-card-title>
                     <v-card-text>
-                        <b>- NUM VAR:</b>
+                        <b>(1) NUM MUT SEQ:</b>
+                        <span> the number of sequences in the selected population
+                          that exhibit at least one amino acid change within the epitope position range.</span>
                         <br><br>
-                        <b>- NUM SEQ:</b>
+                        <b>(2) TOT MUT:</b>
+                        <span> the number of total amino acid changes exhibited by the full population of sequences.</span>
                         <br><br>
-                        <b>- MUTATED FREQ:</b>
+                        <b>(3) MUT FREQ:</b>
+                        <span> the ratio of total variants (2) over the number of mutated sequences (1).</span>
                         <br><br>
-                        <b>- MUTATED SEQ RATIO:</b>
+                        <b>(4) MUT SEQ RATIO:</b>
+                        <span> the ratio of mutated sequences (1) over the total of the selected population.</span>
+                        <br><br>
+                        <span>When an amino acid condition has been added the number of sequences considered for the
+                          calculation of the four statistics is restricted to the ones that exhibit matching mutations
+                          (which, by construction, fall within the epitope position range).</span>
                     </v-card-text>
                 </v-card>
             </v-dialog>
@@ -579,13 +588,13 @@ export default {
           {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Protein', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Protein Name', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Resp. Freq.', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Epitope Seq.', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
+          {text: 'Response Freq', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Epitope Seq', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           /*{text: 'Variant Position', value: 'start_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Variant Type', value: 'variant_aa_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Variant Length', value: 'variant_aa_length', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -599,9 +608,9 @@ export default {
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Num Mut Seq', value: 'num_seq', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Num Var', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Mutated Freq.', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
-          {text: 'Mutated Seq Ratio (meta)', value: 'mutated_seq_ratio2', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Tot Mut', value: 'num_var', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Mut Freq', value: 'mutated_freq', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Mut Seq Ratio', value: 'mutated_seq_ratio2', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+epi', value: 'mutated_seq_ratio4', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+amino', value: 'mutated_seq_ratio3', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           //{text: 'Mutated Seq Ratio meta+epi+amino', value: 'mutated_seq_ratio', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
