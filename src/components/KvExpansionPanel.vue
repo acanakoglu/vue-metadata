@@ -10,7 +10,7 @@
       <span style="font-family:monospace" v-html="queryToShow"></span>
 
     </div>
-    <v-spacer></v-spacer>spacer>
+    <v-spacer></v-spacer>
 
         <v-btn :disabled="searchDisabled" class="delete-button" v-if="cancelButton" slot="header" color="error" flat
                @click="deleteKvLocal()">
