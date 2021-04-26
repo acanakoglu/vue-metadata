@@ -5,7 +5,7 @@
     <v-layout wrap align-center >
 
       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
-        <h2>Epitope Search</h2>
+        <h2>IEDB Epitope search</h2>
       </v-flex>
 
       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
@@ -14,7 +14,7 @@
 
       <v-flex xs12 class="no-horizontal-padding" v-if="Object.keys(epiQuerySelWithoutVariants).length > 0" style="margin-bottom: 30px; margin-left: 20px; margin-right: 20px">
       <span class="label">
-                        Epitope
+                        Epitope search condition:
                     </span>
       <span style="font-family:monospace; font-size:120%;">
                         {{ queryToShow }}

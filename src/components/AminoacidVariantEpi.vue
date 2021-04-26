@@ -2,8 +2,8 @@
   <v-container fluid grid-list-xl class="EpitopeMenu" >
     <v-layout wrap align-center>
       <v-flex xs12 md8 lg8 class="no-horizontal-padding">
-        <h2 style="margin-bottom: 10px">Add Epitope condition on overlapping amino acid changes</h2>
-        <h3 style="margin-bottom: 20px">Choose amino acid changes that must be present in the epitope range within any sequence in the whole database</h3>
+        <h2 style="margin-bottom: 10px">Add condition on overlapping amino acid changes</h2>
+        <h3 style="margin-bottom: 20px">Restrict statistics of selected epitopes to the given amino acid change(s)</h3>
       </v-flex>
       <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
         <v-btn @click="openAnalyzeSubstitutionPanel()"  color="rgb(122, 139, 157)" style="color:white;">

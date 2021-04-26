@@ -200,7 +200,7 @@
                         <v-flex xs12 class="no-horizontal-padding">
                             <!--<div id="query" class="selected-query">-->
                             <span class="label">
-                                Metadata search
+                                Sequence population search condition:
                             </span>
                             <span style="font-family:monospace; font-size:120%;">
                                 {{ queryToShow }}
@@ -709,12 +709,12 @@
              val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
 
              if(/gisaid/.test(window.location.href)){
-               val['creation_database'] = "GISAID";
-               val['refresh_database'] = "GISAID";
+               val['creation_database'] = "EpiSurf GISAID";
+               val['refresh_database'] = "EpiSurf GISAID";
              }
              else{
-               val['creation_database'] = "GenBank";
-               val['refresh_database'] = "GenBank";
+               val['creation_database'] = "EpiSurf";
+               val['refresh_database'] = "EpiSurf";
              }
 
              this.epitopeToAdd = val;
@@ -874,10 +874,10 @@
                   let epitopeArr = (JSON.stringify(this.epitopeAdded));
                   let storage_name = 'epitopeArr';
                   if(this.isGisaid){
-                    storage_name = storage_name + '_' + 'GISAID'
+                    storage_name = storage_name + '_' + 'EpiSurf GISAID'
                   }
                   else{
-                    storage_name = storage_name + '_' + 'GenBank'
+                    storage_name = storage_name + '_' + 'EpiSurf'
                   }
                   localStorage.setItem(storage_name, epitopeArr);
                   this.setFalseNewEpitopeLoading();
@@ -892,10 +892,10 @@
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
                 let storage_name = 'epitopeArr';
                 if(this.isGisaid){
-                  storage_name = storage_name + '_' + 'GISAID'
+                  storage_name = storage_name + '_' + 'EpiSurf GISAID'
                 }
                 else{
-                  storage_name = storage_name + '_' + 'GenBank'
+                  storage_name = storage_name + '_' + 'EpiSurf'
                 }
                 localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();
@@ -910,10 +910,10 @@
                 let epitopeArr = (JSON.stringify(this.epitopeAdded));
                 let storage_name = 'epitopeArr';
                 if(this.isGisaid){
-                  storage_name = storage_name + '_' + 'GISAID'
+                  storage_name = storage_name + '_' + 'EpiSurf GISAID'
                 }
                 else{
-                  storage_name = storage_name + '_' + 'GenBank'
+                  storage_name = storage_name + '_' + 'EpiSurf'
                 }
                 localStorage.setItem(storage_name, epitopeArr);
                 this.setFalseNewEpitopeLoading();

@@ -22,7 +22,7 @@
 
         <v-card-text>
           <div v-if="Object.keys(epitope_infos).length > 0">
-            <h2 style="display: block; margin-bottom: 5px;">Epitope Info:</h2>
+            <h2 style="display: block; margin-bottom: 5px;">Epitope info:</h2>
             <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} : </b>
               <span v-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
               <span v-else class="capitalize">{{value}} </span>
@@ -30,8 +30,8 @@
           </div>
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
-            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Sequence Population Info:</h2>
-            <span v-for="(value, key) in epitope_metadata_infos" style="display: block;"> <b class="text-capitalize">- {{key}} : </b>
+            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Sequence population info:</h2>
+            <span v-for="(value, key) in epitope_metadata_infos" style="display: block;"> <b>- <span class="capitalize">{{key}}</span> : </b>
               <div v-if="value.length !== undefined && value.length !== null" style="display: inline">
                 <span v-for="(val, index) in value">
                   <span v-if="index!=0"> , </span>
@@ -47,7 +47,7 @@
           </div>
           <div v-if="amino_acid_conditions.length > 0">
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
-            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Amino Acid Condition:</h2>
+            <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Amino acid condition:</h2>
             <div v-for="(conditionsAND, index) in amino_acid_conditions">
               <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
               <div v-for="(conditionsOR, index) in conditionsAND">
@@ -63,11 +63,11 @@
           <div>
             <!--v-if="Object.keys(epitope_metadata_infos).length > 0"-->
             <h2 style="display: block;  margin-bottom: 5px; margin-top: 15px;">Statistics calculated on sequence population
-              <span v-if="amino_acid_conditions.length>0">with Amino Acid Condition
+              <span v-if="amino_acid_conditions.length>0">with amino acid condition
               </span>
               :
             </h2>
-            <span v-for="(value, key) in epitope_statistics" style="display: block;"> <b class="text-capitalize">- {{key}} : </b>
+            <span v-for="(value, key) in epitope_statistics" style="display: block;"> <b>- {{key}} : </b>
               <div style="display: inline">
                 <span v-if="key !== 'Mutated sequences ratio'">
                   {{value}}
@@ -129,11 +129,11 @@ export default {
       let infos = {};
       infos['Epitope name'] = epitope.epitope_name;
       infos['Creation date'] = epitope.creation_date + " on " + epitope.creation_database;
-      infos['Refresh date'] = epitope.refresh_date + " on " + epitope.creation_database;
+      infos['Refresh date'] = epitope.refresh_date + " on " + epitope.refresh_database;
       if(epitope.file_name){
-        infos['File Name'] = epitope.file_name;
+        infos['File name'] = epitope.file_name;
       }
-      infos['Protein'] = epitope.product;
+      infos['Protein name'] = epitope.product;
       infos['Position range'] = epitope.position_range_to_show;
       infos['Virus taxon name'] = epitope.taxon_name;
       infos['Host taxon name'] = epitope.host_taxon_name;
@@ -172,7 +172,7 @@ export default {
             let single = query[i];
             Object.keys(single).forEach(function(key) {
               if (key === 'product') {
-                line['Protein'] = single[key][0];
+                line['Protein name'] = single[key][0];
               } else if (key === 'variant_aa_type') {
                 line['Variant type'] = single[key][0];
               } else if (key === 'sequence_aa_original') {
