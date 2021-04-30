@@ -118,17 +118,17 @@
                         :disabled="epiSearchDis || isLoading">
                 Download Table</v-btn>
             </v-flex>
-            <v-flex sm2 align-self-center>
-              <v-layout justify-center>
-              <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                               :disabled="this.result === null || this.result === undefined || this.result.length === 0"
-                                @click="openDialogVirusViz('all', countSeq2)">
-                          <v-img style="margin-right: 5px; min-width: 15px;"
-                                 src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                          VirusViz All Epitopes
-                        </v-btn>
-              </v-layout>
-            </v-flex>
+<!--            <v-flex sm2 align-self-center>-->
+<!--              <v-layout justify-center>-->
+<!--              <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"-->
+<!--                               :disabled="this.result === null || this.result === undefined || this.result.length === 0"-->
+<!--                                @click="openDialogVirusViz('all', countSeq2)">-->
+<!--                          <v-img style="margin-right: 5px; min-width: 15px;"-->
+<!--                                 src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>-->
+<!--                          VirusViz All Epitopes-->
+<!--                        </v-btn>-->
+<!--              </v-layout>-->
+<!--            </v-flex>-->
             <v-flex sm3 align-self-center>
               <v-layout justify-end>
                 <v-dialog width="500" v-model="dialogOrder" persistent>
@@ -584,8 +584,8 @@ export default {
           {text: 'Epitope IEDB ID', value: 'iedb_epitope_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Source Page', value: 'epitope_iri', sortable: false, show: false, to_send: true, can_be_shown: false},
           {text: 'Ref Page', value: 'external_link', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
-          {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
+          // {text: 'VirusViz Mutated Seq', value: 'virusViz_button', sortable: false, show: true, to_send: false, can_be_shown: true},
+          // {text: 'VirusViz All Population', value: 'virusViz_button_all_population', sortable: false, show: true, to_send: false, can_be_shown: true},
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein Name', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},

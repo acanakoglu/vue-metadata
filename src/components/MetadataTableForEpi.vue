@@ -220,13 +220,13 @@
                             </v-card>
                         </v-dialog>
 
-                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
-                             :disabled="this.result.length === 0"
-                              @click="openDialogVirusViz()">
-                        <v-img style="margin-right: 5px; min-width: 15px;"
-                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>
-                        VirusViz
-                        </v-btn>
+<!--                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"-->
+<!--                             :disabled="this.result.length === 0"-->
+<!--                              @click="openDialogVirusViz()">-->
+<!--                        <v-img style="margin-right: 5px; min-width: 15px;"-->
+<!--                               src="http://genomic.elet.polimi.it/virusviz/static/img/virusviz-logo-name.png"/>-->
+<!--                        VirusViz-->
+<!--                        </v-btn>-->
                         <v-dialog
                           v-model="dialogVirusviz"
                           width="500"
