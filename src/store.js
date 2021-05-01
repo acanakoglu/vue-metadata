@@ -57,6 +57,7 @@ export default new Vuex.Store({
         analyzeSubstitutionPanel: false,
         finish_count_population: true,
         fromPredefinedQuery: false,
+        appliedActuaQuery: true,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -409,6 +410,12 @@ export default new Vuex.Store({
         },
         setFalseAnalyzeSubstitutionPanel: (state) => {
             state.analyzeSubstitutionPanel = false;
+        },
+        setTrueAppliedActuaQuery: (state) => {
+            state.appliedActuaQuery = true;
+        },
+        setFalseAppliedActuaQuery: (state) => {
+            state.appliedActuaQuery = false;
         }
     },
     actions: {

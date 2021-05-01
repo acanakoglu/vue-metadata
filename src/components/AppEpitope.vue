@@ -320,6 +320,8 @@
                 is_control: false,
                 finish_count_seq: false,
                 finish_count_var: false,
+                finish_count_population: false,
+                countPopulationEpi: null,
                 precision_float_table: 5,
                 isGisaid: false,
                 queryItems: [
@@ -704,9 +706,11 @@
                }
              }
              val['position_range_to_show'] = newListPositionString;
-             
-             val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
-             val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+
+             let date1 = new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+             let date2 = new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+             val['creation_date']  =  date1;
+             val['refresh_date']  =  date2;
 
              if(/gisaid/.test(window.location.href)){
                val['creation_database'] = "EpiSurf GISAID";
@@ -720,6 +724,7 @@
              this.epitopeToAdd = val;
              this.countNumSeq(val);
              this.countNumVar(val);
+             this.countPopulation(val);
 
             },
             controlExistingName(epitope) {
@@ -827,6 +832,23 @@
                       this.finish_count_var = true;
                     });
           },
+          countPopulation(val){
+             let to_send = JSON.parse(JSON.stringify(val['compound_query']));
+             to_send['kv'] = {};
+            this.finish_count_population = false;
+            this.setTrueNewEpitopeLoading();
+
+            let count_url = `query/count?is_control=${this.is_control}`;
+
+            axios.post(count_url, to_send)
+                .then((res) => {
+                    return res.data;
+                })
+                .then((res) => {
+                    this.countPopulationEpi = res;
+                    this.finish_count_population = true;
+                });
+          },
           addFrequencies() {
             if (this.epitopeToAdd['num_var'] === 'N/D') {
               this.epitopeToAdd['mutated_freq'] = 'N/D';
@@ -839,14 +861,15 @@
                 this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
               }
               this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
-              this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
+              this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countPopulationEpi) * 100;
               if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
                 this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
               } else {
                 this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
               }
-              this.epitopeToAdd['mutated_seq_ratio'] += ' %';
-              this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
+              this.epitopeToAdd['mutated_seq_ratio'] = parseFloat(this.epitopeToAdd['mutated_seq_ratio']).toFixed(this.precision_float_table);
+              //this.epitopeToAdd['mutated_seq_ratio'] += ' %';
+              this.epitopeToAdd['total_num_of_seq_metadata'] = this.countPopulationEpi;
             }
           },
         }
@@ -927,7 +950,7 @@
             ...
                 mapState(['query', 'synonym', 'count', 'type', "panelActive", 'numerical', 'countSeq', "countEpi",
                     'countSeq2', 'countSeq3', 'countSeq4', 'exampleCustomEpitope', 'epitopeAdded', 'countEpiToShow'
-                , 'finish_count_population', 'disableSelectorEpitopePart', 'fromPredefinedQuery']),
+                , 'disableSelectorEpitopePart', 'fromPredefinedQuery']),
             ...
                 mapGetters({
                     compound_query: 'build_query',

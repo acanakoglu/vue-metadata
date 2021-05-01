@@ -208,10 +208,31 @@
                         <br><br>
                         <b>(4) MUT SEQ RATIO:</b>
                         <span> the ratio of mutated sequences (1) over the total of the selected population.</span>
+                        <div style="margin-left: 10px">
+                        <span>
+                          <v-icon color = 'green'>circle</v-icon>: denotes epitopes that have been derived by B-cell
+                          assays and/or by T-cell/MHC ligand assays with a positive assay response frequency >= 0.2
+                          <br>
+                          <v-icon color = 'orange'>circle</v-icon>: denotes epitopes that have been derived by reliable
+                          assays (i.e., B-cell assays or T-cell/MHC ligand assays with response frequency >= 0.2) but
+                          also by less reliable assays (i.e., T-cell/MHC ligand assays with response frequency < 0.2)
+                          <br>
+                          <v-icon color = 'red'>circle</v-icon>: denotes epitopes that have been derived by
+                          T-cell/MHC ligand assays with a positive assay response frequency < 0.2
+                          <br>
+                          <br>
+                          When T-cell/MHC ligand epitopes are concerned, users should consider the percentages of
+                          MUT SEQ RATIO with care, ensuring that the HLA restriction is appropriate for the observed
+                          population (by checking population alleles databases, e.g.,
+                          <a href="http://www.allelefrequencies.net/" target="_blank"> http://www.allelefrequencies.net/</a>).
+                          <br>
+                        </span>
+                        </div>
                         <br><br>
                         <span>When an amino acid condition has been added the number of sequences considered for the
                           calculation of the four statistics is restricted to the ones that exhibit matching mutations
-                          (which, by construction, fall within the epitope position range).</span>
+                          (which, by construction, fall within the epitope position range).
+                        </span>
                     </v-card-text>
                 </v-card>
             </v-dialog>
@@ -243,6 +264,76 @@
                       </span>
 
                       <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
+
+                      <div v-else-if="header.value === 'mutated_seq_ratio2'" style="float:left;">
+                        <span style="display:inline;">{{props.item['mutated_seq_ratio2']}} %</span>
+                        <span v-if="checkReliabilityPercentage(props.item) === 'green'" style=" display:inline; margin-left: 5px;">
+                              <v-icon
+                                  flat icon
+                                  slot="activator"
+                                  color="green"
+                                  class="white--text info-button-green" >circle</v-icon>
+                        </span>
+                        <span v-else-if="checkReliabilityPercentage(props.item) === 'orange'" style="display:inline; margin-left: 5px">
+                            <v-dialog width="500">
+                              <v-btn
+                                    small
+                                    flat icon
+                                    slot="activator"
+                                    color="orange"
+                                    class="white--text info-button"
+                                    >
+                                <v-icon >circle</v-icon>
+                               </v-btn>
+                              <v-card>
+                                  <v-card-title
+                                          class="headline orange lighten-2"
+                                          primary-title
+                                  >
+                                      Attention!
+                                  </v-card-title>
+                                  <v-card-text>
+                                    <span>This epitope has been derived by reliable assays (i.e., B-cell assays or
+                                      T-cell/MHC ligand assays with response frequency >= 0.2) but also by less reliable
+                                      assays (i.e., T-cell/MHC ligand assays with response frequency < 0.2).
+                                      <br>
+                                      Please consider the shown statistics with care, as epitopes should be tested on
+                                      alleles that are well represented in the observed population.
+                                    </span>
+                                  </v-card-text>
+                              </v-card>
+                          </v-dialog>
+                        </span>
+                        <span v-else-if="checkReliabilityPercentage(props.item) === 'red'" style="display:inline; margin-left: 5px">
+                            <v-dialog width="500">
+                              <v-btn
+                                    small
+                                    flat icon
+                                    slot="activator"
+                                    color="red"
+                                    class="white--text info-button"
+                                    >
+                                <v-icon >circle</v-icon>
+                               </v-btn>
+                              <v-card>
+                                  <v-card-title
+                                          class="headline red lighten-2"
+                                          primary-title
+                                  >
+                                      Attention!
+                                  </v-card-title>
+                                  <v-card-text>
+                                    <span>This epitope has been derived by T-cell/MHC ligand assays with a
+                                      positive assay response frequency < 0.2.
+                                      <br>
+                                      Please consider the shown statistics with care, as epitopes should be tested
+                                      on alleles that are well represented in the observed population.
+                                    </span>
+                                  </v-card-text>
+                              </v-card>
+                          </v-dialog>
+                        </span>
+                      </div>
 
                       <span v-else-if="header.value === 'iedb_epitope_id'">
                           <a v-if="props.item[header.value]" :href="props.item['epitope_iri']" target="_blank">{{props.item[header.value]}}</a>
@@ -443,10 +534,12 @@ export default {
       },
       my_interval_num_epi: null,
       my_interval_table: null,
+      my_interval_countSeq: null,
       reCalculateTable: false,
       virusviz_all_pop: false,
       dialogApplyEpitopeTable: false,
       showTable: false,
+      threshold_reliability: 0.2,
     }
   },
   computed: {
@@ -490,6 +583,46 @@ export default {
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
       'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery'
     ]),
+    checkReliabilityPercentage(item){
+      let color = '';
+      let arr_cell = item['cell_type'].split("\n----\n");
+      let arr_resp = item['response_frequency_pos'].split("\n----\n");
+
+      let len = arr_cell.length;
+      let i = 0;
+
+      while (i < len){
+        if(arr_cell[i] === 'B cell'){
+          if(color === ''){
+            color = 'green';
+          }
+          else if (color === 'red'){
+            color = 'orange';
+          }
+        }
+        else{
+          if(arr_resp[i] !== 'N/D' && arr_resp[i] >= this.threshold_reliability){
+              if(color === ''){
+                color = 'green';
+              }
+              else if (color === 'red'){
+                color = 'orange';
+              }
+          }
+          else{
+            if(color === ''){
+                color = 'red';
+              }
+              else if (color === 'green'){
+                color = 'orange';
+              }
+          }
+        }
+
+        i = i + 1;
+      }
+      return color;
+    },
     showTheTable(){
       this.showTable = true;
       this.loadTable();
@@ -589,11 +722,11 @@ export default {
           {text: 'Virus Name', value: 'taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein Name', value: 'product', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
-          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Response Freq', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Response Frequency', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Epitope Seq', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           /*{text: 'Variant Position', value: 'start_aa_original', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Variant Type', value: 'variant_aa_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
@@ -814,10 +947,12 @@ export default {
                   item['mutated_seq_ratio'] += ' %';*/
                   if (item['mutated_seq_ratio2'] >= 10) {
                     item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table + 1);
+                    item['mutated_seq_ratio2'] = parseFloat(item['mutated_seq_ratio2']).toFixed(this.precision_float_table - 1);
                   } else {
                     item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table);
+                    item['mutated_seq_ratio2'] = parseFloat(item['mutated_seq_ratio2']).toFixed(this.precision_float_table);
                   }
-                  item['mutated_seq_ratio2'] += ' %';
+                  //item['mutated_seq_ratio2'] += ' %';
                   /*if (item['mutated_seq_ratio3'] >= 10) {
                     item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table + 1);
                   } else {
@@ -950,7 +1085,8 @@ export default {
                   } else {
                     item['mutated_seq_ratio2'] = item['mutated_seq_ratio2'].toPrecision(this.precision_float_table);
                   }
-                  item['mutated_seq_ratio2'] += ' %';
+                  item['mutated_seq_ratio2'] = parseFloat(item['mutated_seq_ratio2']).toFixed(this.precision_float_table);
+                  //item['mutated_seq_ratio2'] += ' %';
                   /*if (item['mutated_seq_ratio3'] >= 10) {
                     item['mutated_seq_ratio3'] = item['mutated_seq_ratio3'].toPrecision(this.precision_float_table + 1);
                   } else {
@@ -1012,14 +1148,21 @@ export default {
       //Object.assign(to_send,{"compound_query": this.compound_query});
      let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-      let count_url = `query/count?is_control=${this.is_control}`;
+      let count_url = `query/countPoll?is_control=${this.is_control}`;
+
+      if(this.my_interval_countSeq !== null){
+        stopPoll(this.my_interval_countSeq);
+      }
       axios.post(count_url, to_send)
         .then((res) => {
             return res.data;
         })
         .then((res) => {
+          this.my_interval_countSeq = poll(res.result, (res) => {
+            this.my_interval_countSeq = null;
             this.setCountSeq2(res);
             this.received_count_seq = true;
+          });
         });
 
       /*let count_url = 'epitope/countSeq';
@@ -1302,6 +1445,17 @@ export default {
 
   table.v-table tbody td {
     font-size: 16px !important;
+  }
+
+  .info-button {
+    width: 2px;
+    padding-bottom: 5px;
+    margin-left: 15px;
+  }
+
+  .info-button-green {
+    width: 2px;
+    margin-left: 15px;
   }
 
 </style>

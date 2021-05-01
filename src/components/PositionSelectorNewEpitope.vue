@@ -17,9 +17,10 @@
                       :loading = "isLoading"
         ></v-text-field>
 
-        <v-card style="width: 300px">
+        <v-card style="width: 350px">
             <v-card-title>
                 <h4 class="headline mb-0">{{text}}</h4>
+                <h5 style="margin-top: 5px">Non linear epitopes segment must be inserted in order</h5>
             </v-card-title>
             <h5 class="ml-4" style="color:red;">{{errorExt}}</h5>
             <v-container fluid grid-list-xl>
