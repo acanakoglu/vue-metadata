@@ -545,7 +545,8 @@ export default {
   computed: {
     ...mapState([
       'epiQuerySel', 'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpi', 'showSequenceEpiTable',
-      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields', 'fromPredefinedQuery'
+      'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields', 'fromPredefinedQuery',
+        'myIntervalCountSeq'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -581,7 +582,7 @@ export default {
     ...mapMutations([
         'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
-      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery'
+      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery', 'setMyIntervalCountSeq'
     ]),
     checkReliabilityPercentage(item){
       let color = '';
@@ -1360,6 +1361,12 @@ export default {
     }
   },
   watch: {
+    my_interval_countSeq(){
+      if(this.myIntervalCountSeq !== null && this.my_interval_countSeq !== this.myIntervalCountSeq){
+        stopPoll(this.myIntervalCountSeq);
+      }
+      this.setMyIntervalCountSeq(this.my_interval_countSeq);
+    },
     epiSearchDis(){
       if(this.epiSearchDis === false){
         this.loadCountEpi();
@@ -1450,12 +1457,12 @@ export default {
   .info-button {
     width: 2px;
     padding-bottom: 5px;
-    margin-left: 15px;
+    margin-left: 6px;
   }
 
   .info-button-green {
     width: 2px;
-    margin-left: 15px;
+    margin-left: 8px;
   }
 
 </style>

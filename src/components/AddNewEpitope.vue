@@ -479,7 +479,7 @@ export default {
     ...mapState(['epitopeAdded', 'newSingleEpitope', 'newEpitopeLoading', 'showMoreInfoEpitopeUser',
       'countSeq2', 'showAminoacidVariantUserNewEpi',
       'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
-      'epitopeAminoacidConditionsArrayUserNew', 'epitopeAdded', 'userEpitopeSelected']),
+      'epitopeAminoacidConditionsArrayUserNew', 'epitopeAdded', 'userEpitopeSelected', 'myIntervalCountSeq']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query',
@@ -625,7 +625,7 @@ export default {
      'setTrueExampleCustomEpitope', 'setNewSingleEpitopeQuery', 'resetNewSingleAminoacidConditionUserQuery',
      'setNewSingleAminoacidConditionUserQuery', 'setQuery', 'setFalseDisableSelectorEpitopePart',
      'setFalseDisableSelectorUserNewEpitopePart', 'setFalseShowAminoacidVariantUserNewEpi',
-     'resetNewSingleEpitopeQuery', 'refreshEpitopeInList']),
+     'resetNewSingleEpitopeQuery', 'refreshEpitopeInList', 'setMyIntervalCountSeq']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction',]),
      loadCountSeq2(){
        this.setFalseFinishCountPopulation();
@@ -1109,6 +1109,12 @@ export default {
 
   },
   watch:{
+    my_interval_countSeq(){
+      if(this.myIntervalCountSeq !== null && this.my_interval_countSeq !== this.myIntervalCountSeq){
+        stopPoll(this.myIntervalCountSeq);
+      }
+      this.setMyIntervalCountSeq(this.my_interval_countSeq);
+    },
     epiSearchDis(){
       if(this.epiSearchDis){
         this.clearEpitope();
