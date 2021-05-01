@@ -132,6 +132,7 @@
         <v-data-table
                 :headers="selected_headers"
                 :items="result"
+                :pagination.sync="pagination"
                 :loading="isLoading || newEpitopeLoading"
                 class="data-table"
         >
@@ -147,6 +148,8 @@
                     </span>
 
                   <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
+
+                  <span v-else-if="header.value === 'mutated_seq_ratio'">{{props.item['mutated_seq_ratio']}}<span v-if="props.item['mutated_seq_ratio'] !== '-'"> %</span></span>
 
                   <span v-else-if="header.value === 'metadata'">
                     <br>
@@ -194,12 +197,14 @@
                       <div v-for="(conditionsAND, index) in createAminoAcidInfos(props.item)">
                         <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
                         <div v-for="(conditionsOR, index) in conditionsAND">
-                          <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
+                         <span>{{conditionsOR}} </span>
+
+                          <!--<span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
                           <span v-for="(value, key) in conditionsOR" style="display: block;">
                             <b>{{key}}: <br></b>
                             <span class="capitalize">{{value}} </span>
                             <br><br>
-                          </span>
+                          </span>-->
                         </div>
                       </div>
                       <br><br>
@@ -244,13 +249,15 @@
                     </span>
 
                     <span v-else-if="header.value === 'creation_date'">
-                      {{props.item[header.value]}}
-                      ({{props.item['creation_database']}})
+                      <span>{{props.item[header.value]}}</span>
+                      <br><br>
+                      <span>({{props.item['creation_database']}})</span>
                     </span>
 
                     <span v-else-if="header.value === 'refresh_date'">
-                      {{props.item[header.value]}}
-                      ({{props.item['refresh_database']}})
+                      <span>{{props.item[header.value]}}</span>
+                      <br><br>
+                      <span>({{props.item['refresh_database']}})</span>
                     </span>
 
                     <span v-else>{{props.item[header.value]}}</span>
@@ -367,14 +374,7 @@ export default {
       sortable: true,
       headers_can_be_shown: this.getShownHeaders(),
       received_count_seq: true,
-      pagination: {
-          descending: false,
-          page: 1,
-          rowsPerPage: 10,
-          sortBy: itemSourceIdName,
-          totalItems: 0,
-          rowsPerPageItems: [10, 100, 1000] //mani che si alzano
-      },
+      pagination: {},
       dialogVirusviz: false,
       sendToDialogVirusViz: {
         epitope_id : null,
@@ -436,9 +436,78 @@ export default {
           let len = query.length;
           let i = 0;
           while(i < len){
-            let line = {};
+            //let line = {};
+            let line = "";
             let single = query[i];
-            Object.keys(single).forEach(function(key) {
+
+            let len = Object.keys(single).length;
+            let j = 0;
+
+            if(single.hasOwnProperty('product')){
+              line += single['product'][0].substr(0,single['product'][0].indexOf(' '));
+              line = line.charAt(0).toUpperCase() + line.slice(1)
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+              if(j === 3){
+                line += '\n'
+              }
+            }
+
+            if(single.hasOwnProperty('variant_aa_type')){
+              line += single['variant_aa_type'][0].toUpperCase();
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+              if(j === 3){
+                line += '\n'
+              }
+            }
+
+            if(single.hasOwnProperty('start_aa_original')){
+              if(single['start_aa_original']['min_val'] !== single['start_aa_original']['max_val']){
+                line += single['start_aa_original']['min_val'] + '-' + single['start_aa_original']['max_val'];
+              }
+              else{
+                line += single['start_aa_original']['min_val'];
+              }
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+              if(j === 3){
+                line += '\n'
+              }
+            }
+
+            if(single.hasOwnProperty('sequence_aa_original') || single.hasOwnProperty('sequence_aa_alternative')){
+              if(single.hasOwnProperty('sequence_aa_original')){
+                line += single['sequence_aa_original'][0].toUpperCase();
+                j = j + 1;
+              }
+              else{
+                line += "ref";
+              }
+              line += " -> "
+              if(single.hasOwnProperty('sequence_aa_alternative')){
+                line += single['sequence_aa_alternative'][0].toUpperCase();
+                j = j + 1;
+              }
+              else{
+                line += "any";
+              }
+              if(j < len) {
+                line += ', '
+              }
+              if(j === 3){
+                line += '\n'
+              }
+            }
+
+
+            /*Object.keys(single).forEach(function(key) {
               if (key === 'product') {
                 line['Protein'] = single[key][0];
               } else if (key === 'variant_aa_type') {
@@ -451,7 +520,8 @@ export default {
                 let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
                 line['Position range'] = pos;
               }
-            })
+            })*/
+
             arrayToShowInOR.push(line);
             i++;
           }
@@ -580,25 +650,8 @@ export default {
       }
       this.isLoading = false;
     },
-    loadCountSeq2(){
-      this.received_count_seq = false;
-      this.setCountSeq2(null);
-
-     let to_send = JSON.parse(JSON.stringify(this.compound_query));
-
-      let count_url = `query/count?is_control=${this.is_control}`;
-      axios.post(count_url, to_send)
-        .then((res) => {
-            return res.data;
-        })
-        .then((res) => {
-            this.setCountSeq2(res);
-            this.received_count_seq = true;
-        });
-    },
     loadEveything(){
       //if(this.compound_query['gcm'].host_taxon_name && this.compound_query['gcm'].taxon_name ) {
-        //this.loadCountSeq2();
         //this.loadCountEpi();
         this.loadTable();
       //}
@@ -703,6 +756,9 @@ export default {
       }
     },
     epitopeAdded(){
+      if(this.pagination.page > this.epitopeAdded.length/this.pagination.rowsPerPage){
+        this.pagination.page = 1;
+      }
       this.result = this.epitopeAdded;
       this.isLoading = false;
     },

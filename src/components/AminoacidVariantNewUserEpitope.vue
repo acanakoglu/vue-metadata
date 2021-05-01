@@ -2,7 +2,7 @@
   <v-container fluid grid-list-xl class="EpitopeMenu" >
     <v-layout wrap align-center>
       <v-flex xs12 md8 lg8 class="no-horizontal-padding">
-        <h2 style="margin-bottom: 10px">Add Amino Acid Condition</h2>
+        <h2 style="margin-bottom: 10px">Add amino acid restriction</h2>
         <h3 style="margin-bottom: 20px">For computing statistics over a fraction of the selected population carrying the amino acid change</h3>
       </v-flex>
       <v-flex xs12 md4 lg4 class="no-horizontal-padding" style="margin-bottom: 10px">
@@ -14,7 +14,7 @@
       <v-flex xs12 lg12 class="no-horizontal-padding" v-if="Object.keys(newSingleAminoAcidConditionUser).length > 0"
               style="margin-top: 10px; margin-bottom: 30px; margin-left: 20px; margin-right: 20px" >
           <span class="label">
-            Amino Acid Variant
+            Amino acid condition:
           </span>
           <span style="font-family:monospace; font-size:120%;">
               {{ queryToShow }}

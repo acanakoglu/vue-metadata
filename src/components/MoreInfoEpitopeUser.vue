@@ -51,11 +51,13 @@
             <div v-for="(conditionsAND, index) in amino_acid_conditions">
               <!--<h3 style="display: block; margin-top: 10px; margin-bottom: 10px;">Condition {{index + 1}}: </h3> -->
               <div v-for="(conditionsOR, index) in conditionsAND">
-                <span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
+                <span>{{conditionsOR}}</span>
+
+                <!--<span style="display: block; margin-top: 10px; margin-bottom: 10px;" v-if="index > 0"><b> OR </b></span>
                 <span v-for="(value, key) in conditionsOR" style="display: block;">
                   <b>- {{key}} : </b>
                   <span class="capitalize">{{value}} </span>
-                </span>
+                </span>-->
               </div>
             </div>
           </div>
@@ -168,7 +170,65 @@ export default {
           let len = query.length;
           let i = 0;
           while(i < len){
-            let line = {};
+
+            let line = "";
+            let single = query[i];
+
+            let len = Object.keys(single).length;
+            let j = 0;
+
+            if(single.hasOwnProperty('product')){
+              line += single['product'][0].substr(0,single['product'][0].indexOf(' '));
+              line = line.charAt(0).toUpperCase() + line.slice(1)
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+            }
+
+            if(single.hasOwnProperty('variant_aa_type')){
+              line += single['variant_aa_type'][0].toUpperCase();
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+            }
+
+            if(single.hasOwnProperty('start_aa_original')){
+              if(single['start_aa_original']['min_val'] !== single['start_aa_original']['max_val']){
+                line += single['start_aa_original']['min_val'] + '-' + single['start_aa_original']['max_val'];
+              }
+              else{
+                line += single['start_aa_original']['min_val'];
+              }
+              j = j + 1;
+              if(j < len) {
+                line += ', '
+              }
+            }
+
+            if(single.hasOwnProperty('sequence_aa_original') || single.hasOwnProperty('sequence_aa_alternative')){
+              if(single.hasOwnProperty('sequence_aa_original')){
+                line += single['sequence_aa_original'][0].toUpperCase();
+                j = j + 1;
+              }
+              else{
+                line += "ref";
+              }
+              line += " -> "
+              if(single.hasOwnProperty('sequence_aa_alternative')){
+                line += single['sequence_aa_alternative'][0].toUpperCase();
+                j = j + 1;
+              }
+              else{
+                line += "any";
+              }
+              if(j < len) {
+                line += ', ' + j + len
+              }
+            }
+
+            /*let line = {};
             let single = query[i];
             Object.keys(single).forEach(function(key) {
               if (key === 'product') {
@@ -183,7 +243,7 @@ export default {
                 let pos = single[key]['min_val'] + '-' + single[key]['max_val'];
                 line['Position range'] = pos;
               }
-            })
+            })*/
             arrayToShowInOR.push(line);
             i++;
           }
@@ -199,13 +259,13 @@ export default {
         infos['Number of mutated sequences on the fraction of population with the amino acid condition'] = epitope.num_seq;
         infos['Number of variants on the fraction of population with the amino acid condition'] = epitope.num_var;
         infos['Variants frequency on the fraction of population with the amino acid condition'] = epitope.mutated_freq;
-        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
+        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio + " %";
       }
       else{
         infos['Number of mutated sequences on selected population'] = epitope.num_seq;
         infos['Number of variants on selected population'] = epitope.num_var;
         infos['Variants frequency on selected population'] = epitope.mutated_freq;
-        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio;
+        infos['Mutated sequences ratio'] = epitope.mutated_seq_ratio + " %";
       }
       return infos;
     },

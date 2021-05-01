@@ -19,13 +19,19 @@
 
         <v-card style="width: 380px">
             <v-card-title>
-                <h4 class="headline mb-0">{{text}}</h4>
-                <v-spacer></v-spacer>
+              <v-layout>
+                <v-flex sm8 align-self-center>
+                  <h4 class="headline mb-0">{{text}}</h4>
+                  <h5 class="ml-4" style="padding-right: 10px; margin-left: 0px !important; margin-top: 5px">Suggested range >0.2 for T cell / MHC ligand assays</h5>
+                </v-flex>
+                <v-flex sm4 align-self-center>
                 <v-checkbox v-model="isNull"
                             label="N/D"
                             input-value="true"
                             :disabled="forceNull">
                 </v-checkbox>
+                </v-flex>
+              </v-layout>
             </v-card-title>
             <h5 class="ml-4" style="color:red;">{{errorExt}}</h5>
             <v-container fluid grid-list-xl>

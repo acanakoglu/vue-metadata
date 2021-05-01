@@ -107,6 +107,7 @@
                 :headers="selected_headers"
                 :items="result"
                 :loading="isLoading"
+                :pagination.sync="pagination"
                 class="data-table"
         >
             <template slot="items" slot-scope="props">
@@ -279,14 +280,7 @@ export default {
       sortable: true,
       headers_can_be_shown: this.getShownHeaders(),
       received_count_seq: true,
-      pagination: {
-          descending: false,
-          page: 1,
-          rowsPerPage: 10,
-          sortBy: itemSourceIdName,
-          totalItems: 0,
-          rowsPerPageItems: [10, 100, 1000] //mani che si alzano
-      },
+      pagination: {},
       dialogVirusviz: false,
       sendToDialogVirusViz: {
         epitope_id : null,
@@ -294,6 +288,7 @@ export default {
       },
       my_interval_num_epi: null,
       my_interval_table: null,
+      my_interval_countSeq: null,
     }
   },
   computed: {
@@ -471,11 +466,11 @@ export default {
           {text: 'Virus Name', value: 'virus_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Host Name', value: 'host_id', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Protein Name', value: 'protein_name', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
-          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'Assay', value: 'cell_type', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'Assay Type', value: 'assay_type', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
           {text: 'HLA restriction', value: 'mhc_allele', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
-          {text: 'Response Freq', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
+          {text: 'MHC class', value: 'mhc_class', sortable: this.sortable, show: false, to_send: true, can_be_shown: true},
+          {text: 'Response Frequency', value: 'response_frequency_pos', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
           {text: 'Epitope Seq', value: 'epi_fragment_sequence', sortable: false, show: true, to_send: true, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Is Linear', value: 'is_linear', sortable: this.sortable, show: true, to_send: true, can_be_shown: true},
@@ -641,14 +636,22 @@ export default {
       this.setCountSeq2(null);
      let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-      let count_url = `query/count?is_control=${this.is_control}`;
+      let count_url = `query/countPoll?is_control=${this.is_control}`;
+
+      if(this.my_interval_countSeq !== null){
+        stopPoll(this.my_interval_countSeq);
+      }
+
       axios.post(count_url, to_send)
         .then((res) => {
             return res.data;
         })
         .then((res) => {
+          this.my_interval_countSeq = poll(res.result, (res) => {
+            this.my_interval_countSeq = null;
             this.setCountSeq2(res);
             this.received_count_seq = true;
+          });
         });
     },
     loadCountEpi() {
@@ -788,13 +791,6 @@ export default {
         //this.loadTable();
         //this.loadTable2();
       }
-    },
-    pagination: {
-        handler(val, oldVal) {
-            if (JSON.stringify(val) !== JSON.stringify(oldVal))
-              this.loadTable();
-        },
-        deep: true
     },
   }
 }

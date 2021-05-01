@@ -90,15 +90,16 @@ export default {
   components: {AnalyzeSubstitutionPanel, EpitopeSelectorNum, EpitopeSelectorText},
   data() {
     return {
-      appliedActuaQuery: true,
     }
   },
   computed: {
     ...mapState([
       'showAminoacidVariantEpi', 'epiQuerySel', 'query', 'epitopeAminoacidFields',
-      'aminoacidConditions', 'epitopeAminoacidFields','fromPredefinedQuery', 'disableSelectorEpitopePart'
+      'aminoacidConditions', 'epitopeAminoacidFields','fromPredefinedQuery', 'disableSelectorEpitopePart',
+        'appliedActuaQuery'
     ]),
     ...mapGetters({
+        epiSearchDis: 'epiSearchDisabled',
         compound_query: 'build_query',
     }),
     queryToShow() {
@@ -127,7 +128,8 @@ export default {
   methods:{
     ...mapMutations([
         'setTrueShowAminoacidVariantEpi', 'setFalseShowAminoacidVariantEpi', 'setEpitopeAminoacidFields',
-      'setFalseDisableSelectorEpitopePart', 'setTrueAnalyzeSubstitutionPanel'
+      'setFalseDisableSelectorEpitopePart', 'setTrueAnalyzeSubstitutionPanel', 'setTrueAppliedActuaQuery',
+        'setFalseAppliedActuaQuery'
     ]),
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected']),
     openAnalyzeSubstitutionPanel(){
@@ -159,7 +161,7 @@ export default {
       this.setEpiDropDownSelected({field: 'stopExtVariant', list: []});
     },
     applyAminoacidConditions(){
-      this.appliedActuaQuery = true;
+      this.setTrueAppliedActuaQuery();
       Object.entries(this.aminoacidConditions).forEach(item => {
           this.setEpiDropDownSelected({field: item[0], list:item[1]});
       });
@@ -204,11 +206,13 @@ export default {
   watch: {
     compound_query(){
       if(!this.fromPredefinedQuery){
-        this.closeAminoEpiMenu();
+        if(this.epiSearchDis) {
+          this.closeAminoEpiMenu();
+        }
       }
     },
     aminoacidConditions(){
-      this.appliedActuaQuery = false;
+      this.setFalseAppliedActuaQuery();
     }
   },
   created() {
