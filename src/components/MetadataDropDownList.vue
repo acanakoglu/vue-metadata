@@ -90,7 +90,7 @@
                 //     {text: 'Case study', value: 'CaseStudy'},
                 // ],
                 views: [
-                    {text: 'Sequences of the virus responsible for COVID-19', value: 'biological_v', color: '#B3E1FF'},
+                    {text: 'Sequences of the virus responsible for COVID-19 (hCoV-19)', value: 'biological_v', color: '#B3E1FF'},
                     {text: 'Host Organism', value: 'biological_h', color: '#FFA9BF'},
                     {text: 'Sequence properties', value: 'technological', color: '#DEFFC5'},
                     {text: 'Organization', value: 'organizational', color: '#FFBF5B'},

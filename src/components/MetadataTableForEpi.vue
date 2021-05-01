@@ -40,6 +40,57 @@
             <v-container fluid grid-list-xs>
                 <v-layout justify-space-between row>
                     <v-flex sm3 align-self-center>
+
+
+                        <v-dialog
+                                v-model="dialogDownloadTableAccession"
+                                width="500">
+                            <v-btn dark
+                                   slot="activator"
+                                   small
+                                   color="rgb(122, 139, 157)">
+                                Download Accession IDs
+                            </v-btn>
+
+                            <v-card>
+                                <v-card-title
+                                        class="headline"
+                                        style="background-color:rgb(201, 53, 53) ; color: white">
+                                    Download Accession IDs
+                                </v-card-title>
+                                <v-progress-linear height="2" class="progress"
+                                                   :indeterminate="downloadProgress"></v-progress-linear>
+                                <v-card-text>
+                                    <p>
+                                        Click the "Download" button below to download a "result.csv" file that contains
+                                        Accession IDs.
+                                    </p>
+                                    <p>
+                                        Please check size of selection.
+                                        Beware that downloading tables with many files may result in long waiting time.
+                                    </p>
+                                </v-card-text>
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                    <v-btn
+                                            color="rgb(201, 53, 53) "
+                                            flat
+                                            @click="downloadTable">
+                                        Download
+                                    </v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="rgb(201, 53, 53) "
+                                            flat
+                                            @click="dialogDownloadTableAccession = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <!--
                         <v-btn style="color: white;"
                                    @click="dialogDownloadTable = true"
                                    small
@@ -170,6 +221,7 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
+                        -->
                     </v-flex>
 
                     <v-flex sm3 align-self-center>
@@ -421,6 +473,7 @@
                 gmqlProgress: false,
                 dialogDownload: false,
                 dialogDownloadTable: false,
+                dialogDownloadTableAccession: false,
                 dialogGmql: false,
                 gmqlQuery: "",
                 isLoading: true,
@@ -434,10 +487,10 @@
                 pagination: {
                     descending: false,
                     page: 1,
-                    rowsPerPage: 10,
+                    rowsPerPage: 20,
                     sortBy: itemSourceIdName,
                     totalItems: 0,
-                    rowsPerPageItems: [10, 100, 1000] //mani che si alzano
+                    rowsPerPageItems: [20]
                 },
                 dialogVirusviz: false,
             }
@@ -923,6 +976,7 @@
                     if (el.value != "extra")
                         fields.push(el.value)
                 });
+                fields = ['accession_id'];                // ONLY FOR GISAID
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };

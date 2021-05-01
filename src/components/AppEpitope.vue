@@ -195,12 +195,9 @@
                 <v-container fluid grid-list-xl style="background:#FFFFFF">
                     <v-layout wrap align-center test style="background:#FFFFFF">
                         <v-flex xs12 justify-center>
-                            <div style="font-size: 1.3em;color: rgb(62, 60, 122);justify-content: center;">Novel
-                                <strong>"Severe
-                                    acute respiratory syndrome coronavirus 2"</strong> sequences from <strong>"Homo
-                                    sapiens"</strong>
-                                as host are preselected.
-                                If you are interested in other virus(es), please change it from the dropdown menu below:
+                            <div style="font-size: 1.3em;color: rgb(62, 60, 122);justify-content: center;">
+                              Sequences from <strong>"Homo Sapiens"</strong> host are preselected.
+                              If you are interested in other hosts, please change it from the dropdown menu below
                             </div>
                         </v-flex>
                         <v-flex xs12 class="no-horizontal-padding">
@@ -235,8 +232,8 @@
                             xs6
                             class="bottom-info"
                             style="font-size:12px;">
-                        <div>GISAID data provided on this website is subject to GISAID’s <a
-                            href="https://www.gisaid.org/registration/terms-of-use/" target="_blank">Terms
+                        <div>Data used in this web application remain subject to GISAID’s <a
+                            href="http://gisaid.org/DAA/" target="_blank">Terms
                           and Conditions</a>.
                         </div>
 <!--                        <div>Our manuscript on ViruSurf has been published on Nucleic Acids Research. <a-->
