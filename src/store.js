@@ -58,6 +58,7 @@ export default new Vuex.Store({
         finish_count_population: true,
         fromPredefinedQuery: false,
         appliedActuaQuery: true,
+        myIntervalCountSeq: null,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -416,7 +417,10 @@ export default new Vuex.Store({
         },
         setFalseAppliedActuaQuery: (state) => {
             state.appliedActuaQuery = false;
-        }
+        },
+        setMyIntervalCountSeq: (state, poll) => {
+            state.myIntervalCountSeq = poll;
+        },
     },
     actions: {
         deleteKv({commit}, field) {
