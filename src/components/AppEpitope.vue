@@ -667,6 +667,7 @@
             }
             ,
             addCustomEpitope(item, compound_query){
+              this.setFalseFromPredefinedQuery();
               let item_custom_epi_meta;
               let item_custom_var_meta;
               if(item.custom_epitope_meta){
