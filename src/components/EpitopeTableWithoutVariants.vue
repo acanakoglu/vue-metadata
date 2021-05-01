@@ -294,7 +294,7 @@ export default {
   computed: {
     ...mapState([
       'epiQuerySel', 'epiQuerySelWithoutVariants',  'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpiWithoutVariants', 'showSequenceEpiTable',
-      'chosenEpitope', 'aminoacidConditions', 'epitopeAminoacidFields'
+      'chosenEpitope', 'aminoacidConditions', 'epitopeAminoacidFields', 'myIntervalCountSeq'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -329,7 +329,7 @@ export default {
   methods: {
     ...mapMutations([
         'setCountEpiWithoutVariants', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
-      'showSeqEpiTable', 'setChosenEpitope', 'setTrueDisableSelectorEpitopePart'
+      'showSeqEpiTable', 'setChosenEpitope', 'setTrueDisableSelectorEpitopePart', 'setMyIntervalCountSeq'
     ]),
     openDialogVirusViz(epitope_id){
       this.dialogVirusviz = true;
@@ -771,6 +771,12 @@ export default {
     this.loadEveything();
   },
   watch: {
+    my_interval_countSeq(){
+      if(this.myIntervalCountSeq !== null && this.my_interval_countSeq !== this.myIntervalCountSeq){
+        stopPoll(this.myIntervalCountSeq);
+      }
+      this.setMyIntervalCountSeq(this.my_interval_countSeq);
+    },
     epiSearchDis(){
       if(this.epiSearchDis === false){
         this.loadTable();
