@@ -12,7 +12,7 @@
     >
       <template slot="item" slot-scope="data">
           <span class="item-value-span"> {{rename(data.item)}}</span>
-          <span class="item-count-span" v-if="!epitopeAminoacidFields.some(item => item.field === field)"> {{data.item.count}}</span>
+          <span class="item-count-span" v-if="!epitopeAminoacidFields.some(item => item.field === field) && field !== 'iedb_epitope_id'"> {{data.item.count}}</span>
       </template>
     </v-autocomplete>
   </v-card>

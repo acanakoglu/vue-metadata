@@ -38,7 +38,7 @@
                   :text="fieldEpi.text"
                   :field="fieldEpi.field">
               </EpitopeWithoutVariantsSelectorPercentage>
-              <v-dialog width="500">
+              <v-dialog width="500" v-if="fieldEpi.field !== 'response_frequency'">
                   <v-btn
                           slot="activator"
                           class="info-button"
@@ -55,6 +55,32 @@
                       </v-card-title>
                       <v-card-text>
                           {{fieldEpi.description}}
+                      </v-card-text>
+                  </v-card>
+              </v-dialog>
+              <v-dialog width="500" v-else>
+                  <v-btn
+                          slot="activator"
+                          class="info-button"
+                          small
+                          flat icon color="grey">
+                      <v-icon class="info-icon">info</v-icon>
+                  </v-btn>
+                  <v-card>
+                      <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                      >
+                          {{fieldEpi.text}}
+                      </v-card-title>
+                      <v-card-text>
+                        Range of allowed values for the response frequency of positive assays.
+                        <br><br>
+                        In IEDB this measure is defined as the number of positively responded subjects (R)
+                        divided by the total number of those tested (N), summed up by mapped epitopes; to compensate
+                        for epitopes that are identified by a low number of assays, we employ a corrected formula
+                        (proposed by Carrasco et al. (<a href="https://doi.org/10.1155/2015/763461" target="_blank">https://doi.org/10.1155/2015/763461</a>)
+                        resulting as (R-sqrt(R))/N, where the importance of corrections decreases as the number of assays increases.
                       </v-card-text>
                   </v-card>
               </v-dialog>

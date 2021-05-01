@@ -66,24 +66,32 @@
           </v-layout>
           </v-flex>
 
-          <v-layout wrap justify-center style="margin: 20px" v-if="!epiSearchDis">
-            <!--<span><b> NEW EPITOPE:</b> {{this.newSingleEpitope}} </span>-->
-          </v-layout>
-
-          <h3 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 10px; margin-left: 10px"> Positions: </h3>
-          <v-layout wrap justify-left style="margin-left: 10px">
-          <div v-for="(pos, index) in newSingleEpitope['position_range']" v-if="!epiSearchDis">
-               <v-layout align-center style="margin: 0px">
-                 <div class="singlePosition">
-                    <span>
-                        {{pos}}
-                    </span>
-                   <v-btn @click="deletePosition(index)" class="white--text" color="red" small flat icon>
-                     <v-icon dark>remove_circle</v-icon>
-                   </v-btn>
-                 </div>
-               </v-layout>
-          </div>
+          <v-layout wrap>
+            <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex"></v-flex>
+            <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex"></v-flex>
+            <v-flex class="no-horizontal-padding xs12 sm6 md4 lg4 d-flex" style="margin-top: 15px; margin-bottom: 15px">
+              <v-layout wrap>
+                <v-flex class="no-horizontal-padding xs12 sm12 md12 lg12 d-flex">
+                <h3 v-if="newSingleEpitope['position_range']" style="width: 100%; margin-bottom: 15px;"> Positions: </h3>
+                </v-flex>
+                <v-flex class="no-horizontal-padding xs12 sm12 md12 lg12 d-flex">
+                  <v-layout wrap justify-left style="margin-left: 0px">
+                  <div v-for="(pos, index) in newSingleEpitope['position_range']" v-if="!epiSearchDis">
+                       <v-layout align-center style="margin: 0px">
+                         <div class="singlePosition">
+                            <span>
+                                {{pos}}
+                            </span>
+                           <v-btn @click="deletePosition(index)" class="white--text" color="red" small flat icon>
+                             <v-icon dark>remove_circle</v-icon>
+                           </v-btn>
+                         </div>
+                       </v-layout>
+                  </div>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-flex>
           </v-layout>
 
         </v-layout>
@@ -428,6 +436,7 @@ import PositionSelectorNewEpitope from "./PositionSelectorNewEpitope";
 import MoreInfoEpitopeUser from "./MoreInfoEpitopeUser";
 import AminoacidVariantNewUserEpitope from "./AminoacidVariantNewUserEpitope";
 import DownloadAndLoadEpitopes from "./DownloadAndLoadEpitopes";
+import {FULL_TEXT, poll, stopPoll} from "../utils";
 
 export default {
   name: "AddNewEpitope",
@@ -463,6 +472,7 @@ export default {
       isGisaid: false,
       allPossibleProteinAnnotations: [],
       previousVirus: '',
+      my_interval_countSeq: null,
     }
   },
   computed: {
@@ -622,14 +632,22 @@ export default {
        this.setCountSeq2(null);
      let to_send = JSON.parse(JSON.stringify(this.compound_query));
 
-      let count_url = `query/count?is_control=${this.is_control}`;
+      let count_url = `query/countPoll?is_control=${this.is_control}`;
+
+      if(this.my_interval_countSeq !== null){
+        stopPoll(this.my_interval_countSeq);
+      }
+
       axios.post(count_url, to_send)
         .then((res) => {
             return res.data;
         })
         .then((res) => {
+          this.my_interval_countSeq = poll(res.result, (res) => {
+            this.my_interval_countSeq = null;
             this.setCountSeq2(res);
             this.setTrueFinishCountPopulation();
+          });
         });
     },
      setEpitopeIndexToDelete(index){
@@ -704,8 +722,10 @@ export default {
              }
            }
            val['position_range_to_show'] = newListPositionString;
-           val['creation_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
-           val['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+           let date1 = new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+           let date2 = new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+           val['creation_date']  =  date1;     // date1.split('/').reverse().join('/');
+           val['refresh_date']  =  date2;
 
            if(/gisaid/.test(window.location.href)){
              val['creation_database'] = "EpiSurf GISAID";
@@ -719,6 +739,7 @@ export default {
            this.epitopeToAdd = val;
            this.countNumSeq(val);
            this.countNumVar(val);
+           this.countPopulationRefreshedFunction(val);
            this.resetEpitopeAminoacidConditionsArrayUserNew();
 
            this.clearEpitope();
@@ -920,24 +941,15 @@ export default {
            this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['num_var'] / this.epitopeToAdd['num_seq'];
          }
          this.epitopeToAdd['mutated_freq'] = this.epitopeToAdd['mutated_freq'].toPrecision(this.precision_float_table);
-         if(!this.isRefresh) {
-           this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countSeq2) * 100;
-         }
-         else{
-            this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countPopulationRefreshed) * 100;
-         }
+         this.epitopeToAdd['mutated_seq_ratio'] = (this.epitopeToAdd['num_seq'] / this.countPopulationRefreshed) * 100;
          if (this.epitopeToAdd['mutated_seq_ratio'] >= 10) {
            this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table + 1);
          } else {
            this.epitopeToAdd['mutated_seq_ratio'] = this.epitopeToAdd['mutated_seq_ratio'].toPrecision(this.precision_float_table);
          }
-         this.epitopeToAdd['mutated_seq_ratio'] += ' %';
-         if(!this.isRefresh) {
-           this.epitopeToAdd['total_num_of_seq_metadata'] = this.countSeq2;
-         }
-         else{
-           this.epitopeToAdd['total_num_of_seq_metadata'] = this.countPopulationRefreshed;
-         }
+         this.epitopeToAdd['mutated_seq_ratio'] = parseFloat(this.epitopeToAdd['mutated_seq_ratio']).toFixed(this.precision_float_table);
+         //this.epitopeToAdd['mutated_seq_ratio'] += ' %';
+         this.epitopeToAdd['total_num_of_seq_metadata'] = this.countPopulationRefreshed;
        }
      },
      resetSearchedName(){
@@ -1034,7 +1046,8 @@ export default {
       this.isRefresh = true;
       this.refreshingIndex = epitope_index;
      let epitope = JSON.parse(JSON.stringify(this.epitopeAdded[epitope_index]));
-     epitope['refresh_date']  =  new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+     let date1 = new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/');
+     epitope['refresh_date']  =  date1;
      if(/gisaid/.test(window.location.href)){
        epitope['refresh_database'] = "EpiSurf GISAID";
      }
