@@ -996,7 +996,8 @@
                 else
                     orderDir = "ASC";
 
-                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}`;
+                let downloadAccessionIds = "true";
+                let csv_url = `query/table?is_control=${this.is_control}&order_col=${this.pagination.sortBy}&order_dir=${orderDir}&accession_ids=${downloadAccessionIds}`;
                 if (this.selectedProduct !== FULL_TEXT) {
                     csv_url += `&annotation_type=${this.selectedProduct}`;
                 }
