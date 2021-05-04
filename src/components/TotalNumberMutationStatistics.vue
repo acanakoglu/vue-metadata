@@ -419,6 +419,8 @@ export default {
                             this.headers.forEach(el => row[el.text] = 0);
                             row['Mutation'] = position;
                             row['AllMutation'] = mutation;
+                            row['Original'] = original;
+                            row['Alternative'] = alternative;
                             row['Total'] = count;
                             row[text] = count;
                             result.push(row);
@@ -445,7 +447,33 @@ export default {
                 });
 
                 result = result.sort(function(a, b){
-                    return a.Mutation - b.Mutation;
+                  if (a.Mutation === b.Mutation) {
+                      if (a.Original === b.Original) {
+                        if(a.Alternative === "-"){
+                          return 1;
+                        }
+                        else if(b.Alternative === "-"){
+                          return -1;
+                        }
+                        else {
+                          return a.Alternative > b.Alternative ? 1 : -1;
+                        }
+                      }
+                      else{
+                        if(a.Original === "-"){
+                          return 1;
+                        }
+                        else if(b.Original === "-"){
+                          return -1;
+                        }
+                        else {
+                          return a.Original > b.Original ? 1 : -1;
+                        }
+                      }
+                    }
+                    else {
+                      return parseInt(a.Mutation,10) > parseInt(b.Mutation, 10) ? 1 : -1;
+                    }
                 });
                 this.result_statistics = result;
                 this.isLoading = false;
