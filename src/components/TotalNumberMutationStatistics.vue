@@ -228,17 +228,26 @@ export default {
         const url = `epitope/totalMutationStatistics`
 
         let to_send = {};
-        to_send['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
-        to_send['epi_query'] = JSON.parse(JSON.stringify(this.epiQuerySel));
-        to_send['epitopeID'] = JSON.parse(JSON.stringify(this.chosenEpitope));
-        to_send['parameters'] = {firstParameter: this.firstParameterSetted, secondParameter: this.secondParameterSetted};
+        if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
+          to_send['compound_query'] = this.chosenEpitope['compound_query'];
+          to_send['parameters'] = {firstParameter: this.firstParameterSetted, secondParameter: this.secondParameterSetted};
+          to_send['epi_query'] = null;
+          to_send['epitopeID'] = null;
+
+        }
+        else {
+          to_send['compound_query'] = JSON.parse(JSON.stringify(this.compound_query));
+          to_send['epi_query'] = JSON.parse(JSON.stringify(this.epiQuerySel));
+          to_send['epitopeID'] = JSON.parse(JSON.stringify(this.chosenEpitope));
+          to_send['parameters'] = {firstParameter: this.firstParameterSetted, secondParameter: this.secondParameterSetted};
+        }
 
         axios.post(url, to_send)
             .then((res) => {
               return res.data
             })
             .then((res) => {
-              //this.my_interval_table = poll(res.result, (res) => {
+              this.my_interval_table = poll(res.result, (res) => {
                 this.my_interval_table = null;
 
                 let vals = res.values;
@@ -368,7 +377,7 @@ export default {
                 this.result_statistics = result;
                 this.isLoading = false;
               });
-            //});
+            });
 
     },
     exit(){
