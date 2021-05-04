@@ -95,6 +95,24 @@
                     style="margin-bottom: 20px">APPLY</v-btn>
           </v-layout>
 
+
+          <v-container fluid grid-list-xs v-if="showTable">
+            <v-layout justify-space-between row>
+                <v-flex sm3 align-self-center>
+                  <v-btn @click="downloadTable()"
+                         class="white--text"
+                             small
+                         color="rgb(122, 139, 157)"
+                            :disabled="isLoading || Object.keys(this.headers).length <= 1">
+                    Download Table</v-btn>
+                </v-flex>
+                <v-flex sm2 align-self-center>
+                </v-flex>
+                <v-flex sm3 align-self-center>
+                </v-flex>
+            </v-layout>
+          </v-container>
+
           <v-data-table :loading="isLoading" :headers="headers" :items="result_statistics" item-key="name" v-if="showTable === true"
                         hide-actions style="margin-bottom: 20px; margin-top: 10px; border: dimgrey solid 1px">
 
@@ -159,10 +177,7 @@ export default {
       showTable: false,
       my_interval_table: null,
       isLoading : false,
-      headers: [
-          {text: 'Mutation', value: 'Mutation', sortable: this.sortable, show: true},
-          {text: 'Total', value: 'Total', sortable: this.sortable, show: true},
-      ],
+      headers: [],
       result_statistics: [],
       sortable: true,
     }
@@ -207,6 +222,43 @@ export default {
     ...mapMutations([
        'showTotMutStatistics','setChosenEpitope'
     ]),
+    downloadTable(){
+      let text = this.json2csv(this.result_statistics);
+      let filename = "result.csv";
+      let element = document.createElement('a');
+      element.setAttribute('download', filename);
+      var data = new Blob([text]);
+      element.href = URL.createObjectURL(data);
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+    json2csv(input) {
+        var json = input;
+        var fields = [];
+        var fields2 = [];
+        this.headers.forEach(function (el) {
+          let val = el.text.replaceAll(",", "; ");
+          fields.push(val);
+        });
+        this.headers.forEach(function (el) {
+          fields2.push(el.value);
+        });
+        var csv = json.map(function (row) {
+            return fields2.map(function (fieldName) {
+                let string_val ;
+                if(fieldName !== 'Mutation'){
+                  string_val = String(row[fieldName]);
+                }
+                else{
+                  string_val = String(row['AllMutation']);
+                }
+                return JSON.stringify(string_val);
+            }).join(',')
+        });
+        csv.unshift(fields.join(','));
+        return csv.join('\r\n')
+    },
     applyTotMutStatistics(){
         this.showTable = true;
         this.loadTable();
@@ -217,13 +269,10 @@ export default {
           stopPoll(this.my_interval_table);
         }
 
+        this.headers = [];
+
         this.result_statistics = [];
         this.isLoading = true;
-
-        this.headers = [
-            {text: 'Mutation', value: 'Mutation', sortable: this.sortable, show: true},
-            {text: 'Total', value: 'Total', sortable: this.sortable, show: true},
-        ];
 
         const url = `epitope/totalMutationStatistics`
 
@@ -250,6 +299,13 @@ export default {
               this.my_interval_table = poll(res.result, (res) => {
                 this.my_interval_table = null;
 
+                this.headers = [
+                    {text: 'Mutation', value: 'Mutation', sortable: this.sortable, show: true},
+                    {text: 'Total', value: 'Total', sortable: this.sortable, show: true},
+                ];
+
+                let list_sum = {};
+                let total = 0;
                 let vals = res.values;
                 let i = 0;
                 let len = vals.length;
@@ -296,6 +352,7 @@ export default {
                   header['sortable'] = this.sortable;
                   header['show'] = true;
 
+                  list_sum[text] = 0;
                   this.headers.push(header);
                   i = i+1;
                 }
@@ -352,6 +409,8 @@ export default {
                               if(el['AllMutation'] === mutation){
                                 el[text] = count;
                                 el['Total'] = el['Total'] + count;
+                                list_sum[text] = list_sum[text] + count;
+                                total = total + count;
                               }
                             });
                           }
@@ -363,6 +422,8 @@ export default {
                             row['Total'] = count;
                             row[text] = count;
                             result.push(row);
+                            list_sum[text] = list_sum[text] + count;
+                            total = total + count;
                           }
                       })
                     }
@@ -374,6 +435,18 @@ export default {
                   i2 = i2 + 1;
                 }
 
+                this.headers.forEach(function(el){
+                  if(list_sum.hasOwnProperty(el.text)){
+                    el.text = el.text + "\xa0\xa0\xa0[" + list_sum[el.text] + "] ";
+                  }
+                  else if(el.text === 'Total'){
+                    el.text = el.text + "\xa0\xa0\xa0[" + total + "] ";
+                  }
+                });
+
+                result = result.sort(function(a, b){
+                    return a.Mutation - b.Mutation;
+                });
                 this.result_statistics = result;
                 this.isLoading = false;
               });
