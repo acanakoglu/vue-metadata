@@ -124,7 +124,8 @@
                 <th
                   v-for="header in row.headers"
                   :key="header.text"
-                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '',
+                  'font-weight-black', 'text-uppercase']"
                   @click="changeSort(header.value)"
                 >
                   <v-icon small>arrow_upward</v-icon>
