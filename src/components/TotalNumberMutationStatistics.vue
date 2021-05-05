@@ -113,12 +113,30 @@
             </v-layout>
           </v-container>
 
-          <v-data-table :loading="isLoading" :headers="headers" :items="result_statistics" item-key="name" v-if="showTable === true"
+          <v-data-table :loading="isLoading" :headers="headers"
+                        :pagination.sync="pagination"
+                        :items="result_statistics" item-key="name" v-if="showTable === true"
                         hide-actions style="margin-bottom: 20px; margin-top: 10px; border: dimgrey solid 1px">
+
+
+            <template v-if="headers" slot="headers" slot-scope="row">
+              <tr>
+                <th
+                  v-for="header in row.headers"
+                  :key="header.text"
+                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                  @click="changeSort(header.value)"
+                >
+                  <v-icon small>arrow_upward</v-icon>
+                  {{ header.text }}
+                </th>
+              </tr>
+            </template>
+
 
             <template slot="items" slot-scope="props">
               <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in headers"
-                      :key="header.value" v-show="header.show" :title="props.item['AllMutation'] + ' / ' + header.text">
+                      :key="header.value" v-show="header.show" :title="header.text">
 
                 <span v-if="header.value === 'Mutation'">{{props.item['AllMutation']}}</span>
 
@@ -156,6 +174,11 @@ export default {
   data(){
     return{
       dialog: false,
+      pagination: {
+        sortBy: 'Mutation',
+        page: 1,
+        rowsPerPage: -1,
+      },
       allParameters: [
         { header: 'GEOGRAPHY', group: 'GEO'},
         { name: 'Continent', group: 'GEO' },
@@ -222,6 +245,14 @@ export default {
     ...mapMutations([
        'showTotMutStatistics','setChosenEpitope'
     ]),
+    changeSort (column) {
+      if (this.pagination.sortBy === column) {
+        this.pagination.descending = !this.pagination.descending
+      } else {
+        this.pagination.sortBy = column
+        this.pagination.descending = false
+      }
+    },
     downloadTable(){
       let text = this.json2csv(this.result_statistics);
       let filename = "result.csv";
@@ -550,5 +581,29 @@ export default {
     margin-bottom: 10px;
     margin-top: 10px;
   }
+
+  table > tbody > tr > td:nth-child(1),
+  table > thead > tr > th:nth-child(1){
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    left: 0;
+    z-index: 9998;
+    background: white;
+  }
+
+  table > tbody > tr > td:nth-child(2),
+  table > thead > tr > th:nth-child(2){
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    left: 113px;
+    z-index: 9998;
+    background: white;
+    box-shadow: inset -1px 0px 0px 0px grey;
+  }
+
+  table > tbody > tr:hover >td{
+    background: lightgrey !important;
+  }
+
 
 </style>
