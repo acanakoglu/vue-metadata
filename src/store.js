@@ -35,6 +35,7 @@ export default new Vuex.Store({
         countEpiCustom: null,
         countEpiToShow: null,
         showSequenceEpiTable: false,
+        showTotalMutationStatistics: false,
         chosenEpitope: null,
         showAminoacidVariantEpi: false,
         epitopeAminoacidFields: [],
@@ -312,6 +313,9 @@ export default new Vuex.Store({
         },
         showSeqEpiTableUser: (state) => {
             state.showSequenceEpiTableUser = !state.showSequenceEpiTableUser;
+        },
+        showTotMutStatistics: (state) => {
+            state.showTotalMutationStatistics = !state.showTotalMutationStatistics;
         },
         showMoreInfo: (state) => {
             state.showMoreInfoEpitopeUser = !state.showMoreInfoEpitopeUser;

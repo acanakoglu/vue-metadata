@@ -147,6 +147,12 @@
                       <span v-else>{{props.item[header.value]}}</span>
                     </span>
 
+                  <span v-else-if="header.value === 'num_var'">
+                        <span>
+                          <a @click="sendDataToTotMutStatistics(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                        </span>
+                  </span>
+
                   <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
                   <span v-else-if="header.value === 'mutated_seq_ratio'">{{props.item['mutated_seq_ratio']}}<span v-if="props.item['mutated_seq_ratio'] !== '-'"> %</span></span>
@@ -337,6 +343,7 @@
 
       <SequencesEpiTable></SequencesEpiTable>
       <!--<SequencesEpiTableUser></SequencesEpiTableUser>-->
+      <TotalNumberMutationStatistics></TotalNumberMutationStatistics>
 
     </v-card>
   </div>
@@ -350,12 +357,14 @@ import {FULL_TEXT, poll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
 import SequencesEpiTableUser from "./SequencesEpiTableUser";
+import TotalNumberMutationStatistics from "./TotalNumberMutationStatistics";
 
 const itemSourceIdName = 'iedb_epitope_id';
 
 export default {
   name: "EpitopeTableUserAdd",
   components: {
+    TotalNumberMutationStatistics,
     SequencesEpiTableUser,
     AminoacidVariantEpi,
     SequencesEpiTable,
@@ -387,7 +396,7 @@ export default {
     ...mapState([
       'epiQuerySel', 'countSeq', 'countSeq2', 'countSeq3', 'countSeq4' ,'countEpi', 'showSequenceEpiTable',
       'chosenEpitope', 'showAminoacidVariantEpi', 'aminoacidConditions', 'epitopeAminoacidFields', 'epitopeAdded',
-        'newEpitopeLoading'
+        'newEpitopeLoading', 'showTotalMutationStatistics'
     ]),
     ...mapGetters({
       compound_query: 'build_query',
@@ -422,7 +431,7 @@ export default {
     ...mapMutations([
         'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
-      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart'
+      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart','showTotMutStatistics'
     ]),
     createAminoAcidInfos(epitope){
       let kv = epitope.compound_query.kv;
@@ -658,6 +667,10 @@ export default {
     },
     sendDataToSeqEpiTable(item){
       this.showSeqEpiTable();
+      this.setChosenEpitope(item);
+    },
+    sendDataToTotMutStatistics(item){
+      this.showTotMutStatistics();
       this.setChosenEpitope(item);
     },
     selectAllHeaders() {
