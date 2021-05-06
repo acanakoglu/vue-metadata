@@ -597,7 +597,7 @@ export default {
   table > tbody > tr > td:nth-child(2){
     position: sticky !important;
     position: -webkit-sticky !important;
-    left: 80px;
+    left: 100px;
     z-index: 9998;
     background: white;
     box-shadow: inset -1px 0px 0px 0px grey;
@@ -605,7 +605,7 @@ export default {
   table > thead > tr > th:nth-child(2){
      position: sticky !important;
     position: -webkit-sticky !important;
-    left: 80px;
+    left: 100px;
     z-index: 9998;
     background: white;
     box-shadow: inset -1px 0px 0px 0px grey;
