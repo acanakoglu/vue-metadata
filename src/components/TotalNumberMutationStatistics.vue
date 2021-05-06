@@ -115,8 +115,10 @@
 
           <v-data-table :loading="isLoading" :headers="headers"
                         :pagination.sync="pagination"
+                        :rows-per-page-items="pagination.rowsPerPageItems"
+                        :total-items="pagination.totalItems"
                         :items="result_statistics" item-key="name" v-if="showTable === true"
-                        hide-actions style="margin-bottom: 20px; margin-top: 10px; border: dimgrey solid 1px">
+                        style="margin-bottom: 20px; margin-top: 10px; border: dimgrey solid 1px">
 
 
             <template v-if="headers" slot="headers" slot-scope="row">
@@ -178,7 +180,7 @@ export default {
       pagination: {
         sortBy: 'Mutation',
         page: 1,
-        rowsPerPage: -1,
+        rowsPerPage: 10
       },
       allParameters: [
         { header: 'GEOGRAPHY', group: 'GEO'},
@@ -592,18 +594,34 @@ export default {
     background: white;
   }
 
-  table > tbody > tr > td:nth-child(2),
-  table > thead > tr > th:nth-child(2){
+  table > tbody > tr > td:nth-child(2){
     position: sticky !important;
     position: -webkit-sticky !important;
-    left: 113px;
+    left: 80px;
     z-index: 9998;
     background: white;
     box-shadow: inset -1px 0px 0px 0px grey;
   }
+  table > thead > tr > th:nth-child(2){
+     position: sticky !important;
+    position: -webkit-sticky !important;
+    left: 80px;
+    z-index: 9998;
+    background: white;
+    box-shadow: inset -1px 0px 0px 0px grey;
+    padding-right: 10px !important;
+  }
 
   table > tbody > tr:hover >td{
     background: lightgrey !important;
+  }
+
+   table > tbody > tr > td{
+    text-align: center;
+  }
+
+  table > thead > tr > th{
+    padding: 10px !important;
   }
 
 
