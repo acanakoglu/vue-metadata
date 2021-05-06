@@ -263,6 +263,12 @@
                         <!--<span v-else style="color: royalblue">{{props.item[header.value]}}</span>-->
                       </span>
 
+                      <span v-else-if="header.value === 'num_var'">
+                        <span>
+                          <a @click="sendDataToTotMutStatistics(props.item[epitopeId])" target="_blank">{{props.item[header.value]}}</a>
+                        </span>
+                      </span>
+
                       <span v-else-if="header.value === 'position_range'">{{props.item['position_range_to_show']}}</span>
 
                       <div v-else-if="header.value === 'mutated_seq_ratio2'" style="float:left;">
@@ -480,6 +486,7 @@
         </v-layout>
 
         <SequencesEpiTable></SequencesEpiTable>
+        <TotalNumberMutationStatistics></TotalNumberMutationStatistics>
 
       </v-card>
 
@@ -494,12 +501,14 @@ import draggable from 'vuedraggable'
 import {FULL_TEXT, poll, stopPoll} from "../utils";
 import SequencesEpiTable from "./SequencesEpiTable";
 import AminoacidVariantEpi from "./AminoacidVariantEpi";
+import TotalNumberMutationStatistics from "./TotalNumberMutationStatistics";
 
 const itemSourceIdName = 'iedb_epitope_id';
 
 export default {
   name: "EpitopeTable",
   components: {
+    TotalNumberMutationStatistics,
     AminoacidVariantEpi,
     SequencesEpiTable,
     draggable},
@@ -582,7 +591,8 @@ export default {
     ...mapMutations([
         'setCountEpi', 'setCountSeq', 'setCountSeq2', 'setCountSeq3', 'setCountSeq4',
       'showSeqEpiTable', 'setChosenEpitope', 'setTrueShowAminoacidVariantEpi',
-      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery', 'setMyIntervalCountSeq'
+      'setFalseShowAminoacidVariantEpi', 'setTrueDisableSelectorEpitopePart', 'setFalseFromPredefinedQuery',
+      'setMyIntervalCountSeq', 'showTotMutStatistics'
     ]),
     checkReliabilityPercentage(item){
       let color = '';
@@ -1274,6 +1284,10 @@ export default {
     },
     sendDataToSeqEpiTable(item){
       this.showSeqEpiTable();
+      this.setChosenEpitope(item);
+    },
+    sendDataToTotMutStatistics(item){
+      this.showTotMutStatistics();
       this.setChosenEpitope(item);
     },
     selectAllHeaders() {
