@@ -142,14 +142,27 @@
 
                     <span v-if="header.value === 'num_seq'">
                       <span v-if="props.item[header.value] !== '-'">
-                        <a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                        <!--<a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span></a>-->
+
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0 || props.item['num_seq'] === '-'"
+                              @click="sendDataToSeqEpiTable(props.item)">
+                          {{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span>
+                        </v-btn>
+
                       </span>
                       <span v-else>{{props.item[header.value]}}</span>
                     </span>
 
                   <span v-else-if="header.value === 'num_var'">
                         <span>
-                          <a @click="sendDataToTotMutStatistics(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                          <!--<a @click="sendDataToTotMutStatistics(props.item)" target="_blank">{{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span></a>-->
+
+                          <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0 || props.item['num_seq'] === '-'"
+                              @click="sendDataToTotMutStatistics(props.item)">
+                              {{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span>
+                            </v-btn>
                         </span>
                   </span>
 
