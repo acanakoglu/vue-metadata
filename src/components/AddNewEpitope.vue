@@ -285,6 +285,12 @@
                      <span v-if="epitope['file_name']" :title="epitope['file_name']"> <b class="capitalize" style="margin-left: 20px">[File: </b> {{epitope['file_name']}} <b>]</b></span>
                    </span>
                    <span v-else-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
+                   <div v-else-if="key === 'Position range & sequence' || key === 'Position ranges & sequences'" style="display: inline-grid; vertical-align: central">
+                      <span v-for="elem in value">
+                        {{elem}}<br>
+                      </span>
+                    </div>
+
                    <span v-else-if="key !== 'file_name' && key !== 'index'" class="capitalize">{{value}} </span>
                  </span>
                </v-flex>
@@ -551,7 +557,26 @@ export default {
         line['Creation date'] = val[i].creation_date + " on " + val[i].creation_database;
         line['Refresh date'] = val[i].refresh_date + " on " + val[i].refresh_database;
         line['Protein'] = val[i].product;
-        line['Position range'] = val[i].position_range_to_show;
+
+        let arrAll = [];
+        let posRange = val[i].position_range_to_show.replaceAll('\n', '');
+        let sequences = val[i].sequence.replaceAll('\n', '');
+        let arrSeq = sequences.split(',');
+        let arrPos = posRange.split(',');
+        let len = arrPos.length;
+        let j = 0;
+        while (j<len){
+          let singlePosSeq = arrPos[j] + ' : ' + arrSeq[j].toUpperCase();
+          arrAll.push(singlePosSeq);
+          j = j + 1;
+        }
+        if(len === 1) {
+          line['Position range & sequence'] = arrAll;
+        }
+        else{
+          line['Position ranges & sequences'] = arrAll;
+        }
+
         //line['Virus taxon name'] = val[i].taxon_name;
         //line['Host taxon name'] = val[i].host_taxon_name;
         line['Number of mutated sequences'] = val[i].num_seq;
@@ -739,6 +764,7 @@ export default {
            this.epitopeToAdd = val;
            this.countNumSeq(val);
            this.countNumVar(val);
+           this.loadSequence(val);
            this.countPopulationRefreshedFunction(val);
            this.resetEpitopeAminoacidConditionsArrayUserNew();
 
@@ -865,6 +891,20 @@ export default {
        return kv;
 
      },
+     loadSequence(epitope){
+        let to_send = {};
+        to_send['product'] = epitope['product'];
+        to_send['compound_query'] = epitope['compound_query'];
+        to_send['position_ranges'] = epitope['position_range_to_show'];
+        const url = `epitope/sequenceAminoacidNewEpitope`;
+        axios.post(url, to_send)
+            .then((res) => {
+              return res.data
+            })
+            .then((res) => {
+                this.epitopeToAdd['sequence'] = res;
+              })
+    },
      countNumSeq(val){
        let to_send = val['compound_query'];
       this.isLoading = true;
@@ -1057,6 +1097,7 @@ export default {
      this.epitopeToAdd = epitope;
      this.countNumSeq(epitope);
      this.countNumVar(epitope);
+     this.loadSequence(epitope);
      this.countPopulationRefreshedFunction(epitope);
     }
    },

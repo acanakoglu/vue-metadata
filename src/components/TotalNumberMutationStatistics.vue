@@ -106,6 +106,79 @@
                         </span>
                       </div>
 
+                     <span v-else-if="key === 'Mutated sequences ratio'">
+                       <span class="capitalize">{{value}} </span>
+                       <span v-if="chosenEpitope !== null && !chosenEpitope['epitope_name']">
+                         <span v-if="checkReliabilityPercentage(chosenEpitope) === 'green'" style=" display:inline; margin-left: 5px;">
+                              <v-icon
+                                  size="20"
+                                  flat icon
+                                  slot="activator"
+                                  color="green"
+                                  class="white--text info-button-green" >circle</v-icon>
+                        </span>
+                        <span v-else-if="checkReliabilityPercentage(chosenEpitope) === 'orange'" style="display:inline; margin-left: 5px">
+                            <v-dialog width="500">
+                              <v-btn
+                                    style="padding: 0; width: 5px; height: 5px"
+                                    flat icon
+                                    slot="activator"
+                                    color="orange"
+                                    class="white--text info-button"
+                                    >
+                                <v-icon size="20">circle</v-icon>
+                               </v-btn>
+                              <v-card>
+                                  <v-card-title
+                                          class="headline orange lighten-2"
+                                          primary-title
+                                  >
+                                      Attention!
+                                  </v-card-title>
+                                  <v-card-text>
+                                    <span>This epitope has been derived by reliable assays (i.e., B-cell assays or
+                                      T-cell/MHC ligand assays with response frequency >= 0.2) but also by less reliable
+                                      assays (i.e., T-cell/MHC ligand assays with response frequency < 0.2).
+                                      <br>
+                                      Please consider the shown statistics with care, as epitopes should be tested on
+                                      alleles that are well represented in the observed population.
+                                    </span>
+                                  </v-card-text>
+                              </v-card>
+                          </v-dialog>
+                        </span>
+                        <span v-else-if="checkReliabilityPercentage(chosenEpitope) === 'red'" style="display:inline; margin-left: 5px">
+                            <v-dialog width="500">
+                              <v-btn
+                                    style="padding: 0; width: 5px; height: 5px"
+                                    flat icon
+                                    slot="activator"
+                                    color="red"
+                                    class="white--text info-button"
+                                    >
+                                <v-icon size="20">circle</v-icon>
+                               </v-btn>
+                              <v-card>
+                                  <v-card-title
+                                          class="headline red lighten-2"
+                                          primary-title
+                                  >
+                                      Attention!
+                                  </v-card-title>
+                                  <v-card-text>
+                                    <span>This epitope has been derived by T-cell/MHC ligand assays with a
+                                      positive assay response frequency < 0.2.
+                                      <br>
+                                      Please consider the shown statistics with care, as epitopes should be tested
+                                      on alleles that are well represented in the observed population.
+                                    </span>
+                                  </v-card-text>
+                              </v-card>
+                          </v-dialog>
+                        </span>
+                       </span>
+                     </span>
+
                       <span v-else-if="key === 'Number of mutated sequences on selected population'" class="capitalize"><br>{{value}} </span>
 
                       <span v-else class="capitalize">{{value}} </span>
@@ -157,6 +230,14 @@
                 <v-flex sm2 align-self-center>
                 </v-flex>
                 <v-flex sm3 align-self-center>
+                  <v-layout justify-end>
+                    <v-btn @click="returnPredifinedOrderHeader()"
+                           class="white--text"
+                               small
+                           color="rgb(122, 139, 157)"
+                              :disabled="isLoading || Object.keys(this.headers).length <= 1">
+                      Set predefined order fields</v-btn>
+                  </v-layout>
                 </v-flex>
             </v-layout>
           </v-container>
@@ -179,7 +260,7 @@
                   @click="changeSort(header.value)"
                 >
                   <v-icon small>arrow_upward</v-icon>
-                  {{ header.text }}
+                  <pre style="display: inline; font-family: Roboto!important;">{{ header.text }}</pre>
                 </th>
               </tr>
             </template>
@@ -189,12 +270,14 @@
               <td style="white-space:pre-wrap; word-wrap:break-word" v-for="header in headers"
                       :key="header.value" v-show="header.show" :title="header.text">
 
-                <div v-if="header.value === 'Mutation'" v-on:click="orderColumn(props.item)" class="row-pointer">
+                <div v-if="header.value === 'Mutation'" v-on:click="orderColumn(props.item);" :class="{'selectedRow': props.item === selectedItem}" class="row-pointer">
                   <span>{{props.item['AllMutation']}}</span>
                 </div>
 
-                <div v-else-if="header.value === 'Total'" v-on:click="orderColumn(props.item)" class="row-pointer">
+                <div v-else-if="header.value === 'Total'" v-on:click="orderColumn(props.item);" :class="{'selectedRow': props.item === selectedItem}" class="row-pointer">
                   <span>{{props.item[header.value]}}</span>
+                  <v-icon style="margin-left: 10px; color: black;" v-if="selectedItem === props.item && order_by_row_desc" small flat>arrow_downward</v-icon>
+                  <v-icon style="margin-left: 10px; color: black;" v-if="selectedItem === props.item && !order_by_row_desc" small flat>arrow_upward</v-icon>
                 </div>
 
                 <span v-else>{{props.item[header.value]}}</span>
@@ -231,6 +314,8 @@ export default {
   data(){
     return{
       dialog: false,
+      threshold_reliability: 0.2,
+      selectedItem: null,
       pagination: {
         sortBy: 'Mutation',
         page: 1,
@@ -258,8 +343,10 @@ export default {
       my_interval_table: null,
       isLoading : false,
       headers: [],
+      predefined_order_header: [],
       result_statistics: [],
       sortable: true,
+      order_by_row_desc: true,
     }
   },
   computed: {
@@ -278,15 +365,25 @@ export default {
           //epitopeInfo['Virus name'] = epitope['taxon_name'];
           //epitopeInfo['Host name'] = epitope['host_taxon_name'];
           epitopeInfo['Protein name'] = epitope['product'];
-          let posRange = epitope['position_range_to_show'].replaceAll('\n', '');;
+          let posRange = epitope['position_range_to_show'].replaceAll('\n', '');
+          let sequences = epitope['sequence'].replaceAll('\n', '');
+          let arrSeq = sequences.split(',');
           let arrPos = posRange.split(',');
           let len2 = arrPos.length;
           if (len2 === 1){
-            let str1 = arrPos[0];
-            epitopeInfo['Position range'] = str1;
+            let str1 = arrPos[0] + ' : ' + arrSeq[0].toUpperCase();
+            epitopeInfo['Position range & sequence'] = str1;
           }
           else {
-            epitopeInfo['Position ranges'] = arrPos;
+            let arrAll = [];
+            let len = arrPos.length;
+            let i = 0;
+            while (i<len){
+              let singlePosSeq = arrPos[i] + ' : ' + arrSeq[i];
+              arrAll.push(singlePosSeq);
+              i = i + 1;
+            }
+            epitopeInfo['Position ranges & sequences'] = arrAll;
           }
           epitopeInfo['Number of mutated sequences on selected population'] = epitope.num_seq;
           epitopeInfo['Number of variants on selected population'] = epitope.num_var;
@@ -301,7 +398,7 @@ export default {
           //epitopeInfo['Host name'] = epitope['host_taxon_name'];
           epitopeInfo['Protein name'] = epitope['product'];
           if(epitope['is_linear'] === true){
-            let str1 = epitope['position_range_to_show'] + ' - ' + epitope['epi_fragment_sequence'].toUpperCase();
+            let str1 = epitope['position_range_to_show'] + ' : ' + epitope['epi_fragment_sequence'].toUpperCase();
             epitopeInfo['Position range & sequence'] = str1;
           }
           else{
@@ -313,7 +410,7 @@ export default {
             let len = arrPos.length;
             let i = 0;
             while (i<len){
-              let singlePosSeq = arrPos[i] + ' - ' + seqPos[i];
+              let singlePosSeq = arrPos[i] + ' : ' + seqPos[i];
               arrAll.push(singlePosSeq);
               i = i + 1;
             }
@@ -361,6 +458,46 @@ export default {
     ...mapMutations([
        'showTotMutStatistics','setChosenEpitope'
     ]),
+    checkReliabilityPercentage(item){
+      let color = '';
+      let arr_cell = item['cell_type'].split("\n----\n");
+      let arr_resp = item['response_frequency_pos'].split("\n----\n");
+
+      let len = arr_cell.length;
+      let i = 0;
+
+      while (i < len){
+        if(arr_cell[i] === 'B cell'){
+          if(color === ''){
+            color = 'green';
+          }
+          else if (color === 'red'){
+            color = 'orange';
+          }
+        }
+        else{
+          if(arr_resp[i] !== 'N/D' && arr_resp[i] >= this.threshold_reliability){
+              if(color === ''){
+                color = 'green';
+              }
+              else if (color === 'red'){
+                color = 'orange';
+              }
+          }
+          else{
+            if(color === ''){
+                color = 'red';
+              }
+              else if (color === 'green'){
+                color = 'orange';
+              }
+          }
+        }
+
+        i = i + 1;
+      }
+      return color;
+    },
     createMetadataInfos(){
       let infos = {};
       let epitope = JSON.parse(JSON.stringify(this.chosenEpitope));
@@ -382,20 +519,44 @@ export default {
     },
     orderColumn(mutation){
 
-      let old_header = JSON.parse(JSON.stringify(this.headers));
+      if(mutation !== this.selectedItem || (mutation === this.selectedItem && !this.order_by_row_desc)) {
 
-      let new_headers = old_header.splice(0, 2);
+        this.order_by_row_desc = true;
+        this.selectedItem = mutation;
 
-      let ordered_header = old_header.sort(function(a, b){
-        if(mutation[a.value] === mutation[b.value]){
-          return a.value > b.value ? 1 : -1;
-        }
-        else {
-          return parseInt(mutation[a.value], 10) < parseInt(mutation[b.value], 10) ? 1 : -1;
-        }
-      });
+        let old_header = JSON.parse(JSON.stringify(this.headers));
 
-      this.headers = new_headers.concat(ordered_header);
+        let new_headers = old_header.splice(0, 2);
+
+        let ordered_header = old_header.sort(function (a, b) {
+          if (mutation[a.value] === mutation[b.value]) {
+            return a.value > b.value ? 1 : -1;
+          } else {
+            return parseInt(mutation[a.value], 10) < parseInt(mutation[b.value], 10) ? 1 : -1;
+          }
+        });
+
+        this.headers = new_headers.concat(ordered_header);
+      }
+      else if(mutation === this.selectedItem && this.order_by_row_desc){
+
+        this.order_by_row_desc = false;
+        this.selectedItem = mutation;
+
+        let old_header = JSON.parse(JSON.stringify(this.headers));
+
+        let new_headers = old_header.splice(0, 2);
+
+        let ordered_header = old_header.sort(function (a, b) {
+          if (mutation[a.value] === mutation[b.value]) {
+            return a.value < b.value ? 1 : -1;
+          } else {
+            return parseInt(mutation[a.value], 10) > parseInt(mutation[b.value], 10) ? 1 : -1;
+          }
+        });
+
+        this.headers = new_headers.concat(ordered_header);
+      }
 
     },
     changeSort (column) {
@@ -406,8 +567,79 @@ export default {
         this.pagination.descending = false
       }
     },
+    returnPredifinedOrderHeader(){
+      this.headers = this.predefined_order_header;
+      this.selectedItem = null;
+    },
     downloadTable(){
-      let text = this.json2csv(this.result_statistics);
+      let sort = this.pagination.sortBy;
+      let order = this.pagination.descending;
+      let result = JSON.parse(JSON.stringify(this.result_statistics));
+      result = result.sort(function(a, b){
+        if(sort === 'Mutation') {
+          if (a.Mutation === b.Mutation) {
+            if (a.Original === b.Original) {
+              if (a.Alternative === "-") {
+                return 1;
+              } else if (b.Alternative === "-") {
+                return -1;
+              } else {
+                return a.Alternative > b.Alternative ? 1 : -1;
+              }
+            } else {
+              if (a.Original === "-") {
+                return 1;
+              } else if (b.Original === "-") {
+                return -1;
+              } else {
+                return a.Original > b.Original ? 1 : -1;
+              }
+            }
+          } else {
+            if(!order) {
+              return parseInt(a.Mutation, 10) > parseInt(b.Mutation, 10) ? 1 : -1;
+            }
+            else{
+              return parseInt(a.Mutation, 10) < parseInt(b.Mutation, 10) ? 1 : -1;
+            }
+          }
+        }
+        else{
+          if(a[sort] === b[sort]) {
+            if (a.Mutation === b.Mutation) {
+              if (a.Original === b.Original) {
+                if (a.Alternative === "-") {
+                  return 1;
+                } else if (b.Alternative === "-") {
+                  return -1;
+                } else {
+                  return a.Alternative > b.Alternative ? 1 : -1;
+                }
+              } else {
+                if (a.Original === "-") {
+                  return 1;
+                } else if (b.Original === "-") {
+                  return -1;
+                } else {
+                  return a.Original > b.Original ? 1 : -1;
+                }
+              }
+            }
+            else{
+              return parseInt(a.Mutation, 10) > parseInt(b.Mutation, 10) ? 1 : -1;
+            }
+          }
+          else {
+            if(order) {
+              return parseInt(a[sort], 10) < parseInt(b[sort], 10) ? 1 : -1;
+            }
+            else{
+              return parseInt(a[sort], 10) > parseInt(b[sort], 10) ? 1 : -1;
+            }
+          }
+        }
+      });
+      let text = this.json2csv(result);
       let name = '';
       if(this.chosenEpitope != null && this.chosenEpitope['epitope_name']){
         name = this.chosenEpitope['epitope_name'];
@@ -465,6 +697,7 @@ export default {
         this.result_statistics = [];
         this.isLoading = true;
         this.pagination.sortBy = "Mutation";
+        this.pagination.descending = false;
 
         const url = `epitope/totalMutationStatistics`
 
@@ -632,10 +865,10 @@ export default {
 
                 this.headers.forEach(function(el){
                   if(list_sum.hasOwnProperty(el.text)){
-                    el.text = el.text + "\xa0\xa0\xa0[" + list_sum[el.text] + "] ";
+                    el.text = el.text + "  [" + list_sum[el.text] + "] ";
                   }
                   else if(el.text === 'Total'){
-                    el.text = el.text + "\xa0\xa0\xa0[" + total + "] ";
+                    el.text = el.text + "  [" + total + "] ";
                   }
                 });
 
@@ -668,6 +901,7 @@ export default {
                       return parseInt(a.Mutation,10) > parseInt(b.Mutation, 10) ? 1 : -1;
                     }
                 });
+                this.predefined_order_header = this.headers;
                 this.result_statistics = result;
                 this.isLoading = false;
               });
@@ -761,7 +995,7 @@ export default {
   table > tbody > tr > td:nth-child(2){
     position: sticky !important;
     position: -webkit-sticky !important;
-    left: 100px;
+    left: 97px;
     z-index: 9998;
     background: white;
     box-shadow: inset -0.5px 0px 0px 0px grey;
@@ -769,7 +1003,7 @@ export default {
   table > thead > tr > th:nth-child(2){
      position: sticky !important;
     position: -webkit-sticky !important;
-    left: 100px;
+    left: 97px;
     z-index: 9998;
     background: white;
     box-shadow: inset -0.5px 0px 0px 0px grey;
@@ -800,6 +1034,10 @@ export default {
 
   .capitalize:first-letter {
     text-transform: uppercase !important;
+  }
+
+  .selectedRow {
+      font-weight: 1000;
   }
 
 

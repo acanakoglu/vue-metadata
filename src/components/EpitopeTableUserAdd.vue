@@ -633,6 +633,7 @@ export default {
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Protein Name', value: 'product', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Sequence', value: 'sequence', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Metadata', value: 'metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Amino Acid Condition', value: 'aminoacid_condition', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Num Seq Population', value: 'total_num_of_seq_metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},

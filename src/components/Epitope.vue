@@ -34,7 +34,7 @@
           <v-tab-item>
             <div v-if="selectedTab === this.toEpitopeVariants">
                   <v-container fluid grid-list-xl class="EpitopeMenu">
-                    <v-layout wrap align-center >
+                    <v-layout wrap align-center justify-center>
 
                       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
                         <h2>IEDB Epitope search</h2>
@@ -53,7 +53,7 @@
                                     </span>
                     </v-flex>
 
-                      <v-flex class="no-horizontal-padding xs12 sm6 md4 lg2 d-flex EpitopeSelectors"
+                      <v-flex class="no-horizontal-padding xs12 sm6 md4 lg3 d-flex EpitopeSelectors"
                               v-for="fieldEpi in epitopeFields" v-bind:key="fieldEpi.text">
                               <EpitopeSelectorText
                                   v-if="!fieldEpi.is_numerical && !fieldEpi.is_percentage "
@@ -133,7 +133,7 @@
 
       <v-dialog
               v-model="dialogModeEpitopeWithVariants"
-              width="500"
+              width="550"
           >
           <v-card>
               <v-card-title
@@ -154,16 +154,19 @@
 
       <v-dialog
               v-model="dialogModeCustomEpitopes"
-              width="500"
+              width="550"
           >
           <v-card>
               <v-card-title
                       class="headline"
                       style="background-color:rgb(201, 53, 53) ; color: white">
-                  Warning
+                  Welcome to EpiSurf - Custom Epitopes mode!
               </v-card-title>
               <v-card-text>
-                For an appropriate use of EpiSurf, users should keep in mind that purely position-based considerations
+                Here you may propose your own epitope by specifying a name, protein, range (or set of ranges)
+                on the reference sequence.
+                <br><br>
+                Please mind that for an appropriate use of EpiSurf, users should keep in mind that purely position-based considerations
                 are especially useful for B-cell assay epitopes. For T cell/MHC ligand assay, users should consider
                 also HLA restrictions on target populations.
                 <br><br>
@@ -476,7 +479,7 @@ export default {
     }
 
   .EpitopeSelectors{
-    margin-bottom: 10px;
+    margin-bottom: 30px;
   }
 
   .info-icon {
