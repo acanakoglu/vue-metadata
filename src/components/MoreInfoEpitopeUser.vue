@@ -26,7 +26,7 @@
             <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} : </b>
               <span v-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
               <div v-else-if="key === 'Position range & sequence' || key === 'Position ranges & sequences'" style="display: inline-grid; vertical-align: central">
-                <span v-for="elem in value">
+                <span v-for="elem in value" style="word-wrap:break-word; max-width: 400px">
                   {{elem}}<br>
                 </span>
               </div>

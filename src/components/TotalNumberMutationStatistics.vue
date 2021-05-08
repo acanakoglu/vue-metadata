@@ -99,9 +99,9 @@
                    <span v-for="(value, key) in epitopeInfo" style="display: block;">
                        <b>- {{key}} : </b>
                        <a target="_blank" :href="chosenEpitope['epitope_iri']" v-if="key === 'Epitope IEDB ID'" class="capitalize">{{value}} </a>
-                      <span v-else-if="key === 'Position range & sequence' || key === 'Position range'">{{value}} </span>
-                      <div v-else-if="key === 'Position ranges & sequences' || key === 'Position ranges'" style="display: inline-grid; vertical-align: central">
-                        <span v-for="elem in value">
+                      <span v-else-if="key === 'Position range & sequence' || key === 'Position range'" style="word-wrap:break-word; max-width: 400px">{{value}} </span>
+                      <div v-else-if="key === 'Position ranges & sequences' || key === 'Position ranges'" style="display: inline-grid; vertical-align: central;">
+                        <span v-for="elem in value" style="word-wrap:break-word; max-width: 400px">
                           {{elem}}<br>
                         </span>
                       </div>
