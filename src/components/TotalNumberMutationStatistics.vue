@@ -365,6 +365,11 @@ export default {
           //epitopeInfo['Virus name'] = epitope['taxon_name'];
           //epitopeInfo['Host name'] = epitope['host_taxon_name'];
           epitopeInfo['Protein name'] = epitope['product'];
+
+          if(!epitope['sequence']){
+            epitope['sequence'] = "";
+          }
+
           let posRange = epitope['position_range_to_show'].replaceAll('\n', '');
           let sequences = epitope['sequence'].replaceAll('\n', '');
           let arrSeq = sequences.split(',');
