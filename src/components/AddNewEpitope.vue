@@ -559,6 +559,9 @@ export default {
         line['Protein'] = val[i].product;
 
         let arrAll = [];
+        if(!val[i].sequence){
+          val[i].sequence = "";
+        }
         let posRange = val[i].position_range_to_show.replaceAll('\n', '');
         let sequences = val[i].sequence.replaceAll('\n', '');
         let arrSeq = sequences.split(',');
