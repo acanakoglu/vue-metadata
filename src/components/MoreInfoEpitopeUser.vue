@@ -25,6 +25,11 @@
             <h2 style="display: block; margin-bottom: 5px;">Epitope info:</h2>
             <span v-for="(value, key) in epitope_infos" style="display: block;"> <b>- {{key}} : </b>
               <span v-if="key === 'Creation date' || key === 'Refresh date'" >{{value}} </span>
+              <div v-else-if="key === 'Position range & sequence' || key === 'Position ranges & sequences'" style="display: inline-grid; vertical-align: central">
+                <span v-for="elem in value" style="word-wrap:break-word; max-width: 400px">
+                  {{elem}}<br>
+                </span>
+              </div>
               <span v-else class="capitalize">{{value}} </span>
             </span>
           </div>
@@ -136,7 +141,26 @@ export default {
         infos['File name'] = epitope.file_name;
       }
       infos['Protein name'] = epitope.product;
-      infos['Position range'] = epitope.position_range_to_show;
+
+      let arrAll = [];
+      let posRange = epitope.position_range_to_show.replaceAll('\n', '');
+      let sequences = epitope.sequence.replaceAll('\n', '');
+      let arrSeq = sequences.split(',');
+      let arrPos = posRange.split(',');
+      let len = arrPos.length;
+      let j = 0;
+      while (j<len){
+        let singlePosSeq = arrPos[j] + ' : ' + arrSeq[j].toUpperCase();
+        arrAll.push(singlePosSeq);
+        j = j + 1;
+      }
+      if(len === 1) {
+        infos['Position range & sequence'] = arrAll;
+      }
+      else{
+        infos['Position ranges & sequences'] = arrAll;
+      }
+
       infos['Virus taxon name'] = epitope.taxon_name;
       infos['Host taxon name'] = epitope.host_taxon_name;
       /*infos['Number of mutated sequences'] = epitope.num_seq;

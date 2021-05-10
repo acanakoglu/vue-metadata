@@ -4,7 +4,7 @@
         persistent
         scrollable
       v-model="dialog2"
-      width="1000"
+      width="1300"
     >
       <v-card>
         <v-card-title class="headline" style="background-color:rgb(201, 53, 53) ; color: white">

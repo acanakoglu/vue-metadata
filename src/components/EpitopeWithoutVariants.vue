@@ -2,7 +2,7 @@
 <div>
 
   <v-container fluid grid-list-xl class="EpitopeMenu">
-    <v-layout wrap align-center >
+    <v-layout wrap align-center justify-center>
 
       <v-flex class="no-horizontal-padding xs12 sm12 md12 d-flex EpitopeSelectors">
         <h2>IEDB Epitope search</h2>
@@ -21,7 +21,7 @@
                     </span>
     </v-flex>
 
-      <v-flex class="no-horizontal-padding xs12 sm6 md4 lg2 d-flex EpitopeSelectors"
+      <v-flex class="no-horizontal-padding xs12 sm6 md4 lg3 d-flex EpitopeSelectors"
               v-for="fieldEpi in epitopeFields" v-bind:key="fieldEpi.text">
               <EpitopeWithoutVariantsSelectorText
                   v-if="!fieldEpi.is_numerical && !fieldEpi.is_percentage "
@@ -219,7 +219,7 @@ export default {
     }
 
   .EpitopeSelectors{
-    margin-bottom: 10px;
+    margin-bottom: 30px;
   }
 
   .info-icon {

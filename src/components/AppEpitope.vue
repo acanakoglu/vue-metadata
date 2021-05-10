@@ -728,6 +728,7 @@
              this.epitopeToAdd = val;
              this.countNumSeq(val);
              this.countNumVar(val);
+             this.loadSequence(val);
              this.countPopulation(val);
 
             },
@@ -797,6 +798,20 @@
                return kv;
 
              },
+          loadSequence(epitope){
+              let to_send = {};
+              to_send['product'] = epitope['product'];
+              to_send['compound_query'] = epitope['compound_query'];
+              to_send['position_ranges'] = epitope['position_range_to_show'];
+              const url = `epitope/sequenceAminoacidNewEpitope`;
+              axios.post(url, to_send)
+                  .then((res) => {
+                    return res.data
+                  })
+                  .then((res) => {
+                      this.epitopeToAdd['sequence'] = res;
+                    })
+          },
           countNumSeq(val){
                let to_send = val['compound_query'];
               this.finish_count_seq = false;
