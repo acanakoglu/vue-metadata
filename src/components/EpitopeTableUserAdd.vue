@@ -141,7 +141,8 @@
                     :key="header.value" v-show="header.show" :title=header.text>
 
                     <span v-if="header.value === 'num_seq'">
-                      <span v-if="props.item[header.value] !== '-'">
+                      <span>
+                      <!--<span v-if="props.item[header.value] !== '-'">-->
                         <!--<a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span></a>-->
 
                         <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
@@ -151,7 +152,8 @@
                         </v-btn>
 
                       </span>
-                      <span v-else>{{props.item[header.value]}}</span>
+                      <!--</span>
+                      <span v-else>{{props.item[header.value]}}</span>-->
                     </span>
 
                   <span v-else-if="header.value === 'num_var'">
