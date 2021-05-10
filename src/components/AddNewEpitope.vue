@@ -143,6 +143,42 @@
         </v-layout>
 
         <v-dialog
+              v-model="dialogModeCustomEpitopes"
+              width="550"
+          >
+          <v-card>
+              <v-card-title
+                      class="headline"
+                      style="background-color:rgb(201, 53, 53) ; color: white">
+                  Warning
+              </v-card-title>
+              <v-card-text>
+                Please mind that for an appropriate use of EpiSurf, users should keep in mind that purely position-based considerations
+                are especially useful for B-cell assay epitopes. For T cell/MHC ligand assay, users should consider
+                also HLA restrictions on target populations.
+                <br><br>
+                The custom epitope functionality may be exploited in any case, but we invite users to conduct
+                deeper investigation when using epitopes for T cell /MHC ligand assays having a low response
+                frequency (e.g., below 0.2).
+                <v-layout wrap justify-end style="margin-top: 10px;">
+                  <v-flex sm7 align-self-center>
+                  </v-flex>
+                  <v-flex sm5 align-end>
+                    <v-checkbox
+                        color="gray"
+                      v-model="dontShowAgainWarningMode1"
+                      label="Do not show this again"
+                      input-value="true"
+                        class="shrink mr-0 mt-0"
+                    hide-details>
+                    </v-checkbox>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+          </v-card>
+      </v-dialog>
+
+        <v-dialog
             persistent
           v-model="missingFields"
           width="300"
@@ -350,7 +386,7 @@
               <v-select
                 v-model="numOfElemInPage2"
               :items="listPossibleNumPage"
-                class="shrink"
+                class="shrink2"
                 style="display: inline-block"
             ></v-select>
           </div>
@@ -454,6 +490,8 @@ export default {
     return {
       requirement: 'A single Host and a single Virus are required',
       missingFields: false,
+      dialogModeCustomEpitopes: false,
+      dontShowAgainWarningMode1: false,
       newEpitopeFields: [],
       epitope_name: '',
       is_control: false,
@@ -485,7 +523,8 @@ export default {
     ...mapState(['epitopeAdded', 'newSingleEpitope', 'newEpitopeLoading', 'showMoreInfoEpitopeUser',
       'countSeq2', 'showAminoacidVariantUserNewEpi',
       'disableSelectorUserNewEpitopePart', 'newSingleAminoAcidConditionUser',
-      'epitopeAminoacidConditionsArrayUserNew', 'epitopeAdded', 'userEpitopeSelected', 'myIntervalCountSeq']),
+      'epitopeAminoacidConditionsArrayUserNew', 'epitopeAdded', 'userEpitopeSelected', 'myIntervalCountSeq',
+    'dontShowWarningMode1Again']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query',
@@ -656,7 +695,7 @@ export default {
      'setTrueExampleCustomEpitope', 'setNewSingleEpitopeQuery', 'resetNewSingleAminoacidConditionUserQuery',
      'setNewSingleAminoacidConditionUserQuery', 'setQuery', 'setFalseDisableSelectorEpitopePart',
      'setFalseDisableSelectorUserNewEpitopePart', 'setFalseShowAminoacidVariantUserNewEpi',
-     'resetNewSingleEpitopeQuery', 'refreshEpitopeInList', 'setMyIntervalCountSeq']),
+     'resetNewSingleEpitopeQuery', 'refreshEpitopeInList', 'setMyIntervalCountSeq', 'showWarningMode1']),
      ...mapActions(['setNewSingleEpitopeSelected', 'setNewSingleAminoAcidConditionUserAction',]),
      loadCountSeq2(){
        this.setFalseFinishCountPopulation();
@@ -714,6 +753,9 @@ export default {
             this.nameAlreadyExisting = true;
          }
          else {
+           if(!this.dontShowWarningMode1Again) {
+             this.dialogModeCustomEpitopes = true;
+           }
            this.changeAddingEpitope();
            this.setNewSingleEpitopeSelected({field: 'taxon_name', list: this.compound_query['gcm'].taxon_name[0]})
            this.setNewSingleEpitopeSelected({
@@ -1156,6 +1198,9 @@ export default {
 
   },
   watch:{
+    dontShowAgainWarningMode1(){
+      this.showWarningMode1();
+    },
     my_interval_countSeq(){
       if(this.myIntervalCountSeq !== null && this.my_interval_countSeq !== this.myIntervalCountSeq){
         stopPoll(this.myIntervalCountSeq);
@@ -1407,7 +1452,7 @@ export default {
     opacity: 0.5 !important;
   }
 
-  .shrink{
+  .shrink2{
     width: 50px;
     margin-right: 30px;
     margin-left: 30px;
