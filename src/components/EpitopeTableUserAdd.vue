@@ -142,14 +142,27 @@
 
                     <span v-if="header.value === 'num_seq'">
                       <span v-if="props.item[header.value] !== '-'">
-                        <a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                        <!--<a @click="sendDataToSeqEpiTable(props.item)" target="_blank">{{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span></a>-->
+
+                        <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0 || props.item['num_seq'] === '-'"
+                              @click="sendDataToSeqEpiTable(props.item)">
+                          {{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span>
+                        </v-btn>
+
                       </span>
                       <span v-else>{{props.item[header.value]}}</span>
                     </span>
 
                   <span v-else-if="header.value === 'num_var'">
                         <span>
-                          <a @click="sendDataToTotMutStatistics(props.item)" target="_blank">{{props.item[header.value]}}</a>
+                          <!--<a @click="sendDataToTotMutStatistics(props.item)" target="_blank">{{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span></a>-->
+
+                          <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
+                             :disabled="props.item['num_seq'] === 0 || props.item['num_seq'] === '-'"
+                              @click="sendDataToTotMutStatistics(props.item)">
+                              {{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span>
+                            </v-btn>
                         </span>
                   </span>
 
@@ -620,6 +633,7 @@ export default {
           {text: 'Host Name', value: 'host_taxon_name', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Protein Name', value: 'product', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Position Range', value: 'position_range', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
+          {text: 'Sequence', value: 'sequence', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Metadata', value: 'metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Amino Acid Condition', value: 'aminoacid_condition', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
           {text: 'Num Seq Population', value: 'total_num_of_seq_metadata', sortable: this.sortable, show: true, to_send: false, can_be_shown: true},
