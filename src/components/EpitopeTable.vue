@@ -262,7 +262,7 @@
 
                           <v-btn style="text-transform: none; color: white" small color="rgb(79, 131, 164)"
                                :disabled="props.item['num_seq'] === 0 || props.item['num_seq'] === '-'"
-                                @click="sendDataToSeqEpiTable(props.item)">
+                                @click="sendDataToSeqEpiTable(props.item[epitopeId])">
                             {{props.item[header.value]}}&nbsp&nbsp<span class="material-icons" style="font-size: 16px; display: inline">backup_table</span>
                           </v-btn>
 

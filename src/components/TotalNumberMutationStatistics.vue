@@ -21,75 +21,6 @@
         </v-card-title>
 
         <v-card-text>
-          <v-layout wrap align-center justify-center>
-            <v-flex class="no-horizontal-padding xs12 sm6 md6 lg6 d-flex EpitopeSelectors">
-              <v-layout align-center justify-center>
-                <v-card style="width: 300px;">
-                  <v-select
-                    v-model="firstParameter"
-                    :items="filterParam(1)"
-                    :label= "labelFirstParameter"
-                    single
-                    :item-text="rename"
-                    dense
-                    outlined
-                    clearable
-                    @click:clear = "clearFirstParameter()"
-                  >
-                    <template
-                      slot="item"
-                      slot-scope="data"
-                    >
-                      <!-- Divider and Header-->
-                      <template v-if="typeof data.item !== 'object'">
-                        <v-list-tile-content v-text="data.item"/>
-                      </template>
-                      <!-- Normal item -->
-                      <template v-else>
-                        <v-list-tile-content>
-                          <v-list-tile-title>{{rename(data.item.name)}}</v-list-tile-title>
-                        </v-list-tile-content>
-                      </template>
-                    </template>
-                  </v-select>
-                </v-card>
-              </v-layout>
-            </v-flex>
-            <v-flex class="no-horizontal-padding xs12 sm6 md6 lg6 d-flex EpitopeSelectors">
-              <v-layout align-center justify-center>
-                <v-card style="width: 300px">
-                  <v-select
-                    v-model="secondParameter"
-                    :items="filterParam(2)"
-                    :label="labelSecondParameter"
-                    single
-                    :item-text="rename"
-                    dense
-                    outlined
-                    :disabled = "this.firstParameterSetted === null"
-                    clearable
-                    @click:clear = "clearSecondParameter()"
-                  >
-                    <template
-                      slot="item"
-                      slot-scope="data"
-                    >
-                      <!-- Divider and Header-->
-                      <template v-if="typeof data.item !== 'object'">
-                        <v-list-tile-content v-text="data.item"/>
-                      </template>
-                      <!-- Normal item -->
-                      <template v-else>
-                        <v-list-tile-content>
-                          <v-list-tile-title>{{rename(data.item.name)}}</v-list-tile-title>
-                        </v-list-tile-content>
-                      </template>
-                    </template>
-                  </v-select>
-                </v-card>
-              </v-layout>
-            </v-flex>
-          </v-layout>
 
           <v-layout wrap justify-center style="margin: 30px;">
             <v-card style="background-color: #C0C0C0; width: 50%; padding: 20px">
@@ -210,6 +141,77 @@
             </v-card>
           </v-layout>
 
+
+          <v-layout wrap align-center justify-center>
+            <v-flex class="no-horizontal-padding xs12 sm6 md6 lg6 d-flex EpitopeSelectors">
+              <v-layout align-center justify-center>
+                <v-card style="width: 300px;">
+                  <v-select
+                    v-model="firstParameter"
+                    :items="filterParam(1)"
+                    :label= "labelFirstParameter"
+                    single
+                    :item-text="rename"
+                    dense
+                    outlined
+                    clearable
+                    @click:clear = "clearFirstParameter()"
+                  >
+                    <template
+                      slot="item"
+                      slot-scope="data"
+                    >
+                      <!-- Divider and Header-->
+                      <template v-if="typeof data.item !== 'object'">
+                        <v-list-tile-content v-text="data.item"/>
+                      </template>
+                      <!-- Normal item -->
+                      <template v-else>
+                        <v-list-tile-content>
+                          <v-list-tile-title>{{rename(data.item.name)}}</v-list-tile-title>
+                        </v-list-tile-content>
+                      </template>
+                    </template>
+                  </v-select>
+                </v-card>
+              </v-layout>
+            </v-flex>
+            <v-flex class="no-horizontal-padding xs12 sm6 md6 lg6 d-flex EpitopeSelectors">
+              <v-layout align-center justify-center>
+                <v-card style="width: 300px">
+                  <v-select
+                    v-model="secondParameter"
+                    :items="filterParam(2)"
+                    :label="labelSecondParameter"
+                    single
+                    :item-text="rename"
+                    dense
+                    outlined
+                    :disabled = "this.firstParameterSetted === null"
+                    clearable
+                    @click:clear = "clearSecondParameter()"
+                  >
+                    <template
+                      slot="item"
+                      slot-scope="data"
+                    >
+                      <!-- Divider and Header-->
+                      <template v-if="typeof data.item !== 'object'">
+                        <v-list-tile-content v-text="data.item"/>
+                      </template>
+                      <!-- Normal item -->
+                      <template v-else>
+                        <v-list-tile-content>
+                          <v-list-tile-title>{{rename(data.item.name)}}</v-list-tile-title>
+                        </v-list-tile-content>
+                      </template>
+                    </template>
+                  </v-select>
+                </v-card>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+
           <v-layout wrap justify-center style="margin-top: 40px">
             <v-btn @click="applyTotMutStatistics()"
                    class="white--text" color="#00008B"
@@ -236,7 +238,7 @@
                                small
                            color="rgb(122, 139, 157)"
                               :disabled="isLoading || Object.keys(this.headers).length <= 1">
-                      Set predefined order fields</v-btn>
+                      Reset order</v-btn>
                   </v-layout>
                 </v-flex>
             </v-layout>
@@ -396,7 +398,7 @@ export default {
           epitopeInfo['Mutated sequences ratio'] = epitope.mutated_seq_ratio + " %";
           epitopeInfo['Total number of sequences on selected population'] = epitope.total_num_of_seq_metadata;
         }
-        else
+        else if(this.chosenEpitope['iedb_epitope_id'])
         {
           epitopeInfo['Epitope IEDB ID'] = epitope['iedb_epitope_id'];
           //epitopeInfo['Virus name'] = epitope['taxon_name'];
@@ -573,6 +575,9 @@ export default {
       }
     },
     returnPredifinedOrderHeader(){
+      if(this.pagination.sortBy !== "Mutation" || (this.pagination.sortBy === "Mutation" && this.pagination.descending === true)){
+        this.changeSort("Mutation");
+      }
       this.headers = this.predefined_order_header;
       this.selectedItem = null;
     },
