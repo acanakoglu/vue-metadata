@@ -569,7 +569,10 @@ export default {
         let len = arrPos.length;
         let j = 0;
         while (j<len){
-          let singlePosSeq = arrPos[j] + ' : ' + arrSeq[j].toUpperCase();
+          let singlePosSeq = "";
+          if(arrSeq[j] !== undefined) {
+            singlePosSeq = arrPos[j] + ' : ' + arrSeq[j].toUpperCase();
+          }
           arrAll.push(singlePosSeq);
           j = j + 1;
         }
