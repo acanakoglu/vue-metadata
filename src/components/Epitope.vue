@@ -140,6 +140,17 @@
                       class="headline"
                       style="background-color:rgb(201, 53, 53) ; color: white">
                   Warning
+                <v-spacer></v-spacer>
+                <v-btn
+                    style="background-color: rgb(122, 139, 157)"
+                    slot="activator"
+                    flat icon
+                    small
+                  color="white"
+                  @click="dialogModeEpitopeWithVariants = false;"
+                >
+                  <v-icon>close</v-icon>
+                </v-btn>
               </v-card-title>
               <v-card-text>
                 We discourage using the mode "USE IEDB EPITOPES WITH VARIANT COUNTS"
