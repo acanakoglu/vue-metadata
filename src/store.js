@@ -60,6 +60,8 @@ export default new Vuex.Store({
         fromPredefinedQuery: false,
         appliedActuaQuery: true,
         myIntervalCountSeq: null,
+        dontShowWarningMode3Again: false,
+        dontShowWarningMode1Again: false,
     },
     getters: {
         showGraphDialog: (state) => state.graphSourceId != null,
@@ -322,6 +324,12 @@ export default new Vuex.Store({
         },
         showMoreInfo: (state) => {
             state.showMoreInfoEpitopeUser = !state.showMoreInfoEpitopeUser;
+        },
+        showWarningMode3: (state) => {
+            state.dontShowWarningMode3Again = !state.dontShowWarningMode3Again;
+        },
+        showWarningMode1: (state) => {
+            state.dontShowWarningMode1Again = !state.dontShowWarningMode1Again;
         },
         setChosenEpitope: (state, item) => {
             state.chosenEpitope = item;

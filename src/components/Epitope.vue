@@ -140,6 +140,17 @@
                       class="headline"
                       style="background-color:rgb(201, 53, 53) ; color: white">
                   Warning
+                <v-spacer></v-spacer>
+                <v-btn
+                    style="background-color: rgb(122, 139, 157)"
+                    slot="activator"
+                    flat icon
+                    small
+                  color="white"
+                  @click="dialogModeEpitopeWithVariants = false;"
+                >
+                  <v-icon>close</v-icon>
+                </v-btn>
               </v-card-title>
               <v-card-text>
                 We discourage using the mode "USE IEDB EPITOPES WITH VARIANT COUNTS"
@@ -148,34 +159,24 @@
                 For optimal functioning of EpiSurf, we suggest selecting on the order of thousands of sequences;
                 please use metadata filters accordingly.
                 If the set is bigger, expect a slowdown!
+                <v-layout wrap justify-end style="margin-top: 10px;">
+                  <v-flex sm7 align-self-center>
+                  </v-flex>
+                  <v-flex sm5 align-end>
+                    <v-checkbox
+                        color="gray"
+                      v-model="dontShowAgainWarningMode3"
+                      label="Do not show this again"
+                      input-value="true"
+                        class="shrink mr-0 mt-0"
+                    hide-details>
+                    </v-checkbox>
+                  </v-flex>
+                </v-layout>
               </v-card-text>
           </v-card>
       </v-dialog>
 
-      <v-dialog
-              v-model="dialogModeCustomEpitopes"
-              width="550"
-          >
-          <v-card>
-              <v-card-title
-                      class="headline"
-                      style="background-color:rgb(201, 53, 53) ; color: white">
-                  Welcome to EpiSurf - Custom Epitopes mode!
-              </v-card-title>
-              <v-card-text>
-                Here you may propose your own epitope by specifying a name, protein, range (or set of ranges)
-                on the reference sequence.
-                <br><br>
-                Please mind that for an appropriate use of EpiSurf, users should keep in mind that purely position-based considerations
-                are especially useful for B-cell assay epitopes. For T cell/MHC ligand assay, users should consider
-                also HLA restrictions on target populations.
-                <br><br>
-                The custom epitope functionality may be exploited in any case, but we invite users to conduct
-                deeper investigation when using epitopes for T cell /MHC ligand assays having a low response
-                frequency (e.g., below 0.2).
-              </v-card-text>
-          </v-card>
-      </v-dialog>
 
   </v-card>
 </template>
@@ -218,14 +219,14 @@ export default {
       selectedTab: this.setSelectedTab(),
       epiQueryUsedTab: 0,
       dialogModeEpitopeWithVariants: false,
-      dialogModeCustomEpitopes: false,
+      dontShowAgainWarningMode3: false,
     }
   },
   computed: {
     ...mapState(['disableSelectorEpitopePart', 'countEpi', 'epitopeAdded',
       'epiQuerySel', 'epiQuerySelWithoutVariants','disableSelectorUserNewEpitopePart', 'disableSelectorEpitopePart', 'aminoacidConditions',
     'selectedTabEpitope', 'countEpiToShow', 'countEpiCustom', 'countEpiWithoutVariants', 'epitopeAminoacidFields',
-    'fromPredefinedQuery']),
+    'fromPredefinedQuery', 'dontShowWarningMode3Again']),
     ...mapGetters({
       epiSearchDis: 'epiSearchDisabled',
       compound_query: 'build_query'
@@ -263,7 +264,7 @@ export default {
      'setCountEpiCustom', 'setCountEpiToShow', 'setSelectedTabEpitopeToCustom', 'setSelectedTabEpitopeToEpitopeVariants',
      'setSelectedTabEpitopeToEpitopeWithoutVariants', 'setCountEpiWithoutVariants',
      'setEpiQuery', 'setEpiQueryWithoutVariants', 'setFalseFromPredefinedQuery', 'resetAminoacidConditionQuery',
-     'resetNewSingleEpitopeQuery', 'resetEpitopeAminoacidConditionsArrayUserNewInOR']),
+     'resetNewSingleEpitopeQuery', 'resetEpitopeAminoacidConditionsArrayUserNewInOR', 'showWarningMode3']),
      ...mapActions([
          'setNewSingleAminoAcidConditionUserAction'
      ]),
@@ -322,6 +323,9 @@ export default {
      },
    },
   watch:{
+    dontShowAgainWarningMode3(){
+      this.showWarningMode3();
+    },
     selectedTabEpitope(){
       this.selectedTab = this.selectedTabEpitope;
     },
@@ -360,9 +364,6 @@ export default {
     },
     selectedTab(){
       if(this.selectedTab === this.toCustom){
-        if(!this.fromPredefinedQuery) {
-          this.dialogModeCustomEpitopes = true;
-        }
         this.resetNewSingleEpitopeQuery();
         this.setFalseDisableSelectorUserNewEpitopePart();
         this.setNewSingleAminoAcidConditionUserAction({field: 'product', list: ''});
@@ -382,7 +383,7 @@ export default {
       }
       else if(this.selectedTab === this.toEpitopeVariants){
         //console.log("qui", this.fromPredefinedQuery);
-        if(!this.fromPredefinedQuery) {
+        if(!this.fromPredefinedQuery && !this.dontShowWarningMode3Again) {
           this.dialogModeEpitopeWithVariants = true;
         }
         if(this.epiQueryUsedTab === this.toEpitopeWithoutVariants && !this.fromPredefinedQuery){
