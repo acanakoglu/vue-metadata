@@ -201,7 +201,7 @@
                           that exhibit at least one amino acid change within the epitope position range.</span>
                         <br><br>
                         <b>(2) TOT MUT:</b>
-                        <span> the number of total amino acid changes exhibited by the full population of sequences.</span>
+                        <span> the number of total amino acid changes exhibited by the full population of sequences (any insertion counts for one).</span>
                         <br><br>
                         <b>(3) MUT FREQ:</b>
                         <span> the ratio of total variants (2) over the number of mutated sequences (1).</span>
