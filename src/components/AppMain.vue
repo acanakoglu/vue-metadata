@@ -551,20 +551,21 @@
             queryToShow() {
                 let inner_list = [];
                 Object.keys(this.compound_query['gcm']).forEach(key => {
+                  if(key !== 'taxon_name') {
                     const value2 = [];
                     const value = this.compound_query['gcm'][key];
                     if (Array.isArray(value)) {
-                        value.forEach(val => {
-                            if (val === null)
-                                value2.push("N/D");
-                            else
-                                value2.push(val);
-                        });
-                        inner_list.push(key + ': ' + JSON.stringify(value2));
+                      value.forEach(val => {
+                        if (val === null)
+                          value2.push("N/D");
+                        else
+                          value2.push(val);
+                      });
+                      inner_list.push(key + ': ' + JSON.stringify(value2));
                     } else {
-                        inner_list.push(key + ': ' + JSON.stringify(value));
+                      inner_list.push(key + ': ' + JSON.stringify(value));
                     }
-
+                  }
 
                 });
                 return inner_list.join(", ");
