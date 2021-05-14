@@ -104,22 +104,26 @@
                       Statistics:
                   </v-card-title>
                   <v-card-text>
-                      <b>(1) NUM MUT SEQ:</b>
+                      <b>(1) NUM SEQ POPULATION:</b>
+                      <span> the number of sequences available in the population where the epitope has been tested
+                        in EpiSurf (i.e., matching the filters in the Metadata and Amino Acid Condition columns).</span>
+                      <br><br>
+                      <b>(2) NUM MUT SEQ:</b>
                       <span> the number of sequences in the selected population
                         that exhibit at least one amino acid change within the epitope position range.</span>
                       <br><br>
-                      <b>(2) TOT MUT:</b>
+                      <b>(3) TOT MUT:</b>
                       <span> the number of total amino acid changes exhibited by the full population of sequences (any insertion counts for one).</span>
                       <br><br>
-                      <b>(3) MUT FREQ:</b>
-                      <span> the ratio of total variants (2) over the number of mutated sequences (1).</span>
+                      <b>(4) MUT FREQ:</b>
+                      <span> the ratio of total variants (3) over the number of mutated sequences (2).</span>
                       <br><br>
-                      <b>(4) MUT SEQ RATIO:</b>
-                      <span> the ratio of mutated sequences (1) over the total of the selected population.</span>
+                      <b>(5) MUT SEQ RATIO:</b>
+                      <span> the ratio of mutated sequences (2) over the total of the selected population (1).</span>
                       <br><br>
-                      <span>When epitopes have been defined using also an amino acid condition, counters (1) and (2) are
-                        computed by considering the fraction of the population that exhibits the specific
-                        selected amino acid condition.</span>
+                      <span>When epitopes have been defined using also an amino acid condition, counters (2) and (3)
+                        are computed by considering the fraction of the population that exhibits the specific selected
+                        amino acid condition.</span>
                   </v-card-text>
               </v-card>
           </v-dialog>

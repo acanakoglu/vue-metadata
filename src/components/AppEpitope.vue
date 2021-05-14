@@ -325,8 +325,8 @@
                 precision_float_table: 5,
                 isGisaid: false,
                 queryItems: [
-                    {
-                        text: 'Example Epitope',
+                     {
+                        text: 'Italy sequences on B cell, linear, Nucleocapsid 153-170 epitopes',
                         value: {
                             query: {
                                 "gcm": {
@@ -342,30 +342,104 @@
                                     "product": ["Spike (surface glycoprotein)"],
                                     "cell_type": ["B cell"],
                                     "is_linear": [true],
-                                    "mhc_allele": [null],
-                                    "startExt": [14],
-                                    "stopExt": [150],
-                                    "startFreqExt": [0.01],
-                                    "stopFreqExt": [0.08],
+                                    "startExt": [153],
+                                    "stopExt": [170],
+                                }
+                            }
+                        }
+                    },
+                                        {
+                        text: 'Florida sequences on T cell, RBD, HLA-A*02:01 epitopes',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["florida"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            epi_query: {
+                                epitope_meta: {
+                                    "product": ["Spike (surface glycoprotein)"],
+                                    "cell_type": ["T cell"],
+                                    "mhc_allele": ["HLA-A*02:01"],
+                                    "startExt": [331],
+                                    "stopExt": [524],
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Florida sequences on T cell, RBD, HLA-A*02:01 epitopes, high resp. freq.',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["florida"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            epi_query: {
+                                epitope_meta: {
+                                    "product": ["Spike (surface glycoprotein)"],
+                                    "cell_type": ["T cell"],
+                                    "mhc_allele": ["HLA-A*02:01"],
+                                    "startExt": [331],
+                                    "stopExt": [524],
+                                    "startFreqExt": [0.20],
+                                    "stopFreqExt": [1]
+                                },
+                            }
+                        }
+                    },
+                    {
+                        text: 'Florida sequences on T cell, RBD, HLA-A*02:01 epitopes, high resp. freq., K417N change',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["florida"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            epi_query: {
+                                epitope_meta: {
+                                    "product": ["Spike (surface glycoprotein)"],
+                                    "cell_type": ["T cell"],
+                                    "mhc_allele": ["HLA-A*02:01"],
+                                    "startExt": [331],
+                                    "stopExt": [524],
+                                    "startFreqExt": [0.20],
+                                    "stopFreqExt": [1]
                                 },
                                 variant_meta: {
                                     "variant_aa_type": ["SUB"],
-                                    "sequence_aa_original": ["N"],
-                                    "sequence_aa_alternative": ["T"],
-                                    "startExtVariant": [17],
-                                    "stopExtVariant": [55],
+                                    "sequence_aa_original": ["K"],
+                                    "sequence_aa_alternative": ["N"],
+                                    "startExtVariant": [417],
+                                    "stopExtVariant": [417],
                                 }
                             }
                         }
                     },
                     {
-                        text: 'Florida sequences with variants on RDB linear epitopes',
+                        text: 'Texas sequences on epitopes  including Spike 677 position, statistics on Q677P',
                         value: {
                             query: {
                                 "gcm": {
                                     "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
                                     "host_taxon_name": ["homo sapiens"],
-                                    "region": ["florida"],
+                                    "country": ["usa"],
+                                    "region": ["texas"],
                                 },
                                 "type": "original",
                                 "kv": {}
@@ -373,105 +447,284 @@
                             epi_query: {
                                 epitope_meta: {
                                     "product": ["Spike (surface glycoprotein)"],
-                                    "is_linear": [true],
-                                    "startExt": [331],
-                                    "stopExt": [524]
-                                },
-                            }
-                        }
-                    },
-                     {
-                        text: 'Florida sequences with N501Y variants on RDB linear epitopes',
-                        value: {
-                            query: {
-                                "gcm": {
-                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
-                                    "host_taxon_name": ["homo sapiens"],
-                                    "region": ["florida"],
-                                },
-                                "type": "original",
-                                "kv": {}
-                            },
-                            epi_query: {
-                                epitope_meta: {
-                                    "product": ["Spike (surface glycoprotein)"],
-                                    "is_linear": [true],
-                                    "startExt": [331],
-                                    "stopExt": [524]
+                                    "startExt": [677],
+                                    "stopExt": [677],
                                 },
                                 variant_meta: {
-                                    "sequence_aa_original": ["N"],
-                                    "sequence_aa_alternative": ["Y"],
-                                    "startExtVariant": [501],
-                                    "stopExtVariant": [501],
+                                    "variant_aa_type": ["SUB"],
+                                    "sequence_aa_original": ["Q"],
+                                    "sequence_aa_alternative": ["P"],
+                                    "startExtVariant": [677],
+                                    "stopExtVariant": [677],
                                 }
                             }
                         }
                     },
                     {
-                        text: 'Example Custom Epitope',
+                        text: 'Custom Epitope: S14P5-USA',
                         value: {
                             query: {
                                 "gcm": {
                                     "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
                                     "host_taxon_name": ["homo sapiens"],
-                                    "country": ["italy"],
+                                    "country": ["usa"],
                                 },
                                 "type": "original",
                                 "kv": {}
                             },
                             custom_epi_query: {
                                 custom_epitope_meta: {
-                                    "epitope_name": "Custom epitope example",
+                                    "epitope_name": "S14P5-USA",
                                     "taxon_name": "severe acute respiratory syndrome coronavirus 2",
                                     "host_taxon_name": "homo sapiens",
                                     "product": "spike (surface glycoprotein)",
-                                    "position_range": [[1, 12], [15, 20]],
-                                },
-                                custom_variant_meta: {
-                                    "product": ["spike (surface glycoprotein)"],
-                                    "variant_aa_type": ["sub"],
-                                    "sequence_aa_original": ["d"],
-                                    "sequence_aa_alternative": ["g"],
-                                    "start_aa_original": {
-                                        "max_val": 300,
-                                        "min_val": 100,
-                                    }
+                                    "position_range": [[553, 570]],
                                 }
                             }
                         }
                     },
                     {
-                        text: '450-500 Spike Epitope, checking E484K variant sequences',
+                        text: 'Custom Epitope: S20P2-USA',
                         value: {
                             query: {
                                 "gcm": {
                                     "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
                                     "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
                                 },
                                 "type": "original",
                                 "kv": {}
                             },
                             custom_epi_query: {
                                 custom_epitope_meta: {
-                                    "epitope_name": "my_epitope",
+                                    "epitope_name": "S20P2-USA",
                                     "taxon_name": "severe acute respiratory syndrome coronavirus 2",
                                     "host_taxon_name": "homo sapiens",
                                     "product": "spike (surface glycoprotein)",
-                                    "position_range": [[450, 500]],
-                                },
-                                custom_variant_meta: {
-                                    "product": ["spike (surface glycoprotein)"],
-                                    "sequence_aa_original": ["e"],
-                                    "sequence_aa_alternative": ["k"],
-                                    "start_aa_original": {
-                                        "max_val": 484,
-                                        "min_val": 484,
-                                    }
+                                    "position_range": [[769, 786]],
                                 }
                             }
                         }
                     },
+                    {
+                        text: 'Custom Epitope: S21P2-USA',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "S21P2-USA",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[809, 826]],
+                                }
+                            }
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: N45P5-USA',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "N45P5-USA",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[153, 170]],
+                                }
+                            }
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: S14P5-USA-FL',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["florida"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "S14P5-USA-FL",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[553, 570]],
+                                }
+                            }
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: S14P5-USA-MN',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["minnesota"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "S14P5-USA-MN",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[553, 570]],
+                                }
+                            }
+                        }
+                    },
+                    {
+                        text: 'Custom Epitope: S14P5-USA-MI',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                    "region": ["michigan"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "S14P5-USA-MI",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[553, 570]],
+                                }
+                            }
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: N45P5-USA_A156S',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "N45P5-USA",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[153, 170]],
+                                },
+                                custom_variant_meta: {
+                                    "product": ["spike (surface glycoprotein)"],
+                                    "sequence_aa_original": ["a"],
+                                    "sequence_aa_alternative": ["s"],
+                                    "start_aa_original": {
+                                        "max_val": 156,
+                                        "min_val": 156,
+                                    }
+                                }
+                            },
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: N45P5-USA_L161F',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "N45P5-USA",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[153, 170]],
+                                },
+                                custom_variant_meta: {
+                                    "product": ["spike (surface glycoprotein)"],
+                                    "sequence_aa_original": ["l"],
+                                    "sequence_aa_alternative": ["f"],
+                                    "start_aa_original": {
+                                        "max_val": 161,
+                                        "min_val": 161,
+                                    }
+                                }
+                            },
+                        }
+                    },
+                                        {
+                        text: 'Custom Epitope: N45P5-USA_P168S',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["usa"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            custom_epi_query: {
+                                custom_epitope_meta: {
+                                    "epitope_name": "N45P5-USA",
+                                    "taxon_name": "severe acute respiratory syndrome coronavirus 2",
+                                    "host_taxon_name": "homo sapiens",
+                                    "product": "spike (surface glycoprotein)",
+                                    "position_range": [[153, 170]],
+                                },
+                              custom_variant_meta: {
+                                    "product": ["spike (surface glycoprotein)"],
+                                    "sequence_aa_original": ["p"],
+                                    "sequence_aa_alternative": ["s"],
+                                    "start_aa_original": {
+                                        "max_val": 168,
+                                        "min_val": 168,
+                                    }
+                                }
+                            },
+                        }
+                    }
+
+
+
+
+
                 ],
                 selectedTab: 0,
                 queryString:
@@ -683,7 +936,10 @@
              let all_info = val['all_information'] ;
              all_info['compound_query'] = JSON.parse(JSON.stringify(compound_query));
              all_info['epitope_info'] = JSON.parse(JSON.stringify(item_custom_epi_meta));
-             all_info['amino_acid_info'] = JSON.parse(JSON.stringify(item_custom_var_meta));
+
+             if(item_custom_var_meta !== undefined && item_custom_var_meta !== null) {
+               all_info['amino_acid_info'] = JSON.parse(JSON.stringify(item_custom_var_meta));
+             }
 
 
              val['compound_query'] = JSON.parse(JSON.stringify(compound_query));
@@ -772,23 +1028,24 @@
 
 
                let array = [];
-               array.push(var_meta);
+               if(var_meta !== undefined && var_meta !== null) {
+                 array.push(var_meta);
 
-               let copy = JSON.parse(JSON.stringify(array));
-               let length = copy.length;
-               let j = 0;
-               while(j < length){
-                 let single = copy[j];
-                 j++;
-                 let name = 'aa_' + j;
-                 kv[name] = {};
-                 kv[name]['type_query'] = 'aa';
-                 kv[name]['exact'] = false;
-                 if(single.length === undefined || single.length === null) {
-                    kv[name]['query'] = [single];
-                 }
-                 else{
-                    kv[name]['query'] = single;
+                 let copy = JSON.parse(JSON.stringify(array));
+                 let length = copy.length;
+                 let j = 0;
+                 while (j < length) {
+                   let single = copy[j];
+                   j++;
+                   let name = 'aa_' + j;
+                   kv[name] = {};
+                   kv[name]['type_query'] = 'aa';
+                   kv[name]['exact'] = false;
+                   if (single.length === undefined || single.length === null) {
+                     kv[name]['query'] = [single];
+                   } else {
+                     kv[name]['query'] = single;
+                   }
                  }
                }
 

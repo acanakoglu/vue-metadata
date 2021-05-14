@@ -357,7 +357,7 @@
                             <v-icon>list</v-icon>
                         </v-btn>
                     </span>
-                    <span v-else-if="header.value === 'lineage_clade'">
+                    <span v-else-if="header.value === 'lineage'">
                         <span v-if="props.item['lineage'] || props.item['clade']">{{updateCellTextFormat(props.item['lineage'])}} ({{updateCellTextFormat(props.item['clade'])}})</span>
                         <span v-else v-html="updateCellTextFormat(null)"></span>
                     </span>
@@ -622,7 +622,7 @@
                     {text: 'Sequence Length', value: 'length', sortable: this.sortable, show: true},
                     {text: 'GC%', value: 'gc_percentage', sortable: this.sortable, show: true},
                     {text: 'N%', value: 'n_percentage', sortable: this.sortable, show: true},
-                    {text: 'Lineage (Clade)', value: 'lineage_clade', sortable: false, show: true},
+                    {text: 'Lineage (Clade)', value: 'lineage', sortable: this.sortable, show: true},
                     // {text: 'Lineage', value: 'lineage', sortable: this.sortable, show: true},
                     // {text: 'Clade', value: 'clade', sortable: this.sortable, show: true},
 
@@ -920,15 +920,38 @@
                 var json = input;
                 var fields = [];
                 selected_headers.forEach(function (el) {
-                    if (el.value != "extra")
+                    if (el.value != "extra") {
+                      if (el.value !== "lineage") {
                         fields.push(el.value)
+                      } else {
+                        fields.push("lineage (clade)")
+                      }
+                    }
                 });
                 var replacer = function (key, value) {
                     return value === null ? 'N/D' : value
                 };
                 var csv = json.map(function (row) {
                     return fields.map(function (fieldName) {
-                        return JSON.stringify(row[fieldName], replacer)
+                        if(fieldName === "lineage (clade)"){
+                          let all = "";
+                          let clade = row['clade'];
+                          if (clade === null){
+                            clade = 'N/D';
+                          }
+                          let lineage = row['lineage'];
+                          if (lineage === null){
+                            lineage = 'N/D';
+                            all = lineage;
+                          }
+                          else{
+                            all = lineage + ' (' + clade + ')';
+                          }
+                          return JSON.stringify(all, replacer)
+                        }
+                        else {
+                          return JSON.stringify(row[fieldName], replacer)
+                        }
                     }).join(',')
                 });
                 csv.unshift(fields.join(','));
