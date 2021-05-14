@@ -314,12 +314,24 @@ export default {
     }
   },
   created() {
-    this.loadExtremes();
+    //this.loadExtremes();
     if (this.disableSelectorEpitopePart) {
       this.disabledEpi_AminoacidMenuOpened = true;
     } else {
       this.disabledEpi_AminoacidMenuOpened = false;
     }
+
+    if (!this.epiQuerySel['startFreqExt'] && !this.epiQuerySel['stopFreqExt']) {
+        this.deleteExtremesLocal();
+      }
+      this.loadExtremes();
+      if (this.epiQuerySel['startFreqExt']){
+        this.minRange = this.epiQuerySel['startFreqExt'];   //    aggiungo * 100
+      }
+      if (this.epiQuerySel['stopFreqExt']){
+        this.maxRange = this.epiQuerySel['stopFreqExt'];    //    aggiungo * 100
+      }
+      this.shown_value = this.textBoxValue;
   },
 }
 </script>
