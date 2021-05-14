@@ -464,6 +464,28 @@
                         }
                     },
                     {
+                        text: 'Campania sequences on T cell, RBD, HLA-A*02:01 epitopes, high resp. freq., K417N change',
+                        value: {
+                            query: {
+                                "gcm": {
+                                    "taxon_name": ["severe acute respiratory syndrome coronavirus 2"],
+                                    "host_taxon_name": ["homo sapiens"],
+                                    "country": ["italy"],
+                                    "region": ["campania"],
+                                },
+                                "type": "original",
+                                "kv": {}
+                            },
+                            epi_query: {
+                                epitope_meta: {
+                                    "product": ["N (nucleocapsid phosphoprotein)"],
+                                    "cell_type": ["T cell"],
+                                    "mhc_allele": ["HLA-A*02:01","HLA-C*07:01","HLA-C*07:02"],
+                                }
+                            }
+                        }
+                    },
+                    {
                         text: 'Custom Epitope: S14P5-USA',
                         value: {
                             query: {
