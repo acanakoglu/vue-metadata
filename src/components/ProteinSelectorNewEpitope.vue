@@ -31,8 +31,10 @@ export default {
   },
   watch: {
     compound_query(){
-      if(this.last_protein !== this.compound_query['gcm']['taxon_name'][0]) {
-        this.loadData();
+      if(!this.epiSearchDis) {
+        if (this.last_protein !== this.compound_query['gcm']['taxon_name'][0]) {
+          this.loadData();
+        }
       }
     }
   },
