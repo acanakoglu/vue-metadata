@@ -30,8 +30,10 @@ export default {
       field: {type: String, required: true,},
   },
   watch: {
-    'compound_query.gcm.taxon_name': function (){
-          this.loadData();
+    compound_query(){
+      if(this.last_protein !== this.compound_query['gcm']['taxon_name'][0]) {
+        this.loadData();
+      }
     }
   },
   computed: {
@@ -61,7 +63,7 @@ export default {
     ...mapActions(['setEpiDropDownSelected', 'setAminoacidConditionsSelected', 'setNewSingleEpitopeSelected']),
     loadData(){
       if(!this.epiSearchDis) {
-
+        this.last_protein = this.compound_query['gcm']['taxon_name'][0];
         if(this.my_interval_data !== null){
           stopPoll(this.my_interval_data);
         }
@@ -117,6 +119,7 @@ export default {
       is_multiple: true,
       disabledEpi_AminoacidMenuOpened: false,
       my_interval_data: null,
+      last_protein: null,
     }
   },
   mounted() {
